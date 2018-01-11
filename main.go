@@ -1,8 +1,8 @@
 //go:generate npm install
 //go:generate ./node_modules/.bin/ng build --prod --bh ./
 //go:generate go-bindata -prefix "dist/" -pkg main -o bindata.go dist/...
-package maingo-bindata -prefix "dist/" -pkg main -o bindata.go dist/...
 
+package main
 
 import (
 	"bytes"

@@ -1,0 +1,72 @@
+image: registry.brickchain.com/gitlab/gitlab-builder-ionic:3.6.0
+
+services:
+  - registry.brickchain.com/gitlab/gitlab-builder-docker
+
+before_script:
+  - test -e /var/run/docker.sock || export DOCKER_HOST=tcp://localhost:2375
+  - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
+  - git config --global url."git@gitlab.brickchain.com:".insteadOf "https://gitlab.brickchain.com/"
+  - export GO_PROJECT_PATH=`echo $CI_PROJECT_URL |sed -r 's|https?://||'`
+  - mkdir -p /go/src/$GO_PROJECT_PATH && rmdir /go/src/$GO_PROJECT_PATH
+  - ln -s $CI_PROJECT_DIR /go/src/$GO_PROJECT_PATH
+  - cd /go/src/$GO_PROJECT_PATH
+
+stages:
+  - render
+  - build
+  - tag
+  - deploy
+
+render:
+  stage: render
+  script:
+    - go generate
+  artifacts:
+      paths:
+      - dist
+      - bindata.go
+      when: always
+
+build:
+  stage: build
+  image: registry.brickchain.com/gitlab/gitlab-builder-go:1.8
+  script:
+    - GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -tags netgo --ldflags '-extldflags "-static"' -o realm-admin-ng-linux-amd64
+    # - GOOS=linux GOARCH=386 CGO_ENABLED=0 go build -tags netgo --ldflags '-extldflags "-static"' -o realm-admin-ng-linux-386
+    - GOOS=darwin GOARCH=amd64 CGO_ENABLED=0 go build -o realm-admin-ng-darwin-amd64
+    # - GOOS=darwin GOARCH=386 CGO_ENABLED=0 go build -o realm-admin-ng-darwin-386
+    # - GOOS=linux GOARCH=arm GOARM=5 CGO_ENABLED=0 go build -tags netgo -ldflags '-extldflags "-static"' -o realm-admin-ng-linux-armv5
+    # - GOOS=linux GOARCH=arm GOARM=6 CGO_ENABLED=0 go build -tags netgo -ldflags '-extldflags "-static"' -o realm-admin-ng-linux-armv6
+    # - GOOS=linux GOARCH=arm GOARM=7 CGO_ENABLED=0 go build -tags netgo -ldflags '-extldflags "-static"' -o realm-admin-ng-linux-armv7
+    # - GOOS=linux GOARCH=arm64 CGO_ENABLED=0 go build -tags netgo -ldflags '-extldflags "-static"' -o realm-admin-ng-linux-arm64
+    - docker build -t $CI_REGISTRY_IMAGE:$CI_BUILD_REF .
+    - docker push $CI_REGISTRY_IMAGE:$CI_BUILD_REF
+  artifacts:
+      paths:
+      - realm-admin-ng-darwin-*
+      - realm-admin-ng-linux-*
+
+tag:
+  stage: tag
+  script:
+    - docker pull $CI_REGISTRY_IMAGE:$CI_BUILD_REF
+    - docker tag $CI_REGISTRY_IMAGE:$CI_BUILD_REF $CI_REGISTRY_IMAGE:latest
+    - docker push $CI_REGISTRY_IMAGE:latest
+  only:
+    - master
+
+upload to aws:
+  stage: deploy
+  only:
+    - master
+  script:
+    - eval $(vaultenv read -s secret/env/gitlab-ci/s3)
+    - aws s3 cp realm-admin-ng-darwin-amd64 s3://brickchain-artifacts/
+    # - aws s3 cp realm-admin-ng-darwin-386 s3://brickchain-artifacts/
+    - aws s3 cp realm-admin-ng-linux-amd64 s3://brickchain-artifacts/
+    # - aws s3 cp realm-admin-ng-linux-386 s3://brickchain-artifacts/
+    # - aws s3 cp realm-admin-ng-linux-armv5 s3://brickchain-artifacts/
+    # - aws s3 cp realm-admin-ng-linux-armv6 s3://brickchain-artifacts/
+    # - aws s3 cp realm-admin-ng-linux-armv7 s3://brickchain-artifacts/
+    # - aws s3 cp realm-admin-ng-linux-arm64 s3://brickchain-artifacts/
