@@ -1,4 +1,4 @@
-image: registry.brickchain.com/gitlab/gitlab-builder-ionic:3.6.0
+image: registry.brickchain.com/gitlab/gitlab-builder-ionic:3.13
 
 services:
   - registry.brickchain.com/gitlab/gitlab-builder-docker
