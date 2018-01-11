@@ -1,0 +1,33 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    name: realm-admin-ng
+  name: realm-admin-ng
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: realm-admin-ng
+      name: realm-admin-ng
+    spec:
+      containers:
+        - name: realm-admin-ng
+          image: registry.brickchain.com/webapps/realm-admin-ng:{{ .TAG }}
+          env:
+            - name: "LOG_FORMATTER"
+              value: "json"
+            - name: "LOG_LEVEL"
+              value: "debug"
+          ports:
+            - containerPort: 6580
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 6580
+            initialDelaySeconds: 15
+            timeoutSeconds: 1
+
+      imagePullSecrets:
+        - name: registry
