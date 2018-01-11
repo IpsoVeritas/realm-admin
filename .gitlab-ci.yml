@@ -22,7 +22,6 @@ render:
   stage: render
   script:
     - go generate
-    - npm test -- --single-run
   artifacts:
       paths:
       - dist
