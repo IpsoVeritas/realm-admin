@@ -1,3 +1,7 @@
-<p>
-  bootstrap works!
-</p>
+<form (ngSubmit)="onSubmit()" class="bootstrap-form">
+  <mat-form-field>
+    <input name="password" [(ngModel)]="password" matInput placeholder="Bootstrap password">
+    <mat-error *ngIf="bootstrapError">Error {{bootstrapError}}</mat-error>
+  </mat-form-field>
+  <button type="submit" mat-raised-button>Submit</button>
+</form>

@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import { ConfigService } from './config.service';
+import { Location } from '@angular/common';
 
 @Injectable()
 export class LoginService {
 
-  constructor(config: ConfigService) {
-    config.get('backend').then(value => console.log(value));
+  constructor() {
   }
 
 }

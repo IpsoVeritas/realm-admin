@@ -19,7 +19,6 @@ export class ConfigService {
   private getConfig(): Promise<any> {
     return this.http.get('/config.json')
       .forEach(data => this._config = data)
-      .then(() => console.log('config:', this._config))
       .catch(err => {
         console.warn(err);
         this._config = {};
