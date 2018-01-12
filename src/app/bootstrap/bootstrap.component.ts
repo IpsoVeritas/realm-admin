@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { PlatformService } from '../platform.service';
 import { RealmsService } from '../realms.service';
 
 @Component({
@@ -8,22 +10,28 @@ import { RealmsService } from '../realms.service';
 })
 export class BootstrapComponent implements OnInit {
 
-  password: string;
-  bootstrapError: any;
+  bootstrapForm: FormGroup;
 
-  constructor(private realms: RealmsService) { }
+  constructor(private fb: FormBuilder,
+    private platform: PlatformService,
+    private realms: RealmsService) {
+  }
 
   ngOnInit() {
+    this.bootstrapForm = this.fb.group({
+      'password': [null, Validators.required]
+    });
+  }
+
+  get password() {
+    return this.bootstrapForm.get('password');
   }
 
   onSubmit() {
-    console.log(this.password);
-    this.realms.bootstrap(this.password)
-      .then(mandateURI => console.log(mandateURI))
-      .catch(error => {
-        console.log(error);
-        this.bootstrapError = error.message;
-      });
+    this.realms.bootstrap(this.password.value)
+      .then(mandateURI => this.platform.handleURI(mandateURI))
+      .catch(error => console.warn(error.message))
+      .then(() => this.password.setErrors({ 'bootstrapFailed': true }));
   }
 
 }

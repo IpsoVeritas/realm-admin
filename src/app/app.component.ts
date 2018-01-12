@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
-import { LoginService } from './login.service';
+import { WebviewClientService } from 'integrity-webview-client';
 
 @Component({
   selector: 'app-root',
@@ -9,9 +8,7 @@ import { LoginService } from './login.service';
 })
 export class AppComponent implements OnInit {
 
-  constructor(private router: Router,
-    private route: ActivatedRoute,
-    private login: LoginService) {
+  constructor() {
   }
 
   ngOnInit(): void {
