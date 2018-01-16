@@ -1,3 +1,25 @@
-<p>
-  login works!
-</p>
+<mat-expansion-panel>
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      Login to {{activeRealm ||'realm'}}
+    </mat-panel-title>
+  </mat-expansion-panel-header>
+  <form [formGroup]="realmForm" (ngSubmit)="onSubmit()">
+    <mat-form-field>
+      <input formControlName="realm" matInput placeholder="Realm">
+      <mat-error *ngIf="realm.errors && realm.errors['required']">A realm is required</mat-error>
+      <mat-error *ngIf="realm.errors && realm.errors['startAuthFailed']">Invalid realm</mat-error>
+    </mat-form-field>
+    <button type="submit" mat-raised-button [disabled]="realmForm.invalid">Change Realm</button>
+  </form>
+</mat-expansion-panel>
+
+<mat-card>
+  <mat-card-content>
+    <div [innerHtml]="qrimage"></div>
+    <p>{{url}}</p>
+  </mat-card-content>
+  <mat-card-footer>
+      <mat-progress-bar mode="determinate" [value]="qrCountdown"></mat-progress-bar>
+  </mat-card-footer>
+</mat-card>

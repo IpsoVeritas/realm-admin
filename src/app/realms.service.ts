@@ -9,11 +9,6 @@ export class RealmsService {
 
   public bootstrap(password: string): Promise<string> {
     return this.request.post('/access/bootstrap', password).then(response => response['mandateURI']);
-    /*
-    return this._ready
-      .then(() => this.login.doPost(`/access/bootstrap`, password))
-      .then(res => res.json())
-      .then(res => res.mandateURI)
-      */
   }
+
 }

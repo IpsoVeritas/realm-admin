@@ -3,6 +3,8 @@ import { Router, } from '@angular/router';
 import { MatDialog } from '@angular/material';
 import { WebviewClientService } from 'integrity-webview-client';
 import { QrCodeDialogComponent } from './qr-code-dialog/qr-code-dialog.component';
+import { EventsService } from './events.service';
+import { RequestService } from './request.service';
 
 @Injectable()
 export class PlatformService {
@@ -12,14 +14,24 @@ export class PlatformService {
 
   constructor(private router: Router,
     private dialog: MatDialog,
-    private webviewClientService: WebviewClientService) {
+    private webviewClientService: WebviewClientService,
+    private events: EventsService,
+    private requestService: RequestService) {
     this.inApp = /Integrity\//i.test(navigator.userAgent);
     this.isMobile = /Android|iPhone/i.test(navigator.userAgent);
     if (this.inApp) {
       this.webviewClientService.init()
-        .then(data => console.debug(data))
+        .then(data => this.requestService.mandateToken = data.mandate)
         .catch(error => console.warn(error));
     }
+    this.events.subscribe('logout', () => {
+      this.requestService.mandateToken = '';
+      if (this.inApp) {
+        this.webviewClientService.cancel();
+      } else {
+        this.router.navigate(['/login', {}]);
+      }
+    });
   }
 
   public handleURI(uri: string, title?: string): Promise<any> {
@@ -30,13 +42,14 @@ export class PlatformService {
       window.location.href = `integrity://app/webapp/${url}`;
       return Promise.resolve();
     } else {
-      // Todo: if already logged in, send push notifcation
-      const dialogRef = this.dialog.open(QrCodeDialogComponent, {
-        data: { uri: uri, title: title }
+      return new Promise((resolve, reject) => {
+        const dialogRef = this.dialog.open(QrCodeDialogComponent, {
+          data: { uri: uri, title: title }
+        });
+        dialogRef.afterClosed().subscribe(() => resolve());
       });
-      dialogRef.afterClosed().subscribe(() => this.router.navigate(['/login', {}]));
+      // Todo: if already logged in, send push notifcation
     }
-    return Promise.resolve(true);
   }
 
 }
