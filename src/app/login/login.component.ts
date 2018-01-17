@@ -22,7 +22,6 @@ export class LoginComponent implements OnInit {
   pollTimer: any;
 
   qrimage: any;
-  url: string;
 
   realmForm: FormGroup;
 
@@ -31,8 +30,8 @@ export class LoginComponent implements OnInit {
   constructor(private router: Router,
     private fb: FormBuilder,
     private sanitizer: DomSanitizer,
-    private loginService: LoginService) {
-    this.activeRealm = this.loginService.getDefaultRealm();
+    private login: LoginService) {
+    this.activeRealm = this.login.getDefaultRealm();
   }
 
   ngOnInit() {
@@ -64,10 +63,9 @@ export class LoginComponent implements OnInit {
   }
 
   start(realm: string): Promise<any> {
-    return this.loginService.startAuth(realm)
+    return this.login.startAuth(realm)
       .then(data => {
-        this.url = data.requestURI;
-        const svg = qr.imageSync(this.url, { type: 'svg', margin: 0, size: 10 });
+        const svg = qr.imageSync(data.url, { type: 'svg', margin: 0, size: 10 });
         this.qrimage = this.sanitizer.bypassSecurityTrustHtml(svg);
         clearTimeout(this.qrimageTimer);
         clearTimeout(this.progressTimer);
@@ -84,7 +82,7 @@ export class LoginComponent implements OnInit {
   }
 
   poll(token: string, count = 1) {
-    this.loginService.getAuthInfo(token)
+    this.login.getAuthInfo(token)
       .then(() => clearTimeout(this.qrimageTimer))
       .then(() => clearTimeout(this.progressTimer))
       .then(() => this.router.navigate(['/home', {}]))

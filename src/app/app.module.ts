@@ -21,10 +21,8 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { PlatformService } from './platform.service';
 import { EventsService } from './events.service';
-import { RequestService } from './request.service';
 import { ConfigService } from './config.service';
 import { LoginService } from './login.service';
-import { RealmsService } from './realms.service';
 
 import { BootstrapComponent } from './bootstrap/bootstrap.component';
 import { LoginComponent } from './login/login.component';
@@ -63,10 +61,8 @@ import { QrCodeDialogComponent } from './qr-code-dialog/qr-code-dialog.component
     WebviewClientService,
     PlatformService,
     EventsService,
-    RequestService,
     ConfigService,
     LoginService,
-    RealmsService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,

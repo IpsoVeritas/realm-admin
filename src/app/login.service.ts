@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { EventsService } from './events.service';
-import { RequestService } from './request.service';
+import { ConfigService } from './config.service';
 
 @Injectable()
 export class LoginService {
@@ -10,8 +10,9 @@ export class LoginService {
   expirationTimer: any;
 
   constructor(private router: Router,
+    private http: HttpClient,
     private events: EventsService,
-    private requestService: RequestService) {
+    private config: ConfigService) {
   }
 
   public getDefaultRealm(): string {
@@ -20,19 +21,15 @@ export class LoginService {
 
   public getLoginDescriptor(realm?: string): Promise<string> {
     realm = realm ? realm : this.getDefaultRealm();
-    return this.requestService.pathToURL(`/realms/${realm}/login`);
+    return this.config.getBackendURL(`/realms/${realm}/login`);
   }
 
-  public startAuth(realm?: string): Promise<{ authURI: string, requestURI: string, token: string }> {
-    realm = realm ? realm : this.getDefaultRealm();
-    return this.requestService.post('/auth/request', { realm: realm, type: 'mandate-token' }, { headers: new HttpHeaders() })
-      .then(data => {
-        return {
-          authURI: this.requestService.backendURL + '/auth',
-          requestURI: this.requestService.baseURL + data['requestURI'],
-          token: data['token']
-        };
-      });
+  public startAuth(realm?: string): Promise<{ url: string, token: string }> {
+    const body = { realm: realm ? realm : this.getDefaultRealm(), type: 'mandate-token' };
+    return this.config.getBackendURL('/auth/request')
+      .then(url => this.http.post(url, body).toPromise())
+      .then(data => this.config.getBaseURL(data['requestURI'])
+        .then(url => <any>{ url: url, token: data['token'] }));
   }
 
   public getAuthInfo(token?: string): Promise<any> {
@@ -40,18 +37,25 @@ export class LoginService {
     if (token) {
       options.headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` });
     }
-    return this.requestService.get('/auth', options)
+    return this.config.getBackendURL('/auth')
+      .then(url => this.http.get(url, options).toPromise())
       .then((authInfo: any) => {
-        authInfo.exp = new Date(authInfo.exp).getTime();
-        if (authInfo.mandateToken) {
-          this.requestService.mandateToken = authInfo.mandateToken;
-          if (authInfo.sub && authInfo.authenticated && authInfo.exp > Date.now()) {
-            clearTimeout(this.expirationTimer);
-            this.expirationTimer = setTimeout(() => this.events.publish('expired', authInfo), authInfo.exp - Date.now());
-            return authInfo;
+        if (!authInfo.mandateToken) {
+          return Promise.reject('No mandate');
+        }
+        if (!authInfo.authenticated) {
+          return Promise.reject('Not authenticated');
+        }
+        if (authInfo.exp) {
+          authInfo.exp = new Date(authInfo.exp).getTime();
+          if (authInfo.exp < Date.now()) {
+            return Promise.reject('Expired');
           }
         }
-        return Promise.reject('Not authenticated');
+        localStorage.setItem('mandate', authInfo.mandateToken);
+        clearTimeout(this.expirationTimer);
+        this.expirationTimer = setTimeout(() => this.events.publish('logout', authInfo), authInfo.exp - Date.now());
+        return authInfo;
       });
   }
 

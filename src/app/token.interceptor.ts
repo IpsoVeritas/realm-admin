@@ -1,23 +1,21 @@
 import { Injectable, Injector } from '@angular/core';
 import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
+import { ConfigService } from './config.service';
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
 
-  constructor() {
-  }
-
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    /*
-    if (this.loginService.token) {
+    const backend = localStorage.getItem('backend');
+    const mandate = localStorage.getItem('mandate');
+    if (request.url.startsWith(backend) && !request.headers.has('Authorization') && mandate) {
       request = request.clone({
         setHeaders: {
-          Authorization: `Mandate ${this.token}`
+          Authorization: `Mandate ${mandate}`
         }
       });
     }
-    */
     return next.handle(request);
   }
 

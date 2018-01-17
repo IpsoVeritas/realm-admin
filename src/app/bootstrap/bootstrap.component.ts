@@ -1,8 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { Router, } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 import { PlatformService } from '../platform.service';
-import { RealmsService } from '../realms.service';
+import { ConfigService } from '../config.service';
 
 @Component({
   selector: 'app-bootstrap',
@@ -15,8 +16,9 @@ export class BootstrapComponent implements OnInit {
 
   constructor(private router: Router,
     private fb: FormBuilder,
+    private http: HttpClient,
     private platform: PlatformService,
-    private realms: RealmsService) {
+    private config: ConfigService) {
   }
 
   ngOnInit() {
@@ -30,8 +32,9 @@ export class BootstrapComponent implements OnInit {
   }
 
   onSubmit() {
-    this.realms.bootstrap(this.password.value)
-      .then(mandateURI => this.platform.handleURI(mandateURI))
+    return this.config.getBackendURL('/access/bootstrap')
+      .then(url => this.http.post(url, this.password.value).toPromise())
+      .then(data => this.platform.handleURI(data['mandateURI']))
       .then(() => this.router.navigate(['/login', {}]))
       .catch(error => this.password.setErrors({ 'bootstrapFailed': true }));
   }
