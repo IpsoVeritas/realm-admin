@@ -24,19 +24,26 @@ import { EventsService } from './events.service';
 import { ConfigService } from './config.service';
 import { LoginService } from './login.service';
 
+import { QrCodeDialogComponent } from './qr-code-dialog/qr-code-dialog.component';
 import { BootstrapComponent } from './bootstrap/bootstrap.component';
 import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component';
-
-import { QrCodeDialogComponent } from './qr-code-dialog/qr-code-dialog.component';
+import { RolesComponent } from './home/roles/roles.component';
+import { ServicesComponent } from './home/services/services.component';
+import { RealmsComponent } from './home/realms/realms.component';
+import { SettingsComponent } from './home/settings/settings.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    QrCodeDialogComponent,
     BootstrapComponent,
     LoginComponent,
     HomeComponent,
-    QrCodeDialogComponent
+    RolesComponent,
+    ServicesComponent,
+    RealmsComponent,
+    SettingsComponent
   ],
   entryComponents: [
     QrCodeDialogComponent

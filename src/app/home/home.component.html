@@ -1,3 +1,15 @@
 <p>
   home works!
 </p>
+<p>
+  <a [routerLink]="['realms']">Realms</a>
+  <br/>
+  <a [routerLink]="['roles']">Roles</a>
+  <br/>
+  <a [routerLink]="['services']">Services</a>
+  <br/>
+  <a [routerLink]="['settings']">Settings</a>
+  <br/>
+  <a (click)="logout()">Logout</a>
+</p>
+<router-outlet></router-outlet>
