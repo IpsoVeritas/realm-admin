@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { EventsService } from '../../shared/services/events.service';
 
 @Component({
@@ -8,13 +9,18 @@ import { EventsService } from '../../shared/services/events.service';
 })
 export class HomeComponent implements OnInit {
 
-  constructor(private events: EventsService) { }
+  constructor(private events: EventsService,  private breakpointObserver: BreakpointObserver) { }
 
   ngOnInit() {
+    console.log(this)
   }
 
   logout() {
     this.events.publish('logout');
+  }
+
+  get isMobile() {
+    return this.breakpointObserver.isMatched(Breakpoints.HandsetPortrait);
   }
 
 }

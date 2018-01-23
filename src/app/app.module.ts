@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { LayoutModule } from '@angular/cdk/layout';
 
 import { MatInputModule, MatButtonModule } from '@angular/material';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -56,6 +57,7 @@ import { SettingsComponent } from './pages/home/settings/settings.component';
     BrowserAnimationsModule,
     HttpClientModule,
     FormsModule,
+    LayoutModule,
     ReactiveFormsModule,
     MatInputModule,
     MatButtonModule,

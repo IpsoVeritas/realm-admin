@@ -19,3 +19,13 @@ mat-sidenav-container {
   left: 0;
   right: 0
 }
+
+
+.menu-icon {
+  display: none;
+}
+@media (max-width: 599px) and (orientation: portrait) {
+  .menu-icon {
+      display: block;
+  }
+}
