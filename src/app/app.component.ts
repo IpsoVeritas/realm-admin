@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { URLSearchParams } from '@angular/http';
 import { WebviewClientService } from 'integrity-webview-client';
-import { PlatformService } from './platform.service';
-import { LoginService } from './login.service';
+import { PlatformService } from './shared/services/platform.service';
+import { LoginService } from './shared/services/login.service';
 import 'rxjs/add/operator/filter';
 
 @Component({

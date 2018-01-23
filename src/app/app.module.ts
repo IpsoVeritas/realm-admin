@@ -4,8 +4,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { TokenInterceptor } from './token.interceptor';
-
 import { MatInputModule, MatButtonModule } from '@angular/material';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -21,21 +19,22 @@ import { WebviewClientService } from 'integrity-webview-client';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 
-import { PlatformService } from './platform.service';
-import { EventsService } from './events.service';
-import { ConfigService } from './config.service';
-import { LoginService } from './login.service';
+import { QrCodeDialogComponent } from './shared/components/qr-code-dialog/qr-code-dialog.component';
 
-import { QrCodeDialogComponent } from './qr-code-dialog/qr-code-dialog.component';
-import { BootstrapComponent } from './bootstrap/bootstrap.component';
-import { LoginComponent } from './login/login.component';
-import { HomeComponent } from './home/home.component';
-import { RolesComponent } from './home/roles/roles.component';
-import { ServicesComponent } from './home/services/services.component';
-import { RealmsComponent } from './home/realms/realms.component';
-import { SettingsComponent } from './home/settings/settings.component';
-import { SidenavComponent } from './home/sidenav/sidenav.component';
-import { AppbarComponent } from './home/appbar/appbar.component';
+import { TokenInterceptor } from './shared/interceptors/token.interceptor';
+
+import { PlatformService } from './shared/services/platform.service';
+import { EventsService } from './shared/services/events.service';
+import { ConfigService } from './shared/services/config.service';
+import { LoginService } from './shared/services/login.service';
+
+import { BootstrapComponent } from './pages/bootstrap/bootstrap.component';
+import { LoginComponent } from './pages/login/login.component';
+import { HomeComponent } from './pages/home/home.component';
+import { RolesComponent } from './pages/home/roles/roles.component';
+import { ServicesComponent } from './pages/home/services/services.component';
+import { RealmsComponent } from './pages/home/realms/realms.component';
+import { SettingsComponent } from './pages/home/settings/settings.component';
 
 @NgModule({
   declarations: [
@@ -47,9 +46,7 @@ import { AppbarComponent } from './home/appbar/appbar.component';
     RolesComponent,
     ServicesComponent,
     RealmsComponent,
-    SettingsComponent,
-    AppbarComponent,
-    SidenavComponent
+    SettingsComponent
   ],
   entryComponents: [
     QrCodeDialogComponent

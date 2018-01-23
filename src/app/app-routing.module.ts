@@ -1,22 +1,22 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { BootmodeGuardService as BootGuard } from './bootmode-guard.service';
-import { LoginGuardService as LoginGuard } from './login-guard.service';
+import { BootmodeGuard } from './shared/guards/bootmode.guard';
+import { LoginGuard } from './shared/guards/login.guard';
 
-import { BootstrapComponent } from './bootstrap/bootstrap.component';
-import { LoginComponent } from './login/login.component';
-import { HomeComponent } from './home/home.component';
-import { RealmsComponent } from './home/realms/realms.component';
-import { RolesComponent } from './home/roles/roles.component';
-import { ServicesComponent } from './home/services/services.component';
-import { SettingsComponent } from './home/settings/settings.component';
+import { BootstrapComponent } from './pages/bootstrap/bootstrap.component';
+import { LoginComponent } from './pages/login/login.component';
+import { HomeComponent } from './pages/home/home.component';
+import { RealmsComponent } from './pages/home/realms/realms.component';
+import { RolesComponent } from './pages/home/roles/roles.component';
+import { ServicesComponent } from './pages/home/services/services.component';
+import { SettingsComponent } from './pages/home/settings/settings.component';
 
 const appRoutes: Routes = [
-  { path: 'bootstrap', component: BootstrapComponent, canActivate: [BootGuard] },
-  { path: 'login', component: LoginComponent, canActivate: [BootGuard, LoginGuard] },
+  { path: 'bootstrap', component: BootstrapComponent, canActivate: [BootmodeGuard] },
+  { path: 'login', component: LoginComponent, canActivate: [BootmodeGuard, LoginGuard] },
   {
-    path: 'home', component: HomeComponent, canActivate: [BootGuard, LoginGuard],
+    path: 'home', component: HomeComponent, canActivate: [BootmodeGuard, LoginGuard],
     children: [
       { path: 'realms', component: RealmsComponent },
       { path: 'roles', component: RolesComponent },
@@ -35,7 +35,7 @@ const appRoutes: Routes = [
     RouterModule
   ],
   providers: [
-    BootGuard,
+    BootmodeGuard,
     LoginGuard
   ]
 })

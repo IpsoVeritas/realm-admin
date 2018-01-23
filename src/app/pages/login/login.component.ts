@@ -2,7 +2,7 @@ import { Component, ViewChild, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
-import { LoginService } from '../login.service';
+import { LoginService } from '../../shared/services/login.service';
 import { MatExpansionPanel } from '@angular/material';
 import * as qr from 'qr-image';
 

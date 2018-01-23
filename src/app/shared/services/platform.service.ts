@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router, } from '@angular/router';
 import { MatDialog } from '@angular/material';
 import { WebviewClientService } from 'integrity-webview-client';
-import { QrCodeDialogComponent } from './qr-code-dialog/qr-code-dialog.component';
+import { QrCodeDialogComponent } from '../components/qr-code-dialog/qr-code-dialog.component';
 import { EventsService } from './events.service';
 
 @Injectable()

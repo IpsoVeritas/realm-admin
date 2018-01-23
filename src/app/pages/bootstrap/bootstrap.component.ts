@@ -2,8 +2,8 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { Router, } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { PlatformService } from '../platform.service';
-import { ConfigService } from '../config.service';
+import { PlatformService } from '../../shared/services/platform.service';
+import { ConfigService } from '../../shared/services/config.service';
 
 @Component({
   selector: 'app-bootstrap',

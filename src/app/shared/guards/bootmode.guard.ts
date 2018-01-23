@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { HttpClient, HttpResponseBase } from '@angular/common/http';
-import { ConfigService } from './config.service';
+import { ConfigService } from '../services/config.service';
 
 @Injectable()
-export class BootmodeGuardService implements CanActivate {
+export class BootmodeGuard implements CanActivate {
 
   constructor(private router: Router,
     private http: HttpClient,
