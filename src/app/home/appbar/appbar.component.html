@@ -1,8 +1,9 @@
 <mat-toolbar color="primary">
-    <mat-toolbar-row>
-      <span>Logo</span>
-      <span class="spacer"></span>
-      <mat-icon class="example-icon">sync</mat-icon>
-      <mat-icon class="example-icon" (click)="logout()">exit_to_app</mat-icon>
-    </mat-toolbar-row>
-  </mat-toolbar>
+  <mat-toolbar-row>
+    <span>Logo</span>
+    <span class="spacer"></span>
+    <mat-icon class="example-icon">sync</mat-icon>
+    <mat-icon class="example-icon" [routerLink]="['settings']">settings</mat-icon>
+    <mat-icon class="example-icon" (click)="logout()">exit_to_app</mat-icon>
+  </mat-toolbar-row>
+</mat-toolbar>
