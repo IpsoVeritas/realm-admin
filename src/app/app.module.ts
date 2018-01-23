@@ -13,6 +13,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatListModule } from '@angular/material/list';
+import { MatSidenavModule } from '@angular/material/sidenav';
 
 import { WebviewClientService } from 'integrity-webview-client';
 
@@ -32,6 +34,8 @@ import { RolesComponent } from './home/roles/roles.component';
 import { ServicesComponent } from './home/services/services.component';
 import { RealmsComponent } from './home/realms/realms.component';
 import { SettingsComponent } from './home/settings/settings.component';
+import { SidenavComponent } from './home/sidenav/sidenav.component';
+import { AppbarComponent } from './home/appbar/appbar.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +47,9 @@ import { SettingsComponent } from './home/settings/settings.component';
     RolesComponent,
     ServicesComponent,
     RealmsComponent,
-    SettingsComponent
+    SettingsComponent,
+    AppbarComponent,
+    SidenavComponent
   ],
   entryComponents: [
     QrCodeDialogComponent
@@ -62,6 +68,8 @@ import { SettingsComponent } from './home/settings/settings.component';
     MatCardModule,
     MatExpansionModule,
     MatProgressBarModule,
+    MatListModule,
+    MatSidenavModule,
     AppRoutingModule
   ],
   providers: [
