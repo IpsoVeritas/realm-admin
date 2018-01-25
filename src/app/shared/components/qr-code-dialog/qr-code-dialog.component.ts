@@ -10,16 +10,18 @@ import * as qr from 'qr-image';
 })
 export class QrCodeDialogComponent implements OnInit {
 
-  qrimage: any;
+  qrUri: string;
+  qrImage: any;
 
   constructor(public dialogRef: MatDialogRef<QrCodeDialogComponent>,
     private sanitizer: DomSanitizer,
     @Inject(MAT_DIALOG_DATA) public data: any) {
+    this.qrUri = this.data.uri;
   }
 
   ngOnInit() {
-    const svg = qr.imageSync(this.data.uri, { type: 'svg', margin: 1, size: 10 });
-    this.qrimage = this.sanitizer.bypassSecurityTrustHtml(svg);
+    const svg = qr.imageSync(this.qrUri, { type: 'svg', margin: 1, size: 10 });
+    this.qrImage = this.sanitizer.bypassSecurityTrustHtml(svg);
   }
 
   close() {

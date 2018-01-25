@@ -1,38 +1,34 @@
 import { Injectable } from '@angular/core';
 import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { HttpResponseBase } from '@angular/common/http';
-
-import { LoginService } from '../services/login.service';
+import { AuthClient } from '../api-clients';
+import { AuthUser } from '../models';
 
 @Injectable()
 export class LoginGuard implements CanActivate {
 
-  constructor(private router: Router, private loginService: LoginService) {
+  constructor(private router: Router, private authClient: AuthClient) {
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
-    return this.isLoggedIn()
-      .then(isLoggedIn => {
+    return this.authClient.getAuthInfo()
+      .then((user: AuthUser) => user.authenticated)
+      .catch(() => false)
+      .then(isAuthenticated => {
         switch (state.url) {
           case '/login': {
-            if (isLoggedIn) {
+            if (isAuthenticated) {
               this.router.navigate(['/home', {}]);
             }
-            return !isLoggedIn;
+            return !isAuthenticated;
           }
           default:
-            if (!isLoggedIn) {
+            if (!isAuthenticated) {
               this.router.navigate(['/login', {}]);
             }
-            return isLoggedIn;
+            return isAuthenticated;
         }
       });
-  }
-
-  private isLoggedIn(): Promise<boolean> {
-    return this.loginService.getAuthInfo()
-      .then(() => true)
-      .catch(() => false);
   }
 
 }

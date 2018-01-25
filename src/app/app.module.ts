@@ -13,20 +13,19 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { WebviewClientService } from 'integrity-webview-client';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 
-import { QrCodeDialogComponent } from './shared/components/qr-code-dialog/qr-code-dialog.component';
-
-import { TokenInterceptor } from './shared/interceptors/token.interceptor';
-
-import { PlatformService } from './shared/services/platform.service';
-import { EventsService } from './shared/services/events.service';
-import { ConfigService } from './shared/services/config.service';
-import { LoginService } from './shared/services/login.service';
+import { QrCodeDialogComponent } from './shared/components';
+import { TokenInterceptor, LoaderInterceptor } from './shared/interceptors';
+import { AuthClient, AccessClient } from './shared/api-clients';
+import { PlatformService, EventsService, ConfigService, ClipboardService } from './shared/services';
+import { ClipboardDirective } from './shared/directives';
 
 import { BootstrapComponent } from './pages/bootstrap/bootstrap.component';
 import { LoginComponent } from './pages/login/login.component';
@@ -38,6 +37,7 @@ import { SettingsComponent } from './pages/home/settings/settings.component';
 
 @NgModule({
   declarations: [
+    ClipboardDirective,
     AppComponent,
     QrCodeDialogComponent,
     BootstrapComponent,
@@ -67,14 +67,23 @@ import { SettingsComponent } from './pages/home/settings/settings.component';
     MatProgressBarModule,
     MatListModule,
     MatSidenavModule,
+    MatTooltipModule,
+    MatSnackBarModule,
     AppRoutingModule
   ],
   providers: [
     WebviewClientService,
+    AuthClient,
+    AccessClient,
     PlatformService,
     EventsService,
     ConfigService,
-    LoginService,
+    ClipboardService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: LoaderInterceptor,
+      multi: true
+    },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,

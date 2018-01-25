@@ -14,12 +14,11 @@
   </form>
 </mat-expansion-panel>
 
-<mat-card>
+<mat-card *ngIf="activeRealm">
   <mat-card-content>
-    <div [innerHtml]="qrimage"></div>
-    <p>{{url}}</p>
+    <div [appClipboard]="qrUri" (copySuccess)="showCopySuccess($event)" [innerHtml]="qrImage"></div>
   </mat-card-content>
   <mat-card-footer>
-      <mat-progress-bar mode="determinate" [value]="qrCountdown"></mat-progress-bar>
+    <mat-progress-bar mode="determinate" [value]="qrCountdown"></mat-progress-bar>
   </mat-card-footer>
 </mat-card>

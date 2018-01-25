@@ -1,20 +1,18 @@
 <mat-toolbar color="primary">
   <mat-toolbar-row>
-    <span>Logo</span>
+    <span>{{realm}}</span>
     <span class="spacer"></span>
-    <mat-icon class="example-icon">sync</mat-icon>
-    <mat-icon class="example-icon" [routerLink]="['settings']">settings</mat-icon>
-    <mat-icon class="example-icon" (click)="logout()">exit_to_app</mat-icon>
+    <mat-icon [class.paused]="requestCount == 0" class="spin">sync</mat-icon>
+    <mat-icon [routerLink]="['settings']">settings</mat-icon>
+    <mat-icon (click)="logout()">exit_to_app</mat-icon>
   </mat-toolbar-row>
 </mat-toolbar>
 
 <mat-sidenav-container>
   <mat-sidenav mode="side" opened="true">
     <mat-nav-list>
-      <a mat-list-item [routerLink]="['realms']">Realms</a>
-      <br/>
+      <a *ngIf="user?.owner" mat-list-item [routerLink]="['realms']">Realms</a>
       <a mat-list-item [routerLink]="['roles']">Roles</a>
-      <br/>
       <a mat-list-item [routerLink]="['services']">Services</a>
     </mat-nav-list>
   </mat-sidenav>

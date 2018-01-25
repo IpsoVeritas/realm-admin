@@ -1,24 +1,25 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, AfterViewInit } from '@angular/core';
 import { Router, } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
-import { PlatformService } from '../../shared/services/platform.service';
-import { ConfigService } from '../../shared/services/config.service';
+import { AccessClient } from '../../shared/api-clients';
+import { PlatformService, EventsService } from '../../shared/services';
+
+import { BootstrapResponse } from '../../shared/models';
 
 @Component({
   selector: 'app-bootstrap',
   templateUrl: './bootstrap.component.html',
   styleUrls: ['./bootstrap.component.css']
 })
-export class BootstrapComponent implements OnInit {
+export class BootstrapComponent implements OnInit, AfterViewInit {
 
   bootstrapForm: FormGroup;
 
   constructor(private router: Router,
     private fb: FormBuilder,
-    private http: HttpClient,
+    private accessClient: AccessClient,
     private platform: PlatformService,
-    private config: ConfigService) {
+    private events: EventsService) {
   }
 
   ngOnInit() {
@@ -27,14 +28,17 @@ export class BootstrapComponent implements OnInit {
     });
   }
 
+  ngAfterViewInit() {
+    setTimeout(() => this.events.publish('ready', true));
+  }
+
   get password() {
     return this.bootstrapForm.get('password');
   }
 
   onSubmit() {
-    return this.config.getBackendURL('/access/bootstrap')
-      .then(url => this.http.post(url, this.password.value).toPromise())
-      .then(data => this.platform.handleURI(data['mandateURI']))
+    return this.accessClient.postBootstrap(this.password.value)
+      .then((response: BootstrapResponse) => this.platform.handleURI(response.mandateURI))
       .then(() => this.router.navigate(['/login', {}]))
       .catch(error => this.password.setErrors({ 'bootstrapFailed': true }));
   }
