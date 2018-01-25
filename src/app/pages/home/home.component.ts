@@ -12,7 +12,6 @@ export class HomeComponent implements OnInit {
   constructor(private events: EventsService,  private breakpointObserver: BreakpointObserver) { }
 
   ngOnInit() {
-    console.log(this)
   }
 
   logout() {
@@ -22,5 +21,4 @@ export class HomeComponent implements OnInit {
   get isMobile() {
     return this.breakpointObserver.isMatched(Breakpoints.HandsetPortrait);
   }
-
 }
