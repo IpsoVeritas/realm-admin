@@ -16,6 +16,8 @@ import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatMenuModule } from '@angular/material/menu';
+import {MatTableModule} from '@angular/material/table';
 
 import { WebviewClientService } from 'integrity-webview-client';
 
@@ -71,6 +73,8 @@ import { SettingsComponent } from './pages/home/settings/settings.component';
     MatSidenavModule,
     MatTooltipModule,
     MatSnackBarModule,
+    MatMenuModule,
+    MatTableModule,
     AppRoutingModule
   ],
   providers: [

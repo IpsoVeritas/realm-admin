@@ -34,10 +34,13 @@ mat-sidenav-container {
   -webkit-animation: spin 1s infinite linear;
   -moz-animation: spin 1s infinite linear;
   animation: spin 1s infinite linear;
+  opacity: 1;
+  transition: opacity .3s ease-out;
 }
 
 .spin.paused {
   animation-play-state: paused;
+  opacity: 0;
 }
 
 @-webkit-keyframes spin {
