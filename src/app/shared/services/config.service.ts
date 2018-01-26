@@ -35,4 +35,16 @@ export class ConfigService {
     return this._ready.then(() => `${this._backend}${path}`);
   }
 
+  get config(): any {
+    return this._config;
+  }
+
+  get backend(): string {
+    return this._backend;
+  }
+
+  get base(): string {
+    return this._base;
+  }
+
 }

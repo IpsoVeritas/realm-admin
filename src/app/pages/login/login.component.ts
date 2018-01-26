@@ -48,8 +48,12 @@ export class LoginComponent implements OnInit {
       .then(() => this.activeRealm = realm)
       .catch(error => {
         this.activeRealm = '';
-        this.realm.setValue('');
         this.realmPanel.expanded = true;
+        if (error.status === 0) {
+          this.snackBar.open(`Error connecting to ${this.config.backend}`, 'Close', { duration: 5000 });
+        } else {
+          this.realm.setValue('');
+        }
       })
       .then(() => this.events.publish('ready', true));
   }
@@ -60,7 +64,13 @@ export class LoginComponent implements OnInit {
         .then(() => this.activeRealm = this.realm.value)
         .then(() => this.realmPanel.expanded = false)
         .then(() => localStorage.setItem('realm', this.activeRealm))
-        .catch(error => this.realm.setErrors({ 'startAuthFailed': true }));
+        .catch(error => {
+          if (error.status === 0) {
+            this.snackBar.open(`Error connecting to ${this.config.backend}`, '', { duration: 2000 });
+          } else {
+            this.realm.setErrors({ 'startAuthFailed': true });
+          }
+        });
     } else {
       this.realmPanel.expanded = false;
     }
@@ -71,7 +81,7 @@ export class LoginComponent implements OnInit {
   }
 
   showCopySuccess(value: string) {
-    this.snackBar.open(`Copied ${value} to clipboard`, '', { duration: 1000 });
+    this.snackBar.open(`Copied ${value} to clipboard`, '', { duration: 2000 });
   }
 
   updateCountdown() {
