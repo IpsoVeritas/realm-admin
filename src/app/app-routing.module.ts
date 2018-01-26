@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { BootmodeGuard } from './shared/guards/bootmode.guard';
-import { LoginGuard } from './shared/guards/login.guard';
+import { BootmodeGuard, LoginGuard } from './shared/guards';
 
 import { BootstrapComponent } from './pages/bootstrap/bootstrap.component';
 import { LoginComponent } from './pages/login/login.component';

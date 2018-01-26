@@ -2,9 +2,12 @@ import { Component, ViewChild, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
-import { LoginService } from '../../shared/services/login.service';
-import { MatExpansionPanel } from '@angular/material';
+import { AuthClient } from '../../shared/api-clients';
+import { ConfigService, EventsService } from '../../shared/services';
+import { MatExpansionPanel, MatSnackBar } from '@angular/material';
 import * as qr from 'qr-image';
+
+import { AuthUser, AuthInfo } from '../../shared/models';
 
 @Component({
   selector: 'app-login',
@@ -15,13 +18,13 @@ export class LoginComponent implements OnInit {
 
   @ViewChild(MatExpansionPanel) realmPanel: MatExpansionPanel;
 
-  qrimageTimer: any;
-  qrimageTimestamp: number;
+  qrUri: string;
+  qrImage: any;
+  qrImageTimer: any;
+  qrImageTimestamp: number;
   qrCountdown = 100;
   progressTimer: any;
   pollTimer: any;
-
-  qrimage: any;
 
   realmForm: FormGroup;
 
@@ -30,20 +33,25 @@ export class LoginComponent implements OnInit {
   constructor(private router: Router,
     private fb: FormBuilder,
     private sanitizer: DomSanitizer,
-    private login: LoginService) {
-    this.activeRealm = this.login.getDefaultRealm();
+    private authClient: AuthClient,
+    private config: ConfigService,
+    private events: EventsService,
+    private snackBar: MatSnackBar) {
   }
 
   ngOnInit() {
+    const realm = localStorage.getItem('realm');
     this.realmForm = this.fb.group({
-      'realm': [this.activeRealm, Validators.required]
+      'realm': [realm, Validators.required]
     });
-    this.start(this.activeRealm)
+    this.start(realm)
+      .then(() => this.activeRealm = realm)
       .catch(error => {
         this.activeRealm = '';
         this.realm.setValue('');
         this.realmPanel.expanded = true;
-      });
+      })
+      .then(() => this.events.publish('ready', true));
   }
 
   onSubmit() {
@@ -62,31 +70,45 @@ export class LoginComponent implements OnInit {
     return this.realmForm.get('realm');
   }
 
-  start(realm: string): Promise<any> {
-    return this.login.startAuth(realm)
-      .then(data => {
-        const svg = qr.imageSync(data.url, { type: 'svg', margin: 0, size: 10 });
-        this.qrimage = this.sanitizer.bypassSecurityTrustHtml(svg);
-        clearTimeout(this.qrimageTimer);
-        clearTimeout(this.progressTimer);
-        clearTimeout(this.pollTimer);
-        this.qrimageTimer = setTimeout(() => this.start(realm), 60000);
-        this.progressTimer = setInterval(() => this.progress(), 100);
-        this.qrimageTimestamp = Date.now();
-        this.poll(data.token);
+  showCopySuccess(value: string) {
+    this.snackBar.open(`Copied ${value} to clipboard`, '', { duration: 1000 });
+  }
+
+  updateCountdown() {
+    this.qrCountdown = 100 - (Date.now() - this.qrImageTimestamp) / 3000;
+  }
+
+  start(realm: string): Promise<AuthInfo> {
+    return this.authClient.postAuthRequest(realm)
+      .then((authInfo: AuthInfo) => this.config.getBaseURL(authInfo.requestURI)
+        .then(url => {
+          this.qrUri = url;
+          const svg = qr.imageSync(this.qrUri, { type: 'svg', margin: 0, size: 10 });
+          this.qrImage = this.sanitizer.bypassSecurityTrustHtml(svg);
+          clearTimeout(this.qrImageTimer);
+          clearTimeout(this.progressTimer);
+          clearTimeout(this.pollTimer);
+          this.qrImageTimer = setTimeout(() => this.start(realm), 300000);
+          this.progressTimer = setInterval(() => this.updateCountdown(), 100);
+          this.qrImageTimestamp = Date.now();
+          return this.poll(authInfo.token);
+        })
+        .then(() => authInfo));
+  }
+
+  poll(token: string, count = 1): Promise<AuthUser> {
+    return this.authClient.getAuthInfo(token)
+      .then((user: AuthUser) => {
+        if (user.authenticated && user.mandateToken && !user.expired) {
+          clearTimeout(this.qrImageTimer);
+          clearTimeout(this.progressTimer);
+          localStorage.setItem('mandate', user.mandateToken);
+          this.router.navigate(['/home', {}]);
+        } else {
+          this.pollTimer = setTimeout(() => this.poll(token, count + 1), 1000);
+        }
+        return user;
       });
-  }
-
-  progress() {
-    this.qrCountdown = 100 - (Date.now() - this.qrimageTimestamp) / 600;
-  }
-
-  poll(token: string, count = 1) {
-    this.login.getAuthInfo(token)
-      .then(() => clearTimeout(this.qrimageTimer))
-      .then(() => clearTimeout(this.progressTimer))
-      .then(() => this.router.navigate(['/home', {}]))
-      .catch(() => this.pollTimer = setTimeout(() => this.poll(token, count + 1), 1000));
   }
 
 }

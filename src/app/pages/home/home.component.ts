@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { EventsService } from '../../shared/services/events.service';
+import { AccessClient } from '../../shared/api-clients';
+import { EventsService } from '../../shared/services';
+import { User } from '../../shared/models';
 
 @Component({
   selector: 'app-home',
@@ -9,9 +11,18 @@ import { EventsService } from '../../shared/services/events.service';
 })
 export class HomeComponent implements OnInit {
 
-  constructor(private events: EventsService,  private breakpointObserver: BreakpointObserver) { }
+  constructor(private events: EventsService, 
+     private breakpointObserver: BreakpointObserver,
+     private accessClient: AccessClient) { }
+
+  requestCount = 0;
+  user: User;
 
   ngOnInit() {
+    this.events.subscribe('active_http_requests', count => this.requestCount = count);
+    this.accessClient.getUserAccess()
+      .then(user => this.user = user)
+      .then(() => this.events.publish('ready', true));
   }
 
   logout() {
@@ -21,4 +32,8 @@ export class HomeComponent implements OnInit {
   get isMobile() {
     return this.breakpointObserver.isMatched(Breakpoints.HandsetPortrait);
   }
+  get realm(): string {
+    return localStorage.getItem('realm');
+  }
+
 }

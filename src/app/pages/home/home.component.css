@@ -20,12 +20,27 @@ mat-sidenav-container {
   right: 0
 }
 
-
-.menu-icon {
-  display: none;
+.spin {
+  -webkit-animation: spin 1s infinite linear;
+  -moz-animation: spin 1s infinite linear;
+  animation: spin 1s infinite linear;
 }
-@media (max-width: 599px) and (orientation: portrait) {
-  .menu-icon {
-      display: block;
-  }
+
+.spin.paused {
+  animation-play-state: paused;
+}
+
+@-webkit-keyframes spin {
+  100% { -webkit-transform: rotate(0deg); }
+  0% { -webkit-transform: rotate(360deg); }
+}
+
+@-moz-keyframes spin {
+  100% { -moz-transform: rotate(0deg); }
+  0% { -moz-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  100% { transform: rotate(0deg); }
+  0% { transform: rotate(360deg); }
 }

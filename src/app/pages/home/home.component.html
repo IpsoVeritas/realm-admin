@@ -2,17 +2,18 @@
   <mat-toolbar-row>
     <mat-icon class="example-icon menu-icon" (click)="drawer.toggle()">menu</mat-icon>
     <span><img src="assets/img/integrity.svg" alt="logo integrity"></span>
+    <span>{{realm}}</span>
     <span class="spacer"></span>
-    <mat-icon class="example-icon">sync</mat-icon>
-    <mat-icon class="example-icon" [routerLink]="['settings']">settings</mat-icon>
-    <mat-icon class="example-icon" (click)="logout()">exit_to_app</mat-icon>
+    <mat-icon [class.paused]="requestCount == 0" class="spin">sync</mat-icon>
+    <mat-icon [routerLink]="['settings']">settings</mat-icon>
+    <mat-icon (click)="logout()">exit_to_app</mat-icon>
   </mat-toolbar-row>
 </mat-toolbar>
 
 <mat-sidenav-container>
   <mat-sidenav [mode]="isMobile ? 'over' : 'side'" [opened]="!isMobile" #drawer>
     <mat-nav-list>
-      <a mat-list-item [routerLink]="['realms']" (click)="isMobile ? drawer.toggle() : false"><i class="material-icons">settings</i>Realms</a>
+      <a *ngIf="user?.owner" mat-list-item [routerLink]="['realms']" (click)="isMobile ? drawer.toggle() : false"><i class="material-icons">settings</i>Realms</a>
       <br/>
       <a mat-list-item [routerLink]="['roles']" (click)="isMobile ? drawer.toggle() : false"><i class="material-icons">people</i>Roles</a>
       <br/>
