@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AccessClient } from '../../../shared/api-clients';
 
 @Component({
   selector: 'app-realms',
@@ -7,9 +8,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class RealmsComponent implements OnInit {
 
-  constructor() { }
+  constructor(private accessClient: AccessClient) { }
 
   ngOnInit() {
+  }
+
+  click() {
+    this.accessClient.getUserAccess().then(u => console.log(u));
   }
 
 }
