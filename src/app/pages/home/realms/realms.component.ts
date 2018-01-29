@@ -4,7 +4,7 @@ import { AccessClient } from '../../../shared/api-clients';
 @Component({
   selector: 'app-realms',
   templateUrl: './realms.component.html',
-  styleUrls: ['./realms.component.css']
+  styleUrls: ['./realms.component.scss']
 })
 export class RealmsComponent implements OnInit {
 

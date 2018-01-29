@@ -9,7 +9,7 @@ import { BootstrapResponse } from '../../shared/models';
 @Component({
   selector: 'app-bootstrap',
   templateUrl: './bootstrap.component.html',
-  styleUrls: ['./bootstrap.component.css']
+  styleUrls: ['./bootstrap.component.scss']
 })
 export class BootstrapComponent implements OnInit, AfterViewInit {
 

@@ -7,7 +7,7 @@ import * as qr from 'qr-image';
 @Component({
   selector: 'app-qr-code-dialog',
   templateUrl: './qr-code-dialog.component.html',
-  styleUrls: ['./qr-code-dialog.component.css']
+  styleUrls: ['./qr-code-dialog.component.scss']
 })
 export class QrCodeDialogComponent implements OnInit {
 
