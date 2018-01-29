@@ -13,11 +13,9 @@
 <mat-sidenav-container>
   <mat-sidenav [mode]="isHandsetPortrait ? 'over' : 'side'" [opened]="!isHandsetPortrait" #drawer>
     <mat-nav-list>
-      <a *ngIf="user?.owner" mat-list-item [routerLink]="['realms']" (click)="isHandsetPortrait ? drawer.toggle() : false"><i class="material-icons">settings</i>Realms</a>
-      <br/>
-      <a mat-list-item [routerLink]="['roles']" (click)="isHandsetPortrait ? drawer.toggle() : false"><i class="material-icons">people</i>Roles</a>
-      <br/>
-      <a mat-list-item [routerLink]="['services']" (click)="isHandsetPortrait ? drawer.toggle() : false"><i class="material-icons">dashboard</i>Services</a>
+      <a *ngIf="user?.owner" mat-list-item [routerLink]="['realms']" (click)="isHandsetPortrait ? drawer.close() : false"><i class="material-icons">settings</i>Realms</a>
+      <a mat-list-item [routerLink]="['roles']" (click)="isHandsetPortrait ? drawer.close() : false"><i class="material-icons">people</i>Roles</a>
+      <a mat-list-item [routerLink]="['services']" (click)="isHandsetPortrait ? drawer.close() : false"><i class="material-icons">dashboard</i>Services</a>
     </mat-nav-list>
   </mat-sidenav>
   <div>
