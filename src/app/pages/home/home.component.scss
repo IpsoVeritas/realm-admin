@@ -20,6 +20,16 @@ mat-sidenav-container {
   right: 0
 }
 
+.menu-icon {
+  display: none;
+}
+
+@media (max-width: 599px) and (orientation: portrait) {
+  .menu-icon {
+      display: block;
+  }
+}
+
 .spin {
   animation: spin 1s ease-in-out infinite reverse;
   transition: all 0.25s ease-in-out;

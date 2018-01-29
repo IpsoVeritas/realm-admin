@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { AccessClient } from '../../shared/api-clients';
 import { EventsService } from '../../shared/services';
 import { User } from '../../shared/models';
@@ -10,11 +11,12 @@ import { User } from '../../shared/models';
 })
 export class HomeComponent implements OnInit {
 
+  constructor(private events: EventsService,
+    private breakpointObserver: BreakpointObserver,
+    private accessClient: AccessClient) { }
+
   requestCount = 0;
   user: User;
-
-  constructor(private events: EventsService,
-    private accessClient: AccessClient) { }
 
   ngOnInit() {
     this.events.subscribe('active_http_requests', count => this.requestCount = count);
@@ -27,6 +29,9 @@ export class HomeComponent implements OnInit {
     this.events.publish('logout');
   }
 
+  get isHandsetPortrait() {
+    return this.breakpointObserver.isMatched(Breakpoints.HandsetPortrait);
+  }
   get realm(): string {
     return localStorage.getItem('realm');
   }
