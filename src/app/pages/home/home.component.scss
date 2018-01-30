@@ -6,27 +6,57 @@ mat-toolbar {
   z-index: 2;
 }
 
-.spacer {
-  /* This fills the remaining space, by using flexbox.
-     Every toolbar row uses a flexbox row layout. */
-  flex: 1 1 auto;
-}
-
 mat-sidenav-container {
-  position: absolute;
+  position: fixed;
   top: 64px;
   bottom: 0;
   left: 0;
-  right: 0
+  right: 0;
+}
+
+mat-sidenav-container.narrow {
+  top: 56px;
+}
+
+mat-sidenav {
+  z-index: 3;
+  mat-icon {
+    margin-right: 12px;
+  }
+}
+
+#main-content {
+  position: relative;
+  width: calc(100% - 40px);
+  max-width: 800px;
+  margin: 20px auto 0 auto;
 }
 
 .menu-icon {
   display: none;
 }
 
+mat-sidenav  h3 {
+  border: none;
+  font-size: 10px;
+  letter-spacing: 1px;
+  line-height: 24px;
+  text-transform: uppercase;
+  font-weight: 400;
+  margin: 0;
+  padding: 0 16px;
+  background: rgba(0, 0, 0, 0.32);
+  color: white;
+}
+
 @media (max-width: 599px) and (orientation: portrait) {
   .menu-icon {
       display: block;
+  }
+  #main-content {
+    position: relative;
+    width: 100%;
+    margin: 0;
   }
 }
 

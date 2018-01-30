@@ -7,7 +7,7 @@ import { User, BootstrapResponse } from '../models';
 @Injectable()
 export class AccessClient extends BaseClient {
 
-  public getUserAccess(token?: string): Promise<User> {
+  public getUserAccess(): Promise<User> {
     return this.config.getBackendURL('/access')
       .then(url => this.http.get(url).toPromise())
       .then(obj => this.jsonConvert.deserializeObject(obj, User));

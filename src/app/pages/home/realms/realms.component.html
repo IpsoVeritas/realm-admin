@@ -1,3 +1,38 @@
-<p (click)="click()">
-  realms works!
-</p>
+<mat-toolbar class="mat-elevation-z6">
+  <mat-toolbar-row>
+    Realms
+    <span class="spacer"></span>
+    <button (click)="create()" mat-icon-button color="accent">
+      <mat-icon aria-label="Create realm">add_circle</mat-icon>
+    </button>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<div class="mat-elevation-z6">
+
+  <mat-table #table [dataSource]="dataSource" matSort>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="id">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Realm ID</mat-header-cell>
+      <mat-cell *matCellDef="let realm" (click)="select(realm)">{{realm.id}}</mat-cell>
+    </ng-container>
+
+    <!-- Action Column -->
+    <ng-container matColumnDef="action">
+      <mat-header-cell *matHeaderCellDef>Action</mat-header-cell>
+      <mat-cell *matCellDef="let realm">
+        <mat-icon (click)="delete(realm)">remove_circle_outline</mat-icon>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+  </mat-table>
+
+</div>
+
+<button (click)="create()" mat-fab class="fab-add-button">
+  <mat-icon aria-label="Create realm">add</mat-icon>
+</button>

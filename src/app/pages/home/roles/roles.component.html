@@ -1,18 +1,17 @@
-<mat-toolbar>
+<mat-toolbar class="mat-elevation-z6">
   <mat-toolbar-row>
     <button mat-button [matMenuTriggerFor]="menu">Admin<mat-icon>arrow_drop_down</mat-icon></button>
     <mat-menu #menu="matMenu">
       <button mat-menu-item> Admin </button>
       <button mat-menu-item> Guest </button>
     </mat-menu>
-
     <span class="spacer"></span>
     <mat-icon>add_circle</mat-icon>
   </mat-toolbar-row>
 </mat-toolbar>
 
 
-<div class="mat-elevation-z8">
+<div class="mat-elevation-z6">
     <mat-table #table [dataSource]="dataSource" matSort>
     <!-- Name Column -->
     <ng-container matColumnDef="name">
@@ -28,6 +27,7 @@
 
     <!-- icons Column -->
     <ng-container matColumnDef="action">
+      <mat-header-cell *matHeaderCellDef > Action </mat-header-cell>
       <mat-cell *matCellDef="let element">
        <mat-icon (click)="revoke(element)">delete</mat-icon>
       </mat-cell>

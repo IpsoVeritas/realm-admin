@@ -5,7 +5,7 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LayoutModule } from '@angular/cdk/layout';
 
-import { MatInputModule, MatButtonModule } from '@angular/material';
+import { MatInputModule, MatButtonModule, MatSortModule } from '@angular/material';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
@@ -17,7 +17,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatMenuModule } from '@angular/material/menu';
-import {MatTableModule} from '@angular/material/table';
+import { MatTableModule } from '@angular/material/table';
 
 import { WebviewClientService } from 'integrity-webview-client';
 
@@ -26,7 +26,7 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { QrCodeDialogComponent } from './shared/components';
 import { TokenInterceptor, LoaderInterceptor } from './shared/interceptors';
-import { AuthClient, AccessClient } from './shared/api-clients';
+import { AuthClient, AccessClient, RealmsClient } from './shared/api-clients';
 import { PlatformService, EventsService, ConfigService, ClipboardService } from './shared/services';
 import { ClipboardDirective } from './shared/directives';
 
@@ -63,6 +63,7 @@ import { SettingsComponent } from './pages/home/settings/settings.component';
     ReactiveFormsModule,
     MatInputModule,
     MatButtonModule,
+    MatSortModule,
     MatDialogModule,
     MatToolbarModule,
     MatIconModule,
@@ -81,6 +82,7 @@ import { SettingsComponent } from './pages/home/settings/settings.component';
     WebviewClientService,
     AuthClient,
     AccessClient,
+    RealmsClient,
     PlatformService,
     EventsService,
     ConfigService,
