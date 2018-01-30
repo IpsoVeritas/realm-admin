@@ -22,7 +22,7 @@
     <ng-container matColumnDef="action">
       <mat-header-cell *matHeaderCellDef>Action</mat-header-cell>
       <mat-cell *matCellDef="let realm">
-        <mat-icon (click)="delete(realm)">remove_circle_outline</mat-icon>
+        <mat-icon *ngIf="activeRealm != realm.id" (click)="delete(realm)">remove_circle_outline</mat-icon>
       </mat-cell>
     </ng-container>
 

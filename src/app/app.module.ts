@@ -24,7 +24,7 @@ import { WebviewClientService } from 'integrity-webview-client';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 
-import { ConfirmationDialogComponent, QrCodeDialogComponent } from './shared/components';
+import { ConfirmationDialogComponent, QrCodeDialogComponent, SimpleInputDialogComponent } from './shared/components';
 import { TokenInterceptor, LoaderInterceptor } from './shared/interceptors';
 import { AuthClient, AccessClient, RealmsClient } from './shared/api-clients';
 import { PlatformService, EventsService, ConfigService, ClipboardService } from './shared/services';
@@ -44,16 +44,19 @@ import { SettingsComponent } from './pages/home/settings/settings.component';
     AppComponent,
     ConfirmationDialogComponent,
     QrCodeDialogComponent,
+    SimpleInputDialogComponent,
     BootstrapComponent,
     LoginComponent,
     HomeComponent,
     RolesComponent,
     ServicesComponent,
     RealmsComponent,
-    SettingsComponent
+    SettingsComponent,
   ],
   entryComponents: [
-    QrCodeDialogComponent
+    ConfirmationDialogComponent,
+    QrCodeDialogComponent,
+    SimpleInputDialogComponent
   ],
   imports: [
     BrowserModule,
