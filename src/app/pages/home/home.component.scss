@@ -1,5 +1,4 @@
 mat-toolbar {
-  background-color: #fafafa;
   position: fixed;
   top: 0;
   left: 0;
@@ -13,14 +12,13 @@ mat-sidenav-container {
   bottom: 0;
   left: 0;
   right: 0;
-}
+} 
 
 mat-sidenav-container.narrow {
   top: 56px;
 }
 
 mat-sidenav {
-  background-color: #fafafa;
   z-index: 3;
   mat-icon {
     margin-right: 12px;
@@ -38,7 +36,7 @@ mat-sidenav {
   display: none;
 }
 
-mat-sidenav  h3 {
+mat-sidenav h3 {
   border: none;
   font-size: 10px;
   letter-spacing: 1px;

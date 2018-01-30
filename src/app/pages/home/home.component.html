@@ -1,4 +1,4 @@
-<mat-toolbar>
+<mat-toolbar class="integrity-background-color">
   <mat-toolbar-row>
     <mat-icon class="menu-icon" (click)="drawer.toggle()">{{ drawer.opened ? 'close' : 'menu' }}</mat-icon>
     <img [class.hidden]="isHandsetPortrait" src="assets/img/integrity.svg" height="50%">
@@ -10,9 +10,9 @@
   </mat-toolbar-row>
 </mat-toolbar>
 
-<mat-sidenav-container [class.narrow]="isHandsetPortrait">
+<mat-sidenav-container [class.narrow]="isHandsetPortrait" class="integrity-background-color">
 
-  <mat-sidenav [mode]="isHandsetPortrait ? 'over' : 'side'" [opened]="!isHandsetPortrait" #drawer>
+  <mat-sidenav [mode]="isHandsetPortrait ? 'over' : 'side'" [opened]="!isHandsetPortrait" #drawer class="integrity-background-color">
     <mat-nav-list>
       <a *ngIf="user?.owner" mat-list-item [routerLink]="['realms']" (click)="isHandsetPortrait ? drawer.close() : false">
         <mat-icon>domain</mat-icon> Realms</a>
