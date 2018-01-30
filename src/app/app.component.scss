@@ -1,0 +1,23 @@
+.stripe {
+  display: flex;
+  width:100%;
+  height: 2px;
+  position: fixed;
+  z-index: 3;
+  background: #def;
+  div {
+    flex: 1;
+  }
+  div:nth-child(1){
+    background-color: #f9b026;
+  }
+  div:nth-child(2){
+    background-color: #004b97;
+  }
+  div:nth-child(3){
+    background-color: #20afe2;
+  }
+  div:nth-child(4){
+    background-color: #f76a0a;
+  }
+}

@@ -1,4 +1,5 @@
 mat-toolbar {
+  background-color: #fafafa;
   position: fixed;
   top: 0;
   left: 0;
@@ -19,6 +20,7 @@ mat-sidenav-container.narrow {
 }
 
 mat-sidenav {
+  background-color: #fafafa;
   z-index: 3;
   mat-icon {
     margin-right: 12px;

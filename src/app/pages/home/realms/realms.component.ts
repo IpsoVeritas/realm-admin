@@ -1,5 +1,6 @@
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { MatSnackBar, MatTableDataSource, MatSort } from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { EventsService } from '../../../shared/services';
 import { RealmsClient } from '../../../shared/api-clients';
 
@@ -16,7 +17,8 @@ export class RealmsComponent implements OnInit, AfterViewInit {
 
   constructor(private events: EventsService,
     private realmsClient: RealmsClient,
-    private snackBar: MatSnackBar) { }
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog) { }
 
   ngOnInit() {
   }
@@ -29,7 +31,16 @@ export class RealmsComponent implements OnInit, AfterViewInit {
   }
 
   create() {
-    console.log('Create');
+/*
+    const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
+      width: '250px',
+      data: { name: this.name, animal: this.animal }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(result);
+    });
+    */
   }
 
   select(selected) {
@@ -38,7 +49,7 @@ export class RealmsComponent implements OnInit, AfterViewInit {
 
   delete(selected) {
     // Todo: Add confirm dialog. Better snackbar position
-    this.realmsClient.deleteRealm(selected.id)
+    this.realmsClient.deleteRealm('1000')
       .then(() => this.dataSource.data = this.dataSource.data.filter(item => item !== selected))
       .catch(error => this.snackBar.open(`Error deleting ${selected.id}`, 'Close', { duration: 5000 }));
   }
