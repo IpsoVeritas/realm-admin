@@ -40,17 +40,22 @@ mat-sidenav {
   display: none;
 }
 
-mat-sidenav  h3 {
-  border: none;
-  font-size: 10px;
-  letter-spacing: 1px;
-  line-height: 24px;
-  text-transform: uppercase;
-  font-weight: 400;
-  margin: 0;
-  padding: 0 16px;
-  background: rgba(0, 0, 0, 0.32);
-  color: white;
+mat-sidenav {
+  .active {
+    color: $blue;
+  }
+  h3 {
+    border: none;
+    font-size: 10px;
+    letter-spacing: 1px;
+    line-height: 24px;
+    text-transform: uppercase;
+    font-weight: 400;
+    margin: 0;
+    padding: 0 16px;
+    background: rgba(0, 0, 0, 0.32);
+    color: white;
+  }
 }
 
 @media (max-width: 599px) and (orientation: portrait) {
