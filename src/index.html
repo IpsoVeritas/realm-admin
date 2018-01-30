@@ -9,7 +9,6 @@
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <style>
-
     body {
       margin: 0;
       padding: 0;
@@ -23,16 +22,41 @@
     }
 
     .loading {
-      opacity: 0.7;
+      opacity: 1;
       display: flex;
       justify-content: center;
       align-items: center;
-      color: #fff;
-      background: #000;
-      font-weight: 300;
-      font-family: Roboto, sans-serif;
+      color: #333;
+      background: #eee;
       z-index: 10000;
       transition: all 0.5s ease-in-out;
+    }
+
+    .loading div {
+      border-radius: 24px;
+      margin: 12px;
+      width: 48px;
+      height: 48px;
+    }
+
+    .loading div:nth-child(1) {
+      background-color: #f9b026;
+      animation: pulse 1s ease-in-out 0.1s infinite;
+    }
+
+    .loading div:nth-child(2) {
+      background-color: #004b97;
+      animation: pulse 1s ease-in-out 0.35s infinite;
+    }
+
+    .loading div:nth-child(3) {
+      background-color: #20afe2;
+      animation: pulse 1s ease-in-out 0.60s infinite;
+    }
+
+    .loading div:nth-child(4) {
+      background-color: #f76a0a;
+      animation: pulse 1s ease-in-out 0.85s infinite;
     }
 
     app-root.ready+.loading {
@@ -40,20 +64,19 @@
       z-index: -1;
     }
 
-    app-root+.loading svg {
-      animation: spin 3s ease-in-out infinite reverse;
-    }
-
-    app-root.ready+.loading svg {
+    app-root.ready+.loading div {
       animation-play-state: paused;
     }
 
-    @keyframes spin {
-      from {
-        transform: rotate(0deg);
+    @keyframes pulse {
+      0% {
+        transform: scale(1.0);
       }
-      to {
-        transform: rotate(360deg);
+      50% {
+        transform: scale(0.1);
+      }
+      10% {
+        transform: scale(1.0);
       }
     }
 
@@ -63,9 +86,13 @@
 <body class="mat-typography integrity-theme">
   <app-root></app-root>
   <div class="loading">
-    <svg fill="#fff" width="96" height="96" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <!-- svg fill="#fff" width="96" height="96" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/>
-    </svg>
+    </svg -->
   </div>
 </body>
 
