@@ -1,3 +1,5 @@
+@import '~theme/integrity-variables.scss';
+
 .stripe {
   display: flex;
   width:100%;
@@ -9,15 +11,15 @@
     flex: 1;
   }
   div:nth-child(1){
-    background-color: #f9b026;
+    background-color: $yellow;
   }
   div:nth-child(2){
-    background-color: #004b97;
+    background-color: $dark-blue;
   }
   div:nth-child(3){
-    background-color: #20afe2;
+    background-color: $blue;
   }
   div:nth-child(4){
-    background-color: #f76a0a;
+    background-color: $orange;
   }
 }

@@ -1,6 +1,6 @@
 <mat-toolbar>
   <span>{{data.title || "Scan"}}</span>
-  <span style="flex: 1 1 auto"></span>
+  <span class="spacer"></span>
   <mat-icon (click)="close()" style="cursor: pointer">close</mat-icon>
 </mat-toolbar>
 <div [appClipboard]="qrUri" (copySuccess)="showCopySuccess($event)" [innerHtml]="qrImage"></div>

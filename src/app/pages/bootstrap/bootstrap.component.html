@@ -1,8 +1,14 @@
-<form [formGroup]="bootstrapForm" (ngSubmit)="onSubmit()">
-  <mat-form-field>
-    <input formControlName="password" matInput placeholder="Bootstrap password">
-    <mat-error *ngIf="password.errors && password.errors['required']">A password is required</mat-error>
-    <mat-error *ngIf="password.errors && password.errors['bootstrapFailed']">Invalid password</mat-error>
-  </mat-form-field>
-  <button type="submit" mat-raised-button [disabled]="bootstrapForm.invalid">Submit</button>
-</form>
+<div id="bootstrap-panel">
+
+  <mat-card class="mat-elevation-z1">
+    <form [formGroup]="bootstrapForm" (ngSubmit)="onSubmit()">
+      <mat-form-field>
+        <input formControlName="password" matInput placeholder="Bootstrap password">
+        <mat-error *ngIf="password.errors && password.errors['required']">A password is required</mat-error>
+        <mat-error *ngIf="password.errors && password.errors['bootstrapFailed']">Invalid password</mat-error>
+      </mat-form-field>
+      <button type="submit" mat-raised-button [disabled]="bootstrapForm.invalid" color="primary">Submit</button>
+    </form>
+  </mat-card>
+
+</div>

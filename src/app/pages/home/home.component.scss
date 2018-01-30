@@ -1,5 +1,6 @@
+@import '~theme/integrity-variables.scss';
+
 mat-toolbar {
-  background-color: #fafafa;
   position: fixed;
   top: 0;
   left: 0;
@@ -28,6 +29,7 @@ mat-sidenav {
 }
 
 #main-content {
+  background-color: $background-color;
   position: relative;
   width: calc(100% - 40px);
   max-width: 800px;

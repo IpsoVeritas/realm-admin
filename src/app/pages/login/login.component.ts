@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -12,7 +12,8 @@ import { AuthUser, AuthInfo } from '../../shared/models';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class LoginComponent implements OnInit {
 
@@ -93,8 +94,10 @@ export class LoginComponent implements OnInit {
       .then((authInfo: AuthInfo) => this.config.getBaseURL(authInfo.requestURI)
         .then(url => {
           this.qrUri = url;
-          const svg = qr.imageSync(this.qrUri, { type: 'svg', margin: 0, size: 10 });
-          this.qrImage = this.sanitizer.bypassSecurityTrustHtml(svg);
+          const svgObj = qr.svgObject(this.qrUri, { type: 'svg', margin: 0 });
+          // tslint:disable-next-line:max-line-length
+          const html = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${svgObj.size} ${svgObj.size}"><path d="${svgObj.path}"></path></svg>`;
+          this.qrImage = this.sanitizer.bypassSecurityTrustHtml(html);
           clearTimeout(this.qrImageTimer);
           clearTimeout(this.progressTimer);
           clearTimeout(this.pollTimer);

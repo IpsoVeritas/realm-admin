@@ -1,9 +1,9 @@
 <div id="login-panel">
 
-  <mat-expansion-panel>
+  <mat-expansion-panel class="mat-elevation-z2">
     <mat-expansion-panel-header>
       <mat-panel-title>
-        Login to {{activeRealm ||'realm'}}
+        Scan this QR code to access {{activeRealm ||'your realm'}}
       </mat-panel-title>
     </mat-expansion-panel-header>
     <form [formGroup]="realmForm" (ngSubmit)="onSubmit()">
@@ -12,16 +12,16 @@
         <mat-error *ngIf="realm.errors && realm.errors['required']">A realm is required</mat-error>
         <mat-error *ngIf="realm.errors && realm.errors['startAuthFailed']">Invalid realm</mat-error>
       </mat-form-field>
-      <button type="submit" mat-raised-button [disabled]="realmForm.invalid">Change Realm</button>
+      <button type="submit" mat-raised-button [disabled]="realmForm.invalid" color="primary">Change Realm</button>
     </form>
   </mat-expansion-panel>
 
-  <mat-card *ngIf="activeRealm">
+  <mat-card *ngIf="activeRealm" class="mat-elevation-z1">
     <mat-card-content>
       <div [appClipboard]="qrUri" (copySuccess)="showCopySuccess($event)" [innerHtml]="qrImage"></div>
     </mat-card-content>
     <mat-card-footer>
-      <mat-progress-bar mode="determinate" [value]="qrCountdown"></mat-progress-bar>
+      <mat-progress-bar mode="determinate" [value]="qrCountdown" color="warn"></mat-progress-bar>
     </mat-card-footer>
   </mat-card>
 
