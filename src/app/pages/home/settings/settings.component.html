@@ -15,6 +15,12 @@
     </mat-select>
   </mat-form-field>
 
+  <div class="dropzone" appDragAndDrop (filesDropped)="onFilesChange($event)" (filesInvalid)="onFilesInvalid($event)" [includeData]="true" [extensions]="['png', 'jpg', 'bmp']">
+    <div class="text-wrapper" [style.background-image]="image">
+      <div class="centered">Drop your file here!</div>
+    </div>
+  </div>
+
 </div>
 
 <pre>

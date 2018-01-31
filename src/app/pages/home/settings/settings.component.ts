@@ -1,4 +1,5 @@
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { MatSnackBar } from '@angular/material';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { EventsService } from '../../../shared/services';
@@ -16,7 +17,10 @@ export class SettingsComponent implements OnInit {
   realm: Realm;
   roles: Role[];
 
-  constructor(private events: EventsService,
+  image;
+
+  constructor(private sanitizer: DomSanitizer,
+    private events: EventsService,
     private realmsClient: RealmsClient,
     private rolesClient: RolesClient) { }
 
@@ -28,6 +32,15 @@ export class SettingsComponent implements OnInit {
       .then(roles => roles.filter(role => !role.name.startsWith('admin@') && !role.name.startsWith('service@')))
       .then(roles => this.roles = roles)
       .catch(error => console.warn(error));
+  }
+
+  onFilesChange(files) {
+    console.log(files);
+    this.image = this.sanitizer.bypassSecurityTrustStyle(`url(${files[0].dataURL})`);
+  }
+
+  onFilesInvalid(event) {
+    console.log(event);
   }
 
 }

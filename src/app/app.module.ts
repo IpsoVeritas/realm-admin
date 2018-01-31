@@ -29,7 +29,7 @@ import { ConfirmationDialogComponent, QrCodeDialogComponent, SimpleInputDialogCo
 import { TokenInterceptor, LoaderInterceptor } from './shared/interceptors';
 import { AuthClient, AccessClient, RealmsClient, RolesClient } from './shared/api-clients';
 import { PlatformService, EventsService, ConfigService, ClipboardService } from './shared/services';
-import { ClipboardDirective } from './shared/directives';
+import { ClipboardDirective, DragAndDropDirective } from './shared/directives';
 
 import { BootstrapComponent } from './pages/bootstrap/bootstrap.component';
 import { LoginComponent } from './pages/login/login.component';
@@ -42,6 +42,7 @@ import { SettingsComponent } from './pages/home/settings/settings.component';
 @NgModule({
   declarations: [
     ClipboardDirective,
+    DragAndDropDirective,
     AppComponent,
     ConfirmationDialogComponent,
     QrCodeDialogComponent,
@@ -52,7 +53,7 @@ import { SettingsComponent } from './pages/home/settings/settings.component';
     RolesComponent,
     ServicesComponent,
     RealmsComponent,
-    SettingsComponent,
+    SettingsComponent
   ],
   entryComponents: [
     ConfirmationDialogComponent,
