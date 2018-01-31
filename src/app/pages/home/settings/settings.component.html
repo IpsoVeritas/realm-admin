@@ -1,10 +1,10 @@
-<div>
+<div class="settings-container mat-elevation-z1" *ngIf="realm && roles">
 
-  <mat-form-field *ngIf="realm">
+  <mat-form-field>
     <input matInput [(ngModel)]="realm.description" placeholder="Description">
   </mat-form-field>
 
-  <mat-form-field *ngIf="realm && roles">
+  <mat-form-field >
     <mat-select [(ngModel)]="realm.guestRole" placeholder="Guest Role">
       <mat-option [value]="undefined">
         No public role
@@ -25,7 +25,9 @@
     <mat-icon color="accent">add</mat-icon>
   </div>
 
-  <button mat-raised-button color="accent" (click)="updateRealm()">Save</button>
-  <button mat-raised-button (click)="loadRealm()">Reset</button>
+  <div class="buttons">
+    <button mat-raised-button color="accent" (click)="updateRealm()">Save</button>
+    <button mat-raised-button (click)="loadRealm()">Reset</button>
+  </div>
 
 </div>
