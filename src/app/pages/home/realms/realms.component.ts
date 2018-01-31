@@ -46,9 +46,7 @@ export class RealmsComponent implements OnInit, AfterViewInit {
       .then(realm => this.realmsClient.createRealm(realm)
         .then(() => this.dataSource.data.push({ 'id': realm.name }))
         .then(() => this.dataSource.data = this.dataSource.data)
-        .catch(error => {
-          this.snackBarOpen(`Error creating '${realm.name}'`, 'Close', { duration: 2000 });
-        }))
+        .catch(error => this.snackBarOpen(`Error creating '${realm.name}'`, 'Close', { duration: 5000 })))
       .catch(() => 'canceled');
   }
 

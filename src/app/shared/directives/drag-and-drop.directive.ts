@@ -6,61 +6,61 @@ import { Directive, HostListener, HostBinding, EventEmitter, Output, Input } fro
 })
 export class DragAndDropDirective {
 
-  @Input() private includeData: Boolean = false;
+  @Input() private includeDataURL: Boolean = false;
   @Input() private extensions: Array<string> = [];
   @Output() private filesDropped: EventEmitter<File[]> = new EventEmitter();
-  @Output() private filesInvalid: EventEmitter<File[]> = new EventEmitter();
+  @Output() private filesSkipped: EventEmitter<File[]> = new EventEmitter();
 
-  @HostBinding('style.background') private background = '#eee';
+  @HostBinding('class.dnd-hover') hover = false;
 
   constructor() { }
 
   @HostListener('dragover', ['$event']) public onDragOver(evt) {
     evt.preventDefault();
     evt.stopPropagation();
-    this.background = '#999';
+    this.hover = true;
   }
 
   @HostListener('dragleave', ['$event']) public onDragLeave(evt) {
     evt.preventDefault();
     evt.stopPropagation();
-    this.background = '#eee';
+    this.hover = false;
   }
 
   @HostListener('drop', ['$event']) public onDrop(evt) {
 
     evt.preventDefault();
     evt.stopPropagation();
-    this.background = '#eee';
+    this.hover = false;
 
     const files = evt.dataTransfer.files;
-    const validFiles: Array<File> = [];
-    const invalidFiles: Array<File> = [];
+    const droppedFiles: Array<File> = [];
+    const skippedFiles: Array<File> = [];
 
-    if (files.length > 0) {
-      Array.from(files).forEach((file: File) => {
-        const extension = file.name.split('.')[file.name.split('.').length - 1];
-        this.extensions.includes(extension) ? validFiles.push(file) : invalidFiles.push(file);
-      });
-      if (validFiles.length) {
-        if (this.includeData) {
-          Promise.all(validFiles.map(file => {
-            return new Promise((resolve, reject) => {
-              const reader = new FileReader();
-              reader.onload = () => {
-                file['dataURL'] = reader.result;
-                resolve(file);
-              };
-              reader.readAsDataURL(file);
-            });
-          })).then((filesWithData: File[]) => this.filesDropped.emit(filesWithData));
-        } else {
-          this.filesDropped.emit(validFiles);
-        }
+    Array.from(files).forEach((file: File) => {
+      const extension = file.name.split('.')[file.name.split('.').length - 1];
+      this.extensions.includes(extension) ? droppedFiles.push(file) : skippedFiles.push(file);
+    });
+
+    if (droppedFiles.length) {
+      if (this.includeDataURL) {
+        Promise.all(droppedFiles.map(file => {
+          return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => {
+              file['dataURL'] = reader.result;
+              resolve(file);
+            };
+            reader.readAsDataURL(file);
+          });
+        })).then((filesWithData: File[]) => this.filesDropped.emit(filesWithData));
+      } else {
+        this.filesDropped.emit(droppedFiles);
       }
-      if (invalidFiles.length) {
-        this.filesInvalid.emit(invalidFiles);
-      }
+    }
+
+    if (skippedFiles.length) {
+      this.filesSkipped.emit(skippedFiles);
     }
 
   }
