@@ -24,7 +24,7 @@
       <a mat-list-item [routerLink]="['services']" routerLinkActive="active" (click)="isHandsetPortrait ? drawer.close() : false">
         <mat-icon>dashboard</mat-icon>Services</a>
       <a mat-list-item [routerLink]="['settings']" routerLinkActive="active" (click)="isHandsetPortrait ? drawer.close() : false">
-        <mat-icon>settings</mat-icon>{{realm}}</a>
+        <mat-icon>settings</mat-icon>Settings</a>
       <a *ngIf="!isHandsetPortrait" mat-list-item (click)="logout()">
         <mat-icon>exit_to_app</mat-icon>Logout</a>
     </mat-nav-list>

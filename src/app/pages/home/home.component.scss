@@ -24,7 +24,7 @@ mat-sidenav-container.narrow {
 }
 
 mat-sidenav {
-  background-color: #fafafa;
+  background-color: $background-color;
   z-index: 3;
   mat-icon {
     margin-right: 12px;

@@ -33,6 +33,6 @@
 
 </div>
 
-<button (click)="create()" mat-fab class="fab-add-button">
+<button (click)="create()" mat-fab class="fab-add-button" [class.snack-bar-open]="isSnackBarOpen">
   <mat-icon aria-label="Create realm">add</mat-icon>
 </button>

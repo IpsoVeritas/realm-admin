@@ -104,23 +104,31 @@ export class LoginComponent implements OnInit {
           this.qrImageTimer = setTimeout(() => this.start(realm), 300000);
           this.progressTimer = setInterval(() => this.updateCountdown(), 100);
           this.qrImageTimestamp = Date.now();
-          return this.poll(authInfo.token);
+          this.poll(realm, authInfo.token);
         })
         .then(() => authInfo));
   }
 
-  poll(token: string, count = 1): Promise<AuthUser> {
-    return this.authClient.getAuthInfo(token)
+  poll(realm: string, token: string, count = 1): void {
+    this.authClient.getAuthInfo(token)
       .then((user: AuthUser) => {
         if (user.authenticated && user.mandateToken && !user.expired) {
           clearTimeout(this.qrImageTimer);
           clearTimeout(this.progressTimer);
           localStorage.setItem('mandate', user.mandateToken);
-          this.router.navigate(['/home', {}]);
+          localStorage.setItem('expires', String(user.exp.getTime()));
+          this.authClient.getAuthInfo()
+            .then(() => this.events.publish('login'))
+            .then(() => this.router.navigate(['/home', {}]))
+            .catch(error => {
+              if (error && error.error) {
+                this.snackBar.open(error.error, 'Close', { duration: 5000 });
+              }
+              this.start(realm);
+            });
         } else {
-          this.pollTimer = setTimeout(() => this.poll(token, count + 1), 1000);
+          this.pollTimer = setTimeout(() => this.poll(realm, token, count + 1), 1000);
         }
-        return user;
       });
   }
 

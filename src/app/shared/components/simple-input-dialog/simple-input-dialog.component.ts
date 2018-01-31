@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, HostListener } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 @Component({
@@ -19,6 +19,11 @@ export class SimpleInputDialogComponent {
       });
       dialogRef.afterClosed().subscribe(value => value ? resolve(value) : reject());
     });
+  }
+
+  @HostListener('keydown.enter')
+  public onEnter(): void {
+    this.dialogRef.close(this.data.value);
   }
 
 }

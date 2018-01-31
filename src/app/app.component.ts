@@ -52,12 +52,18 @@ export class AppComponent implements OnInit {
       .subscribe((event: NavigationEnd) => localStorage.setItem('url', event.urlAfterRedirects));
 
     this.events.subscribe('ready', isReady => this.ready = isReady);
+    this.events.subscribe('login', () => this.startExpirationTimer());
 
-    this.events.subscribe('login', (user: AuthUser) => {
-      clearTimeout(this.expirationTimer);
-      this.expirationTimer = setTimeout(() => this.events.publish('logout', user), user.timeout);
-    });
+    this.startExpirationTimer();
 
+  }
+
+  startExpirationTimer(): void {
+    clearTimeout(this.expirationTimer);
+    const timeout = Number(localStorage.getItem('expires')) - Date.now();
+    if (timeout > 0) {
+      this.expirationTimer = setTimeout(() => this.events.publish('logout'), timeout);
+    }
   }
 
 }

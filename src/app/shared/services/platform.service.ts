@@ -24,6 +24,7 @@ export class PlatformService {
     }
     this.events.subscribe('logout', () => {
       localStorage.removeItem('mandate');
+      localStorage.removeItem('expires');
       if (this.inApp) {
         this.webviewClient.cancel();
       } else {

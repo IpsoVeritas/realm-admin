@@ -6,3 +6,4 @@ export { Fact } from './fact.model';
 export { Link } from './link.model';
 export { Mandate } from './mandate.model';
 export { User } from './user.model';
+export { Realm } from './realm.model';
