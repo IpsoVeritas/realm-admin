@@ -7,7 +7,7 @@
         <mat-error *ngIf="password.errors && password.errors['required']">A password is required</mat-error>
         <mat-error *ngIf="password.errors && password.errors['bootstrapFailed']">Invalid password</mat-error>
       </mat-form-field>
-      <button type="submit" mat-raised-button [disabled]="bootstrapForm.invalid" color="primary">Submit</button>
+      <button type="submit" mat-raised-button [disabled]="bootstrapForm.invalid" color="accent">Submit</button>
     </form>
   </mat-card>
 

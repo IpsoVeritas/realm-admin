@@ -7,3 +7,5 @@ export { Link } from './link.model';
 export { Mandate } from './mandate.model';
 export { User } from './user.model';
 export { Realm } from './realm.model';
+export { RealmDescriptor } from './realm-descriptor.model';
+export { Role } from './role.model';

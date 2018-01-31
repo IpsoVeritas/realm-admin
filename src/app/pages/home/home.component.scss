@@ -1,5 +1,3 @@
-@import '~theme/integrity-variables.scss';
-
 mat-toolbar {
   position: fixed;
   top: 0;
@@ -24,7 +22,6 @@ mat-sidenav-container.narrow {
 }
 
 mat-sidenav {
-  background-color: $background-color;
   z-index: 3;
   mat-icon {
     margin-right: 12px;
@@ -32,7 +29,6 @@ mat-sidenav {
 }
 
 #main-content {
-  background-color: $background-color;
   position: relative;
   width: calc(100% - 40px);
   max-width: 800px;
@@ -41,24 +37,6 @@ mat-sidenav {
 
 .menu-icon {
   display: none;
-}
-
-mat-sidenav {
-  .active {
-    color: $blue;
-  }
-  h3 {
-    border: none;
-    font-size: 10px;
-    letter-spacing: 1px;
-    line-height: 24px;
-    text-transform: uppercase;
-    font-weight: 400;
-    margin: 0;
-    padding: 0 16px;
-    background: rgba(0, 0, 0, 0.32);
-    color: white;
-  }
 }
 
 @media (max-width: 599px) and (orientation: portrait) {

@@ -1,3 +1,22 @@
-<p>
-  settings works!
-</p>
+<div>
+
+  <mat-form-field *ngIf="realm">
+    <input matInput [(ngModel)]="realm.description" placeholder="Description">
+  </mat-form-field>
+
+  <mat-form-field *ngIf="realm && roles">
+    <mat-select [(ngModel)]="realm.guestRole" placeholder="Guest Role">
+      <mat-option [value]="undefined">
+        No public role
+      </mat-option>
+      <mat-option *ngFor="let role of roles" [value]="role.name">
+        {{ role.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+</div>
+
+<pre>
+  {{ realm | json}}
+</pre>

@@ -18,6 +18,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTableModule } from '@angular/material/table';
+import { MatSelectModule } from '@angular/material/select';
 
 import { WebviewClientService } from 'integrity-webview-client';
 
@@ -26,7 +27,7 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { ConfirmationDialogComponent, QrCodeDialogComponent, SimpleInputDialogComponent } from './shared/components';
 import { TokenInterceptor, LoaderInterceptor } from './shared/interceptors';
-import { AuthClient, AccessClient, RealmsClient } from './shared/api-clients';
+import { AuthClient, AccessClient, RealmsClient, RolesClient } from './shared/api-clients';
 import { PlatformService, EventsService, ConfigService, ClipboardService } from './shared/services';
 import { ClipboardDirective } from './shared/directives';
 
@@ -80,6 +81,7 @@ import { SettingsComponent } from './pages/home/settings/settings.component';
     MatSnackBarModule,
     MatMenuModule,
     MatTableModule,
+    MatSelectModule,
     AppRoutingModule
   ],
   providers: [
@@ -87,6 +89,7 @@ import { SettingsComponent } from './pages/home/settings/settings.component';
     AuthClient,
     AccessClient,
     RealmsClient,
+    RolesClient,
     PlatformService,
     EventsService,
     ConfigService,

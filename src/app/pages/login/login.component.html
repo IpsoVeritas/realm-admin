@@ -12,7 +12,7 @@
         <mat-error *ngIf="realm.errors && realm.errors['required']">A realm is required</mat-error>
         <mat-error *ngIf="realm.errors && realm.errors['startAuthFailed']">Invalid realm</mat-error>
       </mat-form-field>
-      <button type="submit" mat-raised-button [disabled]="realmForm.invalid" color="primary">Change Realm</button>
+      <button type="submit" mat-raised-button [disabled]="realmForm.invalid" color="accent">Change Realm</button>
     </form>
   </mat-expansion-panel>
 

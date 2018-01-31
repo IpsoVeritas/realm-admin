@@ -5,25 +5,37 @@
 // Be sure that you only ever include this mixin once!
 @include mat-core();
 
-$integrity-primary: mat-palette($mat-integrity-blue);
-$integrity-accent: mat-palette($mat-integrity-yellow);
+$integrity-primary: mat-palette($mat-integrity-dark-blue);
+$integrity-accent: mat-palette($mat-integrity-blue);
 $integrity-warn: mat-palette($mat-integrity-red);
+$integrity-ok: mat-palette($mat-integrity-green);
 $integrity-theme: mat-light-theme($integrity-primary, $integrity-accent, $integrity-warn);
 
 .integrity-theme {
 
     @include angular-material-theme($integrity-theme);
 
+    app-root {
+      background-color: $background-color;
+    }
+
     .mat-toolbar {
         background-color: $background-color;
     }
 
-    .mat-drawer {
+    .mat-sidenav {
+        background-color: $background-color;
+        .active {
+          color: mat-color($integrity-accent);
+        }
+    }
+
+    .mat-sidenav-container {
         background-color: $background-color;
     }
 
-    .mat-drawer-container {
-        background-color: $background-color;
+    .mat-form-field-ripple {
+      background-color: mat-color($integrity-ok);
     }
 
 }
