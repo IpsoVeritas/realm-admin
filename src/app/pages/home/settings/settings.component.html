@@ -4,7 +4,7 @@
     <input matInput [(ngModel)]="realm.description" placeholder="Description">
   </mat-form-field>
 
-  <mat-form-field >
+  <mat-form-field>
     <mat-select [(ngModel)]="realm.guestRole" placeholder="Guest Role">
       <mat-option [value]="undefined">
         No public role
@@ -18,11 +18,13 @@
   <div class="dropzone icon" appDragAndDrop (filesDropped)="iconDropped($event)" [includeDataURL]="true" [extensions]="['png', 'jpg', 'gif', 'svg']"
     [style.background-image]="iconImage" [class.dnd-dropped]="iconImage">
     <mat-icon color="accent">add</mat-icon>
+    <input type="file" />
   </div>
 
   <div class="dropzone banner" appDragAndDrop (filesDropped)="bannerDropped($event)" [includeDataURL]="true" [extensions]="['png', 'jpg', 'gif', 'svg']"
     [style.background-image]="bannerImage" [class.dnd-dropped]="bannerImage">
     <mat-icon color="accent">add</mat-icon>
+    <input type="file" />
   </div>
 
   <div class="buttons">

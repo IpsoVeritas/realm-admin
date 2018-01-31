@@ -1,10 +1,10 @@
-import { forEach } from '@angular/router/src/utils/collection';
+import { OnInit, ElementRef } from '@angular/core';
 import { Directive, HostListener, HostBinding, EventEmitter, Output, Input } from '@angular/core';
 
 @Directive({
   selector: '[appDragAndDrop]'
 })
-export class DragAndDropDirective {
+export class DragAndDropDirective implements OnInit {
 
   @Input() private includeDataURL: Boolean = false;
   @Input() private extensions: Array<string> = [];
@@ -13,27 +13,46 @@ export class DragAndDropDirective {
 
   @HostBinding('class.dnd-hover') hover = false;
 
-  constructor() { }
+  input: any;
 
-  @HostListener('dragover', ['$event']) public onDragOver(evt) {
-    evt.preventDefault();
-    evt.stopPropagation();
+  constructor(private el: ElementRef) { }
+
+  ngOnInit() {
+    const input = this.el.nativeElement.querySelector('input[type="file"]');
+    if (input) {
+      input.onchange = (event) => this.processFiles(event.target.files);
+      this.input = input;
+    }
+  }
+
+  @HostListener('click', ['$event']) public onClick(event) {
+    if (this.input) {
+      event.stopPropagation();
+      this.input.click();
+    }
+  }
+
+  @HostListener('dragover', ['$event']) public onDragOver(event) {
+    event.preventDefault();
+    event.stopPropagation();
     this.hover = true;
   }
 
-  @HostListener('dragleave', ['$event']) public onDragLeave(evt) {
-    evt.preventDefault();
-    evt.stopPropagation();
+  @HostListener('dragleave', ['$event']) public onDragLeave(event) {
+    event.preventDefault();
+    event.stopPropagation();
     this.hover = false;
   }
 
-  @HostListener('drop', ['$event']) public onDrop(evt) {
-
-    evt.preventDefault();
-    evt.stopPropagation();
+  @HostListener('drop', ['$event']) public onDrop(event) {
+    event.preventDefault();
+    event.stopPropagation();
     this.hover = false;
+    this.processFiles(event.dataTransfer.files);
+  }
 
-    const files = evt.dataTransfer.files;
+  processFiles(files: FileList) {
+
     const droppedFiles: Array<File> = [];
     const skippedFiles: Array<File> = [];
 

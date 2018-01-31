@@ -15,7 +15,6 @@
 .dropzone {
 
   margin: 12px 0;
-
   display: flex;
   justify-content: center;
   align-items: center;
@@ -48,6 +47,10 @@
     mat-icon {
       color: blue;
     }
+  }
+
+  input[type=file] {
+    display: none;
   }
 
 }
