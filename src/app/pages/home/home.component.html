@@ -5,7 +5,7 @@
     <span class="spacer"></span>
     <span>{{realm}}</span>
     <span class="spacer"></span>
-    <mat-icon [class.paused]="requestCount == 0" class="spin">sync</mat-icon>
+    <mat-icon [class.paused]="requestCount == 0" class="spinner">autorenew</mat-icon>
     <mat-icon *ngIf="isHandsetPortrait" (click)="logout()">exit_to_app</mat-icon>
   </mat-toolbar-row>
 </mat-toolbar>
@@ -30,8 +30,8 @@
     </mat-nav-list>
   </mat-sidenav>
 
-  <div id="main-content">
+  <mat-sidenav-content>
     <router-outlet></router-outlet>
-  </div>
+  </mat-sidenav-content>
 
 </mat-sidenav-container>

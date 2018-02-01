@@ -1,0 +1,33 @@
+@import "~@angular/material/theming";
+@import "~theme/integrity-theme.scss";
+
+// Be sure that you only ever include this mixin once!
+@include mat-core;
+
+.integrity-theme {
+  @include angular-material-theme($integrity-theme);
+
+  app-root {
+    background-color: $integrity-color-superlight-grey;
+  }
+
+  .mat-toolbar {
+    background-color: $integrity-color-superlight-grey;
+  }
+
+  .mat-sidenav {
+    background-color: $integrity-color-superlight-grey;
+
+    .active {
+      color: mat-color($integrity-accent);
+    }
+  }
+
+  .mat-sidenav-container {
+    background-color: $integrity-color-superlight-grey;
+  }
+
+  .mat-form-field-ripple {
+    background-color: mat-color($integrity-ok);
+  }
+}

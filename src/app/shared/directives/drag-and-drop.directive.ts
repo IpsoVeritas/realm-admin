@@ -7,7 +7,7 @@ import { Directive, HostListener, HostBinding, EventEmitter, Output, Input } fro
 export class DragAndDropDirective implements OnInit {
 
   @Input() private includeDataURL: Boolean = false;
-  @Input() private extensions: Array<string> = [];
+  @Input() private extensions: Array<string>;
   @Output() private filesDropped: EventEmitter<File[]> = new EventEmitter();
   @Output() private filesSkipped: EventEmitter<File[]> = new EventEmitter();
 
@@ -58,7 +58,7 @@ export class DragAndDropDirective implements OnInit {
 
     Array.from(files).forEach((file: File) => {
       const extension = file.name.split('.')[file.name.split('.').length - 1];
-      this.extensions.includes(extension) ? droppedFiles.push(file) : skippedFiles.push(file);
+      (!this.extensions || this.extensions.includes(extension)) ? droppedFiles.push(file) : skippedFiles.push(file);
     });
 
     if (droppedFiles.length) {

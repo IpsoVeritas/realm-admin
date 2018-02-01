@@ -1,14 +1,14 @@
-<mat-toolbar class="mat-elevation-z2">
-  <mat-toolbar-row>
-    Realms
-    <span class="spacer"></span>
-    <button (click)="create()" mat-icon-button color="accent">
-      <mat-icon aria-label="Create realm">add_circle</mat-icon>
-    </button>
-  </mat-toolbar-row>
-</mat-toolbar>
+<div class="content mat-elevation-z1">
 
-<div class="mat-elevation-z1">
+  <mat-toolbar>
+    <mat-toolbar-row>
+      Realms
+      <span class="spacer"></span>
+      <button (click)="create()" mat-icon-button color="accent">
+        <mat-icon aria-label="Create realm">add_circle</mat-icon>
+      </button>
+    </mat-toolbar-row>
+  </mat-toolbar>
 
   <mat-table #table [dataSource]="dataSource" matSort>
 
@@ -31,8 +31,8 @@
 
   </mat-table>
 
-</div>
+  <button (click)="create()" mat-fab class="fab-add-button" [class.snack-bar-open]="isSnackBarOpen">
+    <mat-icon aria-label="Create realm">add</mat-icon>
+  </button>
 
-<button (click)="create()" mat-fab class="fab-add-button" [class.snack-bar-open]="isSnackBarOpen">
-  <mat-icon aria-label="Create realm">add</mat-icon>
-</button>
+</div>

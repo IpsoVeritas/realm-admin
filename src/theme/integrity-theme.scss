@@ -1,41 +1,20 @@
 @import '~@angular/material/theming';
-@import 'theme/integrity-palette.scss';
-@import 'theme/integrity-variables.scss';
+@import '~theme/integrity-palette.scss';
 
-// Be sure that you only ever include this mixin once!
-@include mat-core();
+$integrity-color-blue: #20afe2;
+$integrity-color-dark-blue: #004b97;
+$integrity-color-yellow: #f9b026;
+$integrity-color-orange: #f76a0a;
+$integrity-color-red: #d42424;
+$integrity-color-green: #4bb04f;
+
+$integrity-color-superlight-grey: #e5e5e5;
+$integrity-color-light-grey: #bfbfbf;
+$integrity-color-mid-grey: #7f7f7f;
+$integrity-color-dark-grey: #333;
 
 $integrity-primary: mat-palette($mat-integrity-dark-blue);
 $integrity-accent: mat-palette($mat-integrity-blue);
 $integrity-warn: mat-palette($mat-integrity-red);
 $integrity-ok: mat-palette($mat-integrity-green);
 $integrity-theme: mat-light-theme($integrity-primary, $integrity-accent, $integrity-warn);
-
-.integrity-theme {
-
-    @include angular-material-theme($integrity-theme);
-
-    app-root {
-      background-color: $background-color;
-    }
-
-    .mat-toolbar {
-        background-color: $background-color;
-    }
-
-    .mat-sidenav {
-        background-color: $background-color;
-        .active {
-          color: mat-color($integrity-accent);
-        }
-    }
-
-    .mat-sidenav-container {
-        background-color: $background-color;
-    }
-
-    .mat-form-field-ripple {
-      background-color: mat-color($integrity-ok);
-    }
-
-}

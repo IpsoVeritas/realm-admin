@@ -1,56 +1,57 @@
-.settings-container {
-  background-color: white;
+// Import all the tools needed to customize the theme and extract parts of it
+@import "~theme/integrity-theme.scss";
+
+.content {
+  background-color: #fff;
   padding: 24px;
   display: flex;
   flex-direction: column;
-}
 
-.buttons {
-  margin-top: 12px;
-  button {
-    margin-right: 12px;
-  }
-}
+  .buttons {
+    margin-top: 12px;
 
-.dropzone {
-
-  margin: 12px 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: white;
-  background-size: 100% 100%;
-
-  &.icon {
-    height: 100px;
-    width: 100px;
-    border: 1px dashed red;
-    border-radius: 50px;
+    button {
+      margin-right: 12px;
+    }
   }
 
-  &.banner {
-    height: 100px;
-    width: 300px;
-    border: 1px dashed red;
-    border-radius: 5px;
-  }
+  .dropzone {
+    margin: 12px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-size: cover;
+    background-position: center center;
 
-  &.dnd-dropped {
-    border: 1px solid grey;
-    mat-icon {
+    &.icon {
+      height: 100px;
+      width: 100px;
+      border: 1px dashed mat-color($integrity-accent);
+      border-radius: 50px;
+    }
+
+    &.banner {
+      height: 100px;
+      width: 300px;
+      border: 1px dashed mat-color($integrity-accent);
+      border-radius: 5px;
+    }
+
+    &.dnd-dropped {
+      border: 1px solid $integrity-color-superlight-grey;
+
+      mat-icon {
+        display: none;
+      }
+    }
+
+    &.dnd-hover {
+      opacity: 0.5;
+      border: 1px solid mat-color($integrity-accent);
+    }
+
+    input[type=file] {
       display: none;
     }
   }
-
-  &.dnd-hover {
-    border: 1px dashed blue;
-    mat-icon {
-      color: blue;
-    }
-  }
-
-  input[type=file] {
-    display: none;
-  }
-
 }

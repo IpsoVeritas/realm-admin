@@ -20,7 +20,8 @@
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "app",
       "styles": [
-        "styles.scss"
+        "styles.scss",
+        "theme/integrity-material-theme.scss"
       ],
       "scripts": [],
       "environmentSource": "environments/environment.ts",
