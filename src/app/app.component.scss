@@ -12,18 +12,18 @@
   }
 
   div:nth-child(1) {
-    background-color: $integrity-color-yellow;
+    background-color: mat-color($integrity-yellow);
   }
 
   div:nth-child(2) {
-    background-color: $integrity-color-dark-blue;
+    background-color: mat-color($integrity-dark-blue);
   }
 
   div:nth-child(3) {
-    background-color: $integrity-color-blue;
+    background-color: mat-color($integrity-blue);
   }
 
   div:nth-child(4) {
-    background-color: $integrity-color-orange;
+    background-color: mat-color($integrity-orange);
   }
 }

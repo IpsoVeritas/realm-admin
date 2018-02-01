@@ -1,20 +1,16 @@
-@import '~@angular/material/theming';
-@import '~theme/integrity-palette.scss';
+@import "~@angular/material/theming";
+@import "~theme/color-generator.scss";
 
-$integrity-color-blue: #20afe2;
-$integrity-color-dark-blue: #004b97;
-$integrity-color-yellow: #f9b026;
-$integrity-color-orange: #f76a0a;
-$integrity-color-red: #d42424;
-$integrity-color-green: #4bb04f;
+$integrity-blue: mat-palette(mat-colors(#20afe2));
+$integrity-dark-blue: mat-palette(mat-colors(#004b97));
+$integrity-yellow: mat-palette(mat-colors(#f9b026));
+$integrity-orange: mat-palette(mat-colors(#f76a0a));
+$integrity-red: mat-palette(mat-colors(#d42424));
+$integrity-green: mat-palette(mat-colors(#4bb04f));
+$integrity-grey: mat-palette(mat-colors(#9e9e9e));
 
-$integrity-color-superlight-grey: #e5e5e5;
-$integrity-color-light-grey: #bfbfbf;
-$integrity-color-mid-grey: #7f7f7f;
-$integrity-color-dark-grey: #333;
+$integrity-primary: $integrity-dark-blue;
+$integrity-accent: $integrity-blue;
+$integrity-warn: $integrity-red;
 
-$integrity-primary: mat-palette($mat-integrity-dark-blue);
-$integrity-accent: mat-palette($mat-integrity-blue);
-$integrity-warn: mat-palette($mat-integrity-red);
-$integrity-ok: mat-palette($mat-integrity-green);
 $integrity-theme: mat-light-theme($integrity-primary, $integrity-accent, $integrity-warn);

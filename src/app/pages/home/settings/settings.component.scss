@@ -1,11 +1,12 @@
 // Import all the tools needed to customize the theme and extract parts of it
 @import "~theme/integrity-theme.scss";
 
-.content {
-  background-color: #fff;
-  padding: 24px;
+.settings-form {
+
+  padding: 20px;
   display: flex;
   flex-direction: column;
+  background-color: #fff;
 
   .buttons {
     margin-top: 12px;
@@ -38,7 +39,7 @@
     }
 
     &.dnd-dropped {
-      border: 1px solid $integrity-color-superlight-grey;
+      border: 1px solid mat-color($integrity-grey, 200);
 
       mat-icon {
         display: none;

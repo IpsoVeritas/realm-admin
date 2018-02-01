@@ -7,16 +7,24 @@
 .integrity-theme {
   @include angular-material-theme($integrity-theme);
 
+  $foreground-color: mat-contrast($integrity-grey, 200);
+  $background-color: mat-color($integrity-grey, 200);
+
   app-root {
-    background-color: $integrity-color-superlight-grey;
+    background-color: $background-color;
   }
 
   .mat-toolbar {
-    background-color: $integrity-color-superlight-grey;
+    color: $foreground-color;
+    background-color: $background-color;
   }
 
   .mat-sidenav {
-    background-color: $integrity-color-superlight-grey;
+    background-color: $background-color;
+
+    .mat-list-item {
+      color: $foreground-color;
+    }
 
     .active {
       color: mat-color($integrity-accent);
@@ -24,10 +32,11 @@
   }
 
   .mat-sidenav-container {
-    background-color: $integrity-color-superlight-grey;
+    color: $foreground-color;
+    background-color: $background-color;
   }
 
   .mat-form-field-ripple {
-    background-color: mat-color($integrity-ok);
+    background-color: mat-color($integrity-green);
   }
 }

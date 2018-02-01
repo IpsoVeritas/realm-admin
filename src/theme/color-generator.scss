@@ -1,0 +1,60 @@
+$red-magic-number: 241;
+$green-magic-number: 691;
+$blue-magic-number: 68;
+$brightness-divisor: $red-magic-number + $green-magic-number + $blue-magic-number;
+
+@function sqrt($r) {
+  $x0: 1;
+  $x1: $x0;
+
+  @for $i from 1 through 10 {
+    $x1: $x0 - ($x0 * $x0 - abs($r)) / (2 * $x0);
+    $x0: $x1;
+  }
+
+  @return $x1;
+}
+
+@function brightness($color) {
+  $red-component: red($color);
+  $green-component: green($color);
+  $blue-component: blue($color);
+  $number: sqrt(($red-component * $red-component * $red-magic-number + $green-component * $green-component * $green-magic-number + $blue-component * $blue-component * $blue-magic-number) / $brightness-divisor);
+
+  @return 100% * $number / 255;
+}
+
+@function contrasting-color($color) {
+  @if brightness($color) < 65% {
+    @return #ffffff;
+  }
+  @else {
+    @return #000000;
+  }
+}
+
+@function mat-colors($color) {
+  $colors: (
+    50: lighten($color, 41),
+    100: lighten($color, 36),
+    200: lighten($color, 27),
+    300: lighten($color, 18),
+    400: lighten($color, 9),
+    500: lighten($color, 0),
+    600: darken($color, 9),
+    700: darken($color, 18),
+    800: darken($color, 27),
+    900: darken($color, 36),
+    A100: adjust-hue(lighten($color, 27), -10),
+    A200: adjust-hue(lighten($color, 18), -10),
+    A400: adjust-hue($color, -10),
+    A700: adjust-hue(darken($color, 27), -10)
+  );
+
+  $contrast: ();
+  @each $key, $color in $colors {
+    $contrast: map-merge($contrast, ($key: contrasting-color($color)));
+  }
+
+  @return map-merge($colors, (contrast: $contrast));
+}
