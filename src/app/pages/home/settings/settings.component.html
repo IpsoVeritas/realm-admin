@@ -1,3 +1,39 @@
-<p>
-  settings works!
-</p>
+<div class="content mat-elevation-z1" *ngIf="realm && roles">
+
+  <div class="settings-form">
+
+    <mat-form-field>
+      <input matInput [(ngModel)]="realm.description" placeholder="Description">
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-select [(ngModel)]="realm.guestRole" placeholder="Guest Role">
+        <mat-option [value]="undefined">
+          No public role
+        </mat-option>
+        <mat-option *ngFor="let role of roles" [value]="role.name">
+          {{ role.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div class="dropzone icon" appDragAndDrop (filesDropped)="iconDropped($event)" [includeDataURL]="true" [extensions]="['png', 'jpg', 'gif', 'svg']"
+      [style.background-image]="iconImage" [class.dnd-dropped]="iconImage">
+      <mat-icon color="accent">add</mat-icon>
+      <input type="file" />
+    </div>
+
+    <div class="dropzone banner" appDragAndDrop (filesDropped)="bannerDropped($event)" [includeDataURL]="true" [extensions]="['png', 'jpg', 'gif', 'svg']"
+      [style.background-image]="bannerImage" [class.dnd-dropped]="bannerImage">
+      <mat-icon color="accent">add</mat-icon>
+      <input type="file" />
+    </div>
+
+    <div class="buttons">
+      <button mat-raised-button color="accent" (click)="updateRealm()">Save</button>
+      <button mat-raised-button (click)="loadRealm()">Reset</button>
+    </div>
+
+  </div>
+
+</div>

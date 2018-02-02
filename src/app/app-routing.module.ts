@@ -28,7 +28,7 @@ const appRoutes: Routes = [
 
 @NgModule({
   imports: [
-    RouterModule.forRoot(appRoutes, { enableTracing: false, useHash: false })
+    RouterModule.forRoot(appRoutes, { enableTracing: true, useHash: false })
   ],
   exports: [
     RouterModule

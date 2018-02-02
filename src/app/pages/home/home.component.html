@@ -5,8 +5,8 @@
     <span class="spacer"></span>
     <span>{{realm}}</span>
     <span class="spacer"></span>
-    <mat-icon [class.paused]="requestCount == 0" class="spin">sync</mat-icon>
-    <mat-icon (click)="logout()">exit_to_app</mat-icon>
+    <mat-icon [class.paused]="requestCount == 0" class="spinner">autorenew</mat-icon>
+    <mat-icon *ngIf="isHandsetPortrait" (click)="logout()">exit_to_app</mat-icon>
   </mat-toolbar-row>
 </mat-toolbar>
 
@@ -14,20 +14,24 @@
 
   <mat-sidenav [mode]="isHandsetPortrait ? 'over' : 'side'" [opened]="!isHandsetPortrait" #drawer class="integrity-background-color">
     <mat-nav-list>
-      <a *ngIf="user?.owner" mat-list-item [routerLink]="['realms']" (click)="isHandsetPortrait ? drawer.close() : false">
-        <mat-icon>domain</mat-icon> Realms</a>
-      <a mat-list-item [routerLink]="['roles']" (click)="isHandsetPortrait ? drawer.close() : false">
-          <mat-icon>people</mat-icon> Roles</a>
-      <a mat-list-item [routerLink]="['services']" (click)="isHandsetPortrait ? drawer.close() : false">
-          <mat-icon>dashboard</mat-icon> Services</a>
-      <mat-divider></mat-divider>
-      <a mat-list-item [routerLink]="['settings']" (click)="isHandsetPortrait ? drawer.close() : false">
-          <mat-icon>settings</mat-icon> {{realm}}</a>
+      <a *ngIf="isHandsetPortrait" mat-list-item>
+        <img mat-list-item src="assets/img/integrity.svg" width="125">
+      </a>
+      <a *ngIf="user?.owner" mat-list-item [routerLink]="['realms']" routerLinkActive="active" (click)="isHandsetPortrait ? drawer.close() : false">
+        <mat-icon>domain</mat-icon>Realms</a>
+      <a mat-list-item [routerLink]="['roles']" routerLinkActive="active" (click)="isHandsetPortrait ? drawer.close() : false">
+        <mat-icon>people</mat-icon>Roles</a>
+      <a mat-list-item [routerLink]="['services']" routerLinkActive="active" (click)="isHandsetPortrait ? drawer.close() : false">
+        <mat-icon>dashboard</mat-icon>Services</a>
+      <a mat-list-item [routerLink]="['settings']" routerLinkActive="active" (click)="isHandsetPortrait ? drawer.close() : false">
+        <mat-icon>settings</mat-icon>Settings</a>
+      <a *ngIf="!isHandsetPortrait" mat-list-item (click)="logout()">
+        <mat-icon>exit_to_app</mat-icon>Logout</a>
     </mat-nav-list>
   </mat-sidenav>
 
-  <div id="main-content">
+  <mat-sidenav-content>
     <router-outlet></router-outlet>
-  </div>
+  </mat-sidenav-content>
 
 </mat-sidenav-container>

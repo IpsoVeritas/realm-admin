@@ -1,0 +1,58 @@
+// Import all the tools needed to customize the theme and extract parts of it
+@import "~theme/integrity-theme.scss";
+
+.settings-form {
+
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+
+  .buttons {
+    margin-top: 12px;
+
+    button {
+      margin-right: 12px;
+    }
+  }
+
+  .dropzone {
+    margin: 12px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-size: cover;
+    background-position: center center;
+
+    &.icon {
+      height: 100px;
+      width: 100px;
+      border: 1px dashed mat-color($integrity-accent);
+      border-radius: 50px;
+    }
+
+    &.banner {
+      height: 100px;
+      width: 300px;
+      border: 1px dashed mat-color($integrity-accent);
+      border-radius: 5px;
+    }
+
+    &.dnd-dropped {
+      border: 1px solid mat-color($integrity-grey, 200);
+
+      mat-icon {
+        display: none;
+      }
+    }
+
+    &.dnd-hover {
+      opacity: 0.5;
+      border: 1px solid mat-color($integrity-accent);
+    }
+
+    input[type=file] {
+      display: none;
+    }
+  }
+}

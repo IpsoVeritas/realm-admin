@@ -1,14 +1,14 @@
-<mat-toolbar class="mat-elevation-z2">
-  <mat-toolbar-row>
-    Realms
-    <span class="spacer"></span>
-    <button (click)="create()" mat-icon-button color="accent">
-      <mat-icon aria-label="Create realm">add_circle</mat-icon>
-    </button>
-  </mat-toolbar-row>
-</mat-toolbar>
+<div class="content mat-elevation-z1">
 
-<div class="mat-elevation-z1">
+  <mat-toolbar>
+    <mat-toolbar-row>
+      Realms
+      <span class="spacer"></span>
+      <button (click)="create()" mat-icon-button color="accent">
+        <mat-icon aria-label="Create realm">add_circle</mat-icon>
+      </button>
+    </mat-toolbar-row>
+  </mat-toolbar>
 
   <mat-table #table [dataSource]="dataSource" matSort>
 
@@ -22,7 +22,7 @@
     <ng-container matColumnDef="action">
       <mat-header-cell *matHeaderCellDef>Action</mat-header-cell>
       <mat-cell *matCellDef="let realm">
-        <mat-icon (click)="delete(realm)">remove_circle_outline</mat-icon>
+        <mat-icon *ngIf="activeRealm != realm.id" (click)="delete(realm)">remove_circle_outline</mat-icon>
       </mat-cell>
     </ng-container>
 
@@ -31,8 +31,8 @@
 
   </mat-table>
 
-</div>
+  <button (click)="create()" mat-fab class="fab-add-button" [class.snack-bar-open]="isSnackBarOpen">
+    <mat-icon aria-label="Create realm">add</mat-icon>
+  </button>
 
-<button (click)="create()" mat-fab class="fab-add-button">
-  <mat-icon aria-label="Create realm">add</mat-icon>
-</button>
+</div>

@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatSnackBar } from '@angular/material';
 import * as qr from 'qr-image';
@@ -19,6 +19,15 @@ export class QrCodeDialogComponent implements OnInit {
     private snackBar: MatSnackBar,
     @Inject(MAT_DIALOG_DATA) public data: any) {
     this.qrUri = this.data.uri;
+  }
+
+  static showDialog(dialog: MatDialog, data: any): Promise<any> {
+    return new Promise((resolve, reject) => {
+      const dialogRef = dialog.open(QrCodeDialogComponent, {
+        data: data
+      });
+      dialogRef.afterClosed().subscribe(() => resolve());
+    });
   }
 
   ngOnInit() {

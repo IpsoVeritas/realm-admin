@@ -24,6 +24,7 @@ export class PlatformService {
     }
     this.events.subscribe('logout', () => {
       localStorage.removeItem('mandate');
+      localStorage.removeItem('expires');
       if (this.inApp) {
         this.webviewClient.cancel();
       } else {
@@ -41,12 +42,7 @@ export class PlatformService {
       window.location.href = `integrity://app/webapp/${url}`;
       return Promise.resolve();
     } else {
-      return new Promise((resolve, reject) => {
-        const dialogRef = this.dialog.open(QrCodeDialogComponent, {
-          data: { uri: uri, title: title }
-        });
-        dialogRef.afterClosed().subscribe(() => resolve());
-      });
+      return QrCodeDialogComponent.showDialog(this.dialog, { uri: uri, title: title });
       // Todo: if already logged in, send push notifcation
     }
   }

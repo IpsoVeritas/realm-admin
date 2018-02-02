@@ -11,8 +11,7 @@ export class ClipboardDirective {
   @Output() copySuccess: EventEmitter<string> = new EventEmitter();
   @Output() copyError: EventEmitter<Error> = new EventEmitter();
 
-  constructor(private clipboardService: ClipboardService) {
-  }
+  constructor(private clipboardService: ClipboardService) { }
 
   @HostListener('click') copyToClipboard(): void {
     this.clipboardService.copy(this.appClipboard)
