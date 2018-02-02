@@ -24,4 +24,11 @@ export class RolesClient extends BaseClient {
       .then(promises => Promise.all(promises));
   }
 
+  public createRole(realmId: string, role: Role): Promise<Role> {
+    return this.config.getBackendURL(`/realms/${realmId}/roles`)
+      .then(url => this.http.post(url, this.jsonConvert.serializeObject(role)).toPromise())
+      .then(() => role);
+  }
+
+
 }

@@ -1,6 +1,11 @@
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
-import { MatMenuModule } from '@angular/material/menu';
+import { MatSnackBar, MatSnackBarConfig } from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatSelectModule } from '@angular/material/select';
 import { MatTableDataSource, MatSort } from '@angular/material';
+import { ConfirmationDialogComponent, SimpleInputDialogComponent } from '../../../shared/components';
+import { RolesClient } from '../../../shared/api-clients';
+import { Role } from '../../../shared/models';
 
 @Component({
   selector: 'app-roles',
@@ -10,37 +15,68 @@ import { MatTableDataSource, MatSort } from '@angular/material';
 export class RolesComponent implements OnInit, AfterViewInit {
 
   displayedColumns = ['name', 'status', 'action'];
-  dataSource = new MatTableDataSource(DUMMY_DATA);
+  roles: Array<any>;
+  activeRealm: string;
+  selectedRole: string;
+  dataSource: MatTableDataSource<any> = new MatTableDataSource(DUMMY_DATA_0);
   @ViewChild(MatSort) sort: MatSort;
+  isSnackBarOpen = false;
 
-  constructor() { }
+  constructor(private rolesClient: RolesClient,
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog) { }
 
   ngOnInit() {
   }
 
-
-  /**
-   * Set the sort after the view init since this component will
-   * be able to query its view for the initialized sort.
-   */
   ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
-    console.log('ngAfterViewInit', this.sort);
+    this.activeRealm = localStorage.getItem('realm');
+    this.rolesClient.getRoles(this.activeRealm)
+      .then(roles => this.roles = roles)
+      .then(() => this.selectedRole = this.roles[0].id)
+      .then(() => console.log(this.roles));
+  }
+
+  select(event) {
+    console.log(event.value);
+    this.dataSource.data = this.dataSource.data == DUMMY_DATA_0 ? DUMMY_DATA_1 : DUMMY_DATA_0;
+  }
+
+  // create new role
+  create() {
+    SimpleInputDialogComponent.showDialog(this.dialog, { message: 'Role name' })
+      .then(name => {
+        const role = new Role();
+        role.description = name;
+        role.realm = this.activeRealm;
+        return role;
+      })
+      .then(role => this.rolesClient.createRole(this.activeRealm, role)
+      .then(role => console.log(role))
+      .then(() => this.rolesClient.getRoles(this.activeRealm)
+      .then(roles => this.roles = roles))
+      .catch(error => this.snackBarOpen(`Error creating '${role.description}'`, 'Close', { duration: 5000 })))
+      .catch(() => 'canceled');
   }
 
   revoke(user) {
     console.log(user);
   }
 
-
+  snackBarOpen(message: string, action?: string, config?: MatSnackBarConfig) {
+    this.isSnackBarOpen = true;
+    const snackbarRef = this.snackBar.open(message, action, config);
+    snackbarRef.afterDismissed().toPromise().then(() => this.isSnackBarOpen = false);
+  }
 }
+
 
 export interface User {
   name: string;
   status: string;
 }
 
-const DUMMY_DATA: User[] = [
+const DUMMY_DATA_0: User[] = [
   { name: 'Hydrogen', status: 'Active user' },
   { name: 'Helium', status: 'Active user' },
   { name: 'Lithium', status: 'Active user' },
@@ -50,6 +86,9 @@ const DUMMY_DATA: User[] = [
   { name: 'Nitrogen', status: 'Active user' },
   { name: 'Oxygen', status: 'Active user' },
   { name: 'Fluorine', status: 'Pending' },
+];
+
+const DUMMY_DATA_1: User[] = [
   { name: 'Neon', status: 'Active user' },
   { name: 'Sodium', status: 'Revoked' },
   { name: 'Magnesium', status: 'Revoked' },
@@ -62,3 +101,4 @@ const DUMMY_DATA: User[] = [
   { name: 'Potassium', status: 'Active user' },
   { name: 'Calcium', status: 'Active user' },
 ];
+

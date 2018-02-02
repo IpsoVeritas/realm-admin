@@ -2,15 +2,15 @@
 
   <mat-toolbar>
     <mat-toolbar-row>
-      <button mat-button [matMenuTriggerFor]="menu">Admin
-        <mat-icon>arrow_drop_down</mat-icon>
+      <mat-form-field>
+        <mat-select [(value)]="selectedRole" (selectionChange)="select($event)">
+          <mat-option *ngFor="let role of roles" value="{{role.id}}">{{role.description}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <span class="spacer"></span> 
+      <button (click)="create()" mat-icon-button color="accent">
+        <mat-icon aria-label="Create role">add_circle</mat-icon>
       </button>
-      <mat-menu #menu="matMenu">
-        <button mat-menu-item> Admin </button>
-        <button mat-menu-item> Guest </button>
-      </mat-menu>
-      <span class="spacer"></span>
-      <mat-icon>add_circle</mat-icon>
     </mat-toolbar-row>
   </mat-toolbar>
 
