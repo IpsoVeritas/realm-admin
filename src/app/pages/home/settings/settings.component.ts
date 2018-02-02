@@ -23,6 +23,7 @@ export class SettingsComponent implements OnInit {
   iconFile: File;
   bannerFile: File;
 
+  isChanged = false;
   isSnackBarOpen = false;
 
   constructor(private sanitizer: DomSanitizer,
@@ -56,17 +57,20 @@ export class SettingsComponent implements OnInit {
           this.bannerImage = undefined;
         }
       })
+      .then(() => this.isChanged = false)
       .catch(error => this.snackBarOpen(`Error loading '${localStorage.getItem('realm')}'`, 'Close', { duration: 5000 }));
   }
 
   iconDropped(files: File[]) {
     this.iconFile = files[0];
     this.iconImage = this.sanitizer.bypassSecurityTrustStyle(`url(${this.iconFile['dataURL']})`);
+    this.isChanged = true;
   }
 
   bannerDropped(files: File[]) {
     this.bannerFile = files[0];
     this.bannerImage = this.sanitizer.bypassSecurityTrustStyle(`url(${this.bannerFile['dataURL']})`);
+    this.isChanged = true;
   }
 
   updateRealm() {
@@ -74,6 +78,7 @@ export class SettingsComponent implements OnInit {
     this.realmsClient.updateRealm(this.realm)
       .then(() => this.iconFile ? this.realmsClient.uploadIcon(this.realm.id, this.iconFile) : false)
       .then(() => this.bannerFile ? this.realmsClient.uploadBanner(this.realm.id, this.bannerFile) : false)
+      .then(() => this.isChanged = false)
       .catch(error => this.snackBarOpen(`Error updating '${this.realm.id}'`, 'Close', { duration: 5000 }));
   }
 

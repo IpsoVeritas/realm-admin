@@ -3,11 +3,11 @@
   <div class="settings-form">
 
     <mat-form-field>
-      <input matInput [(ngModel)]="realm.description" placeholder="Description">
+      <input matInput [(ngModel)]="realm.description" (ngModelChange)="isChanged=true" placeholder="Description">
     </mat-form-field>
 
     <mat-form-field>
-      <mat-select [(ngModel)]="realm.guestRole" placeholder="Guest Role">
+      <mat-select [(ngModel)]="realm.guestRole" (ngModelChange)="isChanged=true" placeholder="Guest Role">
         <mat-option [value]="undefined">
           No public role
         </mat-option>
@@ -31,7 +31,7 @@
 
     <div class="buttons">
       <button mat-raised-button color="accent" (click)="updateRealm()">Save</button>
-      <button mat-raised-button (click)="loadRealm()">Reset</button>
+      <button mat-raised-button (click)="loadRealm()" [disabled]="!isChanged">Reset</button>
     </div>
 
   </div>
