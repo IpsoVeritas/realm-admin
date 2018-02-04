@@ -18,7 +18,7 @@
 
   <mat-card *ngIf="activeRealm" class="mat-elevation-z1">
     <mat-card-content>
-      <div [appClipboard]="qrUri" (copySuccess)="showCopySuccess($event)" [innerHtml]="qrImage"></div>
+      <qrcode [appClipboard]="qrUri" (copySuccess)="showCopySuccess($event)" [qrdata]="qrUri" [usesvg]="true" [level]="'Q'"></qrcode>
     </mat-card-content>
     <mat-card-footer>
       <mat-progress-bar mode="determinate" [value]="qrCountdown" color="warn"></mat-progress-bar>

@@ -1,3 +1,5 @@
+@import "~theme/integrity-theme.scss";
+
 #login-panel {
   display: flex;
   flex-direction: column;
@@ -32,6 +34,9 @@ form {
   text-align: center;
   svg {
     width: 240px;
+    #template {
+      fill: mat-color($integrity-dark-blue);
+    }
   }
   .mat-progress-bar {
     height: 2px;

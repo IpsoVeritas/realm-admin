@@ -5,7 +5,6 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { AuthClient } from '../../shared/api-clients';
 import { ConfigService, EventsService } from '../../shared/services';
 import { MatExpansionPanel, MatSnackBar } from '@angular/material';
-import * as qr from 'qr-image';
 
 import { AuthUser, AuthInfo } from '../../shared/models';
 
@@ -20,9 +19,8 @@ export class LoginComponent implements OnInit {
   @ViewChild(MatExpansionPanel) realmPanel: MatExpansionPanel;
 
   qrUri: string;
-  qrImage: any;
-  qrImageTimer: any;
-  qrImageTimestamp: number;
+  qrUriTimer: any;
+  qrUriTimestamp: number;
   qrCountdown = 100;
   progressTimer: any;
   pollTimer: any;
@@ -86,7 +84,7 @@ export class LoginComponent implements OnInit {
   }
 
   updateCountdown() {
-    this.qrCountdown = 100 - (Date.now() - this.qrImageTimestamp) / 3000;
+    this.qrCountdown = 100 - (Date.now() - this.qrUriTimestamp) / 3000;
   }
 
   start(realm: string): Promise<AuthInfo> {
@@ -94,16 +92,12 @@ export class LoginComponent implements OnInit {
       .then((authInfo: AuthInfo) => this.config.getBaseURL(authInfo.requestURI)
         .then(url => {
           this.qrUri = url;
-          const svgObj = qr.svgObject(this.qrUri, { type: 'svg', margin: 0 });
-          // tslint:disable-next-line:max-line-length
-          const html = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${svgObj.size} ${svgObj.size}"><path d="${svgObj.path}"></path></svg>`;
-          this.qrImage = this.sanitizer.bypassSecurityTrustHtml(html);
-          clearTimeout(this.qrImageTimer);
+          clearTimeout(this.qrUriTimer);
           clearTimeout(this.progressTimer);
           clearTimeout(this.pollTimer);
-          this.qrImageTimer = setTimeout(() => this.start(realm), 300000);
+          this.qrUriTimer = setTimeout(() => this.start(realm), 300000);
           this.progressTimer = setInterval(() => this.updateCountdown(), 100);
-          this.qrImageTimestamp = Date.now();
+          this.qrUriTimestamp = Date.now();
           this.poll(realm, authInfo.token);
         })
         .then(() => authInfo));
@@ -113,7 +107,7 @@ export class LoginComponent implements OnInit {
     this.authClient.getAuthInfo(token)
       .then((user: AuthUser) => {
         if (user.authenticated && user.mandateToken && !user.expired) {
-          clearTimeout(this.qrImageTimer);
+          clearTimeout(this.qrUriTimer);
           clearTimeout(this.progressTimer);
           localStorage.setItem('mandate', user.mandateToken);
           localStorage.setItem('expires', String(user.exp.getTime()));

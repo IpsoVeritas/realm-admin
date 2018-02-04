@@ -20,6 +20,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatTableModule } from '@angular/material/table';
 import { MatSelectModule } from '@angular/material/select';
 
+import { QRCodeModule } from 'angularx-qrcode';
 import { WebviewClientService } from 'integrity-webview-client';
 
 import { AppComponent } from './app.component';
@@ -83,6 +84,7 @@ import { SettingsComponent } from './pages/home/settings/settings.component';
     MatMenuModule,
     MatTableModule,
     MatSelectModule,
+    QRCodeModule,
     AppRoutingModule
   ],
   providers: [

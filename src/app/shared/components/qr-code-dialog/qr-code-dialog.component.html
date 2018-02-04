@@ -3,4 +3,4 @@
   <span class="spacer"></span>
   <mat-icon (click)="close()" style="cursor: pointer">close</mat-icon>
 </mat-toolbar>
-<div [appClipboard]="qrUri" (copySuccess)="showCopySuccess($event)" [innerHtml]="qrImage"></div>
+<qrcode [appClipboard]="qrUri" (copySuccess)="showCopySuccess($event)" [qrdata]="qrUri" [usesvg]="true" [level]="'Q'"></qrcode>

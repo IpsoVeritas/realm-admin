@@ -2,17 +2,15 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatSnackBar } from '@angular/material';
-import * as qr from 'qr-image';
 
 @Component({
   selector: 'app-qr-code-dialog',
   templateUrl: './qr-code-dialog.component.html',
   styleUrls: ['./qr-code-dialog.component.scss']
 })
-export class QrCodeDialogComponent implements OnInit {
+export class QrCodeDialogComponent {
 
   qrUri: string;
-  qrImage: any;
 
   constructor(public dialogRef: MatDialogRef<QrCodeDialogComponent>,
     private sanitizer: DomSanitizer,
@@ -28,11 +26,6 @@ export class QrCodeDialogComponent implements OnInit {
       });
       dialogRef.afterClosed().subscribe(() => resolve());
     });
-  }
-
-  ngOnInit() {
-    const svg = qr.imageSync(this.qrUri, { type: 'svg', margin: 1, size: 10 });
-    this.qrImage = this.sanitizer.bypassSecurityTrustHtml(svg);
   }
 
   showCopySuccess(value: string) {
