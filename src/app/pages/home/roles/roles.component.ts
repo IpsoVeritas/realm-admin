@@ -17,7 +17,8 @@ export class RolesComponent implements OnInit, AfterViewInit {
   displayedColumns = ['name', 'status', 'action'];
   roles: Array<any>;
   activeRealm: string;
-  selectedRole: string;
+  selectedRoleId: string;
+  activeRole: Role;
   dataSource: MatTableDataSource<any> = new MatTableDataSource(DUMMY_DATA_0);
   @ViewChild(MatSort) sort: MatSort;
   isSnackBarOpen = false;
@@ -33,16 +34,17 @@ export class RolesComponent implements OnInit, AfterViewInit {
     this.activeRealm = localStorage.getItem('realm');
     this.rolesClient.getRoles(this.activeRealm)
       .then(roles => this.roles = roles)
-      .then(() => this.selectedRole = this.roles[0].id)
-      .then(() => console.log(this.roles));
+      .then(() => this.selectedRoleId = this.roles[0].id)
+      .then(() => console.log('onload', this.roles));
   }
 
-  select(event) {
-    console.log(event.value);
-    this.dataSource.data = this.dataSource.data == DUMMY_DATA_0 ? DUMMY_DATA_1 : DUMMY_DATA_0;
+  select(roleId: string) {
+    this.activeRole = this.roles[this.roles.findIndex(role => role.id === roleId)];
+    // TODO
+    // update list of mandates
+    this.dataSource.data = this.dataSource.data === DUMMY_DATA_0 ? DUMMY_DATA_1 : DUMMY_DATA_0;
   }
 
-  // create new role
   create() {
     SimpleInputDialogComponent.showDialog(this.dialog, { message: 'Role name' })
       .then(name => {
@@ -52,10 +54,21 @@ export class RolesComponent implements OnInit, AfterViewInit {
         return role;
       })
       .then(role => this.rolesClient.createRole(this.activeRealm, role)
-      .then(role => console.log(role))
-      .then(() => this.rolesClient.getRoles(this.activeRealm)
-      .then(roles => this.roles = roles))
-      .catch(error => this.snackBarOpen(`Error creating '${role.description}'`, 'Close', { duration: 5000 })))
+        .then(() => this.rolesClient.getRoles(this.activeRealm))
+        .then(roles => this.roles = roles)
+        .then(() => this.selectedRoleId = this.roles[this.roles.length - 1].id)
+        // .then(() => this.roles.push(role))
+        // .then(() => this.selectedRoleId = this.roles[this.roles.length - 1].id)
+        .catch(error => this.snackBarOpen(`Error creating '${role.description}'`, 'Close', { duration: 5000 })))
+      .catch(() => 'canceled');
+  }
+
+  delete() {
+      ConfirmationDialogComponent.showDialog(this.dialog, { message: `Delete role '${this.activeRole.description}'?` })
+      .then(() => this.rolesClient.deleteRole(this.activeRealm, this.activeRole.id)
+        .then(() => this.roles = this.roles.filter(item => item.id !== this.activeRole.id))
+        .then(() => this.selectedRoleId = this.roles[0].id)
+        .catch(error => this.snackBarOpen(`Error deleting '${this.activeRole.description}'`, 'Close', { duration: 5000 })))
       .catch(() => 'canceled');
   }
 

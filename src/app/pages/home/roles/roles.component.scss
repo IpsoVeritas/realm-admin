@@ -1,14 +1,14 @@
+// Import all the tools needed to customize the theme and extract parts of it
+@import "~theme/integrity-theme.scss";
+
 .mat-toolbar {
+  // background-color: mat-color($integrity-orange, 500);
+  // color: mat-contrast($integrity-orange, 500);
   position: sticky;
   top: 0;
 }
 .mat-header-row, .mat-row {
   justify-content: space-between;
-}
-
-.mat-toolbar {
-  position: sticky;
-  top: 0;
 }
 
 .mat-header-cell, .mat-cell {
@@ -36,14 +36,8 @@
   bottom: 68px;
 }
 
-:host-context(.narrow) mat-toolbar {
-  display: none;
-}
-
 :host-context(.narrow) .fab-add-button {
   display: inline;
 }
 
-mat-select {
-  font-size: 16px;
-}
+

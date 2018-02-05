@@ -30,5 +30,10 @@ export class RolesClient extends BaseClient {
       .then(() => role);
   }
 
+  public deleteRole(realmId: string, roleId: string): Promise<any> {
+    return this.config.getBackendURL(`/realms/${realmId}/roles/${roleId}`)
+    .then(url => this.http.delete(url).toPromise());
+  }
+
 
 }

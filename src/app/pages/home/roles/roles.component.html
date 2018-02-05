@@ -3,13 +3,19 @@
   <mat-toolbar>
     <mat-toolbar-row>
       <mat-form-field>
-        <mat-select [(value)]="selectedRole" (selectionChange)="select($event)">
+        <mat-select [(value)]="selectedRoleId" (selectionChange)="select($event.value)">
           <mat-option *ngFor="let role of roles" value="{{role.id}}">{{role.description}}</mat-option>
         </mat-select>
       </mat-form-field>
       <span class="spacer"></span> 
-      <button (click)="create()" mat-icon-button color="accent">
+      <button (click)="create()" mat-icon-button>
         <mat-icon aria-label="Create role">add_circle</mat-icon>
+      </button>
+      <button (click)="edit()" mat-icon-button>
+        <mat-icon aria-label="Edit role">mode_edit</mat-icon>
+      </button>
+      <button (click)="delete()" mat-icon-button>
+        <mat-icon aria-label="Delete role">delete</mat-icon>
       </button>
     </mat-toolbar-row>
   </mat-toolbar>
@@ -39,4 +45,7 @@
     <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
   </mat-table>
 
+  <button (click)="create()" mat-fab class="fab-add-button" [class.snack-bar-open]="isSnackBarOpen">
+    <mat-icon aria-label="Create mandate">add</mat-icon>
+  </button>
 </div>
