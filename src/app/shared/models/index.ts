@@ -10,3 +10,4 @@ export { Realm } from './realm.model';
 export { RealmDescriptor } from './realm-descriptor.model';
 export { Role } from './role.model';
 export { Controller } from './controller.model';
+export { IssuedMandate } from './issued-mandate.model';
