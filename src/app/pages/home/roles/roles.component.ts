@@ -4,8 +4,8 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableDataSource, MatSort } from '@angular/material';
 import { ConfirmationDialogComponent, SimpleInputDialogComponent } from '../../../shared/components';
-import { RolesClient } from '../../../shared/api-clients';
-import { Role } from '../../../shared/models';
+import { RolesClient, MandatesClient } from '../../../shared/api-clients';
+import { Role, Mandate } from '../../../shared/models';
 
 @Component({
   selector: 'app-roles',
@@ -15,15 +15,17 @@ import { Role } from '../../../shared/models';
 export class RolesComponent implements OnInit, AfterViewInit {
 
   displayedColumns = ['name', 'status', 'action'];
-  roles: Array<any>;
+  roles: Array<Role>;
+  mandates: Array<Mandate>;
   activeRealm: string;
   selectedRoleId: string;
   activeRole: Role;
-  dataSource: MatTableDataSource<any> = new MatTableDataSource(DUMMY_DATA_0);
+  dataSource: MatTableDataSource<any>;
   @ViewChild(MatSort) sort: MatSort;
   isSnackBarOpen = false;
 
   constructor(private rolesClient: RolesClient,
+    private mandatesClient: MandatesClient,
     private snackBar: MatSnackBar,
     private dialog: MatDialog) { }
 
@@ -32,18 +34,26 @@ export class RolesComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.activeRealm = localStorage.getItem('realm');
-    this.rolesClient.getRoles(this.activeRealm)
-      .then(roles => this.roles = roles)
+
+    this.mandatesClient.getMandates(this.activeRealm)
+      // fetching mandates
+      .then(mandates => { console.log(mandates); return mandates; })
+      .then(mandates => this.mandates = mandates)
+      .then(() => this.rolesClient.getRoles(this.activeRealm))
+      // fetching roles
+      .then(roles => this.roles = roles.filter(r => !r.internal).sort((a, b) => a.description > b.description ? 1 : 0))
       .then(() => this.selectedRoleId = this.roles[0].id)
-      .then(() => console.log('onload', this.roles));
+      .then(() => this.select(this.selectedRoleId))
+      .then(() => console.log('roles', this.roles));
   }
 
   select(roleId: string) {
     this.activeRole = this.roles[this.roles.findIndex(role => role.id === roleId)];
-    // TODO
-    // update list of mandates
-    this.dataSource.data = this.dataSource.data === DUMMY_DATA_0 ? DUMMY_DATA_1 : DUMMY_DATA_0;
+    this.dataSource = new MatTableDataSource(this.getMandates(this.activeRole.name));
+    this.dataSource.sort = this.sort;
   }
+
+  // Roles
 
   create() {
     SimpleInputDialogComponent.showDialog(this.dialog, { message: 'Role name' })
@@ -72,6 +82,23 @@ export class RolesComponent implements OnInit, AfterViewInit {
       .catch(() => 'canceled');
   }
 
+  // mandates
+
+  getMandates(roleName: string) {
+    return this.mandates.filter(mandate => mandate.role === roleName);
+  }
+
+  // status(mandate: Mandate) {
+  //   if (mandate.type === 'mandate') {
+  //     if (mandate.status === 0) { return 'Active'}
+  //     if (mandate.status === 1) { return 'Revoked'}
+  //   } else if (mandate.type === 'invite') {
+  //     return 'Pending';
+  //   }
+  //   return 'Unknown';
+  // }
+
+
   revoke(user) {
     console.log(user);
   }
@@ -82,36 +109,3 @@ export class RolesComponent implements OnInit, AfterViewInit {
     snackbarRef.afterDismissed().toPromise().then(() => this.isSnackBarOpen = false);
   }
 }
-
-
-export interface User {
-  name: string;
-  status: string;
-}
-
-const DUMMY_DATA_0: User[] = [
-  { name: 'Hydrogen', status: 'Active user' },
-  { name: 'Helium', status: 'Active user' },
-  { name: 'Lithium', status: 'Active user' },
-  { name: 'Beryllium', status: 'Pending' },
-  { name: 'Boron', status: 'Active user' },
-  { name: 'Carbon', status: 'Active user' },
-  { name: 'Nitrogen', status: 'Active user' },
-  { name: 'Oxygen', status: 'Active user' },
-  { name: 'Fluorine', status: 'Pending' },
-];
-
-const DUMMY_DATA_1: User[] = [
-  { name: 'Neon', status: 'Active user' },
-  { name: 'Sodium', status: 'Revoked' },
-  { name: 'Magnesium', status: 'Revoked' },
-  { name: 'Aluminum', status: 'Active user' },
-  { name: 'Silicon', status: 'Revoked' },
-  { name: 'Phosphorus', status: 'Active user' },
-  { name: 'Sulfur', status: 'Active user' },
-  { name: 'Chlorine', status: 'Active user' },
-  { name: 'Argon', status: 'Active user' },
-  { name: 'Potassium', status: 'Active user' },
-  { name: 'Calcium', status: 'Active user' },
-];
-

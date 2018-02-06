@@ -34,6 +34,4 @@ export class RolesClient extends BaseClient {
     return this.config.getBackendURL(`/realms/${realmId}/roles/${roleId}`)
     .then(url => this.http.delete(url).toPromise());
   }
-
-
 }

@@ -27,7 +27,7 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { ConfirmationDialogComponent, QrCodeDialogComponent, SimpleInputDialogComponent } from './shared/components';
 import { TokenInterceptor, LoaderInterceptor } from './shared/interceptors';
-import { AuthClient, AccessClient, RealmsClient, RolesClient } from './shared/api-clients';
+import { AuthClient, AccessClient, RealmsClient, RolesClient, MandatesClient } from './shared/api-clients';
 import { PlatformService, EventsService, ConfigService, ClipboardService } from './shared/services';
 import { ClipboardDirective, DragAndDropDirective } from './shared/directives';
 
@@ -91,6 +91,7 @@ import { SettingsComponent } from './pages/home/settings/settings.component';
     AccessClient,
     RealmsClient,
     RolesClient,
+    MandatesClient,
     PlatformService,
     EventsService,
     ConfigService,
