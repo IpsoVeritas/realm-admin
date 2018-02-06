@@ -1,9 +1,7 @@
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material';
 import { MatTableDataSource, MatSort } from '@angular/material';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { ConfirmationDialogComponent, SimpleInputDialogComponent } from '../../../shared/components';
-import { EventsService } from '../../../shared/services';
+import { EventsService, DialogsService } from '@brickchain/integrity-angular';
 import { RealmsClient } from '../../../shared/api-clients';
 import { Realm } from '../../../shared/models';
 
@@ -21,9 +19,9 @@ export class RealmsComponent implements OnInit, AfterViewInit {
   isSnackBarOpen = false;
 
   constructor(private events: EventsService,
+    private dialogs: DialogsService,
     private realmsClient: RealmsClient,
-    private snackBar: MatSnackBar,
-    private dialog: MatDialog) { }
+    private snackBar: MatSnackBar) { }
 
   ngOnInit() {
     this.activeRealm = localStorage.getItem('realm');
@@ -37,7 +35,7 @@ export class RealmsComponent implements OnInit, AfterViewInit {
   }
 
   create() {
-    SimpleInputDialogComponent.showDialog(this.dialog, { message: 'Realm name' })
+    this.dialogs.openSimpleInput({ message: 'Realm name' })
       .then(name => {
         const realm = new Realm();
         realm.name = name;
@@ -56,7 +54,7 @@ export class RealmsComponent implements OnInit, AfterViewInit {
   }
 
   delete(selected) {
-    ConfirmationDialogComponent.showDialog(this.dialog, { message: `Delete realm '${selected.id}'?` })
+    this.dialogs.openConfirm({ message: `Delete realm '${selected.id}'?` })
       .then(() => this.realmsClient.deleteRealm(selected.id)
         .then(() => this.dataSource.data = this.dataSource.data.filter(item => item !== selected))
         .catch(error => this.snackBarOpen(`Error deleting '${selected.id}'`, 'Close', { duration: 5000 })))

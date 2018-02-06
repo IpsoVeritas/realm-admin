@@ -2,8 +2,9 @@ import { Component, ViewChild, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
+import { EventsService } from '@brickchain/integrity-angular';
 import { AuthClient } from '../../shared/api-clients';
-import { ConfigService, EventsService } from '../../shared/services';
+import { ConfigService } from '../../shared/services';
 import { MatExpansionPanel, MatSnackBar } from '@angular/material';
 
 import { AuthUser, AuthInfo } from '../../shared/models';

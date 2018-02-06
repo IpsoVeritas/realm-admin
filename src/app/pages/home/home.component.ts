@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { EventsService } from '@brickchain/integrity-angular';
 import { AccessClient } from '../../shared/api-clients';
-import { EventsService } from '../../shared/services';
 import { User } from '../../shared/models';
 
 @Component({

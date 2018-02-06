@@ -1,11 +1,12 @@
-@import "~theme/integrity-theme.scss";
+// @import "~@brickchain/integrity-theme/theming";
+@import "~@brickchain/integrity-theme/src/theme/integrity-theme.scss";
 
 #login-panel {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width:100%;
+  width: 100%;
   height: 100%;
 }
 
@@ -13,32 +14,19 @@ form {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  mat-form-field {
-    flex: 2;
-    margin-right: 24px
-  }
+
   button {
     margin-top: 2px;
     height: 36px;
   }
 }
 
-.mat-expansion-panel {
-  width: 448px;
-  z-index: 2;
-}
-
-.mat-card {
-  width: 400px;
-  z-index: 1;
-  text-align: center;
-  svg {
-    width: 240px;
-    #template {
-      fill: mat-color($integrity-dark-blue);
-    }
+mat-card {
+  mat-card-content {
+    text-align: center;
   }
-  .mat-progress-bar {
-    height: 2px;
+
+  mat-progress-bar {
+    height: 2px !important;
   }
 }

@@ -1,28 +1,29 @@
 <div id="login-panel">
-
-  <mat-expansion-panel class="mat-elevation-z2">
-    <mat-expansion-panel-header>
-      <mat-panel-title>
-        Scan this QR code to access {{activeRealm ||'your realm'}}
-      </mat-panel-title>
-    </mat-expansion-panel-header>
-    <form [formGroup]="realmForm" (ngSubmit)="onSubmit()">
-      <mat-form-field>
-        <input formControlName="realm" matInput placeholder="Realm">
-        <mat-error *ngIf="realm.errors && realm.errors['required']">A realm is required</mat-error>
-        <mat-error *ngIf="realm.errors && realm.errors['startAuthFailed']">Invalid realm</mat-error>
-      </mat-form-field>
-      <button type="submit" mat-raised-button [disabled]="realmForm.invalid" color="accent">Change Realm</button>
-    </form>
-  </mat-expansion-panel>
-
   <mat-card *ngIf="activeRealm" class="mat-elevation-z1">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-expansion-panel class="mat-elevation-z0">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Scan this QR code to access {{activeRealm ||'your realm'}}
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <form [formGroup]="realmForm" (ngSubmit)="onSubmit()">
+            <mat-form-field>
+              <input formControlName="realm" matInput placeholder="Realm">
+              <mat-error *ngIf="realm.errors && realm.errors['required']">A realm is required</mat-error>
+              <mat-error *ngIf="realm.errors && realm.errors['startAuthFailed']">Invalid realm</mat-error>
+            </mat-form-field>
+            <button type="submit" mat-raised-button [disabled]="realmForm.invalid" color="accent">Change Realm</button>
+          </form>
+        </mat-expansion-panel>
+      </mat-card-title>
+    </mat-card-header>
     <mat-card-content>
-      <qrcode [appClipboard]="qrUri" (copySuccess)="showCopySuccess($event)" [qrdata]="qrUri" [usesvg]="true" [level]="'Q'"></qrcode>
+      <integrity-qrcode [qrdata]="qrUri" [integrityClipboard]="qrUri" (copySuccess)="showCopySuccess($event)"></integrity-qrcode>
     </mat-card-content>
     <mat-card-footer>
       <mat-progress-bar mode="determinate" [value]="qrCountdown" color="warn"></mat-progress-bar>
     </mat-card-footer>
   </mat-card>
-
 </div>

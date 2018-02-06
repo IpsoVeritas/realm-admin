@@ -1,8 +1,8 @@
 import { Component, HostBinding, OnInit } from '@angular/core';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { URLSearchParams } from '@angular/http';
-import { WebviewClientService } from 'integrity-webview-client';
-import { PlatformService, ConfigService, EventsService } from './shared/services';
+import { EventsService } from '@brickchain/integrity-angular';
+import { PlatformService, ConfigService } from './shared/services';
 import { AuthUser } from './shared/models';
 import 'rxjs/add/operator/filter';
 

@@ -2,10 +2,9 @@ import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { SafeStyle } from '@angular/platform-browser/src/security/dom_sanitization_service';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material';
-import { EventsService } from '../../../shared/services';
+import { EventsService } from '@brickchain/integrity-angular';
 import { RealmsClient, RolesClient } from '../../../shared/api-clients';
 import { Realm, Role } from '../../../shared/models';
-import { ConfirmationDialogComponent, SimpleInputDialogComponent } from '../../../shared/components';
 
 @Component({
   selector: 'app-settings',

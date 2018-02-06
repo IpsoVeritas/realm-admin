@@ -17,13 +17,13 @@
       </mat-select>
     </mat-form-field>
 
-    <div class="dropzone icon" appDragAndDrop (filesDropped)="iconDropped($event)" [includeDataURL]="true" [extensions]="['png', 'jpg', 'gif', 'svg']"
+    <div class="dropzone icon" integrityDragAndDrop (filesDropped)="iconDropped($event)" [includeDataURL]="true" [extensions]="['png', 'jpg', 'gif', 'svg']"
       [style.background-image]="iconImage" [class.dnd-dropped]="iconImage">
       <mat-icon color="accent">add</mat-icon>
       <input type="file" />
     </div>
 
-    <div class="dropzone banner" appDragAndDrop (filesDropped)="bannerDropped($event)" [includeDataURL]="true" [extensions]="['png', 'jpg', 'gif', 'svg']"
+    <div class="dropzone banner" integrityDragAndDrop (filesDropped)="bannerDropped($event)" [includeDataURL]="true" [extensions]="['png', 'jpg', 'gif', 'svg']"
       [style.background-image]="bannerImage" [class.dnd-dropped]="bannerImage">
       <mat-icon color="accent">add</mat-icon>
       <input type="file" />

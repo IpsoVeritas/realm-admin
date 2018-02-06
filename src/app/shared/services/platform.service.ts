@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Router, } from '@angular/router';
 import { MatDialog } from '@angular/material';
-import { WebviewClientService } from 'integrity-webview-client';
-import { QrCodeDialogComponent } from '../components/qr-code-dialog/qr-code-dialog.component';
-import { EventsService } from './events.service';
+import { EventsService, DialogsService } from '@brickchain/integrity-angular';
+import { WebviewClientService } from '@brickchain/integrity-webview-client';
 
 @Injectable()
 export class PlatformService {
@@ -14,7 +13,8 @@ export class PlatformService {
   constructor(private router: Router,
     private dialog: MatDialog,
     private webviewClient: WebviewClientService,
-    private events: EventsService) {
+    private events: EventsService,
+    private dialogs: DialogsService) {
     this.inApp = /Integrity\//i.test(navigator.userAgent);
     this.isMobile = /Android|iPhone/i.test(navigator.userAgent);
     if (this.inApp) {
@@ -42,7 +42,7 @@ export class PlatformService {
       window.location.href = `integrity://app/webapp/${url}`;
       return Promise.resolve();
     } else {
-      return QrCodeDialogComponent.showDialog(this.dialog, { uri: uri, title: title });
+      return this.dialogs.openQRCode({ title: title, qrdata: uri }).then(() => console.log('closed'));
       // Todo: if already logged in, send push notifcation
     }
   }
