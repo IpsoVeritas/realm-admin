@@ -8,7 +8,7 @@ import { LoginComponent } from './pages/login/login.component';
 import { HomeComponent } from './pages/home/home.component';
 import { RealmsComponent } from './pages/home/realms/realms.component';
 import { RolesComponent } from './pages/home/roles/roles.component';
-import { ServicesComponent } from './pages/home/services/services.component';
+import { ControllersComponent } from './pages/home/controllers/controllers.component';
 import { SettingsComponent } from './pages/home/settings/settings.component';
 
 const appRoutes: Routes = [
@@ -19,7 +19,7 @@ const appRoutes: Routes = [
     children: [
       { path: 'realms', component: RealmsComponent },
       { path: 'roles', component: RolesComponent },
-      { path: 'services', component: ServicesComponent },
+      { path: 'controllers', component: ControllersComponent },
       { path: 'settings', component: SettingsComponent }
     ]
   },

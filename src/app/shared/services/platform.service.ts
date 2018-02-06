@@ -3,6 +3,7 @@ import { Router, } from '@angular/router';
 import { MatDialog } from '@angular/material';
 import { EventsService, DialogsService } from '@brickchain/integrity-angular';
 import { WebviewClientService } from '@brickchain/integrity-webview-client';
+import { SessionService } from './session.service';
 
 @Injectable()
 export class PlatformService {
@@ -13,13 +14,14 @@ export class PlatformService {
   constructor(private router: Router,
     private dialog: MatDialog,
     private webviewClient: WebviewClientService,
+    private session: SessionService,
     private events: EventsService,
     private dialogs: DialogsService) {
     this.inApp = /Integrity\//i.test(navigator.userAgent);
     this.isMobile = /Android|iPhone/i.test(navigator.userAgent);
     if (this.inApp) {
       this.webviewClient.init()
-        .then(data => localStorage.setItem('mandate', data.mandate))
+        .then(data => this.session.mandate = data.mandate)
         .catch(error => console.warn(error));
     }
     this.events.subscribe('logout', () => {

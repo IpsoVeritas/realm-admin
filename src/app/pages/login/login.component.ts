@@ -1,10 +1,10 @@
-import { Component, ViewChild, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { EventsService } from '@brickchain/integrity-angular';
 import { AuthClient } from '../../shared/api-clients';
-import { ConfigService } from '../../shared/services';
+import { ConfigService, SessionService } from '../../shared/services';
 import { MatExpansionPanel, MatSnackBar } from '@angular/material';
 
 import { AuthUser, AuthInfo } from '../../shared/models';
@@ -12,10 +12,9 @@ import { AuthUser, AuthInfo } from '../../shared/models';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, AfterViewInit {
 
   @ViewChild(MatExpansionPanel) realmPanel: MatExpansionPanel;
 
@@ -35,17 +34,20 @@ export class LoginComponent implements OnInit {
     private sanitizer: DomSanitizer,
     private authClient: AuthClient,
     private config: ConfigService,
+    private session: SessionService,
     private events: EventsService,
     private snackBar: MatSnackBar) {
   }
 
   ngOnInit() {
-    const realm = localStorage.getItem('realm');
     this.realmForm = this.fb.group({
-      'realm': [realm, Validators.required]
+      'realm': [this.session.realm, Validators.required]
     });
-    this.start(realm)
-      .then(() => this.activeRealm = realm)
+  }
+
+  ngAfterViewInit() {
+    this.start(this.session.realm)
+      .then(() => this.activeRealm = this.session.realm)
       .catch(error => {
         this.activeRealm = '';
         this.realmPanel.expanded = true;
@@ -63,7 +65,7 @@ export class LoginComponent implements OnInit {
       this.start(this.realm.value)
         .then(() => this.activeRealm = this.realm.value)
         .then(() => this.realmPanel.expanded = false)
-        .then(() => localStorage.setItem('realm', this.activeRealm))
+        .then(() => this.session.realm = this.activeRealm)
         .catch(error => {
           if (error.status === 0) {
             this.snackBar.open(`Error connecting to ${this.config.backend}`, '', { duration: 2000 });
@@ -110,8 +112,8 @@ export class LoginComponent implements OnInit {
         if (user.authenticated && user.mandateToken && !user.expired) {
           clearTimeout(this.qrUriTimer);
           clearTimeout(this.progressTimer);
-          localStorage.setItem('mandate', user.mandateToken);
-          localStorage.setItem('expires', String(user.exp.getTime()));
+          this.session.mandate = user.mandateToken;
+          this.session.expires = user.exp.getTime();
           this.authClient.getAuthInfo()
             .then(() => this.events.publish('login'))
             .then(() => this.router.navigate(['/home', {}]))

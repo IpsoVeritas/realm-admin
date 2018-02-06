@@ -26,7 +26,7 @@ export class AuthUser {
   rootTP: string = undefined;
 
   @JsonProperty('key', Any, true)
-  key: Any = undefined;
+  key: any = undefined;
 
   @JsonProperty('facts', [Fact], true)
   facts: Fact[] = undefined;

@@ -17,6 +17,6 @@ export class Fact extends Base {
   data: any = undefined;
 
   @JsonProperty('recipient', Any, true)
-  recipient: Any = undefined;
+  recipient: any = undefined;
 
 }

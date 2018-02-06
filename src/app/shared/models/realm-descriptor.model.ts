@@ -11,10 +11,10 @@ export class RealmDescriptor extends Base {
   description: string = undefined;
 
   @JsonProperty('publicKey', Any, true)
-  publicKey: Any = undefined;
+  publicKey: any = undefined;
 
   @JsonProperty('endpoints', Any, true)
-  endpoints: Any = undefined;
+  endpoints: any = undefined;
 
   @JsonProperty('inviteURL', String, true)
   inviteURL: string = undefined;

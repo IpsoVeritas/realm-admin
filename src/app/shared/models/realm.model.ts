@@ -14,7 +14,7 @@ export class Realm {
   name: string = undefined;
 
   @JsonProperty('publicKey', Any, true)
-  publicKey: Any = undefined;
+  publicKey: any = undefined;
 
   @JsonProperty('description', String, true)
   description: string = undefined;

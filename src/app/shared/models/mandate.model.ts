@@ -20,7 +20,7 @@ export class Mandate extends Base {
   recipientName: string = undefined;
 
   @JsonProperty('recipientPublicKey', Any, true)
-  recipientPublicKey: Any = undefined;
+  recipientPublicKey: any = undefined;
 
   @JsonProperty('requestId', String, true)
   requestId: string = undefined;

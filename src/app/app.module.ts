@@ -27,14 +27,14 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 
 import { TokenInterceptor, LoaderInterceptor } from './shared/interceptors';
-import { AuthClient, AccessClient, RealmsClient, RolesClient } from './shared/api-clients';
-import { PlatformService, ConfigService } from './shared/services';
+import { AuthClient, AccessClient, RealmsClient, RolesClient, ControllersClient } from './shared/api-clients';
+import { SessionService, PlatformService, ConfigService } from './shared/services';
 
 import { BootstrapComponent } from './pages/bootstrap/bootstrap.component';
 import { LoginComponent } from './pages/login/login.component';
 import { HomeComponent } from './pages/home/home.component';
 import { RolesComponent } from './pages/home/roles/roles.component';
-import { ServicesComponent } from './pages/home/services/services.component';
+import { ControllersComponent } from './pages/home/controllers/controllers.component';
 import { RealmsComponent } from './pages/home/realms/realms.component';
 import { SettingsComponent } from './pages/home/settings/settings.component';
 
@@ -45,7 +45,7 @@ import { SettingsComponent } from './pages/home/settings/settings.component';
     LoginComponent,
     HomeComponent,
     RolesComponent,
-    ServicesComponent,
+    ControllersComponent,
     RealmsComponent,
     SettingsComponent
   ],
@@ -87,6 +87,8 @@ import { SettingsComponent } from './pages/home/settings/settings.component';
     AccessClient,
     RealmsClient,
     RolesClient,
+    ControllersClient,
+    SessionService,
     PlatformService,
     ConfigService,
     {
