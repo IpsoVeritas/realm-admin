@@ -1,8 +1,9 @@
 import { Component, Inject, OnInit, AfterViewInit } from '@angular/core';
 import { Router, } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { EventsService } from '@brickchain/integrity-angular';
 import { AccessClient } from '../../shared/api-clients';
-import { PlatformService, EventsService } from '../../shared/services';
+import { PlatformService } from '../../shared/services';
 
 import { BootstrapResponse } from '../../shared/models';
 

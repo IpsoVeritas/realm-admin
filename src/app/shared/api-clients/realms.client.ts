@@ -6,16 +6,22 @@ import { Realm } from '../models';
 @Injectable()
 export class RealmsClient extends BaseClient {
 
-  public getRealms(): Promise<string[]> {
+  public getRealmsIds(): Promise<string[]> {
     return this.config.getBackendURL('/realms')
       .then(url => this.http.get(url).toPromise())
       .then(obj => <string[]>obj);
   }
 
-  public getRealm(id: string): Promise<Realm> {
-    return this.config.getBackendURL(`/realms/${id}`)
+  public getRealm(realmId: string): Promise<Realm> {
+    return this.config.getBackendURL(`/realms/${realmId}`)
       .then(url => this.http.get(url).toPromise())
       .then(obj => this.jsonConvert.deserializeObject(obj, Realm));
+  }
+
+  public getRealms(): Promise<Realm[]> {
+    return this.getRealmsIds()
+      .then(realmIds => realmIds.map(realmId => this.getRealm(realmId)))
+      .then(promises => Promise.all(promises));
   }
 
   public createRealm(realm: Realm): Promise<Realm> {

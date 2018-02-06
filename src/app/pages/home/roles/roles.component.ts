@@ -1,9 +1,7 @@
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { MatSelectModule } from '@angular/material/select';
 import { MatTableDataSource, MatSort } from '@angular/material';
-import { ConfirmationDialogComponent, SimpleInputDialogComponent } from '../../../shared/components';
+import { DialogsService } from '@brickchain/integrity-angular';
 import { RolesClient, MandatesClient } from '../../../shared/api-clients';
 import { Role, Mandate } from '../../../shared/models';
 
@@ -24,10 +22,10 @@ export class RolesComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
   isSnackBarOpen = false;
 
-  constructor(private rolesClient: RolesClient,
+  constructor(private dialogs: DialogsService,
+    private rolesClient: RolesClient,
     private mandatesClient: MandatesClient,
-    private snackBar: MatSnackBar,
-    private dialog: MatDialog) { }
+    private snackBar: MatSnackBar) { }
 
   ngOnInit() {
   }
@@ -56,7 +54,7 @@ export class RolesComponent implements OnInit, AfterViewInit {
   // Roles
 
   create() {
-    SimpleInputDialogComponent.showDialog(this.dialog, { message: 'Role name' })
+    this.dialogs.openSimpleInput({ message: 'Role name' })
       .then(name => {
         const role = new Role();
         role.description = name;
@@ -74,7 +72,7 @@ export class RolesComponent implements OnInit, AfterViewInit {
   }
 
   delete() {
-      ConfirmationDialogComponent.showDialog(this.dialog, { message: `Delete role '${this.activeRole.description}'?` })
+    this.dialogs.openConfirm({ message: `Delete role '${this.activeRole.description}'?` })
       .then(() => this.rolesClient.deleteRole(this.activeRealm, this.activeRole.id)
         .then(() => this.roles = this.roles.filter(item => item.id !== this.activeRole.id))
         .then(() => this.selectedRoleId = this.roles[0].id)

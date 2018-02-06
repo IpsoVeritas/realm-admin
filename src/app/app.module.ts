@@ -20,45 +20,36 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatTableModule } from '@angular/material/table';
 import { MatSelectModule } from '@angular/material/select';
 
-import { WebviewClientService } from 'integrity-webview-client';
+import { EventsModule, QRCodeModule, DialogsModule, ClipboardModule, DragAndDropModule } from '@brickchain/integrity-angular';
+import { WebviewClientModule } from '@brickchain/integrity-webview-client';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 
-import { ConfirmationDialogComponent, QrCodeDialogComponent, SimpleInputDialogComponent } from './shared/components';
 import { TokenInterceptor, LoaderInterceptor } from './shared/interceptors';
-import { AuthClient, AccessClient, RealmsClient, RolesClient, MandatesClient } from './shared/api-clients';
-import { PlatformService, EventsService, ConfigService, ClipboardService } from './shared/services';
-import { ClipboardDirective, DragAndDropDirective } from './shared/directives';
+import { AuthClient, AccessClient, RealmsClient, RolesClient, MandatesClient, ControllersClient } from './shared/api-clients';
+import { SessionService, PlatformService, ConfigService } from './shared/services';
 
 import { BootstrapComponent } from './pages/bootstrap/bootstrap.component';
 import { LoginComponent } from './pages/login/login.component';
 import { HomeComponent } from './pages/home/home.component';
 import { RolesComponent } from './pages/home/roles/roles.component';
-import { ServicesComponent } from './pages/home/services/services.component';
+import { ControllersComponent } from './pages/home/controllers/controllers.component';
 import { RealmsComponent } from './pages/home/realms/realms.component';
 import { SettingsComponent } from './pages/home/settings/settings.component';
 
 @NgModule({
   declarations: [
-    ClipboardDirective,
-    DragAndDropDirective,
     AppComponent,
-    ConfirmationDialogComponent,
-    QrCodeDialogComponent,
-    SimpleInputDialogComponent,
     BootstrapComponent,
     LoginComponent,
     HomeComponent,
     RolesComponent,
-    ServicesComponent,
+    ControllersComponent,
     RealmsComponent,
     SettingsComponent
   ],
   entryComponents: [
-    ConfirmationDialogComponent,
-    QrCodeDialogComponent,
-    SimpleInputDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -83,19 +74,24 @@ import { SettingsComponent } from './pages/home/settings/settings.component';
     MatMenuModule,
     MatTableModule,
     MatSelectModule,
+    WebviewClientModule,
+    QRCodeModule,
+    EventsModule,
+    DialogsModule,
+    ClipboardModule,
+    DragAndDropModule,
     AppRoutingModule
   ],
   providers: [
-    WebviewClientService,
     AuthClient,
     AccessClient,
     RealmsClient,
     RolesClient,
     MandatesClient,
+    ControllersClient,
+    SessionService,
     PlatformService,
-    EventsService,
     ConfigService,
-    ClipboardService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: LoaderInterceptor,

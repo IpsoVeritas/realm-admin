@@ -1,7 +1,7 @@
 import { Injectable, Injector } from '@angular/core';
 import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpResponse } from '@angular/common/http';
-import { EventsService } from '../services';
 import { Observable } from 'rxjs/Observable';
+import { EventsService } from '@brickchain/integrity-angular';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';

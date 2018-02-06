@@ -3,11 +3,11 @@
   <div class="settings-form">
 
     <mat-form-field>
-      <input matInput [(ngModel)]="realm.description" placeholder="Description">
+      <input matInput [(ngModel)]="realm.description" (ngModelChange)="isChanged=true" placeholder="Description">
     </mat-form-field>
 
     <mat-form-field>
-      <mat-select [(ngModel)]="realm.guestRole" placeholder="Guest Role">
+      <mat-select [(ngModel)]="realm.guestRole" (ngModelChange)="isChanged=true" placeholder="Guest Role">
         <mat-option [value]="undefined">
           No public role
         </mat-option>
@@ -17,13 +17,13 @@
       </mat-select>
     </mat-form-field>
 
-    <div class="dropzone icon" appDragAndDrop (filesDropped)="iconDropped($event)" [includeDataURL]="true" [extensions]="['png', 'jpg', 'gif', 'svg']"
+    <div class="dropzone icon" integrityDragAndDrop (filesDropped)="iconDropped($event)" [includeDataURL]="true" [extensions]="['png', 'jpg', 'gif', 'svg']"
       [style.background-image]="iconImage" [class.dnd-dropped]="iconImage">
       <mat-icon color="accent">add</mat-icon>
       <input type="file" />
     </div>
 
-    <div class="dropzone banner" appDragAndDrop (filesDropped)="bannerDropped($event)" [includeDataURL]="true" [extensions]="['png', 'jpg', 'gif', 'svg']"
+    <div class="dropzone banner" integrityDragAndDrop (filesDropped)="bannerDropped($event)" [includeDataURL]="true" [extensions]="['png', 'jpg', 'gif', 'svg']"
       [style.background-image]="bannerImage" [class.dnd-dropped]="bannerImage">
       <mat-icon color="accent">add</mat-icon>
       <input type="file" />
@@ -31,7 +31,7 @@
 
     <div class="buttons">
       <button mat-raised-button color="accent" (click)="updateRealm()">Save</button>
-      <button mat-raised-button (click)="loadRealm()">Reset</button>
+      <button mat-raised-button (click)="loadRealm()" [disabled]="!isChanged">Reset</button>
     </div>
 
   </div>

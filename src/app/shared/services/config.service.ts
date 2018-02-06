@@ -15,7 +15,6 @@ export class ConfigService {
       .then(config => this._config = config)
       .then(() => {
         this._backend = this._config['backend'];
-        localStorage.setItem('backend', this._backend);
         const parser = document.createElement('a');
         parser.href = this._backend;
         this._base = `${parser.protocol}//${parser.host}`;

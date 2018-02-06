@@ -1,22 +1,15 @@
-@import "~@brickchain/integrity-theme/theming";
-
 .mat-toolbar {
-  // background-color: mat-color($integrity-orange, 500);
-  // color: mat-contrast($integrity-orange, 500);
   position: sticky;
   top: 0;
 }
+
 .mat-header-row, .mat-row {
   justify-content: space-between;
 }
 
 .mat-header-cell, .mat-cell {
-  flex: 0 1 45%;
-
-  &:last-child {
-    cursor: pointer;
-    flex: 0 1 10%;
-  }
+  cursor: pointer;
+  flex: 0 1 auto;
 }
 
 .mat-cell {
@@ -35,8 +28,10 @@
   bottom: 68px;
 }
 
+:host-context(.narrow) mat-toolbar {
+  display: none;
+}
+
 :host-context(.narrow) .fab-add-button {
   display: inline;
 }
-
-

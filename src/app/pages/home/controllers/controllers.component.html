@@ -1,0 +1,44 @@
+<!-- div class="iframe">
+  <iframe src="https://www.lipsum.com/"></iframe>
+</div -->
+
+<div class="content mat-elevation-z1">
+
+  <mat-toolbar>
+    <mat-toolbar-row>
+      Controllers
+      <span class="spacer"></span>
+      <button (click)="bind()" mat-icon-button color="accent">
+        <mat-icon aria-label="Bind controller">add_circle</mat-icon>
+      </button>
+    </mat-toolbar-row>
+  </mat-toolbar>
+
+  <mat-table #table [dataSource]="dataSource" matSort>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="id">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Controller Name</mat-header-cell>
+      <mat-cell *matCellDef="let controller" (click)="select(controller)">{{controller.name}}</mat-cell>
+    </ng-container>
+
+    <!-- Action Column -->
+    <ng-container matColumnDef="action">
+      <mat-header-cell *matHeaderCellDef>Action</mat-header-cell>
+      <mat-cell *matCellDef="let controller">
+        <mat-icon (click)="settings(controller)">tune</mat-icon>
+        <mat-icon *ngIf="controller.descriptor?.addBindingEndpoint" (click)="binding(controller)">link</mat-icon>
+        <mat-icon (click)="delete(controller)">remove_circle_outline</mat-icon>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+  </mat-table>
+
+  <button (click)="bind()" mat-fab class="fab-add-button" [class.snack-bar-open]="isSnackBarOpen">
+    <mat-icon aria-label="Bind controller">add</mat-icon>
+  </button>
+
+</div>

@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { EventsService } from '@brickchain/integrity-angular';
+import { SessionService } from '../../shared/services';
 import { AccessClient } from '../../shared/api-clients';
-import { EventsService } from '../../shared/services';
 import { User } from '../../shared/models';
 
 @Component({
@@ -12,6 +13,7 @@ import { User } from '../../shared/models';
 export class HomeComponent implements OnInit {
 
   constructor(private events: EventsService,
+    protected session: SessionService,
     private breakpointObserver: BreakpointObserver,
     private accessClient: AccessClient) { }
 
@@ -19,7 +21,7 @@ export class HomeComponent implements OnInit {
   user: User;
 
   ngOnInit() {
-    this.events.subscribe('switch_realm', realm => this.realm = realm);
+    // this.events.subscribe('switch_realm', realm => this.session.realm = realm);
     this.events.subscribe('active_http_requests', count => this.requestCount = count);
     this.accessClient.getUserAccess()
       .then(user => this.user = user)
@@ -32,14 +34,6 @@ export class HomeComponent implements OnInit {
 
   get isHandsetPortrait() {
     return this.breakpointObserver.isMatched(Breakpoints.HandsetPortrait);
-  }
-
-  get realm(): string {
-    return localStorage.getItem('realm');
-  }
-
-  set realm(realm: string) {
-    localStorage.setItem('realm', realm);
   }
 
 }
