@@ -27,6 +27,7 @@ import { WebviewClientModule } from '@brickchain/integrity-webview-client';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 
+import { DocumentHandlerService } from './handlers/document-handler.service';
 import { TokenInterceptor, LoaderInterceptor } from './shared/interceptors';
 import { AuthClient, AccessClient, RealmsClient, RolesClient, MandatesClient, ControllersClient } from './shared/api-clients';
 import { SessionService, PlatformService, ConfigService } from './shared/services';
@@ -41,6 +42,7 @@ import { SettingsComponent } from './pages/home/settings/settings.component';
 
 import { ControllerBindDialogComponent } from './pages/home/controllers/controller-bind-dialog.component';
 import { ControllerSettingsDialogComponent } from './pages/home/controllers/controller-settings-dialog.component';
+import { ControllerComponent } from './pages/home/controller/controller.component';
 
 @NgModule({
   declarations: [
@@ -53,7 +55,8 @@ import { ControllerSettingsDialogComponent } from './pages/home/controllers/cont
     RealmsComponent,
     SettingsComponent,
     ControllerBindDialogComponent,
-    ControllerSettingsDialogComponent
+    ControllerSettingsDialogComponent,
+    ControllerComponent
   ],
   entryComponents: [
     ControllerBindDialogComponent,
@@ -101,6 +104,7 @@ import { ControllerSettingsDialogComponent } from './pages/home/controllers/cont
     SessionService,
     PlatformService,
     ConfigService,
+    DocumentHandlerService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: LoaderInterceptor,

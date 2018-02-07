@@ -19,7 +19,9 @@
     <!-- Name Column -->
     <ng-container matColumnDef="name">
       <mat-header-cell *matHeaderCellDef mat-sort-header>Controller Name</mat-header-cell>
-      <mat-cell *matCellDef="let controller" (click)="select(controller)">{{controller.name}}</mat-cell>
+      <mat-cell *matCellDef="let controller" [routerLink]="['../controller', controller.id]">
+        {{controller.name}}
+      </mat-cell>
     </ng-container>
 
     <!-- Action Column -->

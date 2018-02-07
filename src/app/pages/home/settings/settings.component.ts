@@ -1,6 +1,5 @@
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
-import { SafeStyle } from '@angular/platform-browser/src/security/dom_sanitization_service';
+import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material';
 import { EventsService } from '@brickchain/integrity-angular';
 import { SessionService } from '../../../shared/services';

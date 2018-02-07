@@ -36,6 +36,17 @@ export class PlatformService {
     });
   }
 
+  public handle(document: any): Promise<any> {
+    if (this.inApp) {
+      return this.webviewClient.handle(document);
+    } else if (this.isMobile) {
+      // Todo: URL encode document and pass to integrity app
+      return Promise.resolve(false);
+    } else {
+      return Promise.resolve(false);
+    }
+  }
+
   public handleURI(uri: string, title?: string): Promise<any> {
     if (this.inApp) {
       return this.webviewClient.handle({ '@uri': uri });
@@ -44,7 +55,8 @@ export class PlatformService {
       window.location.href = `integrity://app/webapp/${url}`;
       return Promise.resolve();
     } else {
-      return this.dialogs.openQRCode({ title: title, qrdata: uri }).then(() => console.log('closed'));
+      return this.dialogs.openQRCode({ title: title, qrdata: uri })
+        .then(() => console.log('closed'));
       // Todo: if already logged in, send push notifcation
     }
   }

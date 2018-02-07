@@ -62,4 +62,10 @@ export class RealmsClient extends BaseClient {
       .then(url => this.http.post(url, this.jsonConvert.serializeObject(controller)).toPromise());
   }
 
+  public createSSOToken(controller: Controller): Promise<any> {
+    const data = { controller: controller.id };
+    return this.config.getBackendURL(`/realms/${controller.realm}/sso-token`)
+      .then(url => this.http.post(url, data, { responseType: 'text' }).toPromise());
+  }
+
 }
