@@ -7,6 +7,13 @@ mat-toolbar {
   right: 0;
   z-index: 2;
 
+  mat-progress-spinner {
+    &.paused {
+      animation-play-state: paused;
+      opacity: 0.5;
+    }
+  }
+
   mat-icon {
     cursor: pointer;
 
@@ -15,17 +22,6 @@ mat-toolbar {
 
       @media (max-width: $break-handset-portrait) and (orientation: portrait) {
         display: block;
-      }
-    }
-
-    &.spinner {
-      animation: spin 1s ease-in-out infinite;
-      transition: all 0.25s ease-in-out;
-      opacity: 0.3;
-
-      &.paused {
-        animation-play-state: paused;
-        opacity: 0;
       }
     }
   }

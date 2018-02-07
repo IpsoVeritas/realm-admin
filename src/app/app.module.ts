@@ -19,6 +19,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTableModule } from '@angular/material/table';
 import { MatSelectModule } from '@angular/material/select';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { EventsModule, QRCodeModule, DialogsModule, ClipboardModule, DragAndDropModule } from '@brickchain/integrity-angular';
 import { WebviewClientModule } from '@brickchain/integrity-webview-client';
@@ -38,6 +39,9 @@ import { ControllersComponent } from './pages/home/controllers/controllers.compo
 import { RealmsComponent } from './pages/home/realms/realms.component';
 import { SettingsComponent } from './pages/home/settings/settings.component';
 
+import { ControllerBindDialogComponent } from './pages/home/controllers/controller-bind-dialog.component';
+import { ControllerSettingsDialogComponent } from './pages/home/controllers/controller-settings-dialog.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -47,9 +51,13 @@ import { SettingsComponent } from './pages/home/settings/settings.component';
     RolesComponent,
     ControllersComponent,
     RealmsComponent,
-    SettingsComponent
+    SettingsComponent,
+    ControllerBindDialogComponent,
+    ControllerSettingsDialogComponent
   ],
   entryComponents: [
+    ControllerBindDialogComponent,
+    ControllerSettingsDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -74,6 +82,7 @@ import { SettingsComponent } from './pages/home/settings/settings.component';
     MatMenuModule,
     MatTableModule,
     MatSelectModule,
+    MatProgressSpinnerModule,
     WebviewClientModule,
     QRCodeModule,
     EventsModule,

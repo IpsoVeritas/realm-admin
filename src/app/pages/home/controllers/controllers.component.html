@@ -17,7 +17,7 @@
   <mat-table #table [dataSource]="dataSource" matSort>
 
     <!-- Name Column -->
-    <ng-container matColumnDef="id">
+    <ng-container matColumnDef="name">
       <mat-header-cell *matHeaderCellDef mat-sort-header>Controller Name</mat-header-cell>
       <mat-cell *matCellDef="let controller" (click)="select(controller)">{{controller.name}}</mat-cell>
     </ng-container>
@@ -26,8 +26,8 @@
     <ng-container matColumnDef="action">
       <mat-header-cell *matHeaderCellDef>Action</mat-header-cell>
       <mat-cell *matCellDef="let controller">
-        <mat-icon (click)="settings(controller)">tune</mat-icon>
         <mat-icon *ngIf="controller.descriptor?.addBindingEndpoint" (click)="binding(controller)">link</mat-icon>
+        <mat-icon (click)="settings(controller)">tune</mat-icon>
         <mat-icon (click)="delete(controller)">remove_circle_outline</mat-icon>
       </mat-cell>
     </ng-container>

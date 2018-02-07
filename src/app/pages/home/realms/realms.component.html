@@ -22,7 +22,9 @@
     <ng-container matColumnDef="action">
       <mat-header-cell *matHeaderCellDef>Action</mat-header-cell>
       <mat-cell *matCellDef="let realm">
-        <mat-icon *ngIf="session.realm != realm.id" (click)="delete(realm)">remove_circle_outline</mat-icon>
+        <button mat-icon-button (click)="delete(realm)" [disabled]="session.realm == realm.id">
+          <mat-icon>remove_circle_outline</mat-icon>
+        </button>
       </mat-cell>
     </ng-container>
 

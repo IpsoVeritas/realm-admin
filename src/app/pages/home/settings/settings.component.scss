@@ -1,17 +1,17 @@
 @import "~@brickchain/integrity-theme/theming";
 
 .settings-form {
-
   padding: 20px;
   display: flex;
   flex-direction: column;
   background-color: #fff;
 
   .buttons {
-    margin-top: 12px;
+    display: flex;
+    justify-content: flex-end;
 
     button {
-      margin-right: 12px;
+      margin: 12px 0 0 12px;
     }
   }
 

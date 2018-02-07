@@ -39,7 +39,7 @@ export class BootstrapComponent implements OnInit, AfterViewInit {
 
   onSubmit() {
     return this.accessClient.postBootstrap(this.password.value)
-      .then((response: BootstrapResponse) => this.platform.handleURI(response.mandateURI))
+      .then((response: BootstrapResponse) => this.platform.handleURI(response.mandateURI, 'Admin Mandate'))
       .then(() => this.router.navigate(['/login', {}]))
       .catch(error => this.password.setErrors({ 'bootstrapFailed': true }));
   }

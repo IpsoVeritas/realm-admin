@@ -26,6 +26,11 @@ export class SettingsComponent implements OnInit {
   isChanged = false;
   isSnackBarOpen = false;
 
+  snackBarErrorConfig: MatSnackBarConfig = {
+    duration: 5000,
+    panelClass: 'error'
+  };
+
   constructor(private sanitizer: DomSanitizer,
     private events: EventsService,
     private session: SessionService,
@@ -36,7 +41,7 @@ export class SettingsComponent implements OnInit {
   ngOnInit() {
     this.loadRealm();
     this.rolesClient.getRoles(this.session.realm)
-      .then(roles => roles.filter(role => !role.name.startsWith('admin@') && !role.name.startsWith('service@')))
+      .then(roles => roles.filter(role => role.name && !role.name.startsWith('admin@') && role.internal !== true))
       .then(roles => this.roles = roles)
       .catch(error => console.warn(error));
   }
@@ -59,7 +64,7 @@ export class SettingsComponent implements OnInit {
         }
       })
       .then(() => this.isChanged = false)
-      .catch(error => this.snackBarOpen(`Error loading '${this.session.realm}'`, 'Close', { duration: 5000 }));
+      .catch(error => this.snackBarOpen(`Error loading '${this.session.realm}'`, 'Close', this.snackBarErrorConfig));
   }
 
   iconDropped(files: File[]) {
@@ -80,7 +85,7 @@ export class SettingsComponent implements OnInit {
       .then(() => this.iconFile ? this.realmsClient.uploadIcon(this.realm.id, this.iconFile) : false)
       .then(() => this.bannerFile ? this.realmsClient.uploadBanner(this.realm.id, this.bannerFile) : false)
       .then(() => this.isChanged = false)
-      .catch(error => this.snackBarOpen(`Error updating '${this.realm.id}'`, 'Close', { duration: 5000 }));
+      .catch(error => this.snackBarOpen(`Error updating '${this.realm.id}'`, 'Close', this.snackBarErrorConfig));
   }
 
   snackBarOpen(message: string, action?: string, config?: MatSnackBarConfig) {
