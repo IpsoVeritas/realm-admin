@@ -39,6 +39,7 @@ export class ControllerComponent implements OnInit, OnDestroy {
     this.controllersClient.getController(this.realmId, this.controllerId)
       .then(controller => this.realmsClient.createSSOToken(controller)
         .then(token => {
+          console.log(token);
           this.controller = controller;
           if (controller.descriptor.adminUI) {
             const delim = controller.descriptor.adminUI.indexOf('?') === -1 ? '?' : '&';
@@ -57,10 +58,21 @@ export class ControllerComponent implements OnInit, OnDestroy {
   }
 
   handleMessage(event: MessageEvent) {
-    const message = event as MessageEvent;
-    const contentWindow = this.iframe.nativeElement.contentWindow;
-    this.documentHandler.receiveMessage(contentWindow, this.realmId, this.controller, event)
-      .catch(err => console.warn(err));
+
+    if (event.origin && this.controller.descriptor.adminUI.startsWith(event.origin)) {
+
+      const contentWindow = this.iframe.nativeElement.contentWindow;
+
+      const context = {
+        realmId: this.realmId,
+        controller: this.controller
+      };
+
+      this.documentHandler.handleData(context, event.data)
+        .then(result => contentWindow.postMessage(result, event.origin))
+        .catch(error => console.error(error));
+
+    }
   }
 
 }

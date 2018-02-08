@@ -74,10 +74,6 @@ export class ControllersComponent implements OnInit {
       });
   }
 
-  select(controller: Controller) {
-    console.log(controller);
-  }
-
   binding(controller: Controller) {
     // Synchronous HTTP to enable clipboard
     const xhr = new XMLHttpRequest();
@@ -96,6 +92,17 @@ export class ControllersComponent implements OnInit {
       }
     };
     xhr.send();
+  }
+
+  sync(controller?: Controller) {
+    if (controller) {
+      this.controllersClient.syncController(controller)
+        .catch(error => this.snackBarOpen(`Error syncing '${controller.name}'`, 'Close', this.snackBarErrorConfig));
+    } else {
+      Promise.all(this.dataSource.data.map(item => this.controllersClient.syncController(item)))
+        .then(controllers => this.dataSource.data = controllers)
+        .catch(error => this.snackBarOpen('Error syncing controllers', 'Close', this.snackBarErrorConfig));
+    }
   }
 
   settings(controller: Controller) {

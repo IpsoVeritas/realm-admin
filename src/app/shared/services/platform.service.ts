@@ -40,7 +40,6 @@ export class PlatformService {
     if (this.inApp) {
       return this.webviewClient.handle(document);
     } else if (this.isMobile) {
-      // Todo: URL encode document and pass to integrity app
       return Promise.resolve(false);
     } else {
       return Promise.resolve(false);
@@ -57,7 +56,7 @@ export class PlatformService {
     } else {
       return this.dialogs.openQRCode({ title: title, qrdata: uri })
         .then(() => console.log('closed'));
-      // Todo: if already logged in, send push notifcation
+      // TODO: if already logged in, send push notifcation
     }
   }
 

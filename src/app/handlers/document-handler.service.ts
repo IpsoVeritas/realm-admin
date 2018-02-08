@@ -1,21 +1,27 @@
 import { Injectable, Injector } from '@angular/core';
 import { Controller } from '../shared/models';
-import { UpdateActionsHandler } from './update-actions.handler';
 import { TextDecoder } from 'text-encoding-utf-8';
 import * as jose from 'node-jose';
+
+import { BrowseHandler } from './browse.handler';
+import { AddRoleHandler } from './add-role.handler';
+import { ListRolesHandler } from './list-roles.handler';
+import { UpdateActionsHandler } from './update-actions.handler';
+import { UpdateControllerHandler } from './update-controller.handler';
 
 @Injectable()
 export class DocumentHandlerService {
 
   private verifier: any;
-  private handlers: {} = {};
+  private handlers: { [key: string]: any } = [];
 
   constructor(private injector: Injector) {
     this.verifier = jose.JWS.createVerify();
-    // this.handlers['browse'] = new BrowseHandler(this, this.injector);
-    // this.handlers['update-controller'] = new UpdateControllerHandler(this, this.injector);
+    this.handlers['browse'] = new BrowseHandler(this, this.injector);
+    this.handlers['add-role'] = new AddRoleHandler(this, this.injector);
+    this.handlers['list-roles'] = new ListRolesHandler(this, this.injector);
     this.handlers['update-actions'] = new UpdateActionsHandler(this, this.injector);
-    // this.handlers['add-role'] = new AddRoleHandler(this, this.injector);
+    this.handlers['update-controller'] = new UpdateControllerHandler(this, this.injector);
   }
 
   public receiveMessage(

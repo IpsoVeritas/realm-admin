@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BaseClient } from './base.client';
-import { Realm, Controller } from '../models';
+import { Realm, Controller, ControllerDescriptor } from '../models';
 
 @Injectable()
 export class RealmsClient extends BaseClient {
@@ -62,7 +62,7 @@ export class RealmsClient extends BaseClient {
       .then(url => this.http.post(url, this.jsonConvert.serializeObject(controller)).toPromise());
   }
 
-  public createSSOToken(controller: Controller): Promise<any> {
+  public createSSOToken(controller: Controller): Promise<string> {
     const data = { controller: controller.id };
     return this.config.getBackendURL(`/realms/${controller.realm}/sso-token`)
       .then(url => this.http.post(url, data, { responseType: 'text' }).toPromise());

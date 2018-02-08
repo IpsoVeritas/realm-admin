@@ -56,7 +56,7 @@ export class RolesComponent implements OnInit, AfterViewInit {
   create() {
     this.dialogs.openSimpleInput({ message: 'Role name' })
       .then(name => {
-        if (name !== null) {
+        if (name) {
           const role = new Role();
           role.description = name;
           role.realm = this.activeRealm;

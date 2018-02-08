@@ -119,7 +119,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
             .then(() => this.router.navigate(['/home', {}]))
             .catch(error => {
               if (error && error.error) {
-                this.snackBar.open(error.error, 'Close', { duration: 5000 });
+                this.snackBar.open(error.error, 'Close', { duration: 5000, panelClass: 'error' });
               }
               this.start(realm);
             });

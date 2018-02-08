@@ -38,7 +38,7 @@ export class RealmsComponent implements OnInit {
   create() {
     this.dialogs.openSimpleInput({ message: 'Realm name' })
       .then(name => {
-        if (name !== null) {
+        if (name) {
           const realm = new Realm();
           realm.id = name;
           realm.name = name;

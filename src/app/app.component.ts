@@ -3,6 +3,7 @@ import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { URLSearchParams } from '@angular/http';
 import { EventsService } from '@brickchain/integrity-angular';
 import { PlatformService, ConfigService, SessionService } from './shared/services';
+import { ControllersClient } from './shared/api-clients';
 import { AuthUser } from './shared/models';
 import 'rxjs/add/operator/filter';
 
@@ -17,12 +18,14 @@ export class AppComponent implements OnInit {
 
   expirationTimer: any;
 
-  constructor(private router: Router,
+  constructor(
+    private router: Router,
     private activatedRoute: ActivatedRoute,
     private platform: PlatformService,
     private config: ConfigService,
     private session: SessionService,
-    private events: EventsService) {
+    private events: EventsService,
+    private controllersClient: ControllersClient) {
   }
 
   ngOnInit(): void {
@@ -58,6 +61,9 @@ export class AppComponent implements OnInit {
 
     this.startExpirationTimer();
 
+    this.controllersClient.getControllers(this.session.realm)
+      .then(controllers => controllers.map(controller => this.controllersClient.syncController(controller)))
+      .catch(error => console.warn('Error syncing controllers', error));
   }
 
   startExpirationTimer(): void {
