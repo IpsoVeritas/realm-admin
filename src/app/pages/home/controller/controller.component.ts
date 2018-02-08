@@ -22,6 +22,8 @@ export class ControllerComponent implements OnInit, OnDestroy {
   controller: Controller;
   uri: SafeResourceUrl;
 
+  ready = false;
+
   constructor(
     private renderer: Renderer2,
     private route: ActivatedRoute,
@@ -39,7 +41,6 @@ export class ControllerComponent implements OnInit, OnDestroy {
     this.controllersClient.getController(this.realmId, this.controllerId)
       .then(controller => this.realmsClient.createSSOToken(controller)
         .then(token => {
-          console.log(token);
           this.controller = controller;
           if (controller.descriptor.adminUI) {
             const delim = controller.descriptor.adminUI.indexOf('?') === -1 ? '?' : '&';
@@ -54,6 +55,12 @@ export class ControllerComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     if (this.stopListening !== undefined) {
       this.stopListening();
+    }
+  }
+
+  load(event) {
+    if (this.iframe) {
+      this.ready = true;
     }
   }
 
