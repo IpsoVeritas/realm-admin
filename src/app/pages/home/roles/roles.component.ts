@@ -3,18 +3,19 @@ import { MatSnackBar, MatSnackBarConfig } from '@angular/material';
 import { MatTableDataSource, MatSort } from '@angular/material';
 import { DialogsService } from '@brickchain/integrity-angular';
 import { RolesClient, MandatesClient } from '../../../shared/api-clients';
-import { Role, Mandate } from '../../../shared/models';
+import { Role, IssuedMandate } from '../../../shared/models';
 
 @Component({
   selector: 'app-roles',
   templateUrl: './roles.component.html',
   styleUrls: ['./roles.component.scss']
 })
+
 export class RolesComponent implements OnInit, AfterViewInit {
 
   displayedColumns = ['name', 'status', 'action'];
   roles: Array<Role>;
-  mandates: Array<Mandate>;
+  mandates: Array<IssuedMandate>;
   activeRealm: string;
   selectedRoleId: string;
   activeRole: Role;
@@ -85,17 +86,6 @@ export class RolesComponent implements OnInit, AfterViewInit {
   getMandates(roleName: string) {
     return this.mandates.filter(mandate => mandate.role === roleName);
   }
-
-  // status(mandate: Mandate) {
-  //   if (mandate.type === 'mandate') {
-  //     if (mandate.status === 0) { return 'Active'}
-  //     if (mandate.status === 1) { return 'Revoked'}
-  //   } else if (mandate.type === 'invite') {
-  //     return 'Pending';
-  //   }
-  //   return 'Unknown';
-  // }
-
 
   revoke(user) {
     console.log(user);

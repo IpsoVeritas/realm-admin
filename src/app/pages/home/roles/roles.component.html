@@ -15,7 +15,7 @@
         <mat-icon aria-label="Edit role">mode_edit</mat-icon>
       </button>
       <button (click)="delete()" mat-icon-button>
-        <mat-icon aria-label="Delete role">delete</mat-icon>
+        <mat-icon aria-label="Delete role">remove_circle_outline</mat-icon>
       </button>
     </mat-toolbar-row>
   </mat-toolbar>
@@ -30,14 +30,14 @@
     <!-- Status Column -->
     <ng-container matColumnDef="status">
       <mat-header-cell *matHeaderCellDef mat-sort-header> Status </mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{element.status}} </mat-cell>
+      <mat-cell *matCellDef="let element"> {{ element | filterStatus }} </mat-cell>
     </ng-container>
 
     <!-- icons Column -->
     <ng-container matColumnDef="action">
       <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
       <mat-cell *matCellDef="let element">
-        <mat-icon (click)="revoke(element)">delete</mat-icon>
+        <mat-icon (click)="revoke(element)">remove_circle_outline</mat-icon>
       </mat-cell>
     </ng-container>
 

@@ -30,6 +30,8 @@ import { TokenInterceptor, LoaderInterceptor } from './shared/interceptors';
 import { AuthClient, AccessClient, RealmsClient, RolesClient, MandatesClient, ControllersClient } from './shared/api-clients';
 import { SessionService, PlatformService, ConfigService } from './shared/services';
 
+import { FilterStatusPipe } from './shared/pipes';
+
 import { BootstrapComponent } from './pages/bootstrap/bootstrap.component';
 import { LoginComponent } from './pages/login/login.component';
 import { HomeComponent } from './pages/home/home.component';
@@ -47,7 +49,8 @@ import { SettingsComponent } from './pages/home/settings/settings.component';
     RolesComponent,
     ControllersComponent,
     RealmsComponent,
-    SettingsComponent
+    SettingsComponent,
+    FilterStatusPipe
   ],
   entryComponents: [
   ],
