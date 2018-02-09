@@ -1,11 +1,12 @@
 {
   "name": "realm-admin-ng",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --port 6580 --live-reload false",
     "build": "ng build --prod --stats-json",
+    "build-dev": "ng build --dev --stats-json",
     "watch": "ng build --watch",
     "test": "ng test",
     "lint": "ng lint",
