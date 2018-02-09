@@ -34,4 +34,12 @@ export class RolesClient extends BaseClient {
     return this.config.getBackendURL(`/realms/${realmId}/roles/${roleId}`)
     .then(url => this.http.delete(url).toPromise());
   }
+
+  public updateRole(realmId: string, role: Role): Promise<Role> {
+    return this.config.getBackendURL(`/realms/${realmId}/roles/${role.id}`)
+      .then(url => this.http.put(url, this.jsonConvert.serializeObject(role)).toPromise())
+      .then(() => role);
+  }
+
+
 }

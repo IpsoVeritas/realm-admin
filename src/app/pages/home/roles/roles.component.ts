@@ -1,9 +1,10 @@
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
-import { MatSnackBar, MatSnackBarConfig } from '@angular/material';
+import { MatSnackBar, MatSnackBarConfig, AUTOCOMPLETE_OPTION_HEIGHT } from '@angular/material';
 import { MatTableDataSource, MatSort } from '@angular/material';
 import { DialogsService } from '@brickchain/integrity-angular';
 import { RolesClient, MandatesClient } from '../../../shared/api-clients';
 import { Role, IssuedMandate } from '../../../shared/models';
+import { MatSelect } from '@angular/material/select';
 
 @Component({
   selector: 'app-roles',
@@ -20,7 +21,10 @@ export class RolesComponent implements OnInit, AfterViewInit {
   selectedRoleId: string;
   activeRole: Role;
   dataSource: MatTableDataSource<any>;
+
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild('matSelect') select: MatSelect;
+
   isSnackBarOpen = false;
 
   constructor(private dialogs: DialogsService,
@@ -42,11 +46,11 @@ export class RolesComponent implements OnInit, AfterViewInit {
       // fetching roles
       .then(roles => this.roles = roles.filter(r => !r.internal).sort((a, b) => a.description > b.description ? 1 : 0))
       .then(() => this.selectedRoleId = this.roles[0].id)
-      .then(() => this.select(this.selectedRoleId))
+      .then(() => this.selectRole(this.selectedRoleId))
       .then(() => console.log('roles', this.roles));
   }
 
-  select(roleId: string) {
+  selectRole(roleId: string) {
     this.activeRole = this.roles[this.roles.findIndex(role => role.id === roleId)];
     this.dataSource = new MatTableDataSource(this.getMandates(this.activeRole.name));
     this.dataSource.sort = this.sort;
@@ -54,7 +58,7 @@ export class RolesComponent implements OnInit, AfterViewInit {
 
   // Roles
 
-  create() {
+  createRole() {
     this.dialogs.openSimpleInput({ message: 'Role name' })
       .then(name => {
         const role = new Role();
@@ -72,7 +76,7 @@ export class RolesComponent implements OnInit, AfterViewInit {
       .catch(() => 'canceled');
   }
 
-  delete() {
+  deleteRole() {
     this.dialogs.openConfirm({ message: `Delete role '${this.activeRole.description}'?` })
       .then(() => this.rolesClient.deleteRole(this.activeRealm, this.activeRole.id)
         .then(() => this.roles = this.roles.filter(item => item.id !== this.activeRole.id))
@@ -81,14 +85,38 @@ export class RolesComponent implements OnInit, AfterViewInit {
       .catch(() => 'canceled');
   }
 
+  editRole() {
+    this.dialogs.openSimpleInput({ message: 'Role name', value: this.activeRole.description})
+    .then(name => {
+      this.activeRole.description = name;
+      return this.activeRole;
+    })
+    .then(role => this.rolesClient.updateRole(this.activeRealm, role)
+      .then(() => this.select.focus())
+      .catch(error => this.snackBarOpen(`Error updating '${role.description}'`, 'Close', { duration: 5000 })))
+    .catch(() => 'canceled');
+  }
+
   // mandates
 
   getMandates(roleName: string) {
     return this.mandates.filter(mandate => mandate.role === roleName);
   }
 
-  revoke(user) {
-    console.log(user);
+  revokeMandate(mandate) {
+    this.dialogs.openConfirm({ message: `Revoke mandate '${mandate.label}'?` })
+    .then(() => this.mandatesClient.revokeMandate(this.activeRealm, this.activeRole.id)
+      .then(() => {
+        mandate.status = 1;
+      })
+      .then(() => this.selectRole(this.selectedRoleId))
+      .catch(error => this.snackBarOpen(`Error revoking '${mandate.label}'`, 'Close', { duration: 5000 })))
+    .catch(() => 'canceled');
+  }
+
+  createMandate() {
+    this.dialogs.openSimpleInput({ message: 'Mail invitation' })
+    .catch(() => 'canceled');
   }
 
   snackBarOpen(message: string, action?: string, config?: MatSnackBarConfig) {

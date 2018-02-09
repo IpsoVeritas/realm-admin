@@ -2,7 +2,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { Role, IssuedMandate } from '../models';
 
 @Pipe({
-  name: 'filterStatus'
+  name: 'filterStatus',
+  pure: false
 })
 
 export class FilterStatusPipe implements PipeTransform {
