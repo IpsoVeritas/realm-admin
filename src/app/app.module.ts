@@ -19,6 +19,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTableModule } from '@angular/material/table';
 import { MatSelectModule } from '@angular/material/select';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { EventsModule, QRCodeModule, DialogsModule, ClipboardModule, DragAndDropModule } from '@brickchain/integrity-angular';
 import { WebviewClientModule } from '@brickchain/integrity-webview-client';
@@ -26,6 +27,7 @@ import { WebviewClientModule } from '@brickchain/integrity-webview-client';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 
+import { DocumentHandlerService } from './handlers/document-handler.service';
 import { TokenInterceptor, LoaderInterceptor } from './shared/interceptors';
 import { AuthClient, AccessClient, RealmsClient, RolesClient, MandatesClient, ControllersClient } from './shared/api-clients';
 import { SessionService, PlatformService, ConfigService } from './shared/services';
@@ -40,6 +42,10 @@ import { ControllersComponent } from './pages/home/controllers/controllers.compo
 import { RealmsComponent } from './pages/home/realms/realms.component';
 import { SettingsComponent } from './pages/home/settings/settings.component';
 
+import { ControllerBindDialogComponent } from './pages/home/controllers/controller-bind-dialog.component';
+import { ControllerSettingsDialogComponent } from './pages/home/controllers/controller-settings-dialog.component';
+import { ControllerComponent } from './pages/home/controller/controller.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -50,9 +56,14 @@ import { SettingsComponent } from './pages/home/settings/settings.component';
     ControllersComponent,
     RealmsComponent,
     SettingsComponent,
-    FilterStatusPipe
+    FilterStatusPipe,
+    ControllerBindDialogComponent,
+    ControllerSettingsDialogComponent,
+    ControllerComponent
   ],
   entryComponents: [
+    ControllerBindDialogComponent,
+    ControllerSettingsDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -77,6 +88,7 @@ import { SettingsComponent } from './pages/home/settings/settings.component';
     MatMenuModule,
     MatTableModule,
     MatSelectModule,
+    MatProgressSpinnerModule,
     WebviewClientModule,
     QRCodeModule,
     EventsModule,
@@ -95,6 +107,7 @@ import { SettingsComponent } from './pages/home/settings/settings.component';
     SessionService,
     PlatformService,
     ConfigService,
+    DocumentHandlerService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: LoaderInterceptor,

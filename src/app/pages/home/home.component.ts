@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { EventsService } from '@brickchain/integrity-angular';
+import { EventsService, DialogsService } from '@brickchain/integrity-angular';
 import { SessionService } from '../../shared/services';
 import { AccessClient } from '../../shared/api-clients';
 import { User } from '../../shared/models';
@@ -13,6 +13,7 @@ import { User } from '../../shared/models';
 export class HomeComponent implements OnInit {
 
   constructor(private events: EventsService,
+    private dialogs: DialogsService,
     protected session: SessionService,
     private breakpointObserver: BreakpointObserver,
     private accessClient: AccessClient) { }
@@ -21,7 +22,6 @@ export class HomeComponent implements OnInit {
   user: User;
 
   ngOnInit() {
-    // this.events.subscribe('switch_realm', realm => this.session.realm = realm);
     this.events.subscribe('active_http_requests', count => this.requestCount = count);
     this.accessClient.getUserAccess()
       .then(user => this.user = user)
@@ -29,7 +29,8 @@ export class HomeComponent implements OnInit {
   }
 
   logout() {
-    this.events.publish('logout');
+    this.dialogs.openConfirm({ message: `Logout?` })
+      .then(confirmed => confirmed ? this.events.publish('logout') : false);
   }
 
   get isHandsetPortrait() {

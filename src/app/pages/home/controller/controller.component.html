@@ -1,0 +1,7 @@
+<div class="iframe">
+  <div class="loading" [class.ready]="ready">
+    <div></div>
+    <p>Loading {{controller?.name}}</p>
+  </div>
+  <iframe #iframe *ngIf="uri" [src]="uri" (load)="load($event)" sandbox="allow-forms allow-scripts allow-same-origin allow-popups"></iframe>
+</div>

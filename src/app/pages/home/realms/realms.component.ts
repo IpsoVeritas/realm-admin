@@ -18,6 +18,11 @@ export class RealmsComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   isSnackBarOpen = false;
 
+  snackBarErrorConfig: MatSnackBarConfig = {
+    duration: 5000,
+    panelClass: 'error'
+  };
+
   constructor(private events: EventsService,
     private dialogs: DialogsService,
     protected session: SessionService,
@@ -33,16 +38,16 @@ export class RealmsComponent implements OnInit {
   create() {
     this.dialogs.openSimpleInput({ message: 'Realm name' })
       .then(name => {
-        const realm = new Realm();
-        realm.id = name;
-        realm.name = name;
-        return realm;
-      })
-      .then(realm => this.realmsClient.createRealm(realm)
-        .then(() => this.dataSource.data.push(realm))
-        .then(() => this.dataSource.data = this.dataSource.data)
-        .catch(error => this.snackBarOpen(`Error creating '${realm.name}'`, 'Close', { duration: 5000 })))
-      .catch(() => 'canceled');
+        if (name) {
+          const realm = new Realm();
+          realm.id = name;
+          realm.name = name;
+          this.realmsClient.createRealm(realm)
+            .then(() => this.dataSource.data.push(realm))
+            .then(() => this.dataSource.data = this.dataSource.data)
+            .catch(error => this.snackBarOpen(`Error creating '${realm.name}'`, 'Close', this.snackBarErrorConfig));
+        }
+      });
   }
 
   select(realm: Realm) {
@@ -51,10 +56,13 @@ export class RealmsComponent implements OnInit {
 
   delete(realm: Realm) {
     this.dialogs.openConfirm({ message: `Delete realm '${realm.id}'?` })
-      .then(() => this.realmsClient.deleteRealm(realm.id)
-        .then(() => this.dataSource.data = this.dataSource.data.filter(item => item !== realm))
-        .catch(error => this.snackBarOpen(`Error deleting '${realm.id}'`, 'Close', { duration: 5000 })))
-      .catch(() => 'canceled');
+      .then(confirmed => {
+        if (confirmed) {
+          this.realmsClient.deleteRealm(realm)
+            .then(() => this.dataSource.data = this.dataSource.data.filter(item => item !== realm))
+            .catch(error => this.snackBarOpen(`Error deleting '${realm.id}'`, 'Close', this.snackBarErrorConfig));
+        }
+      });
   }
 
   snackBarOpen(message: string, action?: string, config?: MatSnackBarConfig) {

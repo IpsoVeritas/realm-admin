@@ -1,11 +1,12 @@
 {
   "name": "realm-admin-ng",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --port 6580 --live-reload false",
     "build": "ng build --prod --stats-json",
+    "build-dev": "ng build --dev --stats-json",
     "watch": "ng build --watch",
     "test": "ng test",
     "lint": "ng lint",
@@ -25,14 +26,15 @@
     "@angular/platform-browser": "^5.0.0",
     "@angular/platform-browser-dynamic": "^5.0.0",
     "@angular/router": "^5.0.0",
-    "@brickchain/integrity-angular": "^0.1.1",
-    "@brickchain/integrity-theme": "^0.1.2",
+    "@brickchain/integrity-angular": "^0.1.4",
+    "@brickchain/integrity-theme": "^0.1.5",
     "@brickchain/integrity-webview-client": "^0.3.3",
     "core-js": "^2.4.1",
     "hammerjs": "^2.0.8",
     "json2typescript": "^1.0.5",
     "node-jose": "^0.11.0",
     "rxjs": "^5.5.2",
+    "text-encoding-utf-8": "^1.0.2",
     "zone.js": "^0.8.14"
   },
   "devDependencies": {

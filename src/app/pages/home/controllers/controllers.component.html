@@ -8,6 +8,9 @@
     <mat-toolbar-row>
       Controllers
       <span class="spacer"></span>
+      <button (click)="sync()" mat-icon-button color="accent">
+        <mat-icon aria-label="Sync controllers">sync</mat-icon>
+      </button>
       <button (click)="bind()" mat-icon-button color="accent">
         <mat-icon aria-label="Bind controller">add_circle</mat-icon>
       </button>
@@ -17,17 +20,20 @@
   <mat-table #table [dataSource]="dataSource" matSort>
 
     <!-- Name Column -->
-    <ng-container matColumnDef="id">
+    <ng-container matColumnDef="name">
       <mat-header-cell *matHeaderCellDef mat-sort-header>Controller Name</mat-header-cell>
-      <mat-cell *matCellDef="let controller" (click)="select(controller)">{{controller.name}}</mat-cell>
+      <mat-cell *matCellDef="let controller" [routerLink]="['../controller', controller.id]">
+        {{controller.name}}
+      </mat-cell>
     </ng-container>
 
     <!-- Action Column -->
     <ng-container matColumnDef="action">
       <mat-header-cell *matHeaderCellDef>Action</mat-header-cell>
       <mat-cell *matCellDef="let controller">
-        <mat-icon (click)="settings(controller)">tune</mat-icon>
         <mat-icon *ngIf="controller.descriptor?.addBindingEndpoint" (click)="binding(controller)">link</mat-icon>
+        <mat-icon (click)="sync(controller)">sync</mat-icon>
+        <mat-icon (click)="settings(controller)">tune</mat-icon>
         <mat-icon (click)="delete(controller)">remove_circle_outline</mat-icon>
       </mat-cell>
     </ng-container>

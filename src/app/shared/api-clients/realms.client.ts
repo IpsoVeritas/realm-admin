@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BaseClient } from './base.client';
-import { Realm } from '../models';
+import { Realm, Controller, ControllerDescriptor } from '../models';
 
 @Injectable()
 export class RealmsClient extends BaseClient {
@@ -36,8 +36,8 @@ export class RealmsClient extends BaseClient {
       .then(() => realm);
   }
 
-  public deleteRealm(id: string): Promise<any> {
-    return this.config.getBackendURL(`/realms/${id}`)
+  public deleteRealm(realm: Realm): Promise<any> {
+    return this.config.getBackendURL(`/realms/${realm.id}`)
       .then(url => this.http.delete(url).toPromise());
   }
 
@@ -55,6 +55,17 @@ export class RealmsClient extends BaseClient {
     const formData: FormData = new FormData();
     formData.append('file', file, file.name);
     return this.http.post(url, formData).toPromise();
+  }
+
+  public bindController(controller: Controller): Promise<any> {
+    return this.config.getBackendURL(`/realms/${controller.realm}/controllers`)
+      .then(url => this.http.post(url, this.jsonConvert.serializeObject(controller)).toPromise());
+  }
+
+  public createSSOToken(controller: Controller): Promise<string> {
+    const data = { controller: controller.id };
+    return this.config.getBackendURL(`/realms/${controller.realm}/sso-token`)
+      .then(url => this.http.post(url, data, { responseType: 'text' }).toPromise());
   }
 
 }

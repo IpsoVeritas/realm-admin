@@ -61,28 +61,31 @@ export class RolesComponent implements OnInit, AfterViewInit {
   createRole() {
     this.dialogs.openSimpleInput({ message: 'Role name' })
       .then(name => {
-        const role = new Role();
-        role.description = name;
-        role.realm = this.activeRealm;
-        return role;
-      })
-      .then(role => this.rolesClient.createRole(this.activeRealm, role)
-        .then(() => this.rolesClient.getRoles(this.activeRealm))
-        .then(roles => this.roles = roles)
-        .then(() => this.selectedRoleId = this.roles[this.roles.length - 1].id)
-        // .then(() => this.roles.push(role))
-        // .then(() => this.selectedRoleId = this.roles[this.roles.length - 1].id)
-        .catch(error => this.snackBarOpen(`Error creating '${role.description}'`, 'Close', { duration: 5000 })))
-      .catch(() => 'canceled');
+        if (name) {
+          const role = new Role();
+          role.description = name;
+          role.realm = this.activeRealm;
+          this.rolesClient.createRole(this.activeRealm, role)
+            .then(() => this.rolesClient.getRoles(this.activeRealm))
+            .then(roles => this.roles = roles)
+            .then(() => this.selectedRoleId = this.roles[this.roles.length - 1].id)
+            // .then(() => this.roles.push(role))
+            // .then(() => this.selectedRoleId = this.roles[this.roles.length - 1].id)
+            .catch(error => this.snackBarOpen(`Error creating '${role.description}'`, 'Close', { duration: 5000 }));
+        }
+      });
   }
 
   deleteRole() {
     this.dialogs.openConfirm({ message: `Delete role '${this.activeRole.description}'?` })
-      .then(() => this.rolesClient.deleteRole(this.activeRealm, this.activeRole.id)
-        .then(() => this.roles = this.roles.filter(item => item.id !== this.activeRole.id))
-        .then(() => this.selectedRoleId = this.roles[0].id)
-        .catch(error => this.snackBarOpen(`Error deleting '${this.activeRole.description}'`, 'Close', { duration: 5000 })))
-      .catch(() => 'canceled');
+      .then(confirmed => {
+        if (confirmed) {
+          this.rolesClient.deleteRole(this.activeRealm, this.activeRole.id)
+            .then(() => this.roles = this.roles.filter(item => item.id !== this.activeRole.id))
+            .then(() => this.selectedRoleId = this.roles[0].id)
+            .catch(error => this.snackBarOpen(`Error deleting '${this.activeRole.description}'`, 'Close', { duration: 5000 }));
+        }
+      });
   }
 
   editRole() {

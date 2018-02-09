@@ -5,7 +5,7 @@
     <span class="spacer"></span>
     <span>{{ session.realm }}</span>
     <span class="spacer"></span>
-    <mat-icon [class.paused]="requestCount == 0" class="spinner">autorenew</mat-icon>
+    <mat-progress-spinner [mode]="requestCount == 0 ? 'determinate' : 'indeterminate'" diameter="20" color="accent"></mat-progress-spinner>
     <mat-icon *ngIf="isHandsetPortrait" (click)="logout()">exit_to_app</mat-icon>
   </mat-toolbar-row>
 </mat-toolbar>
