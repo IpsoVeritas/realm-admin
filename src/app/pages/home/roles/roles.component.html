@@ -24,7 +24,7 @@
     <!-- Name Column -->
     <ng-container matColumnDef="name">
       <mat-header-cell *matHeaderCellDef mat-sort-header> Members </mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{ element.type == 'mandate' ? element.label : element.name }} </mat-cell>
+      <mat-cell *matCellDef="let element"> {{ element.type == 'mandate' ? element.label : element.id }} </mat-cell>
     </ng-container>
 
     <!-- Status Column -->
