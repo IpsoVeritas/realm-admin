@@ -31,4 +31,9 @@ export class InvitesClient extends BaseClient {
       .then(() => invite);
     // return Promise.resolve(invite);
   }
+
+  public deleteInvite(realmId: string, inviteId: string): Promise<any> {
+    return this.config.getBackendURL(`/realms/${realmId}/invite/${inviteId}`)
+      .then(url => this.http.delete(url).toPromise());
+  }
 }

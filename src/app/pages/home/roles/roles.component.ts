@@ -61,13 +61,14 @@ export class RolesComponent implements OnInit, AfterViewInit {
       .then(() => this.selectRole(this.selectedRoleId));
   }
 
+  // Roles
+
   selectRole(roleId: string) {
     this.activeRole = this.roles[this.roles.findIndex(role => role.id === roleId)];
     this.dataSource = new MatTableDataSource(this.getMandates(this.activeRole.name));
+    //console.log(this.getMandates(this.activeRole.name));
     this.dataSource.sort = this.sort;
   }
-
-  // Roles
 
   createRole() {
     this.dialogs.openSimpleInput({ message: 'Role name' })
@@ -78,10 +79,11 @@ export class RolesComponent implements OnInit, AfterViewInit {
           role.realm = this.activeRealm;
           this.rolesClient.createRole(this.activeRealm, role)
             .then(() => this.rolesClient.getRoles(this.activeRealm))
-            .then(roles => this.roles = roles)
-            .then(() => this.selectedRoleId = this.roles[this.roles.length - 1].id)
-            // .then(() => this.roles.push(role))
-            // .then(() => this.selectedRoleId = this.roles[this.roles.length - 1].id)
+            .then(roles => this.roles = roles.filter(r => !r.internal).sort((a, b) => a.description > b.description ? 1 : 0))
+            .then(() => {
+              this.selectedRoleId = this.roles[this.roles.findIndex(elt => elt.description === name)].id;
+              this.selectRole(this.selectedRoleId);
+              })
             .catch(error => this.snackBarOpen(`Error creating '${role.description}'`, 'Close', { duration: 5000 }));
         }
       });

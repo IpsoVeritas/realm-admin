@@ -22,6 +22,8 @@ import { Invite } from './../../../shared/models/';
     mat-dialog-content {
       display: flex;
       flex-direction: column;
+      width: 300px;
+      height: 200px;
     }
   `]
 })
@@ -29,11 +31,6 @@ export class RoleInviteDialogComponent {
 
   constructor(public dialogRef: MatDialogRef<RoleInviteDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public invite: Invite) {
-  }
-
-  @HostListener('keydown.enter')
-  public onEnter(): void {
-    this.dialogRef.close(this.invite);
   }
 
 }
