@@ -7,6 +7,9 @@
 .mat-header-row, .mat-row {
   justify-content: space-between;
 }
+mat-toolbar-row {
+  padding: 0 24px;
+}
 
 .mat-header-cell, .mat-cell {
   flex: 0 1 45%;
@@ -18,13 +21,17 @@
     justify-content: center;
   }
 }
-
-.mat-header-cell:last-child {
-  justify-content: center;
+.mat-header-cell:nth-child(2) {
+  padding-left: 12px;
 }
 
-.mat-cell {
-  //cursor: pointer;
+.mat-header-cell:last-child {
+  justify-content: flex-end;
+  padding-right: 12px;
+}
+
+.mat-cell:last-child {
+  justify-content: flex-end;
 }
 
 .fab-add-button {

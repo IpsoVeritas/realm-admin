@@ -8,13 +8,13 @@
         </mat-select>
       </mat-form-field>
       <span class="spacer"></span> 
-      <button (click)="createRole()" mat-icon-button>
+      <button (click)="createRole()" mat-icon-button color="accent">
         <mat-icon aria-label="Create role">add_circle</mat-icon>
       </button>
-      <button (click)="editRole()" mat-icon-button>
+      <button (click)="editRole()" mat-icon-button color="accent">
         <mat-icon aria-label="Edit role">mode_edit</mat-icon>
       </button>
-      <button (click)="deleteRole()" mat-icon-button>
+      <button (click)="deleteRole()" mat-icon-button color="accent">
         <mat-icon aria-label="Delete role">remove_circle_outline</mat-icon>
       </button>
     </mat-toolbar-row>
@@ -37,7 +37,7 @@
     <ng-container matColumnDef="action">
       <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
       <mat-cell *matCellDef="let element">
-        <button (click)="revokeMandate(element)" mat-icon-button [disabled]="element.type == 'invite'">
+        <button (click)="revokeMandate(element)" mat-icon-button [disabled]="element.type == 'invite'" color="accent">
           <mat-icon aria-label="Revoke mandate">archive</mat-icon>
         </button>
       </mat-cell>
