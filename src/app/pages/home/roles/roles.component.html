@@ -24,7 +24,7 @@
     <!-- Name Column -->
     <ng-container matColumnDef="name">
       <mat-header-cell *matHeaderCellDef mat-sort-header> Members </mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{element.label}} </mat-cell>
+      <mat-cell *matCellDef="let element"> {{ element.type == 'mandate' ? element.label : element.name }} </mat-cell>
     </ng-container>
 
     <!-- Status Column -->
@@ -37,7 +37,7 @@
     <ng-container matColumnDef="action">
       <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
       <mat-cell *matCellDef="let element">
-        <button (click)="revokeMandate(element)" mat-icon-button>
+        <button (click)="revokeMandate(element)" mat-icon-button [disabled]="element.type == 'invite'">
           <mat-icon aria-label="Revoke mandate">archive</mat-icon>
         </button>
       </mat-cell>

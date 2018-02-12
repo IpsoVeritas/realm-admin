@@ -12,3 +12,4 @@ export { Role } from './role.model';
 export { Controller } from './controller.model';
 export { ControllerDescriptor } from './controller-descriptor.model';
 export { IssuedMandate } from './issued-mandate.model';
+export { Invite } from './invite.model';

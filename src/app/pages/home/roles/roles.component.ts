@@ -1,10 +1,12 @@
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { MatSnackBar, MatSnackBarConfig, AUTOCOMPLETE_OPTION_HEIGHT } from '@angular/material';
 import { MatTableDataSource, MatSort } from '@angular/material';
-import { DialogsService } from '@brickchain/integrity-angular';
-import { RolesClient, MandatesClient } from '../../../shared/api-clients';
-import { Role, IssuedMandate } from '../../../shared/models';
 import { MatSelect } from '@angular/material/select';
+import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
+import { RoleInviteDialogComponent } from './role-invite-dialog.component';
+import { DialogsService } from '@brickchain/integrity-angular';
+import { RolesClient, MandatesClient, InvitesClient } from '../../../shared/api-clients';
+import { Role, IssuedMandate, Invite } from '../../../shared/models';
 
 @Component({
   selector: 'app-roles',
@@ -16,7 +18,9 @@ export class RolesComponent implements OnInit, AfterViewInit {
 
   displayedColumns = ['name', 'status', 'action'];
   roles: Array<Role>;
-  mandates: Array<IssuedMandate>;
+  // mandates: Array<IssuedMandate>;
+  // invites: Array<Invite>;
+  mandatesAndInvites: Array<any>;
   activeRealm: string;
   selectedRoleId: string;
   activeRole: Role;
@@ -27,10 +31,17 @@ export class RolesComponent implements OnInit, AfterViewInit {
 
   isSnackBarOpen = false;
 
+  snackBarErrorConfig: MatSnackBarConfig = {
+    duration: 5000,
+    panelClass: 'error'
+  };
+
   constructor(private dialogs: DialogsService,
     private rolesClient: RolesClient,
     private mandatesClient: MandatesClient,
-    private snackBar: MatSnackBar) { }
+    private invitesClient: InvitesClient,
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog) { }
 
   ngOnInit() {
   }
@@ -38,16 +49,16 @@ export class RolesComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this.activeRealm = localStorage.getItem('realm');
 
+    // fetching mandates and invites
     this.mandatesClient.getMandates(this.activeRealm)
-      // fetching mandates
-      .then(mandates => { console.log(mandates); return mandates; })
-      .then(mandates => this.mandates = mandates)
-      .then(() => this.rolesClient.getRoles(this.activeRealm))
+      .then(mandates => this.mandatesAndInvites = mandates)
+      .then(() => this.invitesClient.getInvites(this.activeRealm))
+      .then(invites => this.mandatesAndInvites = this.mandatesAndInvites.concat(invites))
       // fetching roles
+      .then(() => this.rolesClient.getRoles(this.activeRealm))
       .then(roles => this.roles = roles.filter(r => !r.internal).sort((a, b) => a.description > b.description ? 1 : 0))
       .then(() => this.selectedRoleId = this.roles[0].id)
-      .then(() => this.selectRole(this.selectedRoleId))
-      .then(() => console.log('roles', this.roles));
+      .then(() => this.selectRole(this.selectedRoleId));
   }
 
   selectRole(roleId: string) {
@@ -103,7 +114,7 @@ export class RolesComponent implements OnInit, AfterViewInit {
   // mandates
 
   getMandates(roleName: string) {
-    return this.mandates.filter(mandate => mandate.role === roleName);
+    return this.mandatesAndInvites.filter(mandate => mandate.role === roleName);
   }
 
   revokeMandate(mandate) {
@@ -118,8 +129,22 @@ export class RolesComponent implements OnInit, AfterViewInit {
   }
 
   createMandate() {
-    this.dialogs.openSimpleInput({ message: 'Mail invitation' })
-    .catch(() => 'canceled');
+    const invite = new Invite();
+    invite.realm = this.activeRealm;
+    invite.role = this.activeRole.name;
+    invite.type = 'invite';
+    invite.messageType = 'email';
+    this.dialog.open(RoleInviteDialogComponent, { data: invite })
+    .afterClosed().toPromise()
+    .then(updatedInvite => {
+      if (updatedInvite) {
+        this.invitesClient.sendInvite(this.activeRealm, updatedInvite)
+          .then(() => this.mandatesAndInvites.push(updatedInvite))
+          .then(() => this.selectRole(this.selectedRoleId))
+          .then(() => console.log(updatedInvite))
+          .catch(error => this.snackBarOpen(`Error sending '${updatedInvite.name}'`, 'Close', this.snackBarErrorConfig));
+      }
+    });
   }
 
   snackBarOpen(message: string, action?: string, config?: MatSnackBarConfig) {
