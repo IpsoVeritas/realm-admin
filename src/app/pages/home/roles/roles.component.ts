@@ -53,6 +53,9 @@ export class RolesComponent implements OnInit, AfterViewInit {
 
   // Roles
 
+  edit() {
+  }
+
   create() {
     this.dialogs.openSimpleInput({ message: 'Role name' })
       .then(name => {

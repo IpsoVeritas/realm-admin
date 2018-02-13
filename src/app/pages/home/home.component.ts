@@ -14,7 +14,7 @@ export class HomeComponent implements OnInit {
 
   constructor(private events: EventsService,
     private dialogs: DialogsService,
-    protected session: SessionService,
+    public session: SessionService,
     private breakpointObserver: BreakpointObserver,
     private accessClient: AccessClient) { }
 
