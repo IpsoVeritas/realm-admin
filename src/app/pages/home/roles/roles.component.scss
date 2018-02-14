@@ -1,10 +1,16 @@
+@import "~@brickchain/integrity-theme/theming";
+
 .mat-toolbar {
   position: sticky;
   top: 0;
-}
 
-.mat-header-row {
-  z-index: 1;
+  .mat-icon {
+    cursor: pointer;
+  }
+
+  .mat-toolbar-row {
+    padding: 0 24px;
+  }
 }
 
 .mat-header-row, .mat-row {
@@ -23,6 +29,18 @@
   }
 }
 
+.mat-cell {
+  &.active {
+    color: mat-color($integrity-green);
+  }
+  &.pending {
+    color: mat-color($integrity-yellow);
+  }
+  &.revoked {
+    color: mat-color($integrity-warn);
+  }
+}
+
 .fab-add-button {
   position: fixed !important;
   bottom: 20px;
@@ -34,6 +52,7 @@
 .fab-add-button.snack-bar-open {
   bottom: 68px;
 }
+
 :host-context(.narrow) {
   .fab-add-button {
     display: inline;
@@ -43,8 +62,3 @@
     display: none;
   }
 }
-
-mat-toolbar-row {
-  padding: 0 24px;
-}
-

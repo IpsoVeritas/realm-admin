@@ -18,11 +18,11 @@ import * as uuid from 'uuid/v1';
 export class RolesComponent implements OnInit, AfterViewInit {
 
   displayedColumns = ['name', 'status', 'action'];
-  roles: Array<Role>;
-  items = [];
-  selectedRoleId: string;
-  activeRole: Role;
   dataSource: MatTableDataSource<any>;
+
+  _roles: Array<Role>;
+  activeRole: Role;
+  items = [];
 
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild('matSelect') select: MatSelect;
@@ -42,10 +42,10 @@ export class RolesComponent implements OnInit, AfterViewInit {
     private snackBar: MatSnackBar,
     private dialog: MatDialog) { }
 
-  ngOnInit() {
+  ngAfterViewInit() {
   }
 
-  ngAfterViewInit() {
+  ngOnInit() {
     Promise.all([
       this.mandatesClient.getMandates(this.session.realm),
       this.invitesClient.getInvites(this.session.realm),
@@ -65,18 +65,28 @@ export class RolesComponent implements OnInit, AfterViewInit {
         type: 'invite',
         data: invite
       }));
-      this.roles = roles.filter(r => !r.internal).sort((a, b) => a.description > b.description ? 1 : 0);
-      this.selectRole(this.session.getItem('role', this.roles[0].id));
+      this.roles = roles;
+      const intialRoleId = this.session.getItem('role', this.roles[0].id);
+      this.selectRole(this.roles.find(r => r.id === intialRoleId));
     });
   }
 
   // Roles
 
-  selectRole(roleId: string) {
-    this.session.setItem('role', roleId);
-    this.activeRole = this.roles[Math.max(0, this.roles.findIndex(role => role.id === roleId))];
-    this.selectedRoleId = this.activeRole.id;
-    this.dataSource = new MatTableDataSource(this.getMandates(this.activeRole.name));
+  set roles(values: Role[]) {
+    this._roles = values
+      .filter(role => !role.internal)
+      .sort((a, b) => a.description.localeCompare(b.description));
+  }
+
+  get roles(): Role[] {
+    return this._roles;
+  }
+
+  selectRole(role: Role) {
+    this.session.setItem('role', role.id);
+    this.activeRole = role;
+    this.dataSource = new MatTableDataSource(this.getMandates(this.activeRole));
     this.dataSource.sort = this.sort;
   }
 
@@ -90,11 +100,8 @@ export class RolesComponent implements OnInit, AfterViewInit {
           role.realm = this.session.realm;
           this.rolesClient.createRole(this.session.realm, role)
             .then(() => this.rolesClient.getRoles(this.session.realm))
-            .then(roles => this.roles = roles.filter(r => !r.internal).sort((a, b) => a.description > b.description ? 1 : 0))
-            .then(() => {
-              this.selectedRoleId = this.roles[this.roles.findIndex(elt => elt.description === name)].id;
-              this.selectRole(this.selectedRoleId);
-            })
+            .then(roles => this.roles = roles)
+            .then(() => this.selectRole(this.roles.find(r => r.name === role.name)))
             .catch(error => this.snackBarOpen(`Error creating '${role.description}'`, 'Close', { duration: 5000 }));
         }
       });
@@ -106,7 +113,7 @@ export class RolesComponent implements OnInit, AfterViewInit {
         if (confirmed) {
           this.rolesClient.deleteRole(this.session.realm, this.activeRole.id)
             .then(() => this.roles = this.roles.filter(item => item.id !== this.activeRole.id))
-            .then(() => this.selectedRoleId = this.roles[0].id)
+            .then(() => this.selectRole(this.roles[0]))
             .catch(error => this.snackBarOpen(`Error deleting '${this.activeRole.description}'`, 'Close', { duration: 5000 }));
         }
       });
@@ -118,7 +125,8 @@ export class RolesComponent implements OnInit, AfterViewInit {
         if (name) {
           this.activeRole.description = name;
           this.rolesClient.updateRole(this.session.realm, this.activeRole)
-            .then(() => this.select.focus())
+            .then(() => this.roles = this.roles)
+            .then(() => this.selectRole(this.activeRole))
             .catch(error => this.snackBarOpen(`Error updating '${this.activeRole.description}'`, 'Close', { duration: 5000 }));
         }
       });
@@ -126,17 +134,21 @@ export class RolesComponent implements OnInit, AfterViewInit {
 
   // mandates
 
-  getMandates(roleName: string) {
-    return this.items.filter(item => item.role === roleName);
+  getMandates(role: Role) {
+    return this.items.filter(item => item.role === role.name);
   }
 
-  revokeMandate(mandate: IssuedMandate) {
+  revokeMandate(item) {
+    const mandate = item.data;
     this.dialogs.openConfirm({ message: `Revoke mandate '${mandate.label}'?` })
       .then(confirmed => {
         if (confirmed) {
-          this.mandatesClient.revokeMandate(this.session.realm, this.activeRole.id)
-            .then(() => mandate.status = 1)
-            .then(() => this.selectRole(this.selectedRoleId))
+          this.mandatesClient.revokeMandate(mandate)
+            .then(() => {
+              item.status = 'Revoked';
+              item.data.status = 1;
+            })
+            .then(() => this.dataSource.data = this.getMandates(this.activeRole))
             .catch(error => this.snackBarOpen(`Error revoking '${mandate.label}'`, 'Close', { duration: 5000 }));
         }
       });
@@ -144,11 +156,12 @@ export class RolesComponent implements OnInit, AfterViewInit {
 
   // invites
 
-  resendInvite(invite: Invite) {
+  resendInvite(item: any) {
+    const invite = item.data;
     this.dialogs.openConfirm({ message: `Re-send invite to '${invite.name}'?` })
       .then(confirmed => {
         if (confirmed) {
-          this.invitesClient.resendInvite(this.session.realm, invite)
+          this.invitesClient.resendInvite(invite)
             .catch(error => this.snackBarOpen(`Error sending invite to '${invite.name}'`, 'Close', { duration: 5000 }));
         }
       });
@@ -159,7 +172,7 @@ export class RolesComponent implements OnInit, AfterViewInit {
     this.dialogs.openConfirm({ message: `Delete invite to '${invite.name}'?` })
       .then(confirmed => {
         if (confirmed) {
-          this.invitesClient.deleteInvite(this.session.realm, this.activeRole.id)
+          this.invitesClient.deleteInvite(invite)
             .then(() => this.items = this.items.filter(i => i !== item))
             .then(() => this.dataSource.data = this.dataSource.data.filter(i => i !== item))
             .catch(error => this.snackBarOpen(`Error deleting invite to '${invite.name}'`, 'Close', { duration: 5000 }));
@@ -177,7 +190,7 @@ export class RolesComponent implements OnInit, AfterViewInit {
           invite.type = 'invite';
           invite.messageType = 'email';
           invite.messageURI = 'mailto:' + invite.name;
-          this.invitesClient.sendInvite(this.session.realm, invite)
+          this.invitesClient.sendInvite(invite)
             .then(() => this.items.push({
               role: invite.role,
               name: invite.name,
@@ -185,7 +198,7 @@ export class RolesComponent implements OnInit, AfterViewInit {
               type: 'invite',
               data: invite
             }))
-            .then(() => this.dataSource.data = this.getMandates(this.activeRole.name))
+            .then(() => this.dataSource.data = this.getMandates(this.activeRole))
             .catch(error => this.snackBarOpen(`Error sending invite to '${invite.name}'`, 'Close', this.snackBarErrorConfig));
         }
       });

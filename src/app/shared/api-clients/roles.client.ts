@@ -41,5 +41,4 @@ export class RolesClient extends BaseClient {
       .then(() => role);
   }
 
-
 }

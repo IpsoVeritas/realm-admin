@@ -19,10 +19,10 @@
         <mat-icon aria-label="Bind controller" (click)="bind()" color="accent">add_circle</mat-icon>
       </mat-header-cell>
       <mat-cell *matCellDef="let controller">
-        <mat-icon *ngIf="controller.descriptor?.addBindingEndpoint" (click)="binding(controller)">link</mat-icon>
-        <mat-icon (click)="sync(controller)">sync</mat-icon>
-        <mat-icon (click)="settings(controller)">tune</mat-icon>
-        <mat-icon (click)="delete(controller)">remove_circle_outline</mat-icon>
+        <mat-icon *ngIf="controller.descriptor?.addBindingEndpoint" (click)="binding(controller)" color="accent">link</mat-icon>
+        <mat-icon (click)="settings(controller)" color="accent">tune</mat-icon>
+        <mat-icon (click)="sync(controller)" color="accent">sync</mat-icon>
+        <mat-icon (click)="delete(controller)" color="accent">remove_circle_outline</mat-icon>
       </mat-cell>
     </ng-container>
 

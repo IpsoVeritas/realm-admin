@@ -16,7 +16,7 @@
         <mat-icon aria-label="Create realm" (click)="create()" color="accent">add_circle</mat-icon>
       </mat-header-cell>
       <mat-cell *matCellDef="let realm">
-          <mat-icon *ngIf="session.realm != realm.id" (click)="delete(realm)">remove_circle_outline</mat-icon>
+        <mat-icon *ngIf="session.realm != realm.id" (click)="delete(realm)" color="accent">remove_circle_outline</mat-icon>
       </mat-cell>
     </ng-container>
 

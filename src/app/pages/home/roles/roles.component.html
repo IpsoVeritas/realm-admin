@@ -3,12 +3,12 @@
   <mat-toolbar>
     <mat-toolbar-row>
       <mat-form-field>
-        <mat-select [(value)]="selectedRoleId" (selectionChange)="selectRole($event.value)" #matSelect>
-          <mat-option *ngFor="let role of roles" value="{{role.id}}">{{role.description}}</mat-option>
+        <mat-select [(value)]="activeRole" (selectionChange)="selectRole($event.value)" #matSelect>
+          <mat-option *ngFor="let role of roles" [value]="role">{{role.description}}</mat-option>
         </mat-select>
       </mat-form-field>
       <span class="spacer"></span>
-      <mat-icon aria-label="Edit role" (click)="editRole()" color="accent">mode_edit</mat-icon>
+      <mat-icon aria-label="Edit role" (click)="editRole()" color="accent">tune</mat-icon>
       <mat-icon aria-label="Delete role" (click)="deleteRole()" color="accent">remove_circle_outline</mat-icon>
       <mat-icon aria-label="Create role" (click)="createRole()" color="accent">add_circle</mat-icon>
     </mat-toolbar-row>
@@ -18,13 +18,13 @@
     <!-- Name Column -->
     <ng-container matColumnDef="name">
       <mat-header-cell *matHeaderCellDef mat-sort-header> Members </mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{ element.name }} </mat-cell>
+      <mat-cell *matCellDef="let item"> {{ item.name }} </mat-cell>
     </ng-container>
 
     <!-- Status Column -->
     <ng-container matColumnDef="status">
       <mat-header-cell *matHeaderCellDef mat-sort-header> Status </mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{ element.status }} </mat-cell>
+      <mat-cell *matCellDef="let item" [ngClass]="item.status.toLowerCase()"> {{ item.status }} </mat-cell>
     </ng-container>
 
     <!-- icons Column -->
@@ -32,10 +32,10 @@
       <mat-header-cell *matHeaderCellDef>
         <mat-icon aria-label="Create mandate" (click)="sendInvite()" color="accent">add_circle</mat-icon>
       </mat-header-cell>
-      <mat-cell *matCellDef="let element">
-        <mat-icon aria-label="Revoke mandate" (click)="revokeMandate(element.data)" *ngIf="element.type != 'invite'" color="accent">cancel</mat-icon>
-        <mat-icon aria-label="Resend invite" (click)="resendInvite(element.data)" *ngIf="element.type == 'invite'" color="accent">sync</mat-icon>
-        <mat-icon aria-label="Resend invite" (click)="deleteInvite(element)" *ngIf="element.type == 'invite'" color="accent">remove_circle_outline</mat-icon>
+      <mat-cell *matCellDef="let item">
+        <mat-icon aria-label="Revoke mandate" (click)="revokeMandate(item)" *ngIf="item.type != 'invite' && item.status == 'Active'" color="accent">block</mat-icon>
+        <mat-icon aria-label="Resend invite" (click)="resendInvite(item)" *ngIf="item.type == 'invite'" color="accent">sync</mat-icon>
+        <mat-icon aria-label="Resend invite" (click)="deleteInvite(item)" *ngIf="item.type == 'invite'" color="accent">remove_circle_outline</mat-icon>
       </mat-cell>
     </ng-container>
 
@@ -46,4 +46,5 @@
   <button (click)="sendInvite()" mat-fab class="fab-add-button" [class.snack-bar-open]="isSnackBarOpen">
     <mat-icon aria-label="Create mandate">add</mat-icon>
   </button>
+
 </div>

@@ -24,11 +24,9 @@ import { Invite } from './../../../shared/models/';
       </mat-dialog-content>
       <mat-dialog-actions>
         <button mat-button [mat-dialog-close]="null">Cancel</button>
-        <button mat-raised-button
+        <button mat-raised-button color="accent"
           [mat-dialog-close]="invite"
-          color="accent"
-          [disabled]="(emailFormControl.hasError('email') || emailFormControl.hasError('required'))"
-          cdkFocusInitial>
+          [disabled]="(emailFormControl.hasError('email') || emailFormControl.hasError('required'))">
           Send
         </button>
       </mat-dialog-actions>

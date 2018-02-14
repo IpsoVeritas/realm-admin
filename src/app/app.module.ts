@@ -36,8 +36,6 @@ import { AuthClient, AccessClient, RealmsClient, MandatesClient, ControllersClie
 import { RolesClient, InvitesClient } from './shared/api-clients';
 import { SessionService, PlatformService, ConfigService } from './shared/services';
 
-import { FilterStatusPipe } from './shared/pipes';
-
 import { BootstrapComponent } from './pages/bootstrap/bootstrap.component';
 import { LoginComponent } from './pages/login/login.component';
 import { HomeComponent } from './pages/home/home.component';
@@ -61,7 +59,6 @@ import { RoleInviteDialogComponent } from './pages/home/roles/role-invite-dialog
     ControllersComponent,
     RealmsComponent,
     SettingsComponent,
-    FilterStatusPipe,
     ControllerBindDialogComponent,
     ControllerSettingsDialogComponent,
     ControllerComponent,

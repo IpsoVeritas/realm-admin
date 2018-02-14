@@ -24,7 +24,7 @@ import { RolesClient } from '../../../shared/api-clients';
 
     </mat-dialog-content>
     <mat-dialog-actions>
-      <button mat-raised-button [mat-dialog-close]="null">Cancel</button>
+      <button mat-button [mat-dialog-close]="null">Cancel</button>
       <button mat-raised-button [mat-dialog-close]="controller" color="accent">OK</button>
     </mat-dialog-actions>`,
   styles: [`

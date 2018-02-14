@@ -24,20 +24,21 @@ export class InvitesClient extends BaseClient {
       .then(promises => Promise.all(promises));
   }
 
-  public sendInvite(realmId: string, invite: Invite): Promise<Invite> {
-    return this.config.getBackendURL(`/realms/${realmId}/invite`)
+  public sendInvite(invite: Invite): Promise<Invite> {
+    return this.config.getBackendURL(`/realms/${invite.realm}/invite`)
       .then(url => this.http.post(url, this.jsonConvert.serializeObject(invite)).toPromise())
       .then(() => invite);
   }
 
-  public resendInvite(realmId: string, invite: Invite): Promise<Invite> {
-    return this.config.getBackendURL(`/realms/${realmId}/invite/${invite.id}/send`)
+  public resendInvite(invite: Invite): Promise<Invite> {
+    return this.config.getBackendURL(`/realms/${invite.realm}/invite/${invite.id}/send`)
       .then(url => this.http.put(url, {}).toPromise())
       .then(() => invite);
   }
 
-  public deleteInvite(realmId: string, inviteId: string): Promise<any> {
-    return this.config.getBackendURL(`/realms/${realmId}/invite/${inviteId}`)
+  public deleteInvite(invite: Invite): Promise<any> {
+    return this.config.getBackendURL(`/realms/${invite.realm}/invite/${invite.id}`)
       .then(url => this.http.delete(url).toPromise());
   }
+
 }
