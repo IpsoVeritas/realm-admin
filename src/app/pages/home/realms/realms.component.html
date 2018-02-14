@@ -1,34 +1,26 @@
-<div class="content mat-elevation-z1">
-
-  <mat-toolbar>
-    <mat-toolbar-row>
-      Realms
-      <span class="spacer"></span>
-      <button (click)="create()" mat-icon-button color="accent">
-        <mat-icon aria-label="Create realm">add_circle</mat-icon>
-      </button>
-    </mat-toolbar-row>
-  </mat-toolbar>
+<div class="content mat-elevation-z0">
 
   <mat-table #table [dataSource]="dataSource" matSort>
 
     <!-- Name Column -->
     <ng-container matColumnDef="id">
-      <mat-header-cell *matHeaderCellDef mat-sort-header>Realm Name</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>
+        <h2>Realms</h2>
+      </mat-header-cell>
       <mat-cell *matCellDef="let realm" (click)="select(realm)">{{realm.name}}</mat-cell>
     </ng-container>
 
     <!-- Action Column -->
     <ng-container matColumnDef="action">
-      <mat-header-cell *matHeaderCellDef>Action</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef>
+        <mat-icon aria-label="Create realm" (click)="create()" color="accent">add_circle</mat-icon>
+      </mat-header-cell>
       <mat-cell *matCellDef="let realm">
-        <button mat-icon-button (click)="delete(realm)" [disabled]="session.realm == realm.id">
-          <mat-icon>remove_circle_outline</mat-icon>
-        </button>
+          <mat-icon *ngIf="session.realm != realm.id" (click)="delete(realm)">remove_circle_outline</mat-icon>
       </mat-cell>
     </ng-container>
 
-    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-header-row *matHeaderRowDef="displayedColumns" class="mat-toolbar"></mat-header-row>
     <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
 
   </mat-table>

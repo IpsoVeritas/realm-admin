@@ -1,4 +1,4 @@
-<div class="content mat-elevation-z1">
+<div class="content mat-elevation-z0">
 
   <mat-toolbar>
     <mat-toolbar-row>
@@ -7,16 +7,10 @@
           <mat-option *ngFor="let role of roles" value="{{role.id}}">{{role.description}}</mat-option>
         </mat-select>
       </mat-form-field>
-      <span class="spacer"></span> 
-      <button (click)="createRole()" mat-icon-button color="accent">
-        <mat-icon aria-label="Create role">add_circle</mat-icon>
-      </button>
-      <button (click)="editRole()" mat-icon-button color="accent">
-        <mat-icon aria-label="Edit role">mode_edit</mat-icon>
-      </button>
-      <button (click)="deleteRole()" mat-icon-button color="accent">
-        <mat-icon aria-label="Delete role">remove_circle_outline</mat-icon>
-      </button>
+      <span class="spacer"></span>
+      <mat-icon aria-label="Edit role" (click)="editRole()" color="accent">mode_edit</mat-icon>
+      <mat-icon aria-label="Delete role" (click)="deleteRole()" color="accent">remove_circle_outline</mat-icon>
+      <mat-icon aria-label="Create role" (click)="createRole()" color="accent">add_circle</mat-icon>
     </mat-toolbar-row>
   </mat-toolbar>
 
@@ -24,22 +18,24 @@
     <!-- Name Column -->
     <ng-container matColumnDef="name">
       <mat-header-cell *matHeaderCellDef mat-sort-header> Members </mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{ element.type == 'mandate' ? element.label : element.id }} </mat-cell>
+      <mat-cell *matCellDef="let element"> {{ element.name }} </mat-cell>
     </ng-container>
 
     <!-- Status Column -->
     <ng-container matColumnDef="status">
       <mat-header-cell *matHeaderCellDef mat-sort-header> Status </mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{ element | filterStatus }} </mat-cell>
+      <mat-cell *matCellDef="let element"> {{ element.status }} </mat-cell>
     </ng-container>
 
     <!-- icons Column -->
     <ng-container matColumnDef="action">
-      <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
+      <mat-header-cell *matHeaderCellDef>
+        <mat-icon aria-label="Create mandate" (click)="sendInvite()" color="accent">add_circle</mat-icon>
+      </mat-header-cell>
       <mat-cell *matCellDef="let element">
-        <button (click)="revokeMandate(element)" mat-icon-button [disabled]="element.type == 'invite'" color="accent">
-          <mat-icon aria-label="Revoke mandate">archive</mat-icon>
-        </button>
+        <mat-icon aria-label="Revoke mandate" (click)="revokeMandate(element.data)" *ngIf="element.type != 'invite'" color="accent">cancel</mat-icon>
+        <mat-icon aria-label="Resend invite" (click)="resendInvite(element.data)" *ngIf="element.type == 'invite'" color="accent">sync</mat-icon>
+        <mat-icon aria-label="Resend invite" (click)="deleteInvite(element)" *ngIf="element.type == 'invite'" color="accent">remove_circle_outline</mat-icon>
       </mat-cell>
     </ng-container>
 
@@ -47,7 +43,7 @@
     <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
   </mat-table>
 
-  <button (click)="createMandate()" mat-fab class="fab-add-button" [class.snack-bar-open]="isSnackBarOpen">
+  <button (click)="sendInvite()" mat-fab class="fab-add-button" [class.snack-bar-open]="isSnackBarOpen">
     <mat-icon aria-label="Create mandate">add</mat-icon>
   </button>
 </div>

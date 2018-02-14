@@ -1,6 +1,25 @@
 import { JsonObject, JsonProperty } from 'json2typescript';
 import { Base } from './base.model';
 
+/*
+type Invite struct {
+	ID          string `json:"@id,omitempty" gorm:"primary_key"`
+	Type        string `json:"@type,omitempty"`
+	Realm       string `json:"realm" gorm:"index"`
+	Name        string `json:"name,omitempty"`
+	Role        string `json:"role,omitempty" gorm:"index"`
+	Status      string `json:"status,omitempty"`
+	TicketID    string `json:"ticketID,omitempty"`
+	MessageType string `json:"messageType,omitempty"`
+	MessageURI  string `json:"messageURI,omitempty"`
+	Sent        bool   `json:"sent,omitempty"`
+	Text        string `json:"text,omitempty"`
+	TTL         int    `json:"ttl,omitempty"`
+	Sender      string `json:"sender,omitempty"`
+	CreateUser  bool   `json:"createUser,omitempty"`
+	KeyLevel    int    `json:"keyLevel,omitempty"`
+}
+*/
 @JsonObject
 export class Invite extends Base {
 

@@ -25,11 +25,15 @@ export class InvitesClient extends BaseClient {
   }
 
   public sendInvite(realmId: string, invite: Invite): Promise<Invite> {
-    invite.messageURI = 'mailto:' + invite.name;
     return this.config.getBackendURL(`/realms/${realmId}/invite`)
       .then(url => this.http.post(url, this.jsonConvert.serializeObject(invite)).toPromise())
       .then(() => invite);
-    // return Promise.resolve(invite);
+  }
+
+  public resendInvite(realmId: string, invite: Invite): Promise<Invite> {
+    return this.config.getBackendURL(`/realms/${realmId}/invite/${invite.id}/send`)
+      .then(url => this.http.put(url, {}).toPromise())
+      .then(() => invite);
   }
 
   public deleteInvite(realmId: string, inviteId: string): Promise<any> {

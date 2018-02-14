@@ -3,44 +3,52 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class SessionService {
 
+  public getItem(name: string, defaultValue?: string): string {
+    return localStorage.getItem(name) ? localStorage.getItem(name) : defaultValue;
+  }
+
+  public setItem(name: string, value: string) {
+    localStorage.setItem(name, value);
+  }
+
   get realm(): string {
-    return localStorage.getItem('realm');
+    return this.getItem('realm');
   }
 
   set realm(value: string) {
-    localStorage.setItem('realm', value);
+    this.setItem('realm', value);
   }
 
   get url(): string {
-    return localStorage.getItem('url');
+    return this.getItem('url');
   }
 
   set url(value: string) {
-    localStorage.setItem('url', value);
+    this.setItem('url', value);
   }
 
   get backend(): string {
-    return localStorage.getItem('backend');
+    return this.getItem('backend');
   }
 
   set backend(value: string) {
-    localStorage.setItem('backend', value);
+    this.setItem('backend', value);
   }
 
   get mandate(): string {
-    return localStorage.getItem('mandate');
+    return this.getItem('mandate');
   }
 
   set mandate(value: string) {
-    localStorage.setItem('mandate', value);
+    this.setItem('mandate', value);
   }
 
   get expires(): number {
-    return Number(localStorage.getItem('expires'));
+    return Number(this.getItem('expires'));
   }
 
   set expires(value: number) {
-    localStorage.setItem('expires', String(value));
+    this.setItem('expires', String(value));
   }
 
 }

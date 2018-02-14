@@ -27,6 +27,6 @@ export class MandatesClient extends BaseClient {
 
   public revokeMandate(realmId: string, mandateId: string): Promise<any> {
     return this.config.getBackendURL(`/realms/${realmId}/mandates/${mandateId}/revoke`)
-    .then(url => this.http.put(url, null).toPromise());
+    .then(url => this.http.put(url, {}).toPromise());
   }
 }
