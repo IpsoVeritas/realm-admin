@@ -15,7 +15,7 @@ import * as uuid from 'uuid/v1';
   templateUrl: './roles.component.html',
   styleUrls: ['./roles.component.scss']
 })
-export class RolesComponent implements OnInit, AfterViewInit {
+export class RolesComponent implements OnInit {
 
   displayedColumns = ['name', 'status', 'action'];
   dataSource: MatTableDataSource<any>;
@@ -41,9 +41,6 @@ export class RolesComponent implements OnInit, AfterViewInit {
     private invitesClient: InvitesClient,
     private snackBar: MatSnackBar,
     private dialog: MatDialog) { }
-
-  ngAfterViewInit() {
-  }
 
   ngOnInit() {
     Promise.all([

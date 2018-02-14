@@ -1,27 +1,14 @@
 import { JsonObject, JsonProperty } from 'json2typescript';
 import { Base } from './base.model';
 
-/*
-type Invite struct {
-	ID          string `json:"@id,omitempty" gorm:"primary_key"`
-	Type        string `json:"@type,omitempty"`
-	Realm       string `json:"realm" gorm:"index"`
-	Name        string `json:"name,omitempty"`
-	Role        string `json:"role,omitempty" gorm:"index"`
-	Status      string `json:"status,omitempty"`
-	TicketID    string `json:"ticketID,omitempty"`
-	MessageType string `json:"messageType,omitempty"`
-	MessageURI  string `json:"messageURI,omitempty"`
-	Sent        bool   `json:"sent,omitempty"`
-	Text        string `json:"text,omitempty"`
-	TTL         int    `json:"ttl,omitempty"`
-	Sender      string `json:"sender,omitempty"`
-	CreateUser  bool   `json:"createUser,omitempty"`
-	KeyLevel    int    `json:"keyLevel,omitempty"`
-}
-*/
 @JsonObject
-export class Invite extends Base {
+export class Invite {
+
+  @JsonProperty('@id', String, true)
+  id: string = undefined;
+
+  @JsonProperty('@type', String, true)
+  type: string = undefined;
 
   @JsonProperty('realm', String, true)
   realm: string = undefined;
@@ -31,6 +18,9 @@ export class Invite extends Base {
 
   @JsonProperty('role', String, true)
   role: string = undefined;
+
+  @JsonProperty('status', String, true)
+  status: string = undefined;
 
   @JsonProperty('ticketID', String, true)
   ticketID: string = undefined;
@@ -46,4 +36,17 @@ export class Invite extends Base {
 
   @JsonProperty('text', String, true)
   text: string = undefined;
+
+  @JsonProperty('ttl', Number, true)
+  ttl: number = undefined;
+
+  @JsonProperty('sender', String, true)
+  sender: string = undefined;
+
+  @JsonProperty('createUser', Boolean, true)
+  createUser: Boolean = undefined;
+
+  @JsonProperty('keyLevel', Number, true)
+  keyLevel: number = undefined;
+
 }
