@@ -26,6 +26,7 @@
     "@angular/platform-browser": "^5.0.0",
     "@angular/platform-browser-dynamic": "^5.0.0",
     "@angular/router": "^5.0.0",
+    "@angular/service-worker": "^5.2.4",
     "@brickchain/integrity-angular": "^0.1.5",
     "@brickchain/integrity-theme": "^0.1.6",
     "@brickchain/integrity-webview-client": "^0.3.4",
