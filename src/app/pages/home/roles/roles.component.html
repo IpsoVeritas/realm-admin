@@ -3,19 +3,19 @@
   <mat-toolbar>
     <mat-toolbar-row>
       <mat-form-field>
-        <mat-select [(value)]="selectedRoleId" (selectionChange)="select($event.value)">
+        <mat-select [(value)]="selectedRoleId" (selectionChange)="selectRole($event.value)" #matSelect>
           <mat-option *ngFor="let role of roles" value="{{role.id}}">{{role.description}}</mat-option>
         </mat-select>
       </mat-form-field>
       <span class="spacer"></span> 
-      <button (click)="create()" mat-icon-button>
+      <button (click)="createRole()" mat-icon-button color="accent">
         <mat-icon aria-label="Create role">add_circle</mat-icon>
       </button>
-      <button (click)="edit()" mat-icon-button>
+      <button (click)="editRole()" mat-icon-button color="accent">
         <mat-icon aria-label="Edit role">mode_edit</mat-icon>
       </button>
-      <button (click)="delete()" mat-icon-button>
-        <mat-icon aria-label="Delete role">delete</mat-icon>
+      <button (click)="deleteRole()" mat-icon-button color="accent">
+        <mat-icon aria-label="Delete role">remove_circle_outline</mat-icon>
       </button>
     </mat-toolbar-row>
   </mat-toolbar>
@@ -23,21 +23,23 @@
   <mat-table #table [dataSource]="dataSource" matSort>
     <!-- Name Column -->
     <ng-container matColumnDef="name">
-      <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{element.label}} </mat-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Members </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{ element.type == 'mandate' ? element.label : element.id }} </mat-cell>
     </ng-container>
 
     <!-- Status Column -->
     <ng-container matColumnDef="status">
       <mat-header-cell *matHeaderCellDef mat-sort-header> Status </mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{element.status}} </mat-cell>
+      <mat-cell *matCellDef="let element"> {{ element | filterStatus }} </mat-cell>
     </ng-container>
 
     <!-- icons Column -->
     <ng-container matColumnDef="action">
       <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
       <mat-cell *matCellDef="let element">
-        <mat-icon (click)="revoke(element)">delete</mat-icon>
+        <button (click)="revokeMandate(element)" mat-icon-button [disabled]="element.type == 'invite'" color="accent">
+          <mat-icon aria-label="Revoke mandate">archive</mat-icon>
+        </button>
       </mat-cell>
     </ng-container>
 
@@ -45,7 +47,7 @@
     <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
   </mat-table>
 
-  <button (click)="create()" mat-fab class="fab-add-button" [class.snack-bar-open]="isSnackBarOpen">
+  <button (click)="createMandate()" mat-fab class="fab-add-button" [class.snack-bar-open]="isSnackBarOpen">
     <mat-icon aria-label="Create mandate">add</mat-icon>
   </button>
 </div>

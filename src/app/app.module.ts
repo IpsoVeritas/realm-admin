@@ -32,8 +32,11 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { DocumentHandlerService } from './handlers/document-handler.service';
 import { TokenInterceptor, LoaderInterceptor } from './shared/interceptors';
-import { AuthClient, AccessClient, RealmsClient, RolesClient, MandatesClient, ControllersClient } from './shared/api-clients';
+import { AuthClient, AccessClient, RealmsClient, MandatesClient, ControllersClient } from './shared/api-clients';
+import { RolesClient, InvitesClient } from './shared/api-clients';
 import { SessionService, PlatformService, ConfigService } from './shared/services';
+
+import { FilterStatusPipe } from './shared/pipes';
 
 import { BootstrapComponent } from './pages/bootstrap/bootstrap.component';
 import { LoginComponent } from './pages/login/login.component';
@@ -46,6 +49,7 @@ import { SettingsComponent } from './pages/home/settings/settings.component';
 import { ControllerBindDialogComponent } from './pages/home/controllers/controller-bind-dialog.component';
 import { ControllerSettingsDialogComponent } from './pages/home/controllers/controller-settings-dialog.component';
 import { ControllerComponent } from './pages/home/controller/controller.component';
+import { RoleInviteDialogComponent } from './pages/home/roles/role-invite-dialog.component';
 
 @NgModule({
   declarations: [
@@ -57,13 +61,16 @@ import { ControllerComponent } from './pages/home/controller/controller.componen
     ControllersComponent,
     RealmsComponent,
     SettingsComponent,
+    FilterStatusPipe,
     ControllerBindDialogComponent,
     ControllerSettingsDialogComponent,
-    ControllerComponent
+    ControllerComponent,
+    RoleInviteDialogComponent
   ],
   entryComponents: [
     ControllerBindDialogComponent,
-    ControllerSettingsDialogComponent
+    ControllerSettingsDialogComponent,
+    RoleInviteDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -107,6 +114,7 @@ import { ControllerComponent } from './pages/home/controller/controller.componen
     RolesClient,
     MandatesClient,
     ControllersClient,
+    InvitesClient,
     SessionService,
     PlatformService,
     ConfigService,

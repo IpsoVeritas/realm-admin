@@ -25,8 +25,8 @@ export class MandatesClient extends BaseClient {
       .then(obj => this.jsonConvert.deserializeObject(obj, IssuedMandate));
   }
 
-  // public revokeMandate(realmId: string, mandateId: string): Promise<any> {
-  //   return this._ready
-  //     .then(() => this.login.doPut(`/realms/${realmId}/mandates/${mandateId}/revoke`, ""))
-  // }
+  public revokeMandate(realmId: string, mandateId: string): Promise<any> {
+    return this.config.getBackendURL(`/realms/${realmId}/mandates/${mandateId}/revoke`)
+    .then(url => this.http.put(url, null).toPromise());
+  }
 }
