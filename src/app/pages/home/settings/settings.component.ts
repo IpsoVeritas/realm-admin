@@ -2,6 +2,7 @@ import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material';
 import { EventsService } from '@brickchain/integrity-angular';
+import { Ng2ImgToolsService } from 'ng2-img-tools';
 import { SessionService } from '../../../shared/services';
 import { RealmsClient, RolesClient } from '../../../shared/api-clients';
 import { Realm, Role } from '../../../shared/models';
@@ -16,11 +17,13 @@ export class SettingsComponent implements OnInit {
   realm: Realm;
   roles: Role[];
 
-  iconImage: SafeStyle;
-  bannerImage: SafeStyle;
-
+  iconIsProcessing = false;
   iconFile: File;
+  iconImage: SafeStyle;
+
+  bannerIsProcessing = false;
   bannerFile: File;
+  bannerImage: SafeStyle;
 
   isChanged = false;
   isSnackBarOpen = false;
@@ -32,6 +35,7 @@ export class SettingsComponent implements OnInit {
 
   constructor(private sanitizer: DomSanitizer,
     private events: EventsService,
+    private imgTools: Ng2ImgToolsService,
     private session: SessionService,
     private realmsClient: RealmsClient,
     private rolesClient: RolesClient,
@@ -67,15 +71,31 @@ export class SettingsComponent implements OnInit {
   }
 
   iconDropped(files: File[]) {
-    this.iconFile = files[0];
-    this.iconImage = this.sanitizer.bypassSecurityTrustStyle(`url(${this.iconFile['dataURL']})`);
-    this.isChanged = true;
+    if (files && files.length > 0) {
+      this.iconIsProcessing = true;
+      new Promise((resolve, reject) => {
+        this.imgTools.resizeExactCropImage(files[0], 200, 200).subscribe(resolve, error => resolve(files[0]));
+      }).then((file: File) => {
+        this.iconFile = file;
+        this.iconImage = this.sanitizer.bypassSecurityTrustStyle(`url(${URL.createObjectURL(file)})`);
+        this.isChanged = true;
+        this.iconIsProcessing = false;
+      });
+    }
   }
 
   bannerDropped(files: File[]) {
-    this.bannerFile = files[0];
-    this.bannerImage = this.sanitizer.bypassSecurityTrustStyle(`url(${this.bannerFile['dataURL']})`);
-    this.isChanged = true;
+    if (files && files.length > 0) {
+      this.bannerIsProcessing = true;
+      new Promise((resolve, reject) => {
+        this.imgTools.resizeExactCropImage(files[0], 600, 200).subscribe(resolve, error => resolve(files[0]));
+      }).then((file: File) => {
+        this.bannerFile = file;
+        this.bannerImage = this.sanitizer.bypassSecurityTrustStyle(`url(${URL.createObjectURL(file)})`);
+        this.isChanged = true;
+        this.bannerIsProcessing = false;
+      });
+    }
   }
 
   updateRealm() {

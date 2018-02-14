@@ -1,13 +1,12 @@
+import { environment } from '../environments/environment';
+
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LayoutModule } from '@angular/cdk/layout';
-
 import { ServiceWorkerModule } from '@angular/service-worker';
-import { environment } from '../environments/environment';
-
 import { MatInputModule, MatButtonModule, MatSortModule } from '@angular/material';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -26,6 +25,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { EventsModule, QRCodeModule, DialogsModule, ClipboardModule, DragAndDropModule } from '@brickchain/integrity-angular';
 import { WebviewClientModule } from '@brickchain/integrity-webview-client';
+
+import { Ng2ImgToolsModule } from 'ng2-img-tools';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -102,6 +103,7 @@ import { RoleInviteDialogComponent } from './pages/home/roles/role-invite-dialog
     DialogsModule,
     ClipboardModule,
     DragAndDropModule,
+    Ng2ImgToolsModule,
     AppRoutingModule
   ],
   providers: [

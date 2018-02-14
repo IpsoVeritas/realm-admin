@@ -34,7 +34,7 @@
       </mat-header-cell>
       <mat-cell *matCellDef="let item">
         <mat-icon aria-label="Revoke mandate" (click)="revokeMandate(item)" *ngIf="item.type != 'invite' && item.status == 'Active'" color="accent">block</mat-icon>
-        <mat-icon aria-label="Resend invite" (click)="resendInvite(item)" *ngIf="item.type == 'invite'" color="accent">sync</mat-icon>
+        <mat-icon aria-label="Resend invite" (click)="resendInvite(item)" *ngIf="item.type == 'invite'" color="accent">mail_outline</mat-icon>
         <mat-icon aria-label="Resend invite" (click)="deleteInvite(item)" *ngIf="item.type == 'invite'" color="accent">remove_circle_outline</mat-icon>
       </mat-cell>
     </ng-container>
