@@ -7,6 +7,10 @@ mat-toolbar {
   right: 0;
   z-index: 2;
 
+  a {
+    text-decoration: none;
+  }
+
   mat-progress-spinner {
     &.paused {
       animation-play-state: paused;

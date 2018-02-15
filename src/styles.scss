@@ -14,3 +14,11 @@
 .mat-sort-header-container {
   align-items: baseline;
 }
+
+.guide {
+  .mat-icon-button {
+    position: absolute;
+    top: 0;
+    right: 16px;
+  }
+}

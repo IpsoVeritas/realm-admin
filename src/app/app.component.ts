@@ -1,6 +1,7 @@
 import { Component, HostBinding, OnInit } from '@angular/core';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { URLSearchParams } from '@angular/http';
+import { TranslateService } from '@ngx-translate/core';
 import { EventsService } from '@brickchain/integrity-angular';
 import { PlatformService, ConfigService, SessionService } from './shared/services';
 import { ControllersClient } from './shared/api-clients';
@@ -21,19 +22,28 @@ export class AppComponent implements OnInit {
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
+    private translate: TranslateService,
     private platform: PlatformService,
     private config: ConfigService,
     private session: SessionService,
     private events: EventsService,
     private controllersClient: ControllersClient) {
+    translate.setDefaultLang('en');
   }
 
   ngOnInit(): void {
 
+    const params = new URLSearchParams(window.location.search.indexOf('?') !== -1 ? window.location.search.split('?')[1] : '');
+
     this.config.get('backend').then(backend => this.session.backend = backend);
 
-    if (window.location.search.indexOf('realm=') > -1) {
-      const params = new URLSearchParams(window.location.search.split('?')[1]);
+    if (params.has('language')) {
+      this.useLanguage(params.get('language'));
+    } else {
+      this.useLanguage(this.session.getItem('language', this.translate.getBrowserLang()));
+    }
+
+    if (params.has('realm')) {
       this.session.realm = params.get('realm');
     } else {
       if (!this.session.realm) {
@@ -64,6 +74,7 @@ export class AppComponent implements OnInit {
     this.controllersClient.getControllers(this.session.realm)
       .then(controllers => controllers.map(controller => this.controllersClient.syncController(controller)))
       .catch(error => console.warn('Error syncing controllers', error));
+
   }
 
   startExpirationTimer(): void {
@@ -72,6 +83,11 @@ export class AppComponent implements OnInit {
     if (timeout > 0) {
       this.expirationTimer = setTimeout(() => this.events.publish('logout'), timeout);
     }
+  }
+
+  useLanguage(language: string) {
+    this.session.language = language;
+    this.translate.use(language);
   }
 
 }

@@ -51,4 +51,20 @@ export class SessionService {
     this.setItem('expires', String(value));
   }
 
+  get language(): string {
+    return this.getItem('language');
+  }
+
+  set language(value: string) {
+    this.setItem('language', value);
+  }
+
+  get theme(): string {
+    return this.getItem('theme');
+  }
+
+  set theme(value: string) {
+    this.setItem('theme', value);
+  }
+
 }

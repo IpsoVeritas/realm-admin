@@ -1,0 +1,22 @@
+{
+  "entities": {
+    "Realm": "Realm",
+    "Mandate": "Mandate"
+  },
+  "label": {
+    "close": "Close"
+  },
+  "general": {
+    "change_realm": "Change Realm",
+    "copied_to_clipboard": "Copied '{{value}}' to clipboard",
+    "error_connecting": "Error connecting to '{{value}}'"
+  },
+  "login": {
+    "realm_required": "A realm is required",
+    "realm_invalid": "Invalid realm",
+    "scan_qr_code": "Scan QR code to access '{{value}}'"
+  },
+  "guide": {
+    "controllers": "<h2>Guide to controllers</h2>"
+  }
+}

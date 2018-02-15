@@ -1,0 +1,22 @@
+{
+  "entities": {
+    "Realm": "Rike",
+    "Mandate": "Mandat"
+  },
+  "label": {
+    "close": "Stäng"
+  },
+  "general": {
+    "change_realm": "Byt Rike",
+    "copied_to_clipboard": "Kopierade '{{value}}' till urklipp",
+    "error_connecting": "Problem med anslutning till '{{value}}'"
+  },
+  "login": {
+    "realm_required": "Ett rike krävs",
+    "realm_invalid": "Ogiltigt rike",
+    "scan_qr_code": "Skanna QR för tillgång till '{{value}}'"
+  },
+  "guide": {
+    "controllers": "<h2>Guide till controllers</h2>"
+  }
+}

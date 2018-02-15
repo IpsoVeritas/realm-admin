@@ -33,7 +33,7 @@ export class ControllersComponent implements OnInit {
     private events: EventsService,
     private dialogs: DialogsService,
     private clipboard: ClipboardService,
-    private session: SessionService,
+    protected session: SessionService,
     private controllersClient: ControllersClient,
     private realmsClient: RealmsClient,
     private dialog: MatDialog,

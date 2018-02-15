@@ -3,7 +3,7 @@ import { environment } from '../environments/environment';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule, HttpClient } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LayoutModule } from '@angular/cdk/layout';
 import { ServiceWorkerModule } from '@angular/service-worker';
@@ -23,6 +23,9 @@ import { MatTableModule } from '@angular/material/table';
 import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+
 import { EventsModule, QRCodeModule, DialogsModule, ClipboardModule, DragAndDropModule } from '@brickchain/integrity-angular';
 import { WebviewClientModule } from '@brickchain/integrity-webview-client';
 
@@ -32,7 +35,7 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 
 import { DocumentHandlerService } from './handlers/document-handler.service';
-import { TokenInterceptor, LoaderInterceptor } from './shared/interceptors';
+import { TokenInterceptor, LoaderInterceptor, LanguageInterceptor } from './shared/interceptors';
 import { AuthClient, AccessClient, RealmsClient, MandatesClient, ControllersClient } from './shared/api-clients';
 import { RolesClient, InvitesClient } from './shared/api-clients';
 import { SessionService, PlatformService, ConfigService } from './shared/services';
@@ -40,6 +43,7 @@ import { SessionService, PlatformService, ConfigService } from './shared/service
 import { BootstrapComponent } from './pages/bootstrap/bootstrap.component';
 import { LoginComponent } from './pages/login/login.component';
 import { HomeComponent } from './pages/home/home.component';
+import { DashboardComponent } from './pages/home/dashboard/dashboard.component';
 import { RealmsComponent } from './pages/home/realms/realms.component';
 import { RolesComponent } from './pages/home/roles/roles.component';
 import { RoleInviteDialogComponent } from './pages/home/roles/role-invite-dialog.component';
@@ -50,12 +54,17 @@ import { ControllerBindDialogComponent } from './pages/home/controllers/controll
 import { ControllerSettingsDialogComponent } from './pages/home/controllers/controller-settings-dialog.component';
 import { SettingsComponent } from './pages/home/settings/settings.component';
 
+export function createTranslateLoader(http: HttpClient) {
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+}
+
 @NgModule({
   declarations: [
     AppComponent,
     BootstrapComponent,
     LoginComponent,
     HomeComponent,
+    DashboardComponent,
     RealmsComponent,
     RolesComponent,
     RoleInviteDialogComponent,
@@ -105,6 +114,13 @@ import { SettingsComponent } from './pages/home/settings/settings.component';
     ClipboardModule,
     DragAndDropModule,
     Ng2ImgToolsModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: (createTranslateLoader),
+        deps: [HttpClient]
+      }
+    }),
     AppRoutingModule
   ],
   providers: [
@@ -127,6 +143,11 @@ import { SettingsComponent } from './pages/home/settings/settings.component';
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: LanguageInterceptor,
       multi: true
     }
   ],

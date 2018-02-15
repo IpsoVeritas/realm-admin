@@ -2,6 +2,7 @@ import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
+import { TranslateService } from '@ngx-translate/core';
 import { EventsService } from '@brickchain/integrity-angular';
 import { AuthClient } from '../../shared/api-clients';
 import { ConfigService, SessionService } from '../../shared/services';
@@ -35,6 +36,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
     private authClient: AuthClient,
     private config: ConfigService,
     private session: SessionService,
+    private translate: TranslateService,
     private events: EventsService,
     private snackBar: MatSnackBar) {
   }
@@ -52,7 +54,10 @@ export class LoginComponent implements OnInit, AfterViewInit {
         this.activeRealm = '';
         this.realmPanel.expanded = true;
         if (error.status === 0) {
-          this.snackBar.open(`Error connecting to ${this.config.backend}`, 'Close', { duration: 5000 });
+          this.snackBar.open(
+            this.translate.instant('general.error_connecting', { value: this.config.backend }),
+            this.translate.instant('label.close'),
+            { duration: 5000 });
         } else {
           this.realm.setValue('');
         }
@@ -68,7 +73,10 @@ export class LoginComponent implements OnInit, AfterViewInit {
         .then(() => this.session.realm = this.activeRealm)
         .catch(error => {
           if (error.status === 0) {
-            this.snackBar.open(`Error connecting to ${this.config.backend}`, '', { duration: 2000 });
+            this.snackBar.open(
+              this.translate.instant('general.error_connecting', { value: this.config.backend }),
+              this.translate.instant('label.close'),
+              { duration: 5000 });
           } else {
             this.realm.setErrors({ 'startAuthFailed': true });
           }
@@ -83,7 +91,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
   }
 
   showCopySuccess(value: string) {
-    this.snackBar.open(`Copied ${value} to clipboard`, '', { duration: 2000 });
+    this.snackBar.open(this.translate.instant('general.copied_to_clipboard', { value: value }), '', { duration: 2000 });
   }
 
   updateCountdown() {
@@ -119,7 +127,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
             .then(() => this.router.navigate(['/home', {}]))
             .catch(error => {
               if (error && error.error) {
-                this.snackBar.open(error.error, 'Close', { duration: 5000, panelClass: 'error' });
+                this.snackBar.open(error.error, this.translate.instant('label.close'), { duration: 5000, panelClass: 'error' });
               }
               this.start(realm);
             });
