@@ -1,0 +1,47 @@
+<div class="content mat-elevation-z0">
+
+  <mat-toolbar>
+    <mat-toolbar-row>
+      <mat-form-field>
+        <mat-select [(value)]="role" (selectionChange)="selectRole($event.value)" #matSelect>
+          <mat-option *ngFor="let role of roles" [value]="role">{{role.description}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </mat-toolbar-row>
+  </mat-toolbar>
+
+  <mat-table #table [dataSource]="dataSource" matSort>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Members</mat-header-cell>
+      <mat-cell *matCellDef="let item">{{ item.name }}</mat-cell>
+    </ng-container>
+
+    <!-- Status Column -->
+    <ng-container matColumnDef="status">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Status </mat-header-cell>
+      <mat-cell *matCellDef="let item" [ngClass]="item.status.toLowerCase()">{{item.status}}</mat-cell>
+    </ng-container>
+
+    <!-- Action Column -->
+    <ng-container matColumnDef="action">
+      <mat-header-cell *matHeaderCellDef>
+        <mat-icon aria-label="Send invite" (click)="invite(role)" color="accent">person_add</mat-icon>
+      </mat-header-cell>
+      <mat-cell *matCellDef="let item">
+        <mat-icon aria-label="Revoke mandate" (click)="revoke(item)" *ngIf="item.type != 'invite' && item.status == 'Active'" color="accent">block</mat-icon>
+        <mat-icon aria-label="Resend invite" (click)="resend(item)" *ngIf="item.type == 'invite'" color="accent">mail_outline</mat-icon>
+        <mat-icon aria-label="Delete invite" (click)="delete(item)" *ngIf="item.type == 'invite'" color="accent">remove_circle_outline</mat-icon>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  </mat-table>
+
+  <button (click)="invite(role)" mat-fab class="fab-add-button" [class.snack-bar-open]="isSnackBarOpen">
+    <mat-icon aria-label="Create mandate">person_add</mat-icon>
+  </button>
+
+</div>
