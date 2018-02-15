@@ -26,7 +26,7 @@ export class AddRoleHandler {
           const role = new Role();
           role.description = name;
           role.realm = context.realmId;
-          return this.rolesClient.createRole(context.realmId, role)
+          return this.rolesClient.createRole(role)
             .then(() => this.rolesClient.getRoles(context.realmId));
         } else {
           this.rolesClient.getRoles(context.realmId);

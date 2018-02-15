@@ -24,19 +24,19 @@ export class RolesClient extends BaseClient {
       .then(promises => Promise.all(promises));
   }
 
-  public createRole(realmId: string, role: Role): Promise<Role> {
-    return this.config.getBackendURL(`/realms/${realmId}/roles`)
+  public createRole(role: Role): Promise<Role> {
+    return this.config.getBackendURL(`/realms/${role.realm}/roles`)
       .then(url => this.http.post(url, this.jsonConvert.serializeObject(role)).toPromise())
       .then(() => role);
   }
 
-  public deleteRole(realmId: string, roleId: string): Promise<any> {
-    return this.config.getBackendURL(`/realms/${realmId}/roles/${roleId}`)
-    .then(url => this.http.delete(url).toPromise());
+  public deleteRole(role: Role): Promise<any> {
+    return this.config.getBackendURL(`/realms/${role.realm}/roles/${role.id}`)
+      .then(url => this.http.delete(url).toPromise());
   }
 
-  public updateRole(realmId: string, role: Role): Promise<Role> {
-    return this.config.getBackendURL(`/realms/${realmId}/roles/${role.id}`)
+  public updateRole(role: Role): Promise<Role> {
+    return this.config.getBackendURL(`/realms/${role.realm}/roles/${role.id}`)
       .then(url => this.http.put(url, this.jsonConvert.serializeObject(role)).toPromise())
       .then(() => role);
   }

@@ -115,6 +115,7 @@ export class ControllersComponent implements OnInit {
         if (updated) {
           this.controllersClient.updateController(updated)
             .then(() => Object.assign(controller, updated))
+            .then(() => this.dataSource.data = this.dataSource.data)
             .catch(error => this.snackBarOpen(`Error updating '${controller.name}'`, 'Close', this.snackBarErrorConfig));
         }
       });

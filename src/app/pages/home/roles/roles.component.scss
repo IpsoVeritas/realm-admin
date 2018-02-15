@@ -1,18 +1,11 @@
-@import "~@brickchain/integrity-theme/theming";
-
 .mat-toolbar {
   position: sticky;
   top: 0;
-
-  .mat-icon {
-    cursor: pointer;
-  }
-
-  .mat-toolbar-row {
-    padding: 0 24px;
-  }
 }
 
+.mat-header-row {
+  z-index: 1;
+}
 .mat-header-row, .mat-row {
   flex-direction: row;
   justify-content: space-between;
@@ -20,25 +13,15 @@
 
 .mat-header-cell, .mat-cell {
   cursor: pointer;
-  flex: 1 0 45%;
+  flex: 1 0 auto;
 
   &:last-child {
-    min-width: 60px;
-    text-align: right;
-    flex: 0 1 10%;
+    flex: 0 1 auto;
   }
 }
 
-.mat-cell {
-  &.active {
-    color: mat-color($integrity-green);
-  }
-  &.pending {
-    color: mat-color($integrity-yellow);
-  }
-  &.revoked {
-    color: mat-color($integrity-warn);
-  }
+.mat-header-cell:last-child {
+  align-self: flex-end;
 }
 
 .fab-add-button {

@@ -40,15 +40,15 @@ import { SessionService, PlatformService, ConfigService } from './shared/service
 import { BootstrapComponent } from './pages/bootstrap/bootstrap.component';
 import { LoginComponent } from './pages/login/login.component';
 import { HomeComponent } from './pages/home/home.component';
-import { RolesComponent } from './pages/home/roles/roles.component';
-import { ControllersComponent } from './pages/home/controllers/controllers.component';
 import { RealmsComponent } from './pages/home/realms/realms.component';
-import { SettingsComponent } from './pages/home/settings/settings.component';
-
+import { RolesComponent } from './pages/home/roles/roles.component';
+import { RoleInviteDialogComponent } from './pages/home/roles/role-invite-dialog.component';
+import { MandatesComponent } from './pages/home/mandates/mandates.component';
+import { ControllersComponent } from './pages/home/controllers/controllers.component';
+import { ControllerComponent } from './pages/home/controller/controller.component';
 import { ControllerBindDialogComponent } from './pages/home/controllers/controller-bind-dialog.component';
 import { ControllerSettingsDialogComponent } from './pages/home/controllers/controller-settings-dialog.component';
-import { ControllerComponent } from './pages/home/controller/controller.component';
-import { RoleInviteDialogComponent } from './pages/home/roles/role-invite-dialog.component';
+import { SettingsComponent } from './pages/home/settings/settings.component';
 
 @NgModule({
   declarations: [
@@ -56,14 +56,15 @@ import { RoleInviteDialogComponent } from './pages/home/roles/role-invite-dialog
     BootstrapComponent,
     LoginComponent,
     HomeComponent,
-    RolesComponent,
-    ControllersComponent,
     RealmsComponent,
-    SettingsComponent,
+    RolesComponent,
+    RoleInviteDialogComponent,
+    MandatesComponent,
+    ControllersComponent,
+    ControllerComponent,
     ControllerBindDialogComponent,
     ControllerSettingsDialogComponent,
-    ControllerComponent,
-    RoleInviteDialogComponent
+    SettingsComponent
   ],
   entryComponents: [
     ControllerBindDialogComponent,

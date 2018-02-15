@@ -21,8 +21,10 @@
         <mat-icon>domain</mat-icon>Realms</a>
       <a mat-list-item [routerLink]="['roles']" routerLinkActive="active" (click)="isHandsetPortrait ? drawer.close() : false">
         <mat-icon>people</mat-icon>Roles</a>
+      <a mat-list-item [routerLink]="['mandates']" routerLinkActive="active" (click)="isHandsetPortrait ? drawer.close() : false">
+        <mat-icon>vpn_key</mat-icon>Mandates</a>
       <a mat-list-item [routerLink]="['controllers']" routerLinkActive="active" (click)="isHandsetPortrait ? drawer.close() : false">
-        <mat-icon>dashboard</mat-icon>Controllers</a>
+        <mat-icon>room_service</mat-icon>Controllers</a>
       <a mat-list-item [routerLink]="['settings']" routerLinkActive="active" (click)="isHandsetPortrait ? drawer.close() : false">
         <mat-icon>settings</mat-icon>Settings</a>
       <a *ngIf="!isHandsetPortrait" mat-list-item (click)="logout()">

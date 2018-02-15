@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material';
 import { MatTableDataSource, MatSort } from '@angular/material';
-import { EventsService, DialogsService } from '@brickchain/integrity-angular';
+import { DialogsService } from '@brickchain/integrity-angular';
 import { SessionService } from '../../../shared/services';
 import { RealmsClient } from '../../../shared/api-clients';
 import { Realm } from '../../../shared/models';
@@ -23,8 +23,7 @@ export class RealmsComponent implements OnInit {
     panelClass: 'error'
   };
 
-  constructor(private events: EventsService,
-    private dialogs: DialogsService,
+  constructor(private dialogs: DialogsService,
     protected session: SessionService,
     private realmsClient: RealmsClient,
     private snackBar: MatSnackBar) { }

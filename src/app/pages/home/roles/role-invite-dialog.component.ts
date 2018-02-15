@@ -6,7 +6,7 @@ import { Invite } from './../../../shared/models/';
 @Component({
   selector: 'app-role-invite-dialog',
   template: `
-    <h2 mat-dialog-title>Invite member</h2>
+    <h2 mat-dialog-title>Send Invite</h2>
     <form>
       <mat-dialog-content>
         <mat-form-field>
