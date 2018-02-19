@@ -2,7 +2,7 @@ import { Component, ViewChild, ElementRef, OnInit, OnDestroy, Renderer2 } from '
 import { ActivatedRoute } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { DocumentHandlerService } from '../../../handlers/document-handler.service';
-import { SessionService } from '../../../shared/services';
+import { SessionService, CryptoService } from '../../../shared/services';
 import { ControllersClient, RealmsClient } from '../../../shared/api-clients';
 import { Controller, ControllerDescriptor } from './../../../shared/models/';
 
@@ -31,7 +31,8 @@ export class ControllerComponent implements OnInit, OnDestroy {
     private session: SessionService,
     private documentHandler: DocumentHandlerService,
     private controllersClient: ControllersClient,
-    private realmsClient: RealmsClient
+    private realmsClient: RealmsClient,
+    private cryptoService: CryptoService
   ) {
   }
 
@@ -39,13 +40,15 @@ export class ControllerComponent implements OnInit, OnDestroy {
     this.realmId = this.session.realm;
     this.controllerId = this.route.snapshot.paramMap.get('id');
     this.controllersClient.getController(this.realmId, this.controllerId)
-      .then(controller => this.realmsClient.createSSOToken(controller)
+      .then(controller => this.cryptoService.createMandateToken(controller.descriptor.adminUI, this.session.mandates, (this.session.expires - Date.now()) / 1000)
         .then(token => {
           this.controller = controller;
           if (controller.descriptor.adminUI) {
-            const delim = controller.descriptor.adminUI.indexOf('?') === -1 ? '?' : '&';
+            let hash = controller.descriptor.adminUI.split('#')[1]
+            if (hash == undefined) hash = ""
+            const delim = hash.length > 0 ? (hash.indexOf('?') === -1 ? '?' : '&') : '?' ;
             const referer = encodeURIComponent(window.location.href);
-            const uri = `${controller.descriptor.adminUI}${delim}token=${token}&referer=${referer}`;
+            const uri = `${controller.descriptor.adminUI}#${delim}token=${token}&referer=${referer}`;
             this.stopListening = this.renderer.listen('window', 'message', this.handleMessage.bind(this));
             this.uri = this.sanitizer.bypassSecurityTrustResourceUrl(uri);
           }

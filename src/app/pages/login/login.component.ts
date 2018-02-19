@@ -5,7 +5,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
 import { EventsService } from '@brickchain/integrity-angular';
 import { AuthClient } from '../../shared/api-clients';
-import { ConfigService, SessionService } from '../../shared/services';
+import { ConfigService, SessionService, CryptoService } from '../../shared/services';
 import { MatExpansionPanel, MatSnackBar } from '@angular/material';
 
 import { AuthUser, AuthInfo } from '../../shared/models';
@@ -37,6 +37,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
     private config: ConfigService,
     private session: SessionService,
     private translate: TranslateService,
+    private cryptoService: CryptoService,
     private events: EventsService,
     private snackBar: MatSnackBar) {
   }
@@ -117,15 +118,19 @@ export class LoginComponent implements OnInit, AfterViewInit {
   poll(realm: string, token: string, count = 1): void {
     this.authClient.getAuthInfo(token)
       .then((user: AuthUser) => {
-        if (user.authenticated && user.mandateToken && !user.expired) {
+        if (user.authenticated && user.mandates && user.chain && !user.expired) {
           clearTimeout(this.qrUriTimer);
           clearTimeout(this.progressTimer);
-          this.session.mandate = user.mandateToken;
+          this.session.mandates = user.mandates;
+          this.session.chain = user.chain;
           this.session.expires = user.exp.getTime();
-          this.authClient.getAuthInfo()
+          this.cryptoService.createMandateToken(this.session.backend, user.mandates, (user.exp.getTime() - Date.now()) / 1000)
+            .then(token => this.session.mandate = token)
+            .then(() => this.authClient.getAuthInfo())
             .then(() => this.events.publish('login'))
             .then(() => this.router.navigate(['/home', {}]))
             .catch(error => {
+              console.error(error);
               if (error && error.error) {
                 this.snackBar.open(error.error, this.translate.instant('label.close'), { duration: 5000, panelClass: 'error' });
               }

@@ -6,7 +6,7 @@ import { Link } from './link.model';
 export class Base {
 
   @JsonProperty('@context', String, true)
-  context: string = undefined;
+  context: string = 'https://brickchain.com/schema';
 
   @JsonProperty('@type', String, true)
   type: string = undefined;
