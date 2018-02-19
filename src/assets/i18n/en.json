@@ -81,7 +81,8 @@
         "error_syncing_controllers": "Error syncing controllers"
     },
     "settings": {
-        "no_public_role": "No public role"
+        "no_public_role": "No public role",
+        "guest_role": "Guest Role"
     },
     "guide": {
         "dashboard": "<h2>Guide to dashboard</h2>",

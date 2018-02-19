@@ -81,7 +81,8 @@
         "error_syncing_controllers": "Fel vid synkning av tjänster"
     },
     "settings": {
-        "no_public_role": "Ingen publik roll"
+        "no_public_role": "Ingen publik roll",
+        "guest_role": "Gästroll"
     },
     "guide": {
         "dashboard": "<h2>Guide till översikt</h2>",
