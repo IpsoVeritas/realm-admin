@@ -20,6 +20,7 @@ const appRoutes: Routes = [
   {
     path: 'home', component: HomeComponent, canActivate: [BootmodeGuard, LoginGuard],
     children: [
+      { path: '', component: DashboardComponent },
       { path: 'dashboard', component: DashboardComponent },
       { path: 'realms', component: RealmsComponent },
       { path: 'roles', component: RolesComponent },
@@ -30,7 +31,7 @@ const appRoutes: Routes = [
       { path: 'settings', component: SettingsComponent }
     ]
   },
-  { path: '**', redirectTo: '/home', pathMatch: 'full' }
+  { path: '**', redirectTo: '/home/dashboard', pathMatch: 'full' }
 ];
 
 @NgModule({

@@ -1,8 +1,6 @@
 <div class="content guide" [hidden]="session.getItem('hide_dashboard_guide',false)">
-  <mat-card>
-    <button mat-icon-button color="accent">
-      <mat-icon aria-label="Close guide" (click)="session.setItem('hide_dashboard_guide',true)">cancel</mat-icon>
-    </button>
-    <mat-card-content [innerHTML]="'guide.dashboard' | translate"></mat-card-content>
-  </mat-card>
+  <button mat-icon-button color="accent">
+    <mat-icon (click)="session.setItem('hide_dashboard_guide',true)">cancel</mat-icon>
+  </button>
+  <div [innerHTML]="'guide.dashboard' | translate"></div>
 </div>

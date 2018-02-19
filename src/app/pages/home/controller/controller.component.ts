@@ -45,7 +45,7 @@ export class ControllerComponent implements OnInit, OnDestroy {
           if (controller.descriptor.adminUI) {
             const delim = controller.descriptor.adminUI.indexOf('?') === -1 ? '?' : '&';
             const referer = encodeURIComponent(window.location.href);
-            const uri = `${controller.descriptor.adminUI}${delim}token=${token}&referer=${referer}`;
+            const uri = `${controller.descriptor.adminUI}${delim}token=${token}&referer=${referer}&language=${this.session.language}`;
             this.stopListening = this.renderer.listen('window', 'message', this.handleMessage.bind(this));
             this.uri = this.sanitizer.bypassSecurityTrustResourceUrl(uri);
           }

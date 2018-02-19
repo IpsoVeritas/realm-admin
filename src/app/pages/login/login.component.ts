@@ -22,6 +22,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
   qrUri: string;
   qrUriTimer: any;
   qrUriTimestamp: number;
+  qrTimeout = 300 * 1000;
   qrCountdown = 100;
   progressTimer: any;
   pollTimer: any;
@@ -95,7 +96,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
   }
 
   updateCountdown() {
-    this.qrCountdown = 100 - (Date.now() - this.qrUriTimestamp) / 3000;
+    this.qrCountdown = 100 - 100 * (Date.now() - this.qrUriTimestamp) / this.qrTimeout;
   }
 
   start(realm: string): Promise<AuthInfo> {
@@ -106,7 +107,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
           clearTimeout(this.qrUriTimer);
           clearTimeout(this.progressTimer);
           clearTimeout(this.pollTimer);
-          this.qrUriTimer = setTimeout(() => this.start(realm), 300000);
+          this.qrUriTimer = setTimeout(() => this.start(realm), this.qrTimeout);
           this.progressTimer = setInterval(() => this.updateCountdown(), 100);
           this.qrUriTimestamp = Date.now();
           this.poll(realm, authInfo.token);

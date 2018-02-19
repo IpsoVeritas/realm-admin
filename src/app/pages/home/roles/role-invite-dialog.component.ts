@@ -6,29 +6,34 @@ import { Invite } from './../../../shared/models/';
 @Component({
   selector: 'app-role-invite-dialog',
   template: `
-    <h2 mat-dialog-title>Send Invite</h2>
+    <h2 mat-dialog-title translate>invites.send_invite</h2>
     <form>
       <mat-dialog-content>
         <mat-form-field>
-          <input matInput [(ngModel)]="invite.name" name="email" placeholder="Email" type="email" [formControl]="emailFormControl" required>
+          <input matInput [(ngModel)]="invite.name"
+            name="email"
+            placeholder="{{ 'label.email' | translate }}"
+            type="email"
+            [formControl]="emailFormControl" required>
           <mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
-            Please enter a valid email address
+            {{'invites.error_email_invalid' | translate}}
           </mat-error>
           <mat-error *ngIf="emailFormControl.hasError('required')">
-            Email is <strong>required</strong>
+            {{'invites.error_email_required' | translate}}
           </mat-error>
         </mat-form-field>
         <mat-form-field>
-          <textarea matInput [(ngModel)]="invite.text" name="message" placeholder="Message" rows="4"></textarea>
+          <textarea matInput [(ngModel)]="invite.text"
+            name="message"
+            placeholder="{{ 'label.message' | translate }}"
+            rows="4"></textarea>
         </mat-form-field>
       </mat-dialog-content>
       <mat-dialog-actions>
-        <button mat-button [mat-dialog-close]="null">Cancel</button>
+        <button mat-button [mat-dialog-close]="null">{{ 'label.cancel' | translate }}</button>
         <button mat-raised-button color="accent"
           [mat-dialog-close]="invite"
-          [disabled]="(emailFormControl.hasError('email') || emailFormControl.hasError('required'))">
-          Send
-        </button>
+          [disabled]="(emailFormControl.hasError('email') || emailFormControl.hasError('required'))">{{ 'label.send' | translate }}</button>
       </mat-dialog-actions>
     </form>`,
   styles: [`

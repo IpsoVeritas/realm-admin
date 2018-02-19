@@ -5,7 +5,7 @@
     <!-- Name Column -->
     <ng-container matColumnDef="description">
       <mat-header-cell *matHeaderCellDef mat-sort-header>
-        <h2>Roles</h2>
+        <h2 translate>entities.Roles</h2>
       </mat-header-cell>
       <mat-cell *matCellDef="let role" [routerLink]="['../mandates', role.id]">
         {{role.description}}
@@ -15,11 +15,11 @@
     <!-- Action Column -->
     <ng-container matColumnDef="action">
       <mat-header-cell *matHeaderCellDef>
-        <mat-icon aria-label="Create role" (click)="create()" color="accent">add_circle</mat-icon>
+        <mat-icon (click)="create()" color="accent">add_circle</mat-icon>
       </mat-header-cell>
       <mat-cell *matCellDef="let role">
         <mat-icon (click)="invite(role)" color="accent">person_add</mat-icon>
-        <mat-icon (click)="settings(role)" color="accent">tune</mat-icon>
+        <mat-icon (click)="settings(role)" color="accent">settings</mat-icon>
         <mat-icon (click)="delete(role)" color="accent">remove_circle_outline</mat-icon>
       </mat-cell>
     </ng-container>
@@ -30,7 +30,16 @@
   </mat-table>
 
   <button (click)="create()" mat-fab class="fab-add-button" [class.snack-bar-open]="isSnackBarOpen">
-    <mat-icon aria-label="Create role">add</mat-icon>
+    <mat-icon>add</mat-icon>
   </button>
 
 </div>
+
+<div class="content guide" [hidden]="session.getItem('hide_roles_guide',false)">
+  <button mat-icon-button color="accent">
+    <mat-icon (click)="session.setItem('hide_roles_guide',true)">cancel</mat-icon>
+  </button>
+  <div [innerHTML]="'guide.roles' | translate"></div>
+</div>
+
+<pre class="content developer" *ngIf="session.getItem('developer','false') == 'true'">{{dataSource?.data | json }}</pre>

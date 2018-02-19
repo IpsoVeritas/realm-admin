@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router, } from '@angular/router';
 import { MatDialog } from '@angular/material';
+import { TranslateService } from '@ngx-translate/core';
 import { EventsService, DialogsService } from '@brickchain/integrity-angular';
 import { WebviewClientService } from '@brickchain/integrity-webview-client';
 import { SessionService } from './session.service';
@@ -13,6 +14,7 @@ export class PlatformService {
 
   constructor(private router: Router,
     private dialog: MatDialog,
+    private translate: TranslateService,
     private webviewClient: WebviewClientService,
     private session: SessionService,
     private events: EventsService,
@@ -54,9 +56,9 @@ export class PlatformService {
       window.location.href = `integrity://app/webapp/${url}`;
       return Promise.resolve();
     } else {
-      return this.dialogs.openQRCode({ title: title, qrdata: uri })
+      const message = this.translate.instant('general.copied_to_clipboard', { value: uri });
+      return this.dialogs.openQRCode({ title: title, qrdata: uri, copySuccessMessage: message })
         .then(() => console.log('closed'));
-      // TODO: if already logged in, send push notifcation
     }
   }
 

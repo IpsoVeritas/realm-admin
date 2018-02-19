@@ -1,6 +1,7 @@
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material';
 import { MatTableDataSource, MatSort } from '@angular/material';
+import { TranslateService } from '@ngx-translate/core';
 import { DialogsService } from '@brickchain/integrity-angular';
 import { SessionService } from '../../../shared/services';
 import { RealmsClient } from '../../../shared/api-clients';
@@ -24,6 +25,7 @@ export class RealmsComponent implements OnInit {
   };
 
   constructor(private dialogs: DialogsService,
+    private translate: TranslateService,
     protected session: SessionService,
     private realmsClient: RealmsClient,
     private snackBar: MatSnackBar) { }
@@ -35,18 +37,24 @@ export class RealmsComponent implements OnInit {
   }
 
   create() {
-    this.dialogs.openSimpleInput({ message: 'Realm name' })
-      .then(name => {
-        if (name) {
-          const realm = new Realm();
-          realm.id = name;
-          realm.name = name;
-          this.realmsClient.createRealm(realm)
-            .then(() => this.dataSource.data.push(realm))
-            .then(() => this.dataSource.data = this.dataSource.data)
-            .catch(error => this.snackBarOpen(`Error creating '${realm.name}'`, 'Close', this.snackBarErrorConfig));
-        }
-      });
+    this.dialogs.openSimpleInput({
+      message: this.translate.instant('realms.realm_name'),
+      ok: this.translate.instant('label.ok'),
+      cancel: this.translate.instant('label.cancel')
+    }).then(name => {
+      if (name) {
+        const realm = new Realm();
+        realm.id = name;
+        realm.name = name;
+        this.realmsClient.createRealm(realm)
+          .then(() => this.dataSource.data.push(realm))
+          .then(() => this.dataSource.data = this.dataSource.data)
+          .catch(error => this.snackBarOpen(
+            this.translate.instant('general.error_creating', { value: realm.name }),
+            this.translate.instant('label.close'),
+            this.snackBarErrorConfig));
+      }
+    });
   }
 
   select(realm: Realm) {
@@ -54,14 +62,20 @@ export class RealmsComponent implements OnInit {
   }
 
   delete(realm: Realm) {
-    this.dialogs.openConfirm({ message: `Delete realm '${realm.id}'?` })
-      .then(confirmed => {
-        if (confirmed) {
-          this.realmsClient.deleteRealm(realm)
-            .then(() => this.dataSource.data = this.dataSource.data.filter(item => item !== realm))
-            .catch(error => this.snackBarOpen(`Error deleting '${realm.id}'`, 'Close', this.snackBarErrorConfig));
-        }
-      });
+    this.dialogs.openConfirm({
+      message: this.translate.instant('realms.delete_realm', { value: realm.id }),
+      ok: this.translate.instant('label.ok'),
+      cancel: this.translate.instant('label.cancel')
+    }).then(confirmed => {
+      if (confirmed) {
+        this.realmsClient.deleteRealm(realm)
+          .then(() => this.dataSource.data = this.dataSource.data.filter(item => item !== realm))
+          .catch(error => this.snackBarOpen(
+            this.translate.instant('general.error_deleting', { value: realm.id }),
+            this.translate.instant('label.close'),
+            this.snackBarErrorConfig));
+      }
+    });
   }
 
   snackBarOpen(message: string, action?: string, config?: MatSnackBarConfig) {

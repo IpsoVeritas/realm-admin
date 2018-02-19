@@ -2,6 +2,7 @@ import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material';
 import { EventsService } from '@brickchain/integrity-angular';
+import { TranslateService } from '@ngx-translate/core';
 import { Ng2ImgToolsService } from 'ng2-img-tools';
 import { SessionService } from '../../../shared/services';
 import { RealmsClient, RolesClient } from '../../../shared/api-clients';
@@ -35,8 +36,9 @@ export class SettingsComponent implements OnInit {
 
   constructor(private sanitizer: DomSanitizer,
     private events: EventsService,
+    private translate: TranslateService,
     private imgTools: Ng2ImgToolsService,
-    private session: SessionService,
+    protected session: SessionService,
     private realmsClient: RealmsClient,
     private rolesClient: RolesClient,
     private snackBar: MatSnackBar) { }
@@ -67,7 +69,10 @@ export class SettingsComponent implements OnInit {
         }
       })
       .then(() => this.isChanged = false)
-      .catch(error => this.snackBarOpen(`Error loading '${this.session.realm}'`, 'Close', this.snackBarErrorConfig));
+      .catch(error => this.snackBarOpen(
+        this.translate.instant('general.error_loading', { value: this.session.realm }),
+        this.translate.instant('label.close'),
+        this.snackBarErrorConfig));
   }
 
   iconDropped(files: File[]) {
@@ -104,7 +109,10 @@ export class SettingsComponent implements OnInit {
       .then(() => this.iconFile ? this.realmsClient.uploadIcon(this.realm.id, this.iconFile) : false)
       .then(() => this.bannerFile ? this.realmsClient.uploadBanner(this.realm.id, this.bannerFile) : false)
       .then(() => this.isChanged = false)
-      .catch(error => this.snackBarOpen(`Error updating '${this.realm.id}'`, 'Close', this.snackBarErrorConfig));
+      .catch(error => this.snackBarOpen(
+        this.translate.instant('general.error_updating', { value: this.realm.id }),
+        this.translate.instant('label.close'),
+        this.snackBarErrorConfig));
   }
 
   snackBarOpen(message: string, action?: string, config?: MatSnackBarConfig) {

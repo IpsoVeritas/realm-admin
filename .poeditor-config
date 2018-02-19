@@ -1,0 +1,11 @@
+{
+  "targetDir": "src/assets/i18n",
+  "apiToken": "8119b0002854fd2837436b63992485d8",
+  "projectId": "165051",
+  "projectLanguages": [
+    "en",
+    "sv"
+  ],
+  "defaultLanguage": "en",
+  "exportType": "json-properties"
+}
