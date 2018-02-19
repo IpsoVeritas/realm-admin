@@ -38,7 +38,7 @@ export class SettingsComponent implements OnInit {
     private events: EventsService,
     private translate: TranslateService,
     private imgTools: Ng2ImgToolsService,
-    protected session: SessionService,
+    public session: SessionService,
     private realmsClient: RealmsClient,
     private rolesClient: RolesClient,
     private snackBar: MatSnackBar) { }
@@ -109,6 +109,10 @@ export class SettingsComponent implements OnInit {
       .then(() => this.iconFile ? this.realmsClient.uploadIcon(this.realm.id, this.iconFile) : false)
       .then(() => this.bannerFile ? this.realmsClient.uploadBanner(this.realm.id, this.bannerFile) : false)
       .then(() => this.isChanged = false)
+      .then(() => this.snackBarOpen(
+        this.translate.instant('general.success_updating', { value: this.realm.id }),
+        this.translate.instant('label.close'),
+        { duration: 2000 }))
       .catch(error => this.snackBarOpen(
         this.translate.instant('general.error_updating', { value: this.realm.id }),
         this.translate.instant('label.close'),

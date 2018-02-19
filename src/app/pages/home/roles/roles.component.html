@@ -35,9 +35,9 @@
 
 </div>
 
-<div class="content guide" [hidden]="session.getItem('hide_roles_guide',false)">
+<div class="content guide" [hidden]="session.getItem('hide_roles_guide','false') == 'true'">
   <button mat-icon-button color="accent">
-    <mat-icon (click)="session.setItem('hide_roles_guide',true)">cancel</mat-icon>
+    <mat-icon (click)="session.setItem('hide_roles_guide','true')">cancel</mat-icon>
   </button>
   <div [innerHTML]="'guide.roles' | translate"></div>
 </div>

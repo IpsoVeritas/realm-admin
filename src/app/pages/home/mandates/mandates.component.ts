@@ -37,7 +37,7 @@ export class MandatesComponent implements OnInit {
   constructor(private route: ActivatedRoute,
     private translate: TranslateService,
     private dialogs: DialogsService,
-    protected session: SessionService,
+    public session: SessionService,
     private rolesClient: RolesClient,
     private mandatesClient: MandatesClient,
     private invitesClient: InvitesClient,

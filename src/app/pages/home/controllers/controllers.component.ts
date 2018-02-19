@@ -35,7 +35,7 @@ export class ControllersComponent implements OnInit {
     private dialogs: DialogsService,
     private translate: TranslateService,
     private clipboard: ClipboardService,
-    protected session: SessionService,
+    public session: SessionService,
     private controllersClient: ControllersClient,
     private realmsClient: RealmsClient,
     private dialog: MatDialog,

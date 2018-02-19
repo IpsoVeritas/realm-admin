@@ -26,7 +26,7 @@ export class RealmsComponent implements OnInit {
 
   constructor(private dialogs: DialogsService,
     private translate: TranslateService,
-    protected session: SessionService,
+    public session: SessionService,
     private realmsClient: RealmsClient,
     private snackBar: MatSnackBar) { }
 

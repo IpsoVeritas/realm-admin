@@ -31,7 +31,7 @@ export class RolesComponent implements OnInit {
 
   constructor(private dialogs: DialogsService,
     private translate: TranslateService,
-    protected session: SessionService,
+    public session: SessionService,
     private rolesClient: RolesClient,
     private invitesClient: InvitesClient,
     private snackBar: MatSnackBar,
@@ -86,6 +86,7 @@ export class RolesComponent implements OnInit {
 
   settings(role: Role) {
     this.dialogs.openSimpleInput({
+      value: role.description,
       message: this.translate.instant('roles.role_name'),
       ok: this.translate.instant('label.ok'),
       cancel: this.translate.instant('label.cancel')

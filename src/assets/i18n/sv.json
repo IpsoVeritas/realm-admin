@@ -34,7 +34,8 @@
         "error_calling": "Fel uppstod vid anrop till '{{value}}'",
         "error_creating": "Gick ej att skapa '{{value}}'",
         "error_deleting": "Gick ej att radera '{{value}}'",
-        "error_updating": "Gick ej att updatera '{{value}}'"
+        "error_updating": "Gick ej att updatera '{{value}}'",
+        "success_updating": "Sparade ändringar för '{{value}}'"
     },
     "bootstrap": {
         "password": "Bootstrap lösenord",
