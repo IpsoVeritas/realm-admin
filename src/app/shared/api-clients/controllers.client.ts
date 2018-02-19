@@ -51,15 +51,24 @@ export class ControllersClient extends BaseClient {
   }
 
   public syncActions(controller: Controller): Promise<Controller> {
-    // TODO: Implement authentication
-    return this.getControllerActions(controller)
+    if (controller.descriptor.actionsURI == undefined || controller.descriptor.actionsURI == null || controller.descriptor.actionsURI == "") {
+      return Promise.resolve(controller);
+    }
+
+    return this.cryptoService.createMandateToken(controller.descriptor.adminUI, this.session.mandates, 30)
+      .then(token => this.getControllerActions(controller, token))
       .then(actions => this.updateActions(controller, actions))
       .catch(error => console.warn('Update actions failed', controller, error))
       .then(() => controller);
   }
 
-  public getControllerActions(controller: Controller): Promise<string> {
-    return this.http.get(controller.descriptor.actionsURI, { responseType: 'text' }).toPromise();
+  public getControllerActions(controller: Controller, token: string): Promise<string> {
+    const options: any = {
+      responseType: 'text',
+      headers: new HttpHeaders({ 'Authorization': `Mandate ${token}` }),
+    };
+    return this.http.get(controller.descriptor.actionsURI, options).toPromise()
+      .then(r => String(r))
   }
 
   public getControllerDescriptor(url: string): Promise<ControllerDescriptor> {

@@ -13,3 +13,5 @@ export { Controller } from './controller.model';
 export { ControllerDescriptor } from './controller-descriptor.model';
 export { IssuedMandate } from './issued-mandate.model';
 export { Invite } from './invite.model';
+export { CertificateChain } from './certificate-chain.model';
+export { MandateToken } from './mandate-token.model';

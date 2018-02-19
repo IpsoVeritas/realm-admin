@@ -8,7 +8,7 @@ import { SessionService } from '../../../shared/services';
 })
 export class DashboardComponent implements OnInit {
 
-  constructor(protected session: SessionService) { }
+  constructor(public session: SessionService) { }
 
   ngOnInit() {
   }
