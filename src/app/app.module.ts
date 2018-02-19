@@ -38,7 +38,7 @@ import { DocumentHandlerService } from './handlers/document-handler.service';
 import { TokenInterceptor, LoaderInterceptor, LanguageInterceptor } from './shared/interceptors';
 import { AuthClient, AccessClient, RealmsClient, MandatesClient, ControllersClient } from './shared/api-clients';
 import { RolesClient, InvitesClient } from './shared/api-clients';
-import { SessionService, PlatformService, ConfigService } from './shared/services';
+import { SessionService, PlatformService, ConfigService, CryptoService } from './shared/services';
 
 import { BootstrapComponent } from './pages/bootstrap/bootstrap.component';
 import { LoginComponent } from './pages/login/login.component';
@@ -134,6 +134,7 @@ export function createTranslateLoader(http: HttpClient) {
     SessionService,
     PlatformService,
     ConfigService,
+    CryptoService,
     DocumentHandlerService,
     {
       provide: HTTP_INTERCEPTORS,

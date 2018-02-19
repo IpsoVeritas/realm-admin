@@ -49,6 +49,12 @@ export class AuthUser {
   @JsonProperty('mandateToken', String, true)
   mandateToken: string = undefined;
 
+  @JsonProperty('chain', String, true)
+  chain: string = undefined;
+
+  @JsonProperty('mandates', [String], true)
+  mandates: string[] = undefined;
+
   get expired(): boolean {
     return this.exp.getTime() < Date.now();
   }

@@ -11,6 +11,10 @@ export class SessionService {
     localStorage.setItem(name, value);
   }
 
+  public removeItem(name: string) {
+    localStorage.removeItem(name);
+  }
+
   get realm(): string {
     return this.getItem('realm');
   }
@@ -43,6 +47,14 @@ export class SessionService {
     this.setItem('mandate', value);
   }
 
+  get mandates(): string[] {
+    return this.getItem('mandates').split("½;§");
+  }
+
+  set mandates(value: string[]) {
+    this.setItem('mandates', value.join("½;§"));
+  }
+
   get expires(): number {
     return Number(this.getItem('expires'));
   }
@@ -65,6 +77,22 @@ export class SessionService {
 
   set theme(value: string) {
     this.setItem('theme', value);
+  }
+
+  get key(): string {
+    return this.getItem('key');
+  }
+
+  set key(value: string) {
+    this.setItem('key', String(value))
+  }
+
+  get chain(): string {
+    return this.getItem('chain');
+  }
+
+  set chain(value: string) {
+    this.setItem('chain', String(value))
   }
 
 }
