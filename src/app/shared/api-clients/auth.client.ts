@@ -19,8 +19,9 @@ export class AuthClient extends BaseClient {
 
   public postAuthRequest(realm: string): Promise<AuthInfo> {
     return this.config.getBackendURL('/auth/request')
-      .then(url => this.http.post(url, { realm: realm, type: 'login-request', key: this.cryptoService.publicKey }).toPromise())
-      .then(obj => this.jsonConvert.deserializeObject(obj, AuthInfo));
+      .then(url => this.cryptoService.getKey()
+        .then(key => this.http.post(url, { realm: realm, type: 'login-request', key: key }).toPromise())
+        .then(obj => this.jsonConvert.deserializeObject(obj, AuthInfo)));
   }
 
 }

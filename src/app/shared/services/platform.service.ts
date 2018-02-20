@@ -27,8 +27,14 @@ export class PlatformService {
         .catch(error => console.warn(error));
     }
     this.events.subscribe('logout', () => {
-      localStorage.removeItem('mandate');
-      localStorage.removeItem('expires');
+
+      this.session.mandate = undefined;
+      this.session.expires = undefined;
+
+      this.session.key = undefined;
+      this.session.chain = undefined;
+      this.session.mandates = undefined;
+
       if (this.inApp) {
         this.webviewClient.cancel();
       } else {

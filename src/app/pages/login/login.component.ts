@@ -38,7 +38,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
     private config: ConfigService,
     private session: SessionService,
     private translate: TranslateService,
-    private cryptoService: CryptoService,
+    private crypto: CryptoService,
     private events: EventsService,
     private snackBar: MatSnackBar) {
   }
@@ -125,7 +125,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
           this.session.mandates = user.mandates;
           this.session.chain = user.chain;
           this.session.expires = user.exp.getTime();
-          this.cryptoService.createMandateToken(this.session.backend, user.mandates, (user.exp.getTime() - Date.now()) / 1000)
+          this.crypto.createMandateToken(this.session.backend, (user.exp.getTime() - Date.now()) / 1000)
             .then(mandate => this.session.mandate = mandate)
             .then(() => this.authClient.getAuthInfo())
             .then(() => this.events.publish('login'))

@@ -1,6 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Router, } from '@angular/router';
-import { EventsService } from '@brickchain/integrity-angular';
 import { SessionService } from './session.service';
 import * as jose from 'node-jose';
 import { MandateToken } from '../models';
@@ -11,130 +9,74 @@ declare const Buffer;
 @Injectable()
 export class CryptoService {
 
+  private keystore;
   private jsonConvert: JsonConvert;
 
-  private _privateKey: any;
-  private _publicKey: any;
-  private _chain: string;
-  private verifier: any;
-
-  private _ready: Promise<any>;
-
-  constructor(private router: Router,
-    private session: SessionService,
-    private events: EventsService) {
+  constructor(private session: SessionService) {
 
     this.jsonConvert = new JsonConvert();
     this.jsonConvert.operationMode = OperationMode.ENABLE; // print some debug data
     this.jsonConvert.ignorePrimitiveChecks = false; // don't allow assigning number to string etc.
     this.jsonConvert.valueCheckingMode = ValueCheckingMode.DISALLOW_NULL; // never allow null
 
-    this.events.subscribe('logout', () => Promise.all([
-      this.session.removeItem('key'),
-      this.session.removeItem('chain'),
-      this.session.removeItem('mandates'),
-    ]).then(() => this._ready = this.generateKey()));
-
-    this.verifier = jose.JWS.createVerify();
-
-    this._ready = this.getKey();
+    this.keystore = jose.JWK.createKeyStore();
 
   }
 
-  private saveKey(): Promise<any> {
-    return Promise.resolve()
-      .then(() => {
-        return {
-          privateKey: this._privateKey.toJSON(true),
-          publicKey: this._publicKey.toJSON(),
-        };
-      })
-      .then(key => this.session.key = JSON.stringify(key));
-  }
-
-  private getKey(): Promise<any> {
-    const key = this.session.key;
-    if (!key) {
-      return this.generateKey();
+  public getKey(): Promise<any> {
+    if (!this.session.key) {
+      return this.generateKey()
+        .then(key => {
+          this.session.key = key.toJSON(true);
+          return key;
+        });
     } else {
-      const o = JSON.parse(key);
-      return Promise.all([
-        jose.JWK.asKey(o.privateKey, 'json')
-          .then(privateKey => this._privateKey = privateKey),
-        jose.JWK.asKey(o.publicKey, 'json')
-          .then(publicKey => this._publicKey = publicKey)
-      ]);
+      return jose.JWK.asKey(this.session.key, 'json');
     }
   }
 
   private generateKey(): Promise<any> {
-    const keystore = jose.JWK.createKeyStore();
-    return keystore.generate('EC', 'P-256')
-      .then(privateKey => this._privateKey = privateKey)
-      .then(() => this.thumbprint(this._privateKey))
-      .then(tp => {
-        const key = this._privateKey.toJSON();
-        key.kid = tp;
-        return jose.JWK.asKey(key, 'json')
-          .then(publicKey => this._publicKey = publicKey);
-      })
-      .then(() => this.saveKey());
+    return this.keystore.generate('EC', 'P-256')
+      .then(key => this.thumbprint(key)
+        .then(tp => {
+          const object = key.toJSON(true);
+          object.kid = tp;
+          return jose.JWK.asKey(object, 'json');
+        }));
   }
 
-  get publicKey(): any {
-    return this._publicKey;
-  }
-
-  public thumbprint(key: any, hash = 'SHA-256'): Promise<string> {
+  private thumbprint(key: any, hash = 'SHA-256'): Promise<string> {
     return key.thumbprint(hash).then(bytes => Buffer.from(bytes).toString('hex').trim());
   }
 
   public sign(input: any): Promise<string> {
-
-    let buf = '';
-
-    if (typeof (input) === 'string') {
-      buf = input;
-    } else {
-      buf = this.jsonConvert.serializeObject(input);
-    }
-
-    return this._ready
-      .then(() => jose.JWS.createSign({}, {
-        key: this._privateKey,
+    const data = typeof (input) === 'string' ? input : JSON.stringify(this.jsonConvert.serializeObject(input));
+    return this.getKey()
+      .then(key => jose.JWS.createSign({}, {
+        key: key,
         reference: 'jwk',
-        header: { kid: this._privateKey.kid }
-      }).update(buf, 'utf8')
+        header: { kid: key.kid }
+      }).update(data, 'utf8')
         .final());
-
   }
 
   public signCompact(input: any): Promise<string> {
-
-    let buf = '';
-
-    if (typeof (input) === 'string') {
-      buf = input;
-    } else {
-      buf = JSON.stringify(this.jsonConvert.serializeObject(input));
-    }
-
-    return this._ready
-      .then(() => jose.JWS.createSign({ format: 'compact' }, { key: this._privateKey, reference: 'jwk' })
-        .update(buf, 'utf8')
+    const data = typeof (input) === 'string' ? input : JSON.stringify(this.jsonConvert.serializeObject(input));
+    return this.getKey()
+      .then(key => jose.JWS.createSign({ format: 'compact' }, { key: key, reference: 'jwk' })
+        .update(data, 'utf8')
         .final());
-
   }
 
-  public createMandateToken(uri: string, mandates: string[], ttl: number = 60): Promise<string> {
-    const m = new MandateToken();
-    m.timestamp = new Date();
-    m.uri = uri;
-    m.mandate = mandates[0];
-    m.mandates = mandates;
-    m.certificateChain = this.session.chain;
-    m.ttl = Math.floor(ttl);
-    return this.signCompact(m);
+  public createMandateToken(uri: string, ttl: number = 60): Promise<string> {
+    const mandateToken = new MandateToken();
+    mandateToken.timestamp = new Date();
+    mandateToken.uri = uri;
+    mandateToken.mandate = this.session.mandates[0];
+    mandateToken.mandates = this.session.mandates;
+    mandateToken.certificateChain = this.session.chain;
+    mandateToken.ttl = Math.floor(ttl);
+    return this.signCompact(mandateToken);
   }
 
 }

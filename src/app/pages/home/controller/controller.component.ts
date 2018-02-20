@@ -40,22 +40,19 @@ export class ControllerComponent implements OnInit, OnDestroy {
     this.realmId = this.session.realm;
     this.controllerId = this.route.snapshot.paramMap.get('id');
     this.controllersClient.getController(this.realmId, this.controllerId)
-      .then(controller => this.cryptoService.createMandateToken(
-        controller.descriptor.adminUI,
-        this.session.mandates,
-        (this.session.expires - Date.now()) / 1000
-      ).then(token => {
-        this.controller = controller;
-        if (controller.descriptor.adminUI) {
-          let hash = controller.descriptor.adminUI.split('#')[1];
-          hash = hash ? hash : '';
-          const delim = hash.length > 0 ? (hash.indexOf('?') === -1 ? '?' : '&') : '?';
-          const referer = encodeURIComponent(window.location.href);
-          const uri = `${controller.descriptor.adminUI}#${delim}token=${token}&referer=${referer}&language=${this.session.language}`;
-          this.stopListening = this.renderer.listen('window', 'message', this.handleMessage.bind(this));
-          this.uri = this.sanitizer.bypassSecurityTrustResourceUrl(uri);
-        }
-      }));
+      .then(controller => this.cryptoService.createMandateToken(controller.descriptor.adminUI, (this.session.expires - Date.now()) / 1000)
+        .then(token => {
+          this.controller = controller;
+          if (controller.descriptor.adminUI) {
+            let hash = controller.descriptor.adminUI.split('#')[1];
+            hash = hash ? hash : '';
+            const delim = hash.length > 0 ? (hash.indexOf('?') === -1 ? '?' : '&') : '?';
+            const referer = encodeURIComponent(window.location.href);
+            const uri = `${controller.descriptor.adminUI}#${delim}token=${token}&referer=${referer}&language=${this.session.language}`;
+            this.stopListening = this.renderer.listen('window', 'message', this.handleMessage.bind(this));
+            this.uri = this.sanitizer.bypassSecurityTrustResourceUrl(uri);
+          }
+        }));
   }
 
   ngOnDestroy() {
