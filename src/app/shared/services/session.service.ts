@@ -4,7 +4,12 @@ import { Injectable } from '@angular/core';
 export class SessionService {
 
   public getItem(name: string, defaultValue?: any): any {
-    return localStorage.getItem(name) ? JSON.parse(localStorage.getItem(name)) : defaultValue;
+    try {
+      return localStorage.getItem(name) ? JSON.parse(localStorage.getItem(name)) : defaultValue;
+    } catch (err) {
+      console.warn(name, err);
+      return defaultValue;
+    }
   }
 
   public setItem(name: string, value: any | null | undefined) {
