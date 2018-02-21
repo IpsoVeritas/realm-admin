@@ -1,6 +1,26 @@
+<div class="content mat-elevation-z0">
+
+  <mat-card class="mat-elevation-z0" *ngIf="controllers && controllers.length > 0">
+    <mat-card-title>Controllers that require setup...</mat-card-title>
+    <mat-card-content>
+      <button mat-button *ngFor="let controller of controllers" [routerLink]="['../controller', controller.id]">{{controller.name}}</button>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="mat-elevation-z0" *ngIf="controllers">
+    <mat-card-title>Session Expires in...</mat-card-title>
+    <mat-card-content>
+      {{ seconds / 60 | number:'1.0-0' }} minutes and {{ seconds % 60 | number:'1.0-0' }} seconds
+    </mat-card-content>
+  </mat-card>
+
+</div>
+
 <div class="content guide" [hidden]="session.getItem('hide_dashboard_guide',false)">
   <button mat-icon-button color="accent">
     <mat-icon (click)="session.setItem('hide_dashboard_guide',true)">cancel</mat-icon>
   </button>
   <div [innerHTML]="'guide.dashboard' | translate"></div>
 </div>
+
+<pre class="content developer" *ngIf="session.getItem('developer',false)">{{controllers | json }}</pre>

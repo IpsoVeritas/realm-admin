@@ -51,7 +51,7 @@ export class ControllersClient extends BaseClient {
   }
 
   public syncActions(controller: Controller): Promise<Controller> {
-    if (!controller.descriptor.actionsURI) {
+    if (!controller.descriptor.actionsURI || controller.descriptor.requireSetup) {
       return Promise.resolve(controller);
     }
     return this.cryptoService.filterMandates(controller.adminRoles)

@@ -35,7 +35,8 @@
         "error_creating": "Error creating '{{value}}'",
         "error_deleting": "Error deleting '{{value}}'",
         "error_updating": "Error updating '{{value}}'",
-        "success_updating": "Saved changes to '{{value}}'"
+        "success_updating": "Saved changes to '{{value}}'",
+        "setup_required": "Setup required"
     },
     "bootstrap": {
         "password": "Bootstrap password",

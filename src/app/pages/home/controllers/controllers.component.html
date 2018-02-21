@@ -8,7 +8,7 @@
         <h2 translate>entities.Controllers</h2>
       </mat-header-cell>
       <mat-cell *matCellDef="let controller" [routerLink]="['../controller', controller.id]">
-        {{controller.name}}
+        {{controller.name}} <span *ngIf="controller.descriptor?.requireSetup" class="pill" translate>general.setup_required</span>
       </mat-cell>
     </ng-container>
 

@@ -24,6 +24,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatTableModule } from '@angular/material/table';
 import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatChipsModule } from '@angular/material/chips';
 
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -109,6 +110,7 @@ export function createTranslateLoader(http: HttpClient) {
     MatTableModule,
     MatSelectModule,
     MatProgressSpinnerModule,
+    MatChipsModule,
     WebviewClientModule,
     QRCodeModule,
     EventsModule,
