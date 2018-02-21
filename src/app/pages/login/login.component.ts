@@ -125,14 +125,17 @@ export class LoginComponent implements OnInit, AfterViewInit {
           this.session.mandates = user.mandates;
           this.session.chain = user.chain;
           this.session.expires = user.exp.getTime();
-          this.crypto.createMandateToken(this.session.backend, (user.exp.getTime() - Date.now()) / 1000)
-            .then(mandate => this.session.mandate = mandate)
+          this.crypto.createMandateToken(
+            this.session.backend,
+            this.session.mandates,
+            (user.exp.getTime() - Date.now()) / 1000
+          ).then(mandate => this.session.mandate = mandate)
             .then(() => this.authClient.getAuthInfo())
             .then(() => this.events.publish('login'))
             .then(() => this.router.navigate(['/home', {}]))
             .catch(error => {
-              console.error(error);
               if (error && error.error) {
+                console.error(error);
                 this.snackBar.open(error.error, this.translate.instant('label.close'), { duration: 5000, panelClass: 'error' });
               }
               this.start(realm);

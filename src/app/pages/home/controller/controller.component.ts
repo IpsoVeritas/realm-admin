@@ -40,8 +40,12 @@ export class ControllerComponent implements OnInit, OnDestroy {
     this.realmId = this.session.realm;
     this.controllerId = this.route.snapshot.paramMap.get('id');
     this.controllersClient.getController(this.realmId, this.controllerId)
-      .then(controller => this.cryptoService.createMandateToken(controller.descriptor.adminUI, (this.session.expires - Date.now()) / 1000)
-        .then(token => {
+      .then(controller => this.cryptoService.filterMandates(controller.adminRoles)
+        .then(mandates => this.cryptoService.createMandateToken(
+          controller.descriptor.adminUI,
+          mandates,
+          (this.session.expires - Date.now()) / 1000
+        ).then(token => {
           this.controller = controller;
           if (controller.descriptor.adminUI) {
             let hash = controller.descriptor.adminUI.split('#')[1];
@@ -52,7 +56,7 @@ export class ControllerComponent implements OnInit, OnDestroy {
             this.stopListening = this.renderer.listen('window', 'message', this.handleMessage.bind(this));
             this.uri = this.sanitizer.bypassSecurityTrustResourceUrl(uri);
           }
-        }));
+        })));
   }
 
   ngOnDestroy() {

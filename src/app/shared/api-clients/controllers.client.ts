@@ -54,7 +54,8 @@ export class ControllersClient extends BaseClient {
     if (!controller.descriptor.actionsURI) {
       return Promise.resolve(controller);
     }
-    return this.cryptoService.createMandateToken(controller.descriptor.adminUI, 30)
+    return this.cryptoService.filterMandates(controller.adminRoles)
+      .then(mandates => this.cryptoService.createMandateToken(controller.descriptor.adminUI, mandates, 30))
       .then(token => this.getControllerActions(controller, token))
       .then(actions => this.updateActions(controller, actions))
       .catch(error => console.warn('Update actions failed', controller, error))

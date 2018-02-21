@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { SessionService } from './session.service';
 import * as jose from 'node-jose';
-import { MandateToken } from '../models';
+import { TextDecoder } from 'text-encoding-utf-8';
 import { JsonConvert, OperationMode, ValueCheckingMode } from 'json2typescript';
+import { MandateToken } from '../models';
 
 declare const Buffer;
 
@@ -10,6 +11,7 @@ declare const Buffer;
 export class CryptoService {
 
   private keystore;
+  private verifier;
   private jsonConvert: JsonConvert;
 
   constructor(private session: SessionService) {
@@ -20,6 +22,7 @@ export class CryptoService {
     this.jsonConvert.valueCheckingMode = ValueCheckingMode.DISALLOW_NULL; // never allow null
 
     this.keystore = jose.JWK.createKeyStore();
+    this.verifier = jose.JWS.createVerify();
 
   }
 
@@ -68,15 +71,31 @@ export class CryptoService {
         .final());
   }
 
-  public createMandateToken(uri: string, ttl: number = 60): Promise<string> {
+  public filterMandates(roles: string[]): Promise<string[]> {
+    return Promise.all(this.session.mandates.map(mandate => this.verifyAndParseJWS(mandate)))
+      .then(mandates => mandates.filter(mandate => roles.includes(mandate.role)))
+      .then(mandates => mandates.map(mandate => mandate.signed));
+  }
+
+  public createMandateToken(uri: string, mandates: string[], ttl: number = 60): Promise<string> {
     const mandateToken = new MandateToken();
     mandateToken.timestamp = new Date();
     mandateToken.uri = uri;
-    mandateToken.mandate = this.session.mandates[0];
-    mandateToken.mandates = this.session.mandates;
+    mandateToken.mandate = mandates[0];
+    mandateToken.mandates = mandates;
     mandateToken.certificateChain = this.session.chain;
     mandateToken.ttl = Math.floor(ttl);
     return this.signCompact(mandateToken);
+  }
+
+  private verifyAndParseJWS(jws: string): Promise<any> {
+    return this.verifier.verify(jws, { allowEmbeddedKey: true })
+      .then(verified => new TextDecoder('utf-8').decode(verified.payload))
+      .then(payload => JSON.parse(payload))
+      .then(data => {
+        data.signed = jws;
+        return data;
+      });
   }
 
 }

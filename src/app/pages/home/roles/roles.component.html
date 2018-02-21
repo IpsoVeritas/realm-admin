@@ -35,11 +35,11 @@
 
 </div>
 
-<div class="content guide" [hidden]="session.getItem('hide_roles_guide','false') == 'true'">
+<div class="content guide" [hidden]="session.getItem('hide_roles_guide',false)">
   <button mat-icon-button color="accent">
-    <mat-icon (click)="session.setItem('hide_roles_guide','true')">cancel</mat-icon>
+    <mat-icon (click)="session.setItem('hide_roles_guide',true)">cancel</mat-icon>
   </button>
   <div [innerHTML]="'guide.roles' | translate"></div>
 </div>
 
-<pre class="content developer" *ngIf="session.getItem('developer','false') == 'true'">{{dataSource?.data | json }}</pre>
+<pre class="content developer" *ngIf="session.getItem('developer',false)">{{dataSource?.data | json }}</pre>

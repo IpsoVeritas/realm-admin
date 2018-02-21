@@ -1,6 +1,6 @@
-<div class="content guide" [hidden]="session.getItem('hide_dashboard_guide','false') == 'true'">
+<div class="content guide" [hidden]="session.getItem('hide_dashboard_guide',false)">
   <button mat-icon-button color="accent">
-    <mat-icon (click)="session.setItem('hide_dashboard_guide','true')">cancel</mat-icon>
+    <mat-icon (click)="session.setItem('hide_dashboard_guide',true)">cancel</mat-icon>
   </button>
   <div [innerHTML]="'guide.dashboard' | translate"></div>
 </div>
