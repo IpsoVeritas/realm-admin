@@ -6,7 +6,7 @@ import { Link } from './link.model';
 export class Base {
 
   @JsonProperty('@context', String, true)
-  context: string = 'https://brickchain.com/schema';
+  context: string = undefined;
 
   @JsonProperty('@type', String, true)
   type: string = undefined;
@@ -34,5 +34,9 @@ export class Base {
 
   @JsonProperty('@realm', String, true)
   realm: string = undefined;
+
+  constructor() {
+    this.context = 'https://brickchain.com/schema';
+  }
 
 }

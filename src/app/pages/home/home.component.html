@@ -5,7 +5,7 @@
       <img [class.hidden]="isHandsetPortrait" src="assets/img/integrity.svg" height="50%">
     </a>
     <span class="spacer"></span>
-    <a [routerLink]="['settings']">{{ session.realm }}</a>
+    <a [routerLink]="['dashboard']">{{ session.realm }}</a>
     <span class="spacer"></span>
     <mat-progress-spinner [mode]="requestCount == 0 ? 'determinate' : 'indeterminate'" diameter="20" color="accent"></mat-progress-spinner>
     <mat-icon *ngIf="isHandsetPortrait" (click)="logout()">exit_to_app</mat-icon>
@@ -20,17 +20,17 @@
         <img mat-list-item src="assets/img/integrity.svg" width="125">
       </a>
       <a *ngIf="user?.owner" mat-list-item [routerLink]="['realms']" routerLinkActive="active" (click)="isHandsetPortrait ? drawer.close() : false">
-        <mat-icon>domain</mat-icon>Realms</a>
+        <mat-icon>domain</mat-icon>{{ 'entities.Realm' | translate }}</a>
       <a mat-list-item [routerLink]="['roles']" routerLinkActive="active" (click)="isHandsetPortrait ? drawer.close() : false">
-        <mat-icon>people</mat-icon>Roles</a>
+        <mat-icon>people</mat-icon>{{ 'entities.Roles' | translate }}</a>
       <a mat-list-item [routerLink]="['mandates']" routerLinkActive="active" (click)="isHandsetPortrait ? drawer.close() : false">
-        <mat-icon>vpn_key</mat-icon>Mandates</a>
+        <mat-icon>vpn_key</mat-icon>{{ 'entities.Mandates' | translate }}</a>
       <a mat-list-item [routerLink]="['controllers']" routerLinkActive="active" (click)="isHandsetPortrait ? drawer.close() : false">
-        <mat-icon>room_service</mat-icon>Controllers</a>
+        <mat-icon>room_service</mat-icon>{{ 'entities.Controllers' | translate }}</a>
       <a mat-list-item [routerLink]="['settings']" routerLinkActive="active" (click)="isHandsetPortrait ? drawer.close() : false">
-        <mat-icon>settings</mat-icon>Settings</a>
+        <mat-icon>settings</mat-icon>{{ 'label.settings' | translate }}</a>
       <a *ngIf="!isHandsetPortrait" mat-list-item (click)="logout()">
-        <mat-icon>exit_to_app</mat-icon>Logout</a>
+        <mat-icon>exit_to_app</mat-icon>{{ 'label.logout' | translate }}</a>
     </mat-nav-list>
   </mat-sidenav>
 

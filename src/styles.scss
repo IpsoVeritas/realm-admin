@@ -16,9 +16,19 @@
 }
 
 .guide {
+  background: #eee;
+
+  div {
+    padding: 20px;
+  }
+
   .mat-icon-button {
     position: absolute;
-    top: 0;
+    top: 8px;
     right: 16px;
   }
+}
+
+.developer {
+  font-size: 80%;
 }

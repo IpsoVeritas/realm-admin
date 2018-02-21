@@ -9,7 +9,10 @@ export class BaseClient {
 
   protected jsonConvert: JsonConvert;
 
-  constructor(protected http: HttpClient, protected config: ConfigService, protected cryptoService: CryptoService, public session: SessionService) {
+  constructor(protected http: HttpClient,
+    protected config: ConfigService,
+    protected cryptoService: CryptoService,
+    public session: SessionService) {
     this.jsonConvert = new JsonConvert();
     this.jsonConvert.operationMode = OperationMode.ENABLE; // print some debug data
     this.jsonConvert.ignorePrimitiveChecks = false; // don't allow assigning number to string etc.

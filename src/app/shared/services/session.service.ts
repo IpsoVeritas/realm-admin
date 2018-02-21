@@ -3,12 +3,21 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class SessionService {
 
-  public getItem(name: string, defaultValue?: string): string {
-    return localStorage.getItem(name) ? localStorage.getItem(name) : defaultValue;
+  public getItem(name: string, defaultValue?: any): any {
+    try {
+      return localStorage.getItem(name) ? JSON.parse(localStorage.getItem(name)) : defaultValue;
+    } catch (err) {
+      console.warn(name, err);
+      return defaultValue;
+    }
   }
 
-  public setItem(name: string, value: string) {
-    localStorage.setItem(name, value);
+  public setItem(name: string, value: any | null | undefined) {
+    if (value === null || value === undefined) {
+      this.removeItem(name);
+    } else {
+      localStorage.setItem(name, JSON.stringify(value));
+    }
   }
 
   public removeItem(name: string) {
@@ -48,19 +57,19 @@ export class SessionService {
   }
 
   get mandates(): string[] {
-    return this.getItem('mandates').split("½;§");
+    return this.getItem('mandates');
   }
 
   set mandates(value: string[]) {
-    this.setItem('mandates', value.join("½;§"));
+    this.setItem('mandates', value);
   }
 
   get expires(): number {
-    return Number(this.getItem('expires'));
+    return this.getItem('expires');
   }
 
   set expires(value: number) {
-    this.setItem('expires', String(value));
+    this.setItem('expires', value);
   }
 
   get language(): string {
@@ -79,12 +88,12 @@ export class SessionService {
     this.setItem('theme', value);
   }
 
-  get key(): string {
+  get key(): Object {
     return this.getItem('key');
   }
 
-  set key(value: string) {
-    this.setItem('key', String(value))
+  set key(value: Object) {
+    this.setItem('key', value);
   }
 
   get chain(): string {
@@ -92,7 +101,7 @@ export class SessionService {
   }
 
   set chain(value: string) {
-    this.setItem('chain', String(value))
+    this.setItem('chain', value);
   }
 
 }

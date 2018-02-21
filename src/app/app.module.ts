@@ -7,7 +7,9 @@ import { HTTP_INTERCEPTORS, HttpClientModule, HttpClient } from '@angular/common
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LayoutModule } from '@angular/cdk/layout';
 import { ServiceWorkerModule } from '@angular/service-worker';
-import { MatInputModule, MatButtonModule, MatSortModule } from '@angular/material';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSortModule } from '@angular/material/sort';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';

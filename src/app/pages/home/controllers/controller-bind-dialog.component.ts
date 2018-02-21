@@ -7,15 +7,15 @@ import { RolesClient } from '../../../shared/api-clients';
 @Component({
   selector: 'app-controller-bind-dialog',
   template: `
-    <h2 mat-dialog-title>Bind Controller</h2>
+    <h2 mat-dialog-title translate>binding.bind_controller</h2>
     <mat-dialog-content>
 
       <mat-form-field>
-        <input matInput [(ngModel)]="controller.name" placeholder="Name">
+        <input matInput [(ngModel)]="controller.name" placeholder="{{'label.name' | translate}}">
       </mat-form-field>
 
       <mat-form-field>
-        <mat-select [(ngModel)]="controller.mandateRole" placeholder="Mandate Role">
+        <mat-select [(ngModel)]="controller.mandateRole" placeholder="{{'entities.Role' | translate}}">
           <mat-option *ngFor="let role of roles" [value]="role.name">
             {{ role.name }}
           </mat-option>
@@ -24,8 +24,8 @@ import { RolesClient } from '../../../shared/api-clients';
 
     </mat-dialog-content>
     <mat-dialog-actions>
-      <button mat-button [mat-dialog-close]="null">Cancel</button>
-      <button mat-raised-button [mat-dialog-close]="controller" color="accent">OK</button>
+      <button mat-button [mat-dialog-close]="null">{{'label.cancel' | translate}}</button>
+      <button mat-raised-button [mat-dialog-close]="controller" color="accent">{{'label.ok' | translate}}</button>
     </mat-dialog-actions>`,
   styles: [`
     mat-dialog-content {

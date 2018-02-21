@@ -44,3 +44,6 @@ Thumbs.db
 # Build Artifacts
 bindata.go
 realm-admin-ng
+
+# PO editor
+.poeditor-config

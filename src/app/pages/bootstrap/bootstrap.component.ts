@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit, AfterViewInit } from '@angular/core';
 import { Router, } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
 import { EventsService } from '@brickchain/integrity-angular';
 import { AccessClient } from '../../shared/api-clients';
 import { PlatformService } from '../../shared/services';
@@ -18,6 +19,7 @@ export class BootstrapComponent implements OnInit, AfterViewInit {
 
   constructor(private router: Router,
     private fb: FormBuilder,
+    private translate: TranslateService,
     private accessClient: AccessClient,
     private platform: PlatformService,
     private events: EventsService) {
@@ -39,7 +41,10 @@ export class BootstrapComponent implements OnInit, AfterViewInit {
 
   onSubmit() {
     return this.accessClient.postBootstrap(this.password.value)
-      .then((response: BootstrapResponse) => this.platform.handleURI(response.mandateURI, 'Admin Mandate'))
+      .then((response: BootstrapResponse) => this.platform.handleURI(
+        response.mandateURI,
+        this.translate.instant('bootstrap.admin_mandate')
+      ))
       .then(() => this.router.navigate(['/login', {}]))
       .catch(error => this.password.setErrors({ 'bootstrapFailed': true }));
   }

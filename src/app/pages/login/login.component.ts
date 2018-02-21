@@ -22,6 +22,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
   qrUri: string;
   qrUriTimer: any;
   qrUriTimestamp: number;
+  qrTimeout = 300 * 1000;
   qrCountdown = 100;
   progressTimer: any;
   pollTimer: any;
@@ -37,7 +38,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
     private config: ConfigService,
     private session: SessionService,
     private translate: TranslateService,
-    private cryptoService: CryptoService,
+    private crypto: CryptoService,
     private events: EventsService,
     private snackBar: MatSnackBar) {
   }
@@ -96,7 +97,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
   }
 
   updateCountdown() {
-    this.qrCountdown = 100 - (Date.now() - this.qrUriTimestamp) / 3000;
+    this.qrCountdown = 100 - 100 * (Date.now() - this.qrUriTimestamp) / this.qrTimeout;
   }
 
   start(realm: string): Promise<AuthInfo> {
@@ -107,7 +108,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
           clearTimeout(this.qrUriTimer);
           clearTimeout(this.progressTimer);
           clearTimeout(this.pollTimer);
-          this.qrUriTimer = setTimeout(() => this.start(realm), 300000);
+          this.qrUriTimer = setTimeout(() => this.start(realm), this.qrTimeout);
           this.progressTimer = setInterval(() => this.updateCountdown(), 100);
           this.qrUriTimestamp = Date.now();
           this.poll(realm, authInfo.token);
@@ -124,14 +125,17 @@ export class LoginComponent implements OnInit, AfterViewInit {
           this.session.mandates = user.mandates;
           this.session.chain = user.chain;
           this.session.expires = user.exp.getTime();
-          this.cryptoService.createMandateToken(this.session.backend, user.mandates, (user.exp.getTime() - Date.now()) / 1000)
-            .then(token => this.session.mandate = token)
+          this.crypto.createMandateToken(
+            this.session.backend,
+            this.session.mandates,
+            (user.exp.getTime() - Date.now()) / 1000
+          ).then(mandate => this.session.mandate = mandate)
             .then(() => this.authClient.getAuthInfo())
             .then(() => this.events.publish('login'))
             .then(() => this.router.navigate(['/home', {}]))
             .catch(error => {
-              console.error(error);
               if (error && error.error) {
+                console.error(error);
                 this.snackBar.open(error.error, this.translate.instant('label.close'), { duration: 5000, panelClass: 'error' });
               }
               this.start(realm);

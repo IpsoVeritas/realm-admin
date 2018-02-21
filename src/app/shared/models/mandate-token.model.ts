@@ -4,9 +4,6 @@ import { Base } from './base.model';
 @JsonObject
 export class MandateToken extends Base {
 
-  @JsonProperty('@type', String, true)
-  type: string = 'mandate-token';
-
   @JsonProperty('ttl', Number, true)
   ttl: number = undefined;
 
@@ -18,4 +15,10 @@ export class MandateToken extends Base {
 
   @JsonProperty('mandates', [String], true)
   mandates: string[] = undefined;
+
+  constructor() {
+    super();
+    this.type = 'mandate-token';
+  }
+
 }

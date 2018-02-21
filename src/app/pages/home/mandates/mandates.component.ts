@@ -4,6 +4,7 @@ import { MatSnackBar, MatSnackBarConfig, AUTOCOMPLETE_OPTION_HEIGHT } from '@ang
 import { MatTableDataSource, MatSort } from '@angular/material';
 import { MatSelect } from '@angular/material/select';
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
 import { RoleInviteDialogComponent } from '../roles/role-invite-dialog.component';
 import { DialogsService } from '@brickchain/integrity-angular';
 import { SessionService } from '../../../shared/services';
@@ -34,8 +35,9 @@ export class MandatesComponent implements OnInit {
   };
 
   constructor(private route: ActivatedRoute,
+    private translate: TranslateService,
     private dialogs: DialogsService,
-    private session: SessionService,
+    public session: SessionService,
     private rolesClient: RolesClient,
     private mandatesClient: MandatesClient,
     private invitesClient: InvitesClient,
@@ -106,48 +108,69 @@ export class MandatesComponent implements OnInit {
           invite.messageType = 'email';
           invite.messageURI = 'mailto:' + invite.name;
           this.invitesClient.sendInvite(invite)
-            .catch(error => this.snackBarOpen(`Error sending invite to '${invite.name}'`, 'Close', this.snackBarErrorConfig));
+            .catch(error => this.snackBarOpen(
+              this.translate.instant('invites.error_sending', { value: invite.name }),
+              this.translate.instant('label.close'),
+              this.snackBarErrorConfig));
         }
       });
   }
 
   revoke(item) {
-    const mandate = item.data;
-    this.dialogs.openConfirm({ message: `Revoke mandate '${mandate.label}'?` })
-      .then(confirmed => {
-        if (confirmed) {
-          this.mandatesClient.revokeMandate(mandate)
-            .then(() => {
-              item.status = 'Revoked';
-              item.data.status = 1;
-            })
-            .catch(error => this.snackBarOpen(`Error revoking '${mandate.label}'`, 'Close', { duration: 5000 }));
-        }
-      });
+    const mandate: IssuedMandate = item.data;
+    this.dialogs.openConfirm({
+      message: this.translate.instant('mandates.revoke_mandate', { mandate: mandate.label, recipient: mandate.recipientName }),
+      ok: this.translate.instant('label.ok'),
+      cancel: this.translate.instant('label.cancel')
+    }).then(confirmed => {
+      if (confirmed) {
+        this.mandatesClient.revokeMandate(mandate)
+          .then(() => {
+            item.status = 'Revoked';
+            item.data.status = 1;
+          })
+          .catch(error => this.snackBarOpen(
+            this.translate.instant('mandates.error_revoking', { value: mandate.label }),
+            this.translate.instant('label.close'),
+            this.snackBarErrorConfig));
+      }
+    });
   }
 
   resend(item: any) {
     const invite = item.data;
-    this.dialogs.openConfirm({ message: `Re-send invite to '${invite.name}'?` })
-      .then(confirmed => {
-        if (confirmed) {
-          this.invitesClient.resendInvite(invite)
-            .catch(error => this.snackBarOpen(`Error sending invite to '${invite.name}'`, 'Close', { duration: 5000 }));
-        }
-      });
+    this.dialogs.openConfirm({
+      message: this.translate.instant('invites.resend_invite', { value: invite.name }),
+      ok: this.translate.instant('label.ok'),
+      cancel: this.translate.instant('label.cancel')
+    }).then(confirmed => {
+      if (confirmed) {
+        this.invitesClient.resendInvite(invite)
+          .catch(error => this.snackBarOpen(
+            this.translate.instant('invites.error_sending', { value: invite.name }),
+            this.translate.instant('label.close'),
+            this.snackBarErrorConfig));
+      }
+    });
   }
 
   delete(item: any) {
     const invite = item.data;
-    this.dialogs.openConfirm({ message: `Delete invite to '${invite.name}'?` })
-      .then(confirmed => {
-        if (confirmed) {
-          this.invitesClient.deleteInvite(invite)
-            .then(() => this.items = this.items.filter(i => i !== item))
-            .then(() => this.dataSource.data = this.dataSource.data.filter(i => i !== item))
-            .catch(error => this.snackBarOpen(`Error deleting invite to '${invite.name}'`, 'Close', { duration: 5000 }));
-        }
-      });
+    this.dialogs.openConfirm({
+      message: this.translate.instant('invites.delete_invite', { value: invite.name }),
+      ok: this.translate.instant('label.ok'),
+      cancel: this.translate.instant('label.cancel')
+    }).then(confirmed => {
+      if (confirmed) {
+        this.invitesClient.deleteInvite(invite)
+          .then(() => this.items = this.items.filter(i => i !== item))
+          .then(() => this.dataSource.data = this.dataSource.data.filter(i => i !== item))
+          .catch(error => this.snackBarOpen(
+            this.translate.instant('invites.error_deleting', { value: invite.name }),
+            this.translate.instant('label.close'),
+            this.snackBarErrorConfig));
+      }
+    });
   }
 
   snackBarOpen(message: string, action?: string, config?: MatSnackBarConfig) {
