@@ -23,7 +23,9 @@
         "name": "Nom",
         "description": "Description",
         "settings": "Paramètres",
-        "logout": "Déconnexion"
+        "logout": "Déconnexion",
+        "active": "Actif",
+        "pending": "En attente"
     },
     "general": {
         "change_realm": "Changer de Domaine",
@@ -67,7 +69,7 @@
         "error_email_required": "Un adresse email est obligatoire"
     },
     "mandates": {
-        "revoke_mandate": "Révoquer le mandat '{{mandate}}' à '{{recipient}}'?",
+        "revoke_mandate": "Révoquer le mandat '{{mandate}}' pour '{{recipient}}'?",
         "error_revoking": "Erreur lors de la révocation du mandat '{{value}}'"
     },
     "binding": {
