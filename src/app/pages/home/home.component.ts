@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { TranslateService } from '@ngx-translate/core';
 import { EventsService, DialogsService } from '@brickchain/integrity-angular';
 import { SessionService } from '../../shared/services';
 import { AccessClient } from '../../shared/api-clients';
@@ -13,6 +14,7 @@ import { User } from '../../shared/models';
 export class HomeComponent implements OnInit {
 
   constructor(private events: EventsService,
+    private translate: TranslateService,
     private dialogs: DialogsService,
     public session: SessionService,
     private breakpointObserver: BreakpointObserver,
@@ -29,8 +31,12 @@ export class HomeComponent implements OnInit {
   }
 
   logout() {
-    this.dialogs.openConfirm({ message: `Logout?` })
-      .then(confirmed => confirmed ? this.events.publish('logout') : false);
+    this.dialogs.openConfirm({
+      message: this.translate.instant('label.logout'),
+      ok: this.translate.instant('label.ok'),
+      cancel: this.translate.instant('label.cancel')
+    })
+    .then(confirmed => confirmed ? this.events.publish('logout') : false);
   }
 
   get isHandsetPortrait() {
