@@ -1,3 +1,4 @@
 {
-  "backend": "http://localhost:8181/realm-api"
+  "backend": "http://localhost:8181/realm-api",
+  "servicesFeed": "http://localhost:8181/www/services.json"
 }

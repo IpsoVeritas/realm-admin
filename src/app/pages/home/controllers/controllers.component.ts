@@ -6,8 +6,9 @@ import { MatTableDataSource, MatSort } from '@angular/material';
 import { TranslateService } from '@ngx-translate/core';
 import { EventsService, DialogsService, ClipboardService } from '@brickchain/integrity-angular';
 import { SessionService } from '../../../shared/services';
-import { ControllersClient, RealmsClient } from '../../../shared/api-clients';
-import { Controller, ControllerDescriptor } from './../../../shared/models/';
+import { ControllersClient, RealmsClient, ServicesClient } from '../../../shared/api-clients';
+import { Controller, ControllerDescriptor, Service } from './../../../shared/models/';
+import { ControllerAddDialogComponent } from './controller-add-dialog.component';
 import { ControllerBindDialogComponent } from './controller-bind-dialog.component';
 import { ControllerSettingsDialogComponent } from './controller-settings-dialog.component';
 
@@ -38,6 +39,7 @@ export class ControllersComponent implements OnInit {
     public session: SessionService,
     private controllersClient: ControllersClient,
     private realmsClient: RealmsClient,
+    private servicesClient: ServicesClient,
     private dialog: MatDialog,
     private snackBar: MatSnackBar) { }
 
@@ -51,42 +53,44 @@ export class ControllersComponent implements OnInit {
       .then(() => this.dataSource.sort = this.sort);
   }
 
-  bind() {
-    this.dialogs.openSimpleInput({
-      message: this.translate.instant('binding.binding_url'),
-      ok: this.translate.instant('label.ok'),
-      cancel: this.translate.instant('label.cancel')
-    }).then(url => {
-      if (url) {
-        this.controllersClient.getControllerDescriptor(url)
-          .then(descriptor => {
-            const controller = new Controller();
-            controller.name = descriptor.label;
-            controller.active = true;
-            controller.descriptor = descriptor;
-            controller.uri = url;
-            controller.realm = this.session.realm;
-            controller.mandateRole = `service@${this.session.realm}`;
-            const dialogRef = this.dialog.open(ControllerBindDialogComponent, { data: controller });
-            return dialogRef.afterClosed().toPromise();
-          })
-          .then(controller => {
-            if (controller) {
-              this.realmsClient.bindController(controller)
-                .then(binding => this.controllersClient.bindController(controller, binding))
-                .then(() => this.snackBarOpen(
-                  this.translate.instant('binding.binding_success', { value: controller.name }),
-                  this.translate.instant('label.close'),
-                  { duration: 2000 }))
-                .catch(error => this.snackBarOpen(
-                  this.translate.instant('binding.error_binding_failed'),
-                  this.translate.instant('label.close'),
-                  this.snackBarErrorConfig))
-                .then(() => this.loadControllers());
-            }
-          });
-      }
-    });
+  add() {
+    const dialogRef = this.dialog.open(ControllerAddDialogComponent);
+    dialogRef.afterClosed().toPromise()
+      .then((service: Service) => {
+        if (service) {
+          this.servicesClient.addService(service).then(uri => this.bind(uri));
+        }
+      });
+  }
+
+  bind(url) {
+    this.controllersClient.getControllerDescriptor(url)
+      .then(descriptor => {
+        const controller = new Controller();
+        controller.name = descriptor.label;
+        controller.active = true;
+        controller.descriptor = descriptor;
+        controller.uri = url;
+        controller.realm = this.session.realm;
+        controller.mandateRole = `service@${this.session.realm}`;
+        const dialogRef = this.dialog.open(ControllerBindDialogComponent, { data: controller });
+        return dialogRef.afterClosed().toPromise();
+      })
+      .then(controller => {
+        if (controller) {
+          this.realmsClient.bindController(controller)
+            .then(binding => this.controllersClient.bindController(controller, binding))
+            .then(() => this.snackBarOpen(
+              this.translate.instant('binding.binding_success', { value: controller.name }),
+              this.translate.instant('label.close'),
+              { duration: 2000 }))
+            .catch(error => this.snackBarOpen(
+              this.translate.instant('binding.error_binding_failed'),
+              this.translate.instant('label.close'),
+              this.snackBarErrorConfig))
+            .then(() => this.loadControllers());
+        }
+      });
   }
 
   binding(controller: Controller) {

@@ -16,7 +16,7 @@
     <ng-container matColumnDef="action">
       <mat-header-cell *matHeaderCellDef>
         <mat-icon (click)="sync()" color="accent">sync</mat-icon>
-        <mat-icon (click)="bind()" color="accent">add_circle</mat-icon>
+        <mat-icon (click)="add()" color="accent">add_circle</mat-icon>
       </mat-header-cell>
       <mat-cell *matCellDef="let controller">
         <mat-icon *ngIf="controller.descriptor?.addBindingEndpoint" (click)="binding(controller)" color="accent">link</mat-icon>
@@ -31,7 +31,7 @@
 
   </mat-table>
 
-  <button (click)="bind()" mat-fab class="fab-add-button" [class.snack-bar-open]="isSnackBarOpen">
+  <button (click)="add()" mat-fab class="fab-add-button" [class.snack-bar-open]="isSnackBarOpen">
     <mat-icon>add</mat-icon>
   </button>
 

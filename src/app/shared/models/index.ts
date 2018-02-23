@@ -15,3 +15,4 @@ export { IssuedMandate } from './issued-mandate.model';
 export { Invite } from './invite.model';
 export { CertificateChain } from './certificate-chain.model';
 export { MandateToken } from './mandate-token.model';
+export { Service } from './service.model';

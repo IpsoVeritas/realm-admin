@@ -7,6 +7,13 @@
     </mat-card-content>
   </mat-card>
 
+  <mat-card class="mat-elevation-z0" *ngIf="controllers && controllers.length > 0">
+    <mat-card-title>Services available for installation...</mat-card-title>
+    <mat-card-content>
+      <button mat-button *ngFor="let service of services" (click)="install(service)">{{service.name}}</button>
+    </mat-card-content>
+  </mat-card>
+
   <mat-card class="mat-elevation-z0" *ngIf="controllers">
     <mat-card-title>Session Expires in...</mat-card-title>
     <mat-card-content>
@@ -23,4 +30,9 @@
   <div [innerHTML]="'guide.dashboard' | translate"></div>
 </div>
 
-<pre class="content developer" *ngIf="session.getItem('developer',false)">{{controllers | json }}</pre>
+<div class="content developer" *ngIf="session.getItem('developer',false)">
+  <h2>Controllers</h2>
+  <pre>{{controllers | json }}</pre>
+  <h2>Services</h2>
+  <pre>{{services | json }}</pre>
+</div>

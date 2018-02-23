@@ -45,7 +45,8 @@
     "login": {
         "realm_required": "Ett rike krävs",
         "realm_invalid": "Ogiltigt rike",
-        "scan_qr_code": "Skanna QR koden för att öppna '{{value}}'"
+        "scan_qr_code": "Skanna QR koden för att öppna '{{value}}'",
+        "enter_realm": "Ange rike för att logga in"
     },
     "realms": {
         "realm_name": "Ange rikets namn",
@@ -80,7 +81,9 @@
         "controller_settings": "Inställningar för Tjänst",
         "delete_controller": "Radera tjänst '{{value}}'?",
         "error_syncing_controller": "Gick ej att synka '{{value}}'",
-        "error_syncing_controllers": "Fel vid synkning av tjänster"
+        "error_syncing_controllers": "Fel vid synkning av tjänster",
+        "add_service": "Bind Ny Tjänst",
+        "custom_binding_url": "Ange Bindings URL..."
     },
     "settings": {
         "no_public_role": "Ingen publik roll",
