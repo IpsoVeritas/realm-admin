@@ -11,7 +11,7 @@ export class ConfigService {
   private _base: string;
 
   constructor(private http: HttpClient, private location: Location) {
-    this._ready = this.http.get('/config.json').toPromise()
+    this._ready = this.http.get('./config.json').toPromise()
       .then(config => this._config = config)
       .then(() => {
         this._backend = this._config['backend'];
