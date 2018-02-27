@@ -73,7 +73,7 @@ upload to aws:
 
 deploy to staging:
   image: gcr.io/brickchain-docker/gitlab-builder-deploy
-  stage: staging
+  stage: deploy
   script:
     - eval $(vaultenv read -s secret/env/gitlab-ci/brickchain-actions-s3)
     - cat config.json.template |envsubst >www/config.json
