@@ -70,3 +70,15 @@ upload to aws:
     # - aws s3 cp realm-admin-ng-linux-armv6 s3://brickchain-artifacts/
     # - aws s3 cp realm-admin-ng-linux-armv7 s3://brickchain-artifacts/
     # - aws s3 cp realm-admin-ng-linux-arm64 s3://brickchain-artifacts/
+
+deploy to staging:
+  image: gcr.io/brickchain-docker/gitlab-builder-deploy
+  stage: staging
+  script:
+    - eval $(vaultenv read -s secret/env/gitlab-ci/brickchain-actions-s3)
+    - cat config.json.template |envsubst >www/config.json
+    - aws s3 cp --recursive dist/ s3://brickchain-actions/$CI_PROJECT_NAME/$CI_BUILD_REF_NAME
+    - aws configure set preview.cloudfront true
+    - aws cloudfront create-invalidation --distribution-id E2Y3HN6RJX8DF5 --paths "/$CI_PROJECT_NAME/$CI_BUILD_REF_NAME/*"
+  variables:
+    BACKEND: "https://realm.plusintegrity.com/realm-api"
