@@ -58,7 +58,12 @@ export class ControllersComponent implements OnInit {
     dialogRef.afterClosed().toPromise()
       .then((service: Service) => {
         if (service) {
-          this.servicesClient.addService(service).then(uri => this.bind(uri));
+          this.servicesClient.addService(service)
+            .then(uri => this.bind(uri))
+            .catch(error => this.snackBarOpen(
+              this.translate.instant('binding.error_add_failed'),
+              this.translate.instant('label.close'),
+              this.snackBarErrorConfig));
         }
       });
   }

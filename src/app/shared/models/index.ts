@@ -16,3 +16,4 @@ export { Invite } from './invite.model';
 export { CertificateChain } from './certificate-chain.model';
 export { MandateToken } from './mandate-token.model';
 export { Service } from './service.model';
+export { URLResponse } from './url-response.model';
