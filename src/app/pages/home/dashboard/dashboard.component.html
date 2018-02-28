@@ -7,7 +7,7 @@
     </mat-card-content>
   </mat-card>
 
-  <mat-card class="mat-elevation-z0" *ngIf="controllers && controllers.length > 0">
+  <mat-card class="mat-elevation-z0" *ngIf="services && services.length > 0">
     <mat-card-title>Services available for installation...</mat-card-title>
     <mat-card-content>
       <button mat-button *ngFor="let service of services" (click)="install(service)">{{service.name}}</button>

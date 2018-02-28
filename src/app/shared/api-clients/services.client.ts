@@ -13,31 +13,55 @@ export class ServicesClient extends BaseClient {
       .then((array: any[]) => this.jsonConvert.deserializeArray(array, Service));
   }
 
-  public addService(service: Service): Promise<any> {
+  public addService(service: Service): Promise<{ token: string, uri: string } | null> {
+    const token = this.generateToken(service);
     switch (service.mode) {
       case 'redirect': {
-        const token = uuid();
-        const services = this.session.getItem('pending_services', {});
-        services[token] = { timestamp: Date.now(), service: service };
-        this.session.setItem('pending_services', services);
-        const url = `${service.url}${service.url.indexOf('?') === -1 ? '?' : '#'}token=${token}`;
-        console.log(url);
-        // window.location.href = url;
-        return Promise.resolve(service.url);
+        const url = `${service.url}${service.url.indexOf('?') === -1 ? '?' : '&'}token=${token}`;
+        window.location.href = url;
+        return Promise.resolve(null);
       }
       case 'api': {
         return this.http.get(service.url).toPromise()
           .then(obj => this.jsonConvert.deserializeObject(obj, URLResponse))
-          .then((response: URLResponse) => response.url);
+          .then((response: URLResponse) => <any>{ token: token, uri: response.url });
       }
       case 'custom': {
-        return Promise.resolve(service.url);
+        return Promise.resolve({ token: token, uri: service.url });
       }
       default: {
         console.warn('Unsupported mode', service);
         return Promise.reject('unsupported mode');
       }
     }
+  }
+
+  public generateToken(service: Service): string {
+    const token = uuid();
+    const services = this.session.getItem('pending_services', {});
+    services[token] = { timestamp: Date.now(), service: service };
+    this.session.setItem('pending_services', services);
+    return token;
+  }
+
+  public lookupToken(token: string): { timestamp: number, service: Service } {
+    const services = this.session.getItem('pending_services', {});
+    return services[token];
+  }
+
+  public deleteToken(token: string): void {
+    const services = this.session.getItem('pending_services', {});
+    delete services[token];
+    this.session.setItem('pending_services', services);
+  }
+
+  public pruneTokens(maxAge: number) {
+    const now = Date.now();
+    const services = {};
+    Object.entries(this.session.getItem('pending_services', {}))
+      .filter(([key, value]) => now - value['timestamp'] < maxAge)
+      .forEach(([key, value]) => services[key] = value);
+    this.session.setItem('pending_services', services);
   }
 
 }

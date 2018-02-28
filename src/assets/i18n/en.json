@@ -75,7 +75,9 @@
         "binding_success": "Successfully bound '{{value}}'",
         "bind_controller": "Bind Controller",
         "error_binding_failed": "Binding failed!",
-        "url_copied": "Copied binding URL to clipboard"
+        "url_copied": "Copied binding URL to clipboard",
+        "error_add_failed": "Error adding service",
+        "error_invalid_token": "Add token is invalid"
     },
     "controllers": {
         "controller_settings": "Controller Settings",

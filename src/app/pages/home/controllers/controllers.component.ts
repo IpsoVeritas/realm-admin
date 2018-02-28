@@ -1,4 +1,5 @@
-import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, OnInit, AfterViewInit, AfterViewChecked, ViewChild } from '@angular/core';
+import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material';
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
@@ -19,7 +20,7 @@ import { structuralClone } from './../../../shared';
   templateUrl: './controllers.component.html',
   styleUrls: ['./controllers.component.scss']
 })
-export class ControllersComponent implements OnInit {
+export class ControllersComponent implements OnInit, AfterViewInit {
 
   displayedColumns = ['name', 'action'];
   dataSource: MatTableDataSource<any>;
@@ -31,7 +32,8 @@ export class ControllersComponent implements OnInit {
     panelClass: 'error'
   };
 
-  constructor(private http: HttpClient,
+  constructor(private route: ActivatedRoute,
+    private http: HttpClient,
     private events: EventsService,
     private dialogs: DialogsService,
     private translate: TranslateService,
@@ -47,6 +49,24 @@ export class ControllersComponent implements OnInit {
     this.loadControllers();
   }
 
+  ngAfterViewInit() {
+    const token = this.route.snapshot.queryParamMap.get('token');
+    const uri = this.route.snapshot.queryParamMap.get('uri');
+    if (token && uri) {
+      const data = this.servicesClient.lookupToken(this.route.snapshot.queryParamMap.get('token'));
+      setTimeout(() => {
+        if (data && Date.now() - data.timestamp < 5 * 60 * 1000) { // 5 minutes
+          this.bind(token, uri);
+        } else {
+          this.snackBarOpen(
+            this.translate.instant('binding.error_invalid_token'),
+            this.translate.instant('label.close'),
+            this.snackBarErrorConfig);
+        }
+      });
+    }
+  }
+
   loadControllers() {
     this.controllersClient.getControllers(this.session.realm)
       .then(data => this.dataSource = new MatTableDataSource(data))
@@ -59,7 +79,11 @@ export class ControllersComponent implements OnInit {
       .then((service: Service) => {
         if (service) {
           this.servicesClient.addService(service)
-            .then(uri => this.bind(uri))
+            .then(data => {
+              if (data) {
+                this.bind(data.token, data.uri);
+              }
+            })
             .catch(error => this.snackBarOpen(
               this.translate.instant('binding.error_add_failed'),
               this.translate.instant('label.close'),
@@ -68,14 +92,14 @@ export class ControllersComponent implements OnInit {
       });
   }
 
-  bind(url) {
-    this.controllersClient.getControllerDescriptor(url)
+  bind(token: string, uri: string) {
+    this.controllersClient.getControllerDescriptor(uri)
       .then(descriptor => {
         const controller = new Controller();
         controller.name = descriptor.label;
         controller.active = true;
         controller.descriptor = descriptor;
-        controller.uri = url;
+        controller.uri = uri;
         controller.realm = this.session.realm;
         controller.mandateRole = `service@${this.session.realm}`;
         const dialogRef = this.dialog.open(ControllerBindDialogComponent, { data: controller });
@@ -85,6 +109,7 @@ export class ControllersComponent implements OnInit {
         if (controller) {
           this.realmsClient.bindController(controller)
             .then(binding => this.controllersClient.bindController(controller, binding))
+            .then(() => this.servicesClient.deleteToken(token))
             .then(() => this.snackBarOpen(
               this.translate.instant('binding.binding_success', { value: controller.name }),
               this.translate.instant('label.close'),

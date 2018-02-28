@@ -75,7 +75,9 @@
         "binding_success": "Bunden till '{{value}}'",
         "bind_controller": "Bind Tjänst",
         "error_binding_failed": "Fel vid bindning!",
-        "url_copied": "Kopierade bindnings URL till urklipp"
+        "url_copied": "Kopierade bindnings URL till urklipp",
+        "error_add_failed": "Fel vid tillägg av tjänst",
+        "error_invalid_token": "Ogiltig biljett för tillägg av tjänst"
     },
     "controllers": {
         "controller_settings": "Inställningar för Tjänst",

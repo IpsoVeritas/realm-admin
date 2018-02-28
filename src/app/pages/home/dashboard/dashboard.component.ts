@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
+import { MatSnackBar, MatSnackBarConfig } from '@angular/material';
+import { TranslateService } from '@ngx-translate/core';
 import { SessionService } from '../../../shared/services';
 import { ControllersClient, ServicesClient } from '../../../shared/api-clients';
 import { Controller, Service } from '../../../shared/models';
@@ -10,13 +13,23 @@ import { Controller, Service } from '../../../shared/models';
 })
 export class DashboardComponent implements OnInit {
 
+  isSnackBarOpen = false;
+
   controllers: Controller[];
   services: Service[];
   seconds: number;
 
-  constructor(public session: SessionService,
+  snackBarErrorConfig: MatSnackBarConfig = {
+    duration: 5000,
+    panelClass: 'error'
+  };
+
+  constructor(private router: Router,
+    public session: SessionService,
+    private translate: TranslateService,
     private controllersClient: ControllersClient,
-    private servicesClient: ServicesClient) { }
+    private servicesClient: ServicesClient,
+    private snackBar: MatSnackBar) { }
 
   ngOnInit() {
     this.loadControllers();
@@ -41,7 +54,22 @@ export class DashboardComponent implements OnInit {
   }
 
   install(service: Service) {
-    console.log(service.url);
+    this.servicesClient.addService(service)
+      .then(data => {
+        if (data) {
+          this.router.navigate(['/home/controllers'], { queryParams: { token: data.token, uri: data.uri } });
+        }
+      })
+      .catch(error => this.snackBarOpen(
+        this.translate.instant('binding.error_add_failed'),
+        this.translate.instant('label.close'),
+        this.snackBarErrorConfig));
+  }
+
+  snackBarOpen(message: string, action?: string, config?: MatSnackBarConfig) {
+    this.isSnackBarOpen = true;
+    const snackbarRef = this.snackBar.open(message, action, config);
+    snackbarRef.afterDismissed().toPromise().then(() => this.isSnackBarOpen = false);
   }
 
 }
