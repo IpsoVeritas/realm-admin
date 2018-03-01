@@ -71,7 +71,7 @@ upload to aws:
     # - aws s3 cp realm-admin-ng-linux-armv7 s3://brickchain-artifacts/
     # - aws s3 cp realm-admin-ng-linux-arm64 s3://brickchain-artifacts/
 
-deploy to staging:
+deploy to branch:
   image: gcr.io/brickchain-docker/gitlab-builder-deploy
   stage: deploy
   script:
@@ -80,5 +80,34 @@ deploy to staging:
     - aws s3 cp --recursive dist/ s3://brickchain-actions/$CI_PROJECT_NAME/$CI_BUILD_REF_NAME
     - aws configure set preview.cloudfront true
     - aws cloudfront create-invalidation --distribution-id E2Y3HN6RJX8DF5 --paths "/$CI_PROJECT_NAME/$CI_BUILD_REF_NAME/*"
+  variables:
+    BACKEND: "https://realm.plusintegrity.com/realm-api"
+
+deploy to staging:
+  image: gcr.io/brickchain-docker/gitlab-builder-deploy
+  stage: deploy
+  only:
+    - master
+  script:
+    - eval $(vaultenv read -s secret/env/gitlab-ci/brickchain-actions-s3)
+    - cat config.json.template |envsubst >dist/config.json
+    - aws s3 cp --recursive dist/ s3://brickchain-actions/$CI_PROJECT_NAME/staging
+    - aws configure set preview.cloudfront true
+    - aws cloudfront create-invalidation --distribution-id E2Y3HN6RJX8DF5 --paths "/$CI_PROJECT_NAME/staging/*"
+  variables:
+    BACKEND: "https://realmappengine-dot-brickchain-infra.appspot.com/realm-api"
+
+deploy to production:
+  image: gcr.io/brickchain-docker/gitlab-builder-deploy
+  stage: deploy
+  when: manual
+  only:
+    - master
+  script:
+    - eval $(vaultenv read -s secret/env/gitlab-ci/brickchain-actions-s3)
+    - cat config.json.template |envsubst >dist/config.json
+    - aws s3 cp --recursive dist/ s3://brickchain-actions/$CI_PROJECT_NAME/release
+    - aws configure set preview.cloudfront true
+    - aws cloudfront create-invalidation --distribution-id E2Y3HN6RJX8DF5 --paths "/$CI_PROJECT_NAME/release/*"
   variables:
     BACKEND: "https://realm.plusintegrity.com/realm-api"
