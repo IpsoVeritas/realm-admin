@@ -1,5 +1,6 @@
 import { Component, ViewChild, ElementRef, OnInit, OnDestroy, Renderer2 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { DocumentHandlerService } from '../../../handlers/document-handler.service';
 import { SessionService, CryptoService } from '../../../shared/services';
@@ -27,6 +28,7 @@ export class ControllerComponent implements OnInit, OnDestroy {
   constructor(
     private renderer: Renderer2,
     private route: ActivatedRoute,
+    private breakpointObserver: BreakpointObserver,
     private sanitizer: DomSanitizer,
     private session: SessionService,
     private documentHandler: DocumentHandlerService,
@@ -68,6 +70,15 @@ export class ControllerComponent implements OnInit, OnDestroy {
   load(event) {
     if (this.iframe) {
       this.ready = true;
+      const layoutChanges = this.breakpointObserver.observe(Breakpoints.HandsetPortrait);
+      layoutChanges.subscribe(result => {
+        const body = this.iframe.nativeElement.contentWindow.document.getElementsByTagName('body')[0];
+        if (result.matches) {
+          body.classList.add('narrow');
+        } else {
+          body.classList.remove('narrow');
+        }
+      });
     }
   }
 

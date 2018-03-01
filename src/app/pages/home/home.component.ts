@@ -35,8 +35,7 @@ export class HomeComponent implements OnInit {
       message: this.translate.instant('label.logout'),
       ok: this.translate.instant('label.ok'),
       cancel: this.translate.instant('label.cancel')
-    })
-    .then(confirmed => confirmed ? this.events.publish('logout') : false);
+    }).then(confirmed => confirmed ? this.events.publish('logout') : false);
   }
 
   get isHandsetPortrait() {
