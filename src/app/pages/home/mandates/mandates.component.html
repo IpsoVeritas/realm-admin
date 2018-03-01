@@ -21,7 +21,7 @@
     <!-- Status Column -->
     <ng-container matColumnDef="status">
       <mat-header-cell *matHeaderCellDef mat-sort-header>{{'label.status' | translate }}</mat-header-cell>
-      <mat-cell *matCellDef="let item" [ngClass]="item.status.toLowerCase()">{{item.status}}</mat-cell>
+      <mat-cell *matCellDef="let item" [ngClass]="item.status.toLowerCase()">{{"label." + item.status.toLowerCase() | translate }}</mat-cell>
     </ng-container>
 
     <!-- Action Column -->

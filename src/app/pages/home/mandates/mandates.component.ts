@@ -107,6 +107,17 @@ export class MandatesComponent implements OnInit {
           invite.messageType = 'email';
           invite.messageURI = 'mailto:' + invite.name;
           this.invitesClient.sendInvite(invite)
+            .then(() => {
+              this.items.push({
+                role: invite.role,
+                name: invite.name,
+                status: 'Pending',
+                type: 'invite',
+                data: invite
+              });
+              this.dataSource = new MatTableDataSource(this.getMandates(this.role));
+              this.dataSource.sort = this.sort;
+            })
             .catch(error => this.snackBarOpen(
               this.translate.instant('invites.error_sending', { value: invite.name }),
               this.translate.instant('label.close'),

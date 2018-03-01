@@ -23,7 +23,9 @@
         "name": "Name",
         "description": "Description",
         "settings": "Settings",
-        "logout": "Logout"
+        "logout": "Logout",
+        "active": "Active",
+        "pending": "Pending"
     },
     "general": {
         "change_realm": "Change Realm",

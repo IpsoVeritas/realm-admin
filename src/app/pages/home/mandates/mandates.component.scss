@@ -23,7 +23,6 @@
   flex: 1 0 45%;
 
   &:last-child {
-    min-width: 60px;
     text-align: right;
     flex: 0 1 10%;
   }
@@ -61,6 +60,6 @@
   }
 
   .mat-header-cell:last-child {
-    display: none;
+    visibility: hidden;
   }
 }
