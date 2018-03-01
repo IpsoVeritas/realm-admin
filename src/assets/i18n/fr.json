@@ -77,7 +77,9 @@
         "binding_success": "Liaison avec '{{value}}' réussie",
         "bind_controller": "Contrôleur de liaison",
         "error_binding_failed": "Liaison échouée !",
-        "url_copied": "URL de liaison copiée dans le presse-papiers"
+        "url_copied": "URL de liaison copiée dans le presse-papiers",
+        "error_add_failed": "Erreur lors de l’ajout du service",
+        "error_invalid_token": "Jeton est invalide"
     },
     "controllers": {
         "controller_settings": "Paramètres du contrôleur",
