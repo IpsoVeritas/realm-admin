@@ -35,7 +35,8 @@
         "error_creating": "Error creating '{{value}}'",
         "error_deleting": "Error deleting '{{value}}'",
         "error_updating": "Error updating '{{value}}'",
-        "success_updating": "Saved changes to '{{value}}'"
+        "success_updating": "Saved changes to '{{value}}'",
+        "setup_required": "Setup required"
     },
     "bootstrap": {
         "password": "Bootstrap password",
@@ -44,7 +45,8 @@
     "login": {
         "realm_required": "A realm is required",
         "realm_invalid": "Invalid realm",
-        "scan_qr_code": "Scan QR code to access '{{value}}'"
+        "scan_qr_code": "Scan QR code to access '{{value}}'",
+        "enter_realm": "Enter realm to login"
     },
     "realms": {
         "realm_name": "Enter realm name",
@@ -73,13 +75,17 @@
         "binding_success": "Successfully bound '{{value}}'",
         "bind_controller": "Bind Controller",
         "error_binding_failed": "Binding failed!",
-        "url_copied": "Copied binding URL to clipboard"
+        "url_copied": "Copied binding URL to clipboard",
+        "error_add_failed": "Error adding service",
+        "error_invalid_token": "Add token is invalid"
     },
     "controllers": {
         "controller_settings": "Controller Settings",
         "delete_controller": "Delete controller '{{value}}'?",
         "error_syncing_controller": "Error syncing '{{value}}'",
-        "error_syncing_controllers": "Error syncing controllers"
+        "error_syncing_controllers": "Error syncing controllers",
+        "add_service": "Add Service Binding",
+        "custom_binding_url": "Custom Binding URL..."
     },
     "settings": {
         "no_public_role": "No public role",

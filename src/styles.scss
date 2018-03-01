@@ -32,3 +32,12 @@
 .developer {
   font-size: 80%;
 }
+
+.pill {
+  border-radius: 8px;
+  padding: 0 8px;
+  margin: 4px;
+  color: mat-color($integrity-yellow, default-contrast);
+  background-color: mat-color($integrity-yellow);
+  display: inline-block;
+}

@@ -4,7 +4,7 @@ import { URLSearchParams } from '@angular/http';
 import { TranslateService } from '@ngx-translate/core';
 import { EventsService } from '@brickchain/integrity-angular';
 import { PlatformService, ConfigService, SessionService } from './shared/services';
-import { ControllersClient } from './shared/api-clients';
+import { ControllersClient, ServicesClient } from './shared/api-clients';
 import { AuthUser } from './shared/models';
 import 'rxjs/add/operator/filter';
 
@@ -27,13 +27,16 @@ export class AppComponent implements OnInit {
     private config: ConfigService,
     private session: SessionService,
     private events: EventsService,
-    private controllersClient: ControllersClient) {
+    private controllersClient: ControllersClient,
+    private servicesClient: ServicesClient) {
     translate.setDefaultLang('en');
   }
 
   ngOnInit(): void {
 
     const params = new URLSearchParams(window.location.search.indexOf('?') !== -1 ? window.location.search.split('?')[1] : '');
+    const paramsHash = new URLSearchParams(window.location.hash.indexOf('?') !== -1 ? window.location.hash.split('?')[1] : '');
+    params.appendAll(paramsHash);
 
     this.config.get('backend').then(backend => this.session.backend = backend);
 
@@ -58,7 +61,13 @@ export class AppComponent implements OnInit {
         .then(url => window.location.href = url);
     }
 
-    if (this.session.url) {
+    this.servicesClient.pruneTokens(24 * 60 * 60 * 1000); // 1day
+
+    if (this.servicesClient.lookupToken(params.get('token')) && params.has('uri')) {
+      this.router.navigate(['/home/controllers'], {
+        queryParams: { token: params.get('token'), uri: decodeURIComponent(params.get('uri')) }
+      });
+    } else if (this.session.url) {
       this.router.navigate([this.session.url, {}]);
     }
 

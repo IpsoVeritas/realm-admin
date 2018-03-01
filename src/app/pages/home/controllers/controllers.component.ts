@@ -1,4 +1,5 @@
-import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, OnInit, AfterViewInit, AfterViewChecked, ViewChild } from '@angular/core';
+import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material';
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
@@ -6,8 +7,9 @@ import { MatTableDataSource, MatSort } from '@angular/material';
 import { TranslateService } from '@ngx-translate/core';
 import { EventsService, DialogsService, ClipboardService } from '@brickchain/integrity-angular';
 import { SessionService } from '../../../shared/services';
-import { ControllersClient, RealmsClient } from '../../../shared/api-clients';
-import { Controller, ControllerDescriptor } from './../../../shared/models/';
+import { ControllersClient, RealmsClient, ServicesClient } from '../../../shared/api-clients';
+import { Controller, ControllerDescriptor, Service } from './../../../shared/models/';
+import { ControllerAddDialogComponent } from './controller-add-dialog.component';
 import { ControllerBindDialogComponent } from './controller-bind-dialog.component';
 import { ControllerSettingsDialogComponent } from './controller-settings-dialog.component';
 
@@ -18,7 +20,7 @@ import { structuralClone } from './../../../shared';
   templateUrl: './controllers.component.html',
   styleUrls: ['./controllers.component.scss']
 })
-export class ControllersComponent implements OnInit {
+export class ControllersComponent implements OnInit, AfterViewInit {
 
   displayedColumns = ['name', 'action'];
   dataSource: MatTableDataSource<any>;
@@ -30,7 +32,8 @@ export class ControllersComponent implements OnInit {
     panelClass: 'error'
   };
 
-  constructor(private http: HttpClient,
+  constructor(private route: ActivatedRoute,
+    private http: HttpClient,
     private events: EventsService,
     private dialogs: DialogsService,
     private translate: TranslateService,
@@ -38,11 +41,30 @@ export class ControllersComponent implements OnInit {
     public session: SessionService,
     private controllersClient: ControllersClient,
     private realmsClient: RealmsClient,
+    private servicesClient: ServicesClient,
     private dialog: MatDialog,
     private snackBar: MatSnackBar) { }
 
   ngOnInit() {
     this.loadControllers();
+  }
+
+  ngAfterViewInit() {
+    const token = this.route.snapshot.queryParamMap.get('token');
+    const uri = this.route.snapshot.queryParamMap.get('uri');
+    if (token && uri) {
+      const data = this.servicesClient.lookupToken(this.route.snapshot.queryParamMap.get('token'));
+      setTimeout(() => {
+        if (data && Date.now() - data.timestamp < 5 * 60 * 1000) { // 5 minutes
+          this.bind(token, uri);
+        } else {
+          this.snackBarOpen(
+            this.translate.instant('binding.error_invalid_token'),
+            this.translate.instant('label.close'),
+            this.snackBarErrorConfig);
+        }
+      });
+    }
   }
 
   loadControllers() {
@@ -51,42 +73,54 @@ export class ControllersComponent implements OnInit {
       .then(() => this.dataSource.sort = this.sort);
   }
 
-  bind() {
-    this.dialogs.openSimpleInput({
-      message: this.translate.instant('binding.binding_url'),
-      ok: this.translate.instant('label.ok'),
-      cancel: this.translate.instant('label.cancel')
-    }).then(url => {
-      if (url) {
-        this.controllersClient.getControllerDescriptor(url)
-          .then(descriptor => {
-            const controller = new Controller();
-            controller.name = descriptor.label;
-            controller.active = true;
-            controller.descriptor = descriptor;
-            controller.uri = url;
-            controller.realm = this.session.realm;
-            controller.mandateRole = `service@${this.session.realm}`;
-            const dialogRef = this.dialog.open(ControllerBindDialogComponent, { data: controller });
-            return dialogRef.afterClosed().toPromise();
-          })
-          .then(controller => {
-            if (controller) {
-              this.realmsClient.bindController(controller)
-                .then(binding => this.controllersClient.bindController(controller, binding))
-                .then(() => this.snackBarOpen(
-                  this.translate.instant('binding.binding_success', { value: controller.name }),
-                  this.translate.instant('label.close'),
-                  { duration: 2000 }))
-                .catch(error => this.snackBarOpen(
-                  this.translate.instant('binding.error_binding_failed'),
-                  this.translate.instant('label.close'),
-                  this.snackBarErrorConfig))
-                .then(() => this.loadControllers());
-            }
-          });
-      }
-    });
+  add() {
+    const dialogRef = this.dialog.open(ControllerAddDialogComponent);
+    dialogRef.afterClosed().toPromise()
+      .then((service: Service) => {
+        if (service) {
+          this.servicesClient.addService(service)
+            .then(data => {
+              if (data) {
+                this.bind(data.token, data.uri);
+              }
+            })
+            .catch(error => this.snackBarOpen(
+              this.translate.instant('binding.error_add_failed'),
+              this.translate.instant('label.close'),
+              this.snackBarErrorConfig));
+        }
+      });
+  }
+
+  bind(token: string, uri: string) {
+    this.controllersClient.getControllerDescriptor(uri)
+      .then(descriptor => {
+        const controller = new Controller();
+        controller.name = descriptor.label;
+        controller.active = true;
+        controller.descriptor = descriptor;
+        controller.uri = uri;
+        controller.realm = this.session.realm;
+        controller.mandateRole = `service@${this.session.realm}`;
+        const dialogRef = this.dialog.open(ControllerBindDialogComponent, { data: controller });
+        return dialogRef.afterClosed().toPromise();
+      })
+      .then(controller => {
+        if (controller) {
+          this.realmsClient.bindController(controller)
+            .then(binding => this.controllersClient.bindController(controller, binding))
+            .then(() => this.servicesClient.deleteToken(token))
+            .then(() => this.snackBarOpen(
+              this.translate.instant('binding.binding_success', { value: controller.name }),
+              this.translate.instant('label.close'),
+              { duration: 2000 }))
+            .catch(error => this.snackBarOpen(
+              this.translate.instant('binding.error_binding_failed'),
+              this.translate.instant('label.close'),
+              this.snackBarErrorConfig))
+            .then(() => this.loadControllers());
+        }
+      });
   }
 
   binding(controller: Controller) {

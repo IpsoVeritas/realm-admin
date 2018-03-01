@@ -84,7 +84,7 @@ export class ControllerComponent implements OnInit, OnDestroy {
 
       this.documentHandler.handleData(context, event.data)
         .then(result => contentWindow.postMessage(result, event.origin))
-        .catch(error => console.error(error));
+        .catch(error => console.error(error, context, event.data));
 
     }
   }

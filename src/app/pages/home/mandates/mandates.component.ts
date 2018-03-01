@@ -10,7 +10,6 @@ import { DialogsService } from '@brickchain/integrity-angular';
 import { SessionService } from '../../../shared/services';
 import { RolesClient, MandatesClient, InvitesClient } from '../../../shared/api-clients';
 import { Role, IssuedMandate, Invite } from '../../../shared/models';
-import * as uuid from 'uuid/v1';
 
 @Component({
   selector: 'app-mandates',

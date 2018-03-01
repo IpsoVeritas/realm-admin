@@ -24,6 +24,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatTableModule } from '@angular/material/table';
 import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatChipsModule } from '@angular/material/chips';
 
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -38,8 +39,10 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { DocumentHandlerService } from './handlers/document-handler.service';
 import { TokenInterceptor, LoaderInterceptor, LanguageInterceptor } from './shared/interceptors';
-import { AuthClient, AccessClient, RealmsClient, MandatesClient, ControllersClient } from './shared/api-clients';
-import { RolesClient, InvitesClient } from './shared/api-clients';
+import {
+  AuthClient, AccessClient, RealmsClient, MandatesClient,
+  ControllersClient, RolesClient, InvitesClient, ServicesClient
+} from './shared/api-clients';
 import { SessionService, PlatformService, ConfigService, CryptoService } from './shared/services';
 
 import { BootstrapComponent } from './pages/bootstrap/bootstrap.component';
@@ -52,6 +55,7 @@ import { RoleInviteDialogComponent } from './pages/home/roles/role-invite-dialog
 import { MandatesComponent } from './pages/home/mandates/mandates.component';
 import { ControllersComponent } from './pages/home/controllers/controllers.component';
 import { ControllerComponent } from './pages/home/controller/controller.component';
+import { ControllerAddDialogComponent } from './pages/home/controllers/controller-add-dialog.component';
 import { ControllerBindDialogComponent } from './pages/home/controllers/controller-bind-dialog.component';
 import { ControllerSettingsDialogComponent } from './pages/home/controllers/controller-settings-dialog.component';
 import { SettingsComponent } from './pages/home/settings/settings.component';
@@ -73,11 +77,13 @@ export function createTranslateLoader(http: HttpClient) {
     MandatesComponent,
     ControllersComponent,
     ControllerComponent,
+    ControllerAddDialogComponent,
     ControllerBindDialogComponent,
     ControllerSettingsDialogComponent,
     SettingsComponent
   ],
   entryComponents: [
+    ControllerAddDialogComponent,
     ControllerBindDialogComponent,
     ControllerSettingsDialogComponent,
     RoleInviteDialogComponent
@@ -109,6 +115,7 @@ export function createTranslateLoader(http: HttpClient) {
     MatTableModule,
     MatSelectModule,
     MatProgressSpinnerModule,
+    MatChipsModule,
     WebviewClientModule,
     QRCodeModule,
     EventsModule,
@@ -133,6 +140,7 @@ export function createTranslateLoader(http: HttpClient) {
     MandatesClient,
     ControllersClient,
     InvitesClient,
+    ServicesClient,
     SessionService,
     PlatformService,
     ConfigService,
