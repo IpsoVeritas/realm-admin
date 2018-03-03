@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
-import { MatSnackBar, MatSnackBarConfig } from '@angular/material';
+import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import { EventsService } from '@brickchain/integrity-angular';
 import { TranslateService } from '@ngx-translate/core';
 import { Ng2ImgToolsService } from 'ng2-img-tools';

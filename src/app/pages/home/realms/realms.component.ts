@@ -1,6 +1,7 @@
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
-import { MatSnackBar, MatSnackBarConfig } from '@angular/material';
-import { MatTableDataSource, MatSort } from '@angular/material';
+import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
+import { MatTableDataSource, } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
 import { TranslateService } from '@ngx-translate/core';
 import { DialogsService } from '@brickchain/integrity-angular';
 import { SessionService } from '../../../shared/services';

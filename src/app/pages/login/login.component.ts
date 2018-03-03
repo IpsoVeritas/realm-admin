@@ -6,7 +6,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { EventsService } from '@brickchain/integrity-angular';
 import { AuthClient } from '../../shared/api-clients';
 import { ConfigService, SessionService, CryptoService } from '../../shared/services';
-import { MatExpansionPanel, MatSnackBar } from '@angular/material';
+import { MatExpansionPanel } from '@angular/material/expansion';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { AuthUser, AuthInfo } from '../../shared/models';
 

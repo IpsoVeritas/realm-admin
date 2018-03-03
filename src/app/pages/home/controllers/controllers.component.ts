@@ -1,9 +1,10 @@
 import { Component, OnInit, AfterViewInit, AfterViewChecked, ViewChild } from '@angular/core';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { MatSnackBar, MatSnackBarConfig } from '@angular/material';
+import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
-import { MatTableDataSource, MatSort } from '@angular/material';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
 import { TranslateService } from '@ngx-translate/core';
 import { EventsService, DialogsService, ClipboardService } from '@brickchain/integrity-angular';
 import { SessionService } from '../../../shared/services';

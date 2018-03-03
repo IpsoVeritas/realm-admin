@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router, } from '@angular/router';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { EventsService, DialogsService } from '@brickchain/integrity-angular';
 import { WebviewClientService } from '@brickchain/integrity-webview-client';
