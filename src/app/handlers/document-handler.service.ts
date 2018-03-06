@@ -24,20 +24,6 @@ export class DocumentHandlerService {
     this.handlers['update-controller'] = new UpdateControllerHandler(this, this.injector);
   }
 
-  public receiveMessage(
-    iframe: any,
-    realmId: string,
-    controller: Controller,
-    event: MessageEvent
-  ): Promise<any> {
-    if (event.origin && controller.descriptor.adminUI.startsWith(event.origin)) {
-      return this.handleData({ iframe: iframe, realmId: realmId, controller: controller }, event.data)
-        .then(res => iframe ? iframe.postMessage(res, event.origin) : false);
-    } else {
-      return Promise.reject('invalid origin');
-    }
-  }
-
   public handleData(context: any, data: any): Promise<any> {
 
     if (typeof (data) === 'object') {

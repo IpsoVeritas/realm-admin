@@ -94,10 +94,26 @@ export class ControllerComponent implements OnInit, OnDestroy {
       };
 
       this.documentHandler.handleData(context, event.data)
-        .then(result => contentWindow.postMessage(result, event.origin))
-        .catch(error => console.error(error, context, event.data));
-
+        .then(result => {
+          contentWindow.postMessage(this.buildResponse(event, result, false), event.origin);
+        })
+        .catch(error => {
+          console.error(error, context, event.data);
+          contentWindow.postMessage(this.buildResponse(event, error, true), event.origin);
+        });
     }
+  }
+
+  buildResponse(event: MessageEvent, data: any, isError: boolean = false): any {
+    let message: any;
+    if (event.data && event.data['@correlationId']) {
+      message = {};
+      message['@correlationId'] = event.data['@correlationId'];
+      message[isError ? 'error' : 'data'] = data;
+    } else {
+      message = data;
+    }
+    return message;
   }
 
 }
