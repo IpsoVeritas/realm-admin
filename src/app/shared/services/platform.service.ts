@@ -23,7 +23,10 @@ export class PlatformService {
     this.isMobile = /Android|iPhone/i.test(navigator.userAgent);
     if (this.inApp) {
       this.webviewClient.init()
-        .then(data => this.session.mandate = data.mandate)
+        .then(data => {
+          this.session.mandate = data.mandate;
+          this.router.navigate(['/home', {}]);
+        })
         .catch(error => console.warn(error));
     }
     this.events.subscribe('logout', () => {

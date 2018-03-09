@@ -31,7 +31,7 @@ const appRoutes: Routes = [
       { path: 'settings', component: SettingsComponent }
     ]
   },
-  { path: '**', redirectTo: '/home/dashboard', pathMatch: 'full' }
+  { path: '**', redirectTo: '/home', pathMatch: 'full' }
 ];
 
 @NgModule({
