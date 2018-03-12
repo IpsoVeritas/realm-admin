@@ -70,6 +70,7 @@ export class ControllersComponent implements OnInit, AfterViewInit {
 
   loadControllers() {
     this.controllersClient.getControllers(this.session.realm)
+      .then(controllers => controllers.filter(controller => !controller.hidden))
       .then(data => this.dataSource = new MatTableDataSource(data))
       .then(() => this.dataSource.sort = this.sort);
   }
