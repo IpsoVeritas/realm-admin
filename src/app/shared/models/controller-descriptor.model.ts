@@ -32,4 +32,7 @@ export class ControllerDescriptor extends Base {
   @JsonProperty('icon', String, true)
   icon: string = undefined;
 
+  @JsonProperty('endpoints', Any, true)
+  endpoints: any = undefined;
+
 }
