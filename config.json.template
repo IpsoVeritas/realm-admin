@@ -1,3 +1,4 @@
 {
-    "backend": "${BACKEND}"
+    "backend": "${BACKEND}",
+    "servicesFeed": "https://firebasestorage.googleapis.com/v0/b/integrity-autobinder.appspot.com/o/services.json?alt=media"
 }
