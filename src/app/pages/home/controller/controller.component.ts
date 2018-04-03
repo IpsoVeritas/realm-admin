@@ -72,11 +72,10 @@ export class ControllerComponent implements OnInit, OnDestroy {
       this.ready = true;
       const layoutChanges = this.breakpointObserver.observe(Breakpoints.HandsetPortrait);
       layoutChanges.subscribe(result => {
-        const body = this.iframe.nativeElement.contentWindow.document.getElementsByTagName('body')[0];
         if (result.matches) {
-          body.classList.add('narrow');
+          this.iframe.nativeElement.contentWindow.postMessage('realm-admin-narrow', '*');
         } else {
-          body.classList.remove('narrow');
+          this.iframe.nativeElement.contentWindow.postMessage('realm-admin-wide', '*');
         }
       });
     }

@@ -4,8 +4,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
 import { EventsService } from '@brickchain/integrity-angular';
+import { WebviewClientService } from '@brickchain/integrity-webview-client';
 import { AuthClient } from '../../shared/api-clients';
-import { ConfigService, SessionService, CryptoService } from '../../shared/services';
+import { ConfigService, SessionService, CryptoService, PlatformService } from '../../shared/services';
 import { MatExpansionPanel } from '@angular/material/expansion';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -40,6 +41,8 @@ export class LoginComponent implements OnInit, AfterViewInit {
     private session: SessionService,
     private translate: TranslateService,
     private crypto: CryptoService,
+    private platform: PlatformService,
+    private webviewClient: WebviewClientService,
     private events: EventsService,
     private snackBar: MatSnackBar) {
   }
@@ -65,7 +68,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
           this.realm.setValue('');
         }
       })
-      .then(() => this.events.publish('ready', true));
+      .then(() => this.events.publish('ready', !this.platform.inApp));
   }
 
   onSubmit() {
@@ -105,14 +108,20 @@ export class LoginComponent implements OnInit, AfterViewInit {
     return this.authClient.postAuthRequest(realm)
       .then((authInfo: AuthInfo) => this.config.getBaseURL(authInfo.requestURI)
         .then(url => {
-          this.qrUri = url;
-          clearTimeout(this.qrUriTimer);
-          clearTimeout(this.progressTimer);
-          clearTimeout(this.pollTimer);
-          this.qrUriTimer = setTimeout(() => this.start(realm), this.qrTimeout);
-          this.progressTimer = setInterval(() => this.updateCountdown(), 100);
-          this.qrUriTimestamp = Date.now();
-          this.poll(realm, authInfo.token);
+          if (this.platform.inApp) {
+            this.platform.handleURI(url)
+              .then(() => this.poll(realm, authInfo.token))
+              .catch(() => this.webviewClient.cancel());
+          } else {
+            this.qrUri = url;
+            clearTimeout(this.qrUriTimer);
+            clearTimeout(this.progressTimer);
+            clearTimeout(this.pollTimer);
+            this.qrUriTimer = setTimeout(() => this.start(realm), this.qrTimeout);
+            this.progressTimer = setInterval(() => this.updateCountdown(), 100);
+            this.qrUriTimestamp = Date.now();
+            this.poll(realm, authInfo.token);
+          }
         })
         .then(() => authInfo));
   }

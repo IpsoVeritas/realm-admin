@@ -2,15 +2,13 @@ import { Injectable } from '@angular/core';
 import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { HttpResponseBase } from '@angular/common/http';
 import { AuthClient } from '../api-clients';
-import { PlatformService } from '../services';
 import { AuthUser } from '../models';
 
 @Injectable()
 export class LoginGuard implements CanActivate {
 
   constructor(private router: Router,
-    private authClient: AuthClient,
-    private platform: PlatformService) { }
+    private authClient: AuthClient) { }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
     return this.authClient.getAuthInfo()
@@ -19,13 +17,13 @@ export class LoginGuard implements CanActivate {
       .then(isAuthenticated => {
         switch (state.url) {
           case '/login': {
-            if (!this.platform.inApp && isAuthenticated) {
+            if (isAuthenticated) {
               this.router.navigate(['/home', {}]);
             }
-            return !this.platform.inApp && !isAuthenticated;
+            return !isAuthenticated;
           }
           default:
-            if (!this.platform.inApp && !isAuthenticated) {
+            if (!isAuthenticated) {
               this.router.navigate(['/login', {}]);
             }
             return isAuthenticated;
