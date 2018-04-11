@@ -22,12 +22,13 @@ export class PlatformService {
     this.inApp = /Integrity\//i.test(navigator.userAgent);
     this.isMobile = /Android|iPhone/i.test(navigator.userAgent);
     if (this.inApp) {
-      this.webviewClient.init()
-        .then(data => {
-          this.session.mandate = data.mandate;
-          this.router.navigate(['/home', {}]);
-        })
-        .catch(error => console.warn(error));
+      this.webviewClient.init().then(data => {
+        if (data.lang) {
+          this.session.language = data.lang;
+          this.translate.use(data.lang);
+        }
+        this.session.realm = data.context.realm.name;
+      });
     }
     this.events.subscribe('logout', () => {
 
