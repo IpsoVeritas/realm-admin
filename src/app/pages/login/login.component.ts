@@ -103,7 +103,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
 
   start(realm: string): Promise<AuthInfo> {
     return this.authClient.postAuthRequest(realm)
-      .then((authInfo: AuthInfo) => this.config.getBaseURL(authInfo.requestURI)
+      .then((authInfo: AuthInfo) => Promise.resolve(authInfo.requestURI) // this.config.getBaseURL(authInfo.requestURI)
         .then(url => {
           this.qrUri = url;
           clearTimeout(this.qrUriTimer);
