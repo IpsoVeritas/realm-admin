@@ -78,6 +78,7 @@ deploy to branch:
     - eval $(vaultenv read -s secret/env/gitlab-ci/brickchain-actions-s3)
     - cat config.json.template |envsubst >dist/config.json
     - aws s3 cp --recursive dist/ s3://brickchain-actions/$CI_PROJECT_NAME/$CI_BUILD_REF_NAME
+    - aws s3 cp --content-type 'application/json' --acl public-read s3://brickchain-actions/$CI_PROJECT_NAME/$CI_BUILD_REF_NAME/config.json s3://brickchain-actions/$CI_PROJECT_NAME/$CI_BUILD_REF_NAME/config.json --metadata-directive REPLACE
     - aws configure set preview.cloudfront true
     - aws cloudfront create-invalidation --distribution-id E2Y3HN6RJX8DF5 --paths "/$CI_PROJECT_NAME/$CI_BUILD_REF_NAME/*"
   variables:
@@ -92,6 +93,7 @@ deploy to staging:
     - eval $(vaultenv read -s secret/env/gitlab-ci/brickchain-actions-s3)
     - cat config.json.template |envsubst >dist/config.json
     - aws s3 cp --recursive dist/ s3://brickchain-actions/$CI_PROJECT_NAME/staging
+    - aws s3 cp --content-type 'application/json' --acl public-read s3://brickchain-actions/$CI_PROJECT_NAME/staging/config.json s3://brickchain-actions/$CI_PROJECT_NAME/staging/config.json --metadata-directive REPLACE
     - aws configure set preview.cloudfront true
     - aws cloudfront create-invalidation --distribution-id E2Y3HN6RJX8DF5 --paths "/$CI_PROJECT_NAME/staging/*"
   variables:
@@ -108,6 +110,7 @@ deploy to production:
     - eval $(vaultenv read -s secret/env/gitlab-ci/brickchain-actions-s3)
     - cat config.json.template |envsubst >dist/config.json
     - aws s3 cp --recursive dist/ s3://brickchain-actions/$CI_PROJECT_NAME/release
+    - aws s3 cp --content-type 'application/json' --acl public-read s3://brickchain-actions/$CI_PROJECT_NAME/release/config.json s3://brickchain-actions/$CI_PROJECT_NAME/release/config.json --metadata-directive REPLACE
     - aws configure set preview.cloudfront true
     - aws cloudfront create-invalidation --distribution-id E2Y3HN6RJX8DF5 --paths "/$CI_PROJECT_NAME/release/*"
   variables:
