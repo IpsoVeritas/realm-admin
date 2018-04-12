@@ -95,7 +95,7 @@ deploy to staging:
     - aws configure set preview.cloudfront true
     - aws cloudfront create-invalidation --distribution-id E2Y3HN6RJX8DF5 --paths "/$CI_PROJECT_NAME/staging/*"
   variables:
-    BACKEND: "https://realmappengine-dot-brickchain-infra.appspot.com/realm-api"
+    BACKEND: "https://realm.svc-staging.plusintegrity.com/realm-api"
 
 deploy to production:
   image: gcr.io/brickchain-docker/gitlab-builder-deploy
