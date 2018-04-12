@@ -116,10 +116,14 @@ export class ControllersComponent implements OnInit, AfterViewInit {
               this.translate.instant('binding.binding_success', { value: controller.name }),
               this.translate.instant('label.close'),
               { duration: 2000 }))
-            .catch(error => this.snackBarOpen(
-              this.translate.instant('binding.error_binding_failed'),
-              this.translate.instant('label.close'),
-              this.snackBarErrorConfig))
+            .catch(error => {
+              console.error("Error binding controller:", error);
+              this.snackBarOpen(
+                this.translate.instant('binding.error_binding_failed'),
+                this.translate.instant('label.close'),
+                this.snackBarErrorConfig
+              )
+            })
             .then(() => this.loadControllers());
         }
       });
