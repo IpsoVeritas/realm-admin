@@ -96,6 +96,7 @@ deploy to staging:
     - aws cloudfront create-invalidation --distribution-id E2Y3HN6RJX8DF5 --paths "/$CI_PROJECT_NAME/staging/*"
   variables:
     BACKEND: "https://realm.svc-staging.plusintegrity.com/realm-api"
+    SRVFEED: "https://firebasestorage.googleapis.com/v0/b/integrity-autobinder-staging.appspot.com/o/services.json?alt=media"
 
 deploy to production:
   image: gcr.io/brickchain-docker/gitlab-builder-deploy
@@ -111,3 +112,4 @@ deploy to production:
     - aws cloudfront create-invalidation --distribution-id E2Y3HN6RJX8DF5 --paths "/$CI_PROJECT_NAME/release/*"
   variables:
     BACKEND: "https://realm.plusintegrity.com/realm-api"
+    SRVFEED: "https://firebasestorage.googleapis.com/v0/b/integrity-autobinder.appspot.com/o/services.json?alt=media"
