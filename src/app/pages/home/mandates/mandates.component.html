@@ -1,56 +1,97 @@
-<div class="content mat-elevation-z0">
+<mat-toolbar class="content-header">
+  <app-stripe></app-stripe>
+  <mat-toolbar-row>
+    <mat-icon class="menu-icon" (click)="events.publish('toggle_drawer')">menu</mat-icon>
+    <span *ngIf="role" class="mat-display-1"> {{role.description}}</span>
+    <span class="mat-spacer"></span>
+    <button mat-button color="accent" (click)="editRole(role)">
+      <mat-icon>mode_edit</mat-icon> Edit group
+    </button>
+    <button mat-icon-button color="accent" (click)="editRole(role)">
+      <mat-icon>mode_edit</mat-icon>
+    </button>
+    <button mat-button color="accent" (click)="deleteRole(role)">
+      <mat-icon>delete</mat-icon> Delete group
+    </button>
+    <button mat-icon-button color="accent" (click)="deleteRole(role)">
+      <mat-icon>delete</mat-icon>
+    </button>
+    <button mat-button color="accent" (click)="inviteToRole(role)">
+      <mat-icon>person_add</mat-icon> Invite people
+    </button>
+    <button mat-icon-button color="accent" (click)="inviteToRole(role)">
+      <mat-icon>person_add</mat-icon>
+    </button>
+  </mat-toolbar-row>
+</mat-toolbar>
 
-  <mat-toolbar>
-    <mat-toolbar-row>
-      <mat-form-field>
-        <mat-select [(value)]="role" (selectionChange)="selectRole($event.value)" #matSelect>
-          <mat-option *ngFor="let role of roles" [value]="role">{{role.description}}</mat-option>
-        </mat-select>
-      </mat-form-field>
-    </mat-toolbar-row>
-  </mat-toolbar>
+<mat-tab-group color="accent">
+  <mat-tab label="Group members">
+    <mat-table #table [dataSource]="dataSource" matSort>
 
-  <mat-table #table [dataSource]="dataSource" matSort>
+      <!-- Name Column -->
+      <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Member email</mat-header-cell>
+        <mat-cell *matCellDef="let item">{{ item.name }}</mat-cell>
+      </ng-container>
 
-    <!-- Name Column -->
-    <ng-container matColumnDef="name">
-      <mat-header-cell *matHeaderCellDef mat-sort-header>{{'label.members' | translate }}</mat-header-cell>
-      <mat-cell *matCellDef="let item">{{ item.name }}</mat-cell>
-    </ng-container>
+      <!-- Starts Column -->
+      <ng-container matColumnDef="starts">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>{{'label.mandate_starts' | translate }}</mat-header-cell>
+        <mat-cell *matCellDef="let item">{{ item.data.timestamp | date:'short' }}</mat-cell>
+      </ng-container>
 
-    <!-- Status Column -->
-    <ng-container matColumnDef="status">
-      <mat-header-cell *matHeaderCellDef mat-sort-header>{{'label.status' | translate }}</mat-header-cell>
-      <mat-cell *matCellDef="let item" [ngClass]="item.status.toLowerCase()">{{"label." + item.status.toLowerCase() | translate }}</mat-cell>
-    </ng-container>
+      <!-- Starts Column -->
+      <ng-container matColumnDef="ends">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>{{'label.mandate_ends' | translate }}</mat-header-cell>
+        <mat-cell *matCellDef="let item">{{ item.data.timestamp | date:'short' }}</mat-cell>
+      </ng-container>
 
-    <!-- Action Column -->
-    <ng-container matColumnDef="action">
-      <mat-header-cell *matHeaderCellDef>
-        <mat-icon (click)="invite(role)" color="accent">person_add</mat-icon>
-      </mat-header-cell>
-      <mat-cell *matCellDef="let item">
-        <mat-icon (click)="revoke(item)" *ngIf="item.type != 'invite' && item.status == 'Active'" color="accent">block</mat-icon>
-        <mat-icon (click)="resend(item)" *ngIf="item.type == 'invite'" color="accent">mail_outline</mat-icon>
-        <mat-icon (click)="delete(item)" *ngIf="item.type == 'invite'" color="accent">remove_circle_outline</mat-icon>
-      </mat-cell>
-    </ng-container>
+      <!-- Status Column -->
+      <ng-container matColumnDef="status">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>{{'label.status' | translate }}</mat-header-cell>
+        <mat-cell *matCellDef="let item">
+          <mat-chip-list>
+            <mat-chip [ngClass]="item.status.toLowerCase()">{{"label." + item.status.toLowerCase() | translate }}</mat-chip>
+          </mat-chip-list>
+        </mat-cell>
+      </ng-container>
 
-    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-  </mat-table>
+      <!-- Action Column -->
+      <ng-container matColumnDef="action">
+        <mat-header-cell *matHeaderCellDef></mat-header-cell>
+        <mat-cell *matCellDef="let item">
 
-  <button (click)="invite(role)" mat-fab class="fab-add-button" [class.snack-bar-open]="isSnackBarOpen">
-    <mat-icon>person_add</mat-icon>
-  </button>
+          <button mat-icon-button color="accent" (click)="revoke(item)" *ngIf="item.type != 'invite' && item.status == 'Active'">
+            <mat-icon>block</mat-icon>
+          </button>
 
-</div>
+          <button mat-icon-button color="accent" [matMenuTriggerFor]="inviteMenu" *ngIf="item.type == 'invite'">
+            <mat-icon>more_vert</mat-icon>
+          </button>
 
-<div class="content guide" [hidden]="session.getItem('hide_mandates_guide',false)">
-  <button mat-icon-button color="accent">
-    <mat-icon (click)="session.setItem('hide_mandates_guide',true)">cancel</mat-icon>
-  </button>
-  <div [innerHTML]="'guide.mandates' | translate"></div>
-</div>
+          <mat-menu #inviteMenu="matMenu" yPosition="below" [overlapTrigger]="false">
+            <button mat-menu-item (click)="resend(item)">Resend invite</button>
+            <button mat-menu-item (click)="delete(item)">Delete invite</button>
+          </mat-menu>
 
-<pre class="content developer" *ngIf="session.getItem('developer',false)">{{dataSource?.data | json }}</pre>
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+  </mat-tab>
+  <mat-tab label="Authorizations">
+
+  </mat-tab>
+</mat-tab-group>
+
+<integrity-section title="Developer" enableExpansion="true" expansionId="mandates.dev" *ngIf="session.getItem('developer',false)">
+  <mat-card>
+    <mat-card-title>Items</mat-card-title>
+    <mat-card-content>
+      <pre>{{dataSource?.data | json }}</pre>
+    </mat-card-content>
+  </mat-card>
+</integrity-section>

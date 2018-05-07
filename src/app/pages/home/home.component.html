@@ -1,3 +1,4 @@
+<!--
 <mat-toolbar class="integrity-background-color">
   <mat-toolbar-row>
     <mat-icon class="menu-icon" (click)="drawer.toggle()">{{ drawer.opened ? 'close' : 'menu' }}</mat-icon>
@@ -11,31 +12,109 @@
     <mat-icon *ngIf="isHandsetPortrait" (click)="logout()">exit_to_app</mat-icon>
   </mat-toolbar-row>
 </mat-toolbar>
+-->
+<mat-sidenav-container class="integrity-background-color">
 
-<mat-sidenav-container [class.narrow]="isHandsetPortrait" class="integrity-background-color">
+  <mat-sidenav #drawer class="integrity-background-color" [mode]="drawerMode" [opened]="drawerMode == 'side'">
 
-  <mat-sidenav [mode]="isHandsetPortrait ? 'over' : 'side'" [opened]="!isHandsetPortrait" #drawer class="integrity-background-color">
+    <img class="logo" src="assets/img/integrity_grey_landscape.svg" *ngIf="drawerMode == 'side'">
+
+    <img class="logo" src="assets/img/integrity_colour_landscape.svg" *ngIf="drawerMode == 'over'">
+
+    <mat-divider *ngIf="profileMode == 'drawer'"></mat-divider>
+
+    <div class="profile" *ngIf="realm && profileMode == 'drawer'" (click)="profile.toggle()">
+      <div class="profile-icon" [style.background-image]="iconImage">
+        <div class="overlay"></div>
+        <mat-icon [class.popup-visible]="profile.expanded">keyboard_arrow_down</mat-icon>
+      </div>
+      <h3>{{realm.description}}</h3>
+      <p>{{realm.name}}</p>
+    </div>
+
+    <mat-expansion-panel #profile class="profile-expansion-panel">
+      <mat-nav-list *ngIf="profileMode == 'drawer'">
+        <a mat-list-item [routerLink]="['settings']" routerLinkActive="active" (click)="drawerMode == 'over' ? drawer.close() : false">
+          <mat-icon>settings</mat-icon>{{ 'label.settings' | translate }}</a>
+        <a mat-list-item (click)="logout()">
+          <mat-icon>exit_to_app</mat-icon>{{ 'label.logout' | translate }}</a>
+      </mat-nav-list>
+    </mat-expansion-panel>
+
+    <mat-divider *ngIf="profileMode == 'drawer'"></mat-divider>
+
     <mat-nav-list>
-      <a *ngIf="isHandsetPortrait" mat-list-item [routerLink]="['dashboard']" (click)="isHandsetPortrait ? drawer.close() : false">
-        <img mat-list-item src="assets/img/integrity.svg" width="125">
-      </a>
-      <a *ngIf="user?.owner" mat-list-item [routerLink]="['realms']" routerLinkActive="active" (click)="isHandsetPortrait ? drawer.close() : false">
+      <a mat-list-item [routerLink]="['dashboard']" routerLinkActive="active" (click)="drawerMode == 'over' ? drawer.close() : false">
+        <mat-icon>dashboard</mat-icon>Your dashboard</a>
+    </mat-nav-list>
+
+    <integrity-section title="Manage user groups" enableExpansion="true" expansionId="home.1" class="nav-list">
+      <mat-nav-list>
+        <a mat-list-item [routerLink]="['mandates', role.id]" routerLinkActive="active" (click)="drawerMode == 'over' ? drawer.close() : false"
+          *ngFor="let role of roles">
+          <mat-icon>group</mat-icon>{{role.description}}</a>
+        <a mat-list-item (click)="createRole()" routerLinkActive="active">
+          <mat-icon>add</mat-icon>New group</a>
+      </mat-nav-list>
+    </integrity-section>
+    <integrity-section title="Manage services" enableExpansion="true" expansionId="home.2" class="nav-list">
+      <mat-nav-list>
+        <a mat-list-item [routerLink]="['controller', controller.id]" routerLinkActive="active" (click)="drawerMode == 'over' ? drawer.close() : false"
+          *ngFor="let controller of controllers">
+          <mat-icon>
+            <img src="{{controller.descriptor.icon}}" width="20" height="20">
+          </mat-icon>
+          {{controller.name}}
+          <!-- span *ngIf="controller.descriptor?.requireSetup" translate>general.setup_required</span -->
+        </a>
+        <a mat-list-item routerLink="/qr-code-demo" routerLinkActive="active">
+          <mat-icon>add</mat-icon>Add service</a>
+      </mat-nav-list>
+    </integrity-section>
+
+    <mat-divider *ngIf="profileMode == 'drawer'"></mat-divider>
+
+    <mat-nav-list>
+      <a *ngIf="user?.owner" mat-list-item [routerLink]="['realms']" routerLinkActive="active" (click)="drawerMode == 'over' ? drawer.close() : false">
         <mat-icon>domain</mat-icon>{{ 'entities.Realm' | translate }}</a>
-      <a mat-list-item [routerLink]="['roles']" routerLinkActive="active" (click)="isHandsetPortrait ? drawer.close() : false">
-        <mat-icon>people</mat-icon>{{ 'entities.Roles' | translate }}</a>
-      <a mat-list-item [routerLink]="['mandates']" routerLinkActive="active" (click)="isHandsetPortrait ? drawer.close() : false">
-        <mat-icon>vpn_key</mat-icon>{{ 'entities.Mandates' | translate }}</a>
-      <a mat-list-item [routerLink]="['controllers']" routerLinkActive="active" (click)="isHandsetPortrait ? drawer.close() : false">
+      <a mat-list-item [routerLink]="['controllers']" routerLinkActive="active" (click)="drawerMode == 'over' ? drawer.close() : false">
         <mat-icon>room_service</mat-icon>{{ 'entities.Controllers' | translate }}</a>
-      <a mat-list-item [routerLink]="['settings']" routerLinkActive="active" (click)="isHandsetPortrait ? drawer.close() : false">
-        <mat-icon>settings</mat-icon>{{ 'label.settings' | translate }}</a>
-      <a *ngIf="!isHandsetPortrait" mat-list-item (click)="logout()">
-        <mat-icon>exit_to_app</mat-icon>{{ 'label.logout' | translate }}</a>
     </mat-nav-list>
   </mat-sidenav>
 
   <mat-sidenav-content>
-    <router-outlet></router-outlet>
+    <div class="content" [ngClass]="'drawer-'+drawerMode">
+      <router-outlet></router-outlet>
+    </div>
+    <div class="profile" *ngIf="realm">
+      <div class="profile-icon" #profileMenuTrigger="matMenuTrigger"  [style.background-image]="iconImage" [matMenuTriggerFor]="profileMenu">
+        <div class="overlay"></div>
+        <mat-icon [class.popup-visible]="profileMenuTrigger.menuOpen">keyboard_arrow_down</mat-icon>
+      </div>
+      <h3>{{realm.description}}</h3>
+      <p>{{realm.name}}</p>
+    </div>
+
+    <mat-menu class="profile-popup" #profileMenu="matMenu" xPosition="before" yPosition="below" [overlapTrigger]="false">
+      <button mat-menu-item [routerLink]="['settings']">
+        <mat-icon>settings</mat-icon>{{ 'label.settings' | translate }}
+      </button>
+      <button mat-menu-item (click)="logout()">
+        <mat-icon>exit_to_app</mat-icon>{{ 'label.logout' | translate }}
+      </button>
+    </mat-menu>
+
+    <!--
+    <div class="profile-popup" [class.visible]="showProfile">
+      <mat-nav-list>
+        <a mat-list-item [routerLink]="['settings']" routerLinkActive="active" (click)="toggleProfile()">
+          <mat-icon>settings</mat-icon>{{ 'label.settings' | translate }}</a>
+        <mat-divider></mat-divider>
+        <a mat-list-item (click)="toggleProfile();logout()">
+          <mat-icon>exit_to_app</mat-icon>{{ 'label.logout' | translate }}</a>
+      </mat-nav-list>
+    </div>
+  -->
   </mat-sidenav-content>
 
 </mat-sidenav-container>

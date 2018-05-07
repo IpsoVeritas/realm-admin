@@ -1,38 +1,60 @@
-<div class="content mat-elevation-z0">
+<div class="banner" [style.background-image]="bannerImage"></div>
 
-  <mat-card class="mat-elevation-z0" *ngIf="controllers && controllers.length > 0">
-    <mat-card-title>Controllers that require setup...</mat-card-title>
+<mat-toolbar>
+  <app-stripe></app-stripe>
+  <mat-toolbar-row>
+    <mat-icon class="menu-icon" (click)="events.publish('toggle_drawer')">menu</mat-icon>
+    <h1> Welcome</h1>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<integrity-section title="Personalise your space" enableExpansion="true" expansionId="dashboard.1" *ngIf="realm && realm.realmDescriptor && !realm.realmDescriptor.banner">
+  <mat-card>
+    <mat-card-title>Add pictures to your realm</mat-card-title>
     <mat-card-content>
-      <button mat-button *ngFor="let controller of controllers" [routerLink]="['../controller', controller.id]">{{controller.name}}</button>
+      <p>
+        Add a banner and a profile picture to make your realm easily identified by your users
+      </p>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-button routerLink="/home/settings">
+        <mat-icon>camera_alt</mat-icon> Add pictures
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</integrity-section>
+
+<integrity-section title="Controllers" enableExpansion="true" expansionId="controllersSection" *ngIf="controllers && controllers.length > 0">
+  <button mat-button *ngFor="let controller of controllers" [routerLink]="['../controller', controller.id]">{{controller.name}}</button>
+</integrity-section>
+
+<integrity-section title="Services" enableExpansion="true" expansionId="controllersSection" *ngIf="services && services.length > 0">
+  <button mat-button *ngFor="let service of services" (click)="install(service)">{{service.name}}</button>
+</integrity-section>
+
+<integrity-section title="Session">
+  <mat-card>
+    Expires in {{ seconds / 60 | number:'1.0-0' }} minutes and {{ seconds % 60 | number:'1.0-0' }} seconds
+  </mat-card>
+</integrity-section>
+
+<integrity-section title="Developer" enableExpansion="true" expansionId="dashboardDev" *ngIf="session.getItem('developer',false)">
+  <mat-card>
+    <mat-card-title>Realm</mat-card-title>
+    <mat-card-content>
+      <pre>{{realm | json }}</pre>
     </mat-card-content>
   </mat-card>
-
-  <mat-card class="mat-elevation-z0" *ngIf="services && services.length > 0">
-    <mat-card-title>Services available for installation...</mat-card-title>
+  <mat-card>
+    <mat-card-title>Controllers</mat-card-title>
     <mat-card-content>
-      <button mat-button *ngFor="let service of services" (click)="install(service)">{{service.name}}</button>
+      <pre>{{controllers | json }}</pre>
     </mat-card-content>
   </mat-card>
-
-  <mat-card class="mat-elevation-z0" *ngIf="controllers">
-    <mat-card-title>Session Expires in...</mat-card-title>
+  <mat-card>
+    <mat-card-title>Services</mat-card-title>
     <mat-card-content>
-      {{ seconds / 60 | number:'1.0-0' }} minutes and {{ seconds % 60 | number:'1.0-0' }} seconds
+      <pre>{{services | json }}</pre>
     </mat-card-content>
   </mat-card>
-
-</div>
-
-<div class="content guide" [hidden]="session.getItem('hide_dashboard_guide',false)">
-  <button mat-icon-button color="accent">
-    <mat-icon (click)="session.setItem('hide_dashboard_guide',true)">cancel</mat-icon>
-  </button>
-  <div [innerHTML]="'guide.dashboard' | translate"></div>
-</div>
-
-<div class="content developer" *ngIf="session.getItem('developer',false)">
-  <h2>Controllers</h2>
-  <pre>{{controllers | json }}</pre>
-  <h2>Services</h2>
-  <pre>{{services | json }}</pre>
-</div>
+</integrity-section>

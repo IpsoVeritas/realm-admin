@@ -1,5 +1,6 @@
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
+import { Router, ActivatedRoute } from '@angular/router';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import { MatTableDataSource, } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
@@ -7,10 +8,12 @@ import { MatSelect } from '@angular/material/select';
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { RoleInviteDialogComponent } from '../roles/role-invite-dialog.component';
-import { DialogsService } from '@brickchain/integrity-angular';
+import { DialogsService, EventsService } from '@brickchain/integrity-angular';
 import { SessionService } from '../../../shared/services';
 import { RolesClient, MandatesClient, InvitesClient } from '../../../shared/api-clients';
 import { Role, IssuedMandate, Invite } from '../../../shared/models';
+
+import { structuralClone } from './../../../shared';
 
 @Component({
   selector: 'app-mandates',
@@ -19,11 +22,11 @@ import { Role, IssuedMandate, Invite } from '../../../shared/models';
 })
 export class MandatesComponent implements OnInit {
 
-  displayedColumns = ['name', 'status', 'action'];
+  displayedColumns = ['name', 'starts', 'ends', 'status', 'action'];
   dataSource: MatTableDataSource<any>;
   @ViewChild(MatSort) sort: MatSort;
 
-  _roles: Array<Role>;
+  // _roles: Array<Role>;
   role: Role;
   items = [];
 
@@ -35,8 +38,10 @@ export class MandatesComponent implements OnInit {
   };
 
   constructor(private route: ActivatedRoute,
+    private router: Router,
     private translate: TranslateService,
     private dialogs: DialogsService,
+    public events: EventsService,
     public session: SessionService,
     private rolesClient: RolesClient,
     private mandatesClient: MandatesClient,
@@ -47,9 +52,8 @@ export class MandatesComponent implements OnInit {
   ngOnInit() {
     Promise.all([
       this.mandatesClient.getMandates(this.session.realm),
-      this.invitesClient.getInvites(this.session.realm),
-      this.rolesClient.getRoles(this.session.realm)
-    ]).then(([mandates, invites, roles]) => {
+      this.invitesClient.getInvites(this.session.realm)
+    ]).then(([mandates, invites]) => {
       mandates.forEach(mandate => this.items.push({
         role: mandate.role,
         name: mandate.label,
@@ -64,40 +68,71 @@ export class MandatesComponent implements OnInit {
         type: 'invite',
         data: invite
       }));
-      this.roles = roles;
-      let roleId = this.route.snapshot.paramMap.get('id');
-      if (roleId == null) {
-        roleId = this.session.getItem('role', this.roles && this.roles.length > 0 ? this.roles[0].id : null);
-      }
-      this.selectRole(this.roles.find(r => r.id === roleId));
+      this.route.paramMap.subscribe(paramMap => this.selectRole(paramMap.get('id')));
     });
 
   }
 
-  set roles(values: Role[]) {
-    this._roles = values
-      .filter(role => !role.internal)
-      .sort((a, b) => a.description.localeCompare(b.description));
-  }
-
-  get roles(): Role[] {
-    return this._roles;
-  }
-
-  selectRole(role: Role) {
-    if (role) {
-      this.session.setItem('role', role.id);
-      this.role = role;
-      this.dataSource = new MatTableDataSource(this.getMandates(this.role));
-      this.dataSource.sort = this.sort;
-    }
+  selectRole(roleId: string) {
+    this.rolesClient.getRole(this.session.realm, roleId)
+      .then(role => {
+        this.session.setItem('role', role.id);
+        this.role = role;
+        this.dataSource = new MatTableDataSource(this.getMandates(this.role));
+        this.dataSource.sort = this.sort;
+      });
   }
 
   getMandates(role: Role) {
     return this.items.filter(item => item.role === role.name);
   }
 
-  invite(role: Role) {
+  editRole(role: Role) {
+    this.dialogs.openSimpleInput({
+      value: role.description,
+      message: this.translate.instant('roles.role_name'),
+      ok: this.translate.instant('label.ok'),
+      okColor: 'accent',
+      cancel: this.translate.instant('label.cancel'),
+      cancelColor: 'accent',
+    }).then(name => {
+      if (name) {
+        structuralClone(role, Role)
+          .then(updated => {
+            updated.description = name;
+            this.rolesClient.updateRole(updated)
+              .then(() => Object.assign(role, updated))
+              .then(() => this.events.publish('roles_updated'))
+              .catch(error => this.snackBarOpen(
+                this.translate.instant('general.error_updating', { value: role.description }),
+                this.translate.instant('label.close'),
+                this.snackBarErrorConfig));
+          });
+      }
+    });
+  }
+
+  deleteRole(role: Role) {
+    this.dialogs.openConfirm({
+      message: this.translate.instant('group.delete_group', { description: role.description, items: this.items.length }),
+      ok: this.translate.instant('label.delete'),
+      okColor: 'warn',
+      okIcon: 'delete',
+      cancel: this.translate.instant('label.cancel')
+    }).then(confirmed => {
+      if (confirmed) {
+        this.rolesClient.deleteRole(role)
+          .then(() => this.events.publish('roles_updated'))
+          .then(() => this.router.navigateByUrl('/home'))
+          .catch(error => this.snackBarOpen(
+            this.translate.instant('general.error_deleting', { value: role.description }),
+            this.translate.instant('label.close'),
+            this.snackBarErrorConfig));
+      }
+    });
+  }
+
+  inviteToRole(role: Role) {
     this.dialog.open(RoleInviteDialogComponent, { data: new Invite() })
       .afterClosed().toPromise()
       .then(invite => {
@@ -132,6 +167,8 @@ export class MandatesComponent implements OnInit {
     this.dialogs.openConfirm({
       message: this.translate.instant('mandates.revoke_mandate', { mandate: mandate.label, recipient: mandate.recipientName }),
       ok: this.translate.instant('label.ok'),
+      okColor: 'warn',
+      okIcon: 'block',
       cancel: this.translate.instant('label.cancel')
     }).then(confirmed => {
       if (confirmed) {

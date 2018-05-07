@@ -1,3 +1,4 @@
+import { RealmDescriptor } from './../../shared/models/realm-descriptor.model';
 import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -5,7 +6,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
 import { EventsService } from '@brickchain/integrity-angular';
 import { WebviewClientService } from '@brickchain/integrity-webview-client';
-import { AuthClient } from '../../shared/api-clients';
+import { AuthClient, RealmsClient } from '../../shared/api-clients';
 import { ConfigService, SessionService, CryptoService, PlatformService } from '../../shared/services';
 import { MatExpansionPanel } from '@angular/material/expansion';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -32,11 +33,13 @@ export class LoginComponent implements OnInit, AfterViewInit {
   realmForm: FormGroup;
 
   activeRealm: string;
+  activeDescriptor: RealmDescriptor;
 
   constructor(private router: Router,
     private fb: FormBuilder,
     private sanitizer: DomSanitizer,
     private authClient: AuthClient,
+    private realmsClient: RealmsClient,
     private config: ConfigService,
     private session: SessionService,
     private translate: TranslateService,
@@ -105,25 +108,27 @@ export class LoginComponent implements OnInit, AfterViewInit {
   }
 
   start(realm: string): Promise<AuthInfo> {
-    return this.authClient.postAuthRequest(realm)
-      .then((authInfo: AuthInfo) => Promise.resolve(authInfo.requestURI) // this.config.getBaseURL(authInfo.requestURI)
-        .then(url => {
-          if (this.platform.inApp) {
-            this.platform.handleURI(url)
-              .then(() => this.poll(realm, authInfo.token))
-              .catch(() => this.webviewClient.cancel());
-          } else {
-            this.qrUri = url;
-            clearTimeout(this.qrUriTimer);
-            clearTimeout(this.progressTimer);
-            clearTimeout(this.pollTimer);
-            this.qrUriTimer = setTimeout(() => this.start(realm), this.qrTimeout);
-            this.progressTimer = setInterval(() => this.updateCountdown(), 100);
-            this.qrUriTimestamp = Date.now();
-            this.poll(realm, authInfo.token);
-          }
-        })
-        .then(() => authInfo));
+    return this.realmsClient.getRealmDescriptor(realm)
+      .then(descriptor => this.activeDescriptor = descriptor)
+      .then(() => this.authClient.postAuthRequest(realm)
+        .then((authInfo: AuthInfo) => Promise.resolve(authInfo.requestURI) // this.config.getBaseURL(authInfo.requestURI)
+          .then(url => {
+            if (this.platform.inApp) {
+              this.platform.handleURI(url)
+                .then(() => this.poll(realm, authInfo.token))
+                .catch(() => this.webviewClient.cancel());
+            } else {
+              this.qrUri = url;
+              clearTimeout(this.qrUriTimer);
+              clearTimeout(this.progressTimer);
+              clearTimeout(this.pollTimer);
+              this.qrUriTimer = setTimeout(() => this.start(realm), this.qrTimeout);
+              this.progressTimer = setInterval(() => this.updateCountdown(), 100);
+              this.qrUriTimestamp = Date.now();
+              this.poll(realm, authInfo.token);
+            }
+          })
+          .then(() => authInfo)));
   }
 
   poll(realm: string, token: string, count = 1): void {

@@ -48,7 +48,9 @@
         "realm_required": "A realm is required",
         "realm_invalid": "Invalid realm",
         "scan_qr_code": "Scan QR code to access '{{value}}'",
-        "enter_realm": "Enter realm to login"
+        "enter_realm": "Enter realm to login",
+        "login_to": "Login to {{value}}",
+        "app_instructions": "You need the Integrity App to scan this QR Code and access your admin interface for {{value}}"
     },
     "realms": {
         "realm_name": "Enter realm name",

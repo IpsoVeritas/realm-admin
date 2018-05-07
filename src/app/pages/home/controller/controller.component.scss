@@ -1,16 +1,38 @@
-.loading {
-  background: none;
+.iframe {
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
 
-  div {
-    animation: spin 1s ease-in-out infinite;
-  }
+  .loading {
+    background: none;
+    position: fixed;
+    width: 850px;
 
-  &.ready {
-    opacity: 0;
-    z-index: -1;
+    @media (max-width: 850px) {
+      width: 100%;
+    }
 
     div {
-      animation-play-state: paused;
+      animation: spin 1s ease-in-out infinite;
     }
+
+    &.ready {
+      opacity: 0;
+      z-index: -1;
+
+      div {
+        animation-play-state: paused;
+      }
+    }
+  }
+
+  iframe {
+    margin: 0;
+    padding: 0;
+    border: none;
+    width: 100%;
+    height: 100%;
   }
 }

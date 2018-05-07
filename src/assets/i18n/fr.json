@@ -48,7 +48,9 @@
         "realm_required": "Un domaine est obligatoire",
         "realm_invalid": "Domaine non valide",
         "scan_qr_code": "Scanner le QR code pour accéder à '{{value}}'",
-        "enter_realm": "Saisir un domaine pour se connecter"
+        "enter_realm": "Saisir un domaine pour se connecter",
+        "login_to": "",
+        "app_instructions": ""
     },
     "realms": {
         "realm_name": "Saisir un nom de domaine",

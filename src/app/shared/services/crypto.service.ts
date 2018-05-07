@@ -88,7 +88,7 @@ export class CryptoService {
     return this.signCompact(mandateToken);
   }
 
-  private verifyAndParseJWS(jws: string): Promise<any> {
+  public verifyAndParseJWS(jws: string | Object): Promise<any> {
     return this.verifier.verify(jws, { allowEmbeddedKey: true })
       .then(verified => new TextDecoder('utf-8').decode(verified.payload))
       .then(payload => JSON.parse(payload))

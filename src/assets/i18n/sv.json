@@ -48,7 +48,9 @@
         "realm_required": "Ett rike krävs",
         "realm_invalid": "Ogiltigt rike",
         "scan_qr_code": "Skanna QR koden för att öppna '{{value}}'",
-        "enter_realm": "Ange rike för att logga in"
+        "enter_realm": "Ange rike för att logga in",
+        "login_to": "",
+        "app_instructions": ""
     },
     "realms": {
         "realm_name": "Ange rikets namn",

@@ -30,7 +30,7 @@ import { Invite } from './../../../shared/models/';
         </mat-form-field>
       </mat-dialog-content>
       <mat-dialog-actions>
-        <button mat-button [mat-dialog-close]="null">{{ 'label.cancel' | translate }}</button>
+        <button mat-button [mat-dialog-close]="null" color="accent">{{ 'label.cancel' | translate }}</button>
         <button mat-raised-button color="accent"
           [mat-dialog-close]="invite"
           [disabled]="(emailFormControl.hasError('email') || emailFormControl.hasError('required'))">{{ 'label.send' | translate }}</button>

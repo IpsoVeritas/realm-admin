@@ -25,11 +25,14 @@ import { MatTableModule } from '@angular/material/table';
 import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatTabsModule } from '@angular/material/tabs';
 
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
-import { EventsModule, QRCodeModule, DialogsModule, ClipboardModule, DragAndDropModule } from '@brickchain/integrity-angular';
+import { EventsModule, QRCodeModule, DialogsModule } from '@brickchain/integrity-angular';
+import { ClipboardModule, DragAndDropModule, SectionModule } from '@brickchain/integrity-angular';
+
 import { WebviewClientModule } from '@brickchain/integrity-webview-client';
 
 import { Ng2ImgToolsModule } from 'ng2-img-tools';
@@ -44,6 +47,8 @@ import {
   ControllersClient, RolesClient, InvitesClient, ServicesClient
 } from './shared/api-clients';
 import { SessionService, PlatformService, ConfigService, CryptoService } from './shared/services';
+
+import { StripeComponent } from './components/stripe.component';
 
 import { BootstrapComponent } from './pages/bootstrap/bootstrap.component';
 import { LoginComponent } from './pages/login/login.component';
@@ -67,6 +72,7 @@ export function createTranslateLoader(http: HttpClient) {
 @NgModule({
   declarations: [
     AppComponent,
+    StripeComponent,
     BootstrapComponent,
     LoginComponent,
     HomeComponent,
@@ -116,12 +122,14 @@ export function createTranslateLoader(http: HttpClient) {
     MatSelectModule,
     MatProgressSpinnerModule,
     MatChipsModule,
+    MatTabsModule,
     WebviewClientModule,
     QRCodeModule,
     EventsModule,
     DialogsModule,
     ClipboardModule,
     DragAndDropModule,
+    SectionModule,
     Ng2ImgToolsModule,
     TranslateModule.forRoot({
       loader: {

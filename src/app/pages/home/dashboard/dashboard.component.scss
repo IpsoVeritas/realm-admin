@@ -1,3 +1,22 @@
-mat-card {
-  margin-bottom: 20px;
+.banner {
+  width: 842px;
+  height: 130px;
+  justify-content: center;
+  align-items: center;
+  background-size: cover;
+  background-position: center center;
+}
+
+.mat-toolbar {
+  display: none;
+}
+
+:host-context(.drawer-over) {
+  .banner {
+    display: none;
+  }
+
+  .mat-toolbar {
+    display: flex;
+  }
 }

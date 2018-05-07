@@ -1,43 +1,103 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~@brickchain/integrity-theme/material-theme";
 
-.spacer {
-  /* This fills the remaining space, by using flexbox.
-     Every toolbar row uses a flexbox row layout. */
-  flex: 1 1 auto;
+html {
+  width: 100vw;
+  overflow-x: hidden;
+}
+
+body {
+  height: 100vh;
+  margin: 0;
+  padding: 0;
 }
 
 .hidden {
   display: none;
 }
 
+.mat-toolbar-row {
+  height: 90px;
+}
+
+.mat-table {
+  margin: 0 30px;
+}
+
+.mat-header-row, .mat-row {
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.mat-row:last-of-type {
+  border: none;
+}
+
+.mat-header-cell {
+  cursor: pointer;
+}
+
 .mat-sort-header-container {
   align-items: baseline;
 }
 
-.guide {
-  background: #eee;
+.profile-popup {
+  margin-top: 20px;
+  width: 270px;
+  position: relative;
+  overflow: visible !important;
+  left: 15px;
+}
 
-  div {
-    padding: 20px;
+.profile-popup::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  top: 0;
+  right: 7px;
+  box-sizing: border-box;
+  border: 10px solid black;
+  border-color: transparent transparent #fff #fff;
+  transform-origin: 0 0;
+  transform: rotate(135deg);
+  box-shadow: -2px 2px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.content-header {
+  .menu-icon {
+    margin-right: 10px;
   }
 
-  .mat-icon-button {
-    position: absolute;
-    top: 8px;
-    right: 16px;
+  .mat-toolbar-row {
+    padding: 0 15px 0 30px;
+  }
+
+  .mat-button, .mat-icon-button {
+    display: block;
+    opacity: 1;
+    transition: opacity 2s;
+  }
+
+  @media (max-width: 500px) {
+    .mat-button {
+      display: none;
+      opacity: 0;
+    }
+  }
+
+  @media (min-width: 501px) {
+    .mat-icon-button {
+      display: none;
+      opacity: 0;
+    }
   }
 }
 
-.developer {
-  font-size: 80%;
-}
-
-.pill {
-  border-radius: 8px;
-  padding: 0 8px;
-  margin: 4px;
-  color: mat-color($integrity-yellow, default-contrast);
-  background-color: mat-color($integrity-yellow);
-  display: inline-block;
+.drawer-side {
+  .content-header {
+    .menu-icon {
+      display: none;
+    }
+  }
 }
