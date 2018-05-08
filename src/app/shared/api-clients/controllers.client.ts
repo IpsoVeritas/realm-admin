@@ -54,20 +54,27 @@ export class ControllersClient extends BaseClient {
     if (!controller.descriptor.actionsURI || controller.descriptor.requireSetup) {
       return Promise.resolve(controller);
     }
-    return this.cryptoService.filterMandates(controller.adminRoles)
-      .then(mandates => this.cryptoService.createMandateToken(controller.descriptor.adminUI, mandates, 30))
-      .then(token => this.getControllerActions(controller, token))
+    return this.getControllerActionsJWS(controller)
       .then(actions => this.updateActions(controller, actions))
       .catch(error => console.warn('Update actions failed', controller, error))
       .then(() => controller);
   }
 
-  public getControllerActions(controller: Controller, token: string): Promise<any> {
-    const options: any = {
-      responseType: 'text',
-      headers: new HttpHeaders({ 'Authorization': `Mandate ${token}` }),
-    };
-    return this.http.get(controller.descriptor.actionsURI, options).toPromise();
+  public getControllerActions(controller: Controller): Promise<any> {
+    return this.getControllerActionsJWS(controller)
+      .then(jws => this.cryptoService.verifyAndParseJWS(jws));
+  }
+
+  public getControllerActionsJWS(controller: Controller): Promise<any> {
+    return this.cryptoService.filterMandates(controller.adminRoles)
+      .then(mandates => this.cryptoService.createMandateToken(controller.descriptor.adminUI, mandates, 30))
+      .then(token => {
+        const options: any = {
+          responseType: 'text',
+          headers: new HttpHeaders({ 'Authorization': `Mandate ${token}` }),
+        };
+        return this.http.get(controller.descriptor.actionsURI, options).toPromise();
+      });
   }
 
   public getControllerDescriptor(url: string): Promise<ControllerDescriptor> {

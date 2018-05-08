@@ -25,7 +25,7 @@
   </mat-toolbar-row>
 </mat-toolbar>
 
-<mat-tab-group color="accent">
+<mat-tab-group color="accent" (selectedTabChange)="tabChanged($event)">
   <mat-tab label="Group members">
     <mat-table #table [dataSource]="dataSource" matSort>
 
@@ -83,15 +83,44 @@
     </mat-table>
   </mat-tab>
   <mat-tab label="Authorizations">
-
+    <mat-expansion-panel class="mat-elevation-z0" *ngFor="let controller of controllers">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <a routerLink="/home/controller/{{controller.id}}">{{controller.name}}</a>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <mat-list>
+        <mat-divider></mat-divider>
+        <ng-container *ngFor="let action of controller['actions']">
+          <mat-list-item>
+            {{action.label}}
+            <span class="mat-spacer"></span>
+            <mat-icon color="accent" *ngIf="action.roles.includes(role.name)">check</mat-icon>
+          </mat-list-item>
+          <mat-divider></mat-divider>
+        </ng-container>
+      </mat-list>
+    </mat-expansion-panel>
   </mat-tab>
 </mat-tab-group>
 
 <integrity-section title="Developer" enableExpansion="true" expansionId="mandates.dev" *ngIf="session.getItem('developer',false)">
   <mat-card>
+    <mat-card-title>Role</mat-card-title>
+    <mat-card-content>
+      <pre>{{role | json }}</pre>
+    </mat-card-content>
+  </mat-card>
+  <mat-card>
     <mat-card-title>Items</mat-card-title>
     <mat-card-content>
       <pre>{{dataSource?.data | json }}</pre>
+    </mat-card-content>
+  </mat-card>
+  <mat-card>
+    <mat-card-title>Controllers</mat-card-title>
+    <mat-card-content>
+      <pre>{{controllers | json }}</pre>
     </mat-card-content>
   </mat-card>
 </integrity-section>

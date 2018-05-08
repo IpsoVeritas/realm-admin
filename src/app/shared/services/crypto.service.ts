@@ -89,6 +89,9 @@ export class CryptoService {
   }
 
   public verifyAndParseJWS(jws: string | Object): Promise<any> {
+    if (typeof jws === 'string' && jws.trim().startsWith('{')) {
+      jws = JSON.parse(jws);
+    }
     return this.verifier.verify(jws, { allowEmbeddedKey: true })
       .then(verified => new TextDecoder('utf-8').decode(verified.payload))
       .then(payload => JSON.parse(payload))

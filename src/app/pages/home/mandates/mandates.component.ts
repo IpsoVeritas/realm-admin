@@ -6,12 +6,13 @@ import { MatTableDataSource, } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MatSelect } from '@angular/material/select';
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
+import { MatTabChangeEvent } from '@angular/material/tabs';
 import { TranslateService } from '@ngx-translate/core';
 import { RoleInviteDialogComponent } from '../roles/role-invite-dialog.component';
 import { DialogsService, EventsService } from '@brickchain/integrity-angular';
 import { SessionService } from '../../../shared/services';
-import { RolesClient, MandatesClient, InvitesClient } from '../../../shared/api-clients';
-import { Role, IssuedMandate, Invite } from '../../../shared/models';
+import { RolesClient, MandatesClient, InvitesClient, ControllersClient } from '../../../shared/api-clients';
+import { Role, IssuedMandate, Invite, Controller } from '../../../shared/models';
 
 import { structuralClone } from './../../../shared';
 
@@ -29,6 +30,7 @@ export class MandatesComponent implements OnInit {
   // _roles: Array<Role>;
   role: Role;
   items = [];
+  controllers: Controller[];
 
   isSnackBarOpen = false;
 
@@ -46,6 +48,7 @@ export class MandatesComponent implements OnInit {
     private rolesClient: RolesClient,
     private mandatesClient: MandatesClient,
     private invitesClient: InvitesClient,
+    private controllersClient: ControllersClient,
     private snackBar: MatSnackBar,
     private dialog: MatDialog) { }
 
@@ -71,6 +74,23 @@ export class MandatesComponent implements OnInit {
       this.route.paramMap.subscribe(paramMap => this.selectRole(paramMap.get('id')));
     });
 
+  }
+
+  tabChanged(event: MatTabChangeEvent) {
+    if (event.index === 1) {
+      this.queryControllers();
+    }
+  }
+
+  queryControllers() {
+    this.controllersClient.getControllers(this.session.realm)
+      .then(controllers => controllers.map(controller => this.controllersClient.getControllerActions(controller)
+        .then(actions => {
+          controller['actions'] = actions;
+          return controller;
+        })))
+      .then(promises => Promise.all(promises))
+      .then(controllers => this.controllers = controllers);
   }
 
   selectRole(roleId: string) {

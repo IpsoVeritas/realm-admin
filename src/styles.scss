@@ -20,8 +20,12 @@ body {
   height: 90px;
 }
 
-.mat-table {
+.mat-tab-body-content {
   margin: 0 30px;
+
+  @media (max-width: 500px) {
+    margin: 0 10px;
+  }
 }
 
 .mat-header-row, .mat-row {
