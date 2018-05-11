@@ -2,6 +2,7 @@ import { Component, ViewChild, ElementRef, OnInit, OnDestroy, Renderer2 } from '
 import { ActivatedRoute } from '@angular/router';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { EventsService } from '@brickchain/integrity-angular';
 import { DocumentHandlerService } from '../../../handlers/document-handler.service';
 import { SessionService, CryptoService } from '../../../shared/services';
 import { ControllersClient, RealmsClient } from '../../../shared/api-clients';
@@ -19,7 +20,6 @@ export class ControllerComponent implements OnInit, OnDestroy {
   stopListening: Function;
 
   realmId: string;
-  controllerId: string;
   controller: Controller;
   uri: SafeResourceUrl;
 
@@ -31,6 +31,7 @@ export class ControllerComponent implements OnInit, OnDestroy {
     private breakpointObserver: BreakpointObserver,
     private sanitizer: DomSanitizer,
     private session: SessionService,
+    public events: EventsService,
     private documentHandler: DocumentHandlerService,
     private controllersClient: ControllersClient,
     private realmsClient: RealmsClient,
@@ -40,8 +41,18 @@ export class ControllerComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.realmId = this.session.realm;
-    this.controllerId = this.route.snapshot.paramMap.get('id');
-    this.controllersClient.getController(this.realmId, this.controllerId)
+    this.route.paramMap.subscribe(paramMap => this.loadController(paramMap.get('id')));
+  }
+
+  ngOnDestroy() {
+    if (this.stopListening !== undefined) {
+      this.stopListening();
+    }
+  }
+
+  loadController(controllerId: string) {
+    console.log(this.realmId, controllerId);
+    this.controllersClient.getController(this.realmId, controllerId)
       .then(controller => this.cryptoService.filterMandates(controller.adminRoles)
         .then(mandates => this.cryptoService.createMandateToken(
           controller.descriptor.adminUI,
@@ -61,10 +72,16 @@ export class ControllerComponent implements OnInit, OnDestroy {
         })));
   }
 
-  ngOnDestroy() {
-    if (this.stopListening !== undefined) {
-      this.stopListening();
-    }
+  edit() {
+
+  }
+
+  delete() {
+
+  }
+
+  sync() {
+
   }
 
   load(event) {

@@ -67,7 +67,9 @@
           {{controller.name}}
           <!-- span *ngIf="controller.descriptor?.requireSetup" translate>general.setup_required</span -->
         </a>
-        <a mat-list-item routerLink="/qr-code-demo" routerLinkActive="active">
+        <a mat-list-item (click)="syncControllers()" routerLinkActive="active">
+          <mat-icon>sync</mat-icon>Sync services</a>
+        <a mat-list-item (click)="addController()" routerLinkActive="active">
           <mat-icon>add</mat-icon>Add service</a>
       </mat-nav-list>
     </integrity-section>
@@ -87,7 +89,7 @@
       <router-outlet></router-outlet>
     </div>
     <div class="profile" *ngIf="realm">
-      <div class="profile-icon" #profileMenuTrigger="matMenuTrigger"  [style.background-image]="iconImage" [matMenuTriggerFor]="profileMenu">
+      <div class="profile-icon" #profileMenuTrigger="matMenuTrigger" [style.background-image]="iconImage" [matMenuTriggerFor]="profileMenu">
         <div class="overlay"></div>
         <mat-icon [class.popup-visible]="profileMenuTrigger.menuOpen">keyboard_arrow_down</mat-icon>
       </div>

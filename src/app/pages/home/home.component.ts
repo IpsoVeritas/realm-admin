@@ -4,11 +4,14 @@ import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { MatDrawer } from '@angular/material/sidenav';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
+import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { EventsService, DialogsService } from '@brickchain/integrity-angular';
 import { SessionService } from '../../shared/services';
-import { AccessClient, RealmsClient, RolesClient, ControllersClient } from '../../shared/api-clients';
-import { User, Realm, Role, Controller } from '../../shared/models';
+import { AccessClient, RealmsClient, RolesClient, ControllersClient, ServicesClient } from '../../shared/api-clients';
+import { User, Realm, Role, Controller, Service } from '../../shared/models';
+import { ControllerAddDialogComponent } from './controllers/controller-add-dialog.component';
+import { ControllerBindDialogComponent } from './controllers/controller-bind-dialog.component';
 
 import * as uuid from 'uuid/v1';
 
@@ -48,10 +51,12 @@ export class HomeComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     public session: SessionService,
+    private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private realmsClient: RealmsClient,
     private rolesClient: RolesClient,
     private controllersClient: ControllersClient,
+    private servicesClient: ServicesClient,
     private breakpointObserver: BreakpointObserver,
     private accessClient: AccessClient) {
     this.drawerMode = 'side';
@@ -137,6 +142,68 @@ export class HomeComponent implements OnInit {
             this.snackBarErrorConfig));
       }
     });
+  }
+
+  addController() {
+    const dialogRef = this.dialog.open(ControllerAddDialogComponent);
+    dialogRef.afterClosed().toPromise()
+      .then((service: Service) => {
+        if (service) {
+          this.servicesClient.addService(service)
+            .then(data => {
+              if (data) {
+                this.bindController(data.token, data.uri);
+              }
+            })
+            .catch(error => this.snackBarOpen(
+              this.translate.instant('binding.error_add_failed'),
+              this.translate.instant('label.close'),
+              this.snackBarErrorConfig));
+        }
+      });
+  }
+
+  bindController(token: string, uri: string) {
+    this.controllersClient.getControllerDescriptor(uri)
+      .then(descriptor => {
+        const controller = new Controller();
+        controller.name = descriptor.label;
+        controller.active = true;
+        controller.descriptor = descriptor;
+        controller.uri = uri;
+        controller.realm = this.session.realm;
+        controller.mandateRole = `service@${this.session.realm}`;
+        const dialogRef = this.dialog.open(ControllerBindDialogComponent, { data: controller });
+        return dialogRef.afterClosed().toPromise();
+      })
+      .then(controller => {
+        if (controller) {
+          this.realmsClient.bindController(controller)
+            .then(binding => this.controllersClient.bindController(controller, binding))
+            .then(() => this.servicesClient.deleteToken(token))
+            .then(() => this.snackBarOpen(
+              this.translate.instant('binding.binding_success', { value: controller.name }),
+              this.translate.instant('label.close'),
+              { duration: 2000 }))
+            .catch(error => {
+              console.error('Error binding controller:', error);
+              this.snackBarOpen(
+                this.translate.instant('binding.error_binding_failed'),
+                this.translate.instant('label.close'),
+                this.snackBarErrorConfig
+              );
+            })
+            .then(() => this.loadControllers());
+        }
+      });
+  }
+
+  syncControllers() {
+    Promise.all(this.controllers.map(item => this.controllersClient.syncController(item)))
+      .catch(error => this.snackBarOpen(
+        this.translate.instant('controllers.error_syncing_controllers'),
+        this.translate.instant('label.close'),
+        this.snackBarErrorConfig));
   }
 
   snackBarOpen(message: string, action?: string, config?: MatSnackBarConfig) {

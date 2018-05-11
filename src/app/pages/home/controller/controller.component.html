@@ -1,7 +1,36 @@
-<div class="iframe">
-  <div class="loading" [class.ready]="ready">
-    <div></div>
-    <p>Loading {{controller?.name}}</p>
+<div class="iframe-container">
+  <mat-toolbar class="content-header">
+    <app-stripe></app-stripe>
+    <mat-toolbar-row>
+      <mat-icon class="menu-icon" (click)="events.publish('toggle_drawer')">menu</mat-icon>
+      <span *ngIf="controller" class="mat-display-1"> {{controller?.name}}</span>
+      <span class="mat-spacer"></span>
+      <button mat-button color="accent" (click)="edit()">
+        <mat-icon>mode_edit</mat-icon> Edit service
+      </button>
+      <button mat-icon-button color="accent" (click)="edit()">
+        <mat-icon>mode_edit</mat-icon>
+      </button>
+      <button mat-button color="accent" (click)="delete()">
+        <mat-icon>delete</mat-icon> Delete service
+      </button>
+      <button mat-icon-button color="accent" (click)="delete()">
+        <mat-icon>delete</mat-icon>
+      </button>
+      <button mat-button color="accent" (click)="sync()">
+        <mat-icon>sync</mat-icon> Sync service
+      </button>
+      <button mat-icon-button color="accent" (click)="sync()">
+        <mat-icon>sync</mat-icon>
+      </button>
+    </mat-toolbar-row>
+  </mat-toolbar>
+
+  <div class="iframe">
+    <div class="loading" [class.ready]="ready">
+      <div></div>
+      <p>Loading {{controller?.name}}</p>
+    </div>
+    <iframe #iframe *ngIf="uri" [src]="uri" (load)="load($event)" sandbox="allow-forms allow-scripts allow-same-origin allow-popups"></iframe>
   </div>
-  <iframe #iframe *ngIf="uri" [src]="uri" (load)="load($event)" sandbox="allow-forms allow-scripts allow-same-origin allow-popups"></iframe>
 </div>

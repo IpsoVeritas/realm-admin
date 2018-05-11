@@ -1,38 +1,48 @@
-.iframe {
-  overflow: hidden;
-  margin: 0;
-  padding: 0;
-  width: 100%;
+.iframe-container {
+  display: flex;
+  flex-direction: column;
+  align-content: stretch;
   height: 100%;
 
-  .loading {
-    background: none;
-    position: fixed;
-    width: 850px;
-
-    @media (max-width: 850px) {
-      width: 100%;
-    }
-
-    div {
-      animation: spin 1s ease-in-out infinite;
-    }
-
-    &.ready {
-      opacity: 0;
-      z-index: -1;
-
-      div {
-        animation-play-state: paused;
-      }
-    }
+  .content-header {
+    flex: 0 1 auto;
   }
 
-  iframe {
+  .iframe {
+    display: flex;
+    flex: 1 0 auto;
+    overflow: hidden;
     margin: 0;
     padding: 0;
-    border: none;
-    width: 100%;
-    height: 100%;
+
+    .loading {
+      background: none;
+      position: fixed;
+      width: 850px;
+
+      @media (max-width: 850px) {
+        width: 100%;
+      }
+
+      div {
+        animation: spin 1s ease-in-out infinite;
+      }
+
+      &.ready {
+        opacity: 0;
+        z-index: -1;
+
+        div {
+          animation-play-state: paused;
+        }
+      }
+    }
+
+    iframe {
+      flex: 1 1 auto;
+      margin: 0;
+      padding: 0;
+      border: none;
+    }
   }
 }
