@@ -79,8 +79,6 @@
     <mat-nav-list>
       <a *ngIf="user?.owner" mat-list-item [routerLink]="['realms']" routerLinkActive="active" (click)="drawerMode == 'over' ? drawer.close() : false">
         <mat-icon>domain</mat-icon>{{ 'entities.Realm' | translate }}</a>
-      <a mat-list-item [routerLink]="['controllers']" routerLinkActive="active" (click)="drawerMode == 'over' ? drawer.close() : false">
-        <mat-icon>room_service</mat-icon>{{ 'entities.Controllers' | translate }}</a>
     </mat-nav-list>
   </mat-sidenav>
 

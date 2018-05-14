@@ -23,6 +23,12 @@
       <button mat-icon-button color="accent" (click)="sync()">
         <mat-icon>sync</mat-icon>
       </button>
+      <button *ngIf="controller?.descriptor?.addBindingEndpoint" mat-button color="accent" (click)="binding()">
+        <mat-icon>link</mat-icon> Get binding
+      </button>
+      <button *ngIf="controller?.descriptor?.addBindingEndpoint"  mat-icon-button color="accent" (click)="binding()">
+        <mat-icon>link</mat-icon>
+      </button>
     </mat-toolbar-row>
   </mat-toolbar>
 

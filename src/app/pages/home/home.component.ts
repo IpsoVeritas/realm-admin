@@ -75,6 +75,7 @@ export class HomeComponent implements OnInit {
     this.events.subscribe('active_http_requests', count => this.requestCount = count);
     this.events.subscribe('toggle_drawer', () => this.drawer.toggle());
     this.events.subscribe('roles_updated', () => this.loadRoles());
+    this.events.subscribe('controllers_updated', () => this.loadControllers());
     this.accessClient.getUserAccess()
       .then(user => this.user = user)
       .then(() => this.events.publish('ready', true));

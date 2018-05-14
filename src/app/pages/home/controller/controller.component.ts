@@ -1,12 +1,18 @@
 import { Component, ViewChild, ElementRef, OnInit, OnDestroy, Renderer2 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { EventsService } from '@brickchain/integrity-angular';
+import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
+import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
+import { EventsService, DialogsService, ClipboardService } from '@brickchain/integrity-angular';
 import { DocumentHandlerService } from '../../../handlers/document-handler.service';
 import { SessionService, CryptoService } from '../../../shared/services';
 import { ControllersClient, RealmsClient } from '../../../shared/api-clients';
 import { Controller, ControllerDescriptor } from './../../../shared/models/';
+import { ControllerSettingsDialogComponent } from '../controllers/controller-settings-dialog.component';
+
+import { structuralClone } from './../../../shared';
 
 @Component({
   selector: 'app-controller',
@@ -17,6 +23,8 @@ export class ControllerComponent implements OnInit, OnDestroy {
 
   @ViewChild('iframe') iframe: ElementRef;
 
+  isSnackBarOpen = false;
+
   stopListening: Function;
 
   realmId: string;
@@ -25,17 +33,28 @@ export class ControllerComponent implements OnInit, OnDestroy {
 
   ready = false;
 
+  snackBarErrorConfig: MatSnackBarConfig = {
+    duration: 5000,
+    panelClass: 'error'
+  };
+
   constructor(
     private renderer: Renderer2,
     private route: ActivatedRoute,
+    private router: Router,
     private breakpointObserver: BreakpointObserver,
     private sanitizer: DomSanitizer,
     private session: SessionService,
+    private dialogs: DialogsService,
+    private translate: TranslateService,
+    private clipboard: ClipboardService,
     public events: EventsService,
+    private dialog: MatDialog,
     private documentHandler: DocumentHandlerService,
     private controllersClient: ControllersClient,
     private realmsClient: RealmsClient,
-    private cryptoService: CryptoService
+    private cryptoService: CryptoService,
+    private snackBar: MatSnackBar
   ) {
   }
 
@@ -73,15 +92,73 @@ export class ControllerComponent implements OnInit, OnDestroy {
   }
 
   edit() {
-
+    structuralClone(this.controller, Controller)
+      .then(clone => {
+        const dialogRef = this.dialog.open(ControllerSettingsDialogComponent, { data: clone });
+        return dialogRef.afterClosed().toPromise();
+      })
+      .then(updated => {
+        if (updated) {
+          this.controllersClient.updateController(updated)
+            .then(() => this.controller = updated)
+            .catch(error => this.snackBarOpen(
+              this.translate.instant('general.error_updating', { value: this.controller.name }),
+              this.translate.instant('label.close'),
+              this.snackBarErrorConfig));
+        }
+      });
   }
 
   delete() {
-
+    this.dialogs.openConfirm({
+      message: this.translate.instant('controllers.delete_controller', { value: this.controller.name }),
+      ok: this.translate.instant('label.ok'),
+      cancel: this.translate.instant('label.cancel')
+    }).then(confirmed => {
+      if (confirmed) {
+        this.controllersClient.deleteController(this.controller)
+          .then(() => this.events.publish('controllers_updated'))
+          .then(() => this.router.navigateByUrl('/home'))
+          .catch(error => this.snackBarOpen(
+            this.translate.instant('general.error_deleting', { value: this.controller.name }),
+            this.translate.instant('label.close'),
+            this.snackBarErrorConfig));
+      }
+    });
   }
 
   sync() {
+    this.controllersClient.syncController(this.controller)
+      .catch(error => this.snackBarOpen(
+        this.translate.instant('controllers.error_syncing_controller', { value: this.controller.name }),
+        this.translate.instant('label.close'),
+        this.snackBarErrorConfig));
+  }
 
+  binding() {
+    // Synchronous HTTP to enable clipboard
+    const xhr = new XMLHttpRequest();
+    xhr.open('post', this.controller.descriptor.addBindingEndpoint, false);
+    xhr.setRequestHeader('Authorization', `Mandate ${this.session.mandate}`);
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState === XMLHttpRequest.DONE) {
+        if (xhr.status === 201) {
+          const obj = JSON.parse(xhr.responseText);
+          this.clipboard.copy(obj.url)
+            .then(value => this.snackBarOpen(
+              this.translate.instant('binding.url_copied', { value: this.controller.name }),
+              this.translate.instant('label.close'),
+              { duration: 2000 }))
+            .catch(() => this.snackBarOpen(obj.url, 'Close'));
+        } else {
+          this.snackBarOpen(
+            this.translate.instant('general.error_calling', { value: this.controller.descriptor.addBindingEndpoint }),
+            this.translate.instant('label.close'),
+            this.snackBarErrorConfig);
+        }
+      }
+    };
+    xhr.send();
   }
 
   load(event) {
@@ -130,6 +207,12 @@ export class ControllerComponent implements OnInit, OnDestroy {
       message = data;
     }
     return message;
+  }
+
+  snackBarOpen(message: string, action?: string, config?: MatSnackBarConfig) {
+    this.isSnackBarOpen = true;
+    const snackbarRef = this.snackBar.open(message, action, config);
+    snackbarRef.afterDismissed().toPromise().then(() => this.isSnackBarOpen = false);
   }
 
 }
