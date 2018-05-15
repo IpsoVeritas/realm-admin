@@ -21,6 +21,8 @@ export class DashboardComponent implements OnInit {
   services: Service[];
   seconds: number;
 
+  navigationSubscription;
+
   public realm: Realm;
   public bannerImage: SafeStyle;
 
@@ -37,17 +39,24 @@ export class DashboardComponent implements OnInit {
     private controllersClient: ControllersClient,
     private servicesClient: ServicesClient,
     private realmsClient: RealmsClient,
-    private snackBar: MatSnackBar) { }
+    private snackBar: MatSnackBar) {
+    this.navigationSubscription = this.router.events.subscribe((event: any) => {
+      if (event instanceof NavigationEnd) {
+        this.load();
+      }
+    });
+  }
 
   ngOnInit() {
-    this.loadRealm();
-    this.loadControllers();
-    this.loadServices();
     setTimeout(() => this.updateClock(), 500);
   }
 
-  loadRealm() {
-    this.realmsClient.getRealm(this.session.realm)
+  load(): Promise<any> {
+    return Promise.all([this.loadRealm(), this.loadControllers(), this.loadServices()]);
+  }
+
+  loadRealm(): Promise<Realm> {
+    return this.realmsClient.getRealm(this.session.realm)
       .then(realm => {
         this.realm = realm;
         let url = 'assets/img/banner.jpg';
@@ -55,18 +64,21 @@ export class DashboardComponent implements OnInit {
           url = realm.realmDescriptor.banner;
         }
         this.bannerImage = this.sanitizer.bypassSecurityTrustStyle(`url(${url}?ts=${Date.now()})`);
-      });
+      })
+      .then(() => this.realm);
   }
 
-  loadControllers() {
-    this.controllersClient.getControllers(this.session.realm)
+  loadControllers(): Promise<Controller[]> {
+    return this.controllersClient.getControllers(this.session.realm)
       .then(controllers => controllers.filter(controller => controller.descriptor.requireSetup))
-      .then(controllers => this.controllers = controllers);
+      .then(controllers => this.controllers = controllers)
+      .then(() => this.controllers);
   }
 
-  loadServices() {
-    this.servicesClient.getServices()
-      .then(services => this.services = services);
+  loadServices(): Promise<Service[]> {
+    return this.servicesClient.getServices()
+      .then(services => this.services = services)
+      .then(() => this.services);
   }
 
   updateClock() {

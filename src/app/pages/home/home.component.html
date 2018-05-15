@@ -73,13 +73,14 @@
           <mat-icon>add</mat-icon>Add service</a>
       </mat-nav-list>
     </integrity-section>
-
+    <!--
     <mat-divider *ngIf="profileMode == 'drawer'"></mat-divider>
 
     <mat-nav-list>
       <a *ngIf="user?.owner" mat-list-item [routerLink]="['realms']" routerLinkActive="active" (click)="drawerMode == 'over' ? drawer.close() : false">
         <mat-icon>domain</mat-icon>{{ 'entities.Realm' | translate }}</a>
     </mat-nav-list>
+    -->
   </mat-sidenav>
 
   <mat-sidenav-content>
@@ -102,6 +103,18 @@
       <button mat-menu-item (click)="logout()">
         <mat-icon>exit_to_app</mat-icon>{{ 'label.logout' | translate }}
       </button>
+      <div *ngIf="user?.owner">
+        <mat-divider></mat-divider>
+        <button mat-menu-item *ngFor="let realm of realms" (click)="selectRealm(realm)">
+          <mat-icon>domain</mat-icon>{{ realm.name }}
+        </button>
+        <button mat-menu-item (click)="addRealm()">
+          <mat-icon>add</mat-icon>{{ 'label.add_realm' | translate }}
+        </button>
+        <button *ngIf="realm.ownerRealm !== true" mat-menu-item (click)="deleteRealm()">
+          <mat-icon>delete</mat-icon>{{ 'label.delete_realm' | translate }}
+        </button>
+      </div>
     </mat-menu>
 
     <!--
