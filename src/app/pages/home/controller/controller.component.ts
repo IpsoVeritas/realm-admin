@@ -10,7 +10,7 @@ import { DocumentHandlerService } from '../../../handlers/document-handler.servi
 import { SessionService, CryptoService } from '../../../shared/services';
 import { ControllersClient, RealmsClient } from '../../../shared/api-clients';
 import { Controller, ControllerDescriptor } from './../../../shared/models/';
-import { ControllerSettingsDialogComponent } from '../controllers/controller-settings-dialog.component';
+import { ControllerSettingsDialogComponent } from './controller-settings-dialog.component';
 
 import { structuralClone } from './../../../shared';
 

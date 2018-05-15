@@ -10,8 +10,8 @@ import { EventsService, DialogsService } from '@brickchain/integrity-angular';
 import { SessionService } from '../../shared/services';
 import { AccessClient, RealmsClient, RolesClient, ControllersClient, ServicesClient } from '../../shared/api-clients';
 import { User, Realm, Role, Controller, Service } from '../../shared/models';
-import { ControllerAddDialogComponent } from './controllers/controller-add-dialog.component';
-import { ControllerBindDialogComponent } from './controllers/controller-bind-dialog.component';
+import { ControllerAddDialogComponent } from './controller/controller-add-dialog.component';
+import { ControllerBindDialogComponent } from './controller/controller-bind-dialog.component';
 
 import * as uuid from 'uuid/v1';
 

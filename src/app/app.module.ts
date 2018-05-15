@@ -54,15 +54,12 @@ import { BootstrapComponent } from './pages/bootstrap/bootstrap.component';
 import { LoginComponent } from './pages/login/login.component';
 import { HomeComponent } from './pages/home/home.component';
 import { DashboardComponent } from './pages/home/dashboard/dashboard.component';
-import { RealmsComponent } from './pages/home/realms/realms.component';
-import { RolesComponent } from './pages/home/roles/roles.component';
-import { RoleInviteDialogComponent } from './pages/home/roles/role-invite-dialog.component';
+import { RoleInviteDialogComponent } from './pages/home/mandates/role-invite-dialog.component';
 import { MandatesComponent } from './pages/home/mandates/mandates.component';
-import { ControllersComponent } from './pages/home/controllers/controllers.component';
 import { ControllerComponent } from './pages/home/controller/controller.component';
-import { ControllerAddDialogComponent } from './pages/home/controllers/controller-add-dialog.component';
-import { ControllerBindDialogComponent } from './pages/home/controllers/controller-bind-dialog.component';
-import { ControllerSettingsDialogComponent } from './pages/home/controllers/controller-settings-dialog.component';
+import { ControllerAddDialogComponent } from './pages/home/controller/controller-add-dialog.component';
+import { ControllerBindDialogComponent } from './pages/home/controller/controller-bind-dialog.component';
+import { ControllerSettingsDialogComponent } from './pages/home/controller/controller-settings-dialog.component';
 import { SettingsComponent } from './pages/home/settings/settings.component';
 
 export function createTranslateLoader(http: HttpClient) {
@@ -77,11 +74,8 @@ export function createTranslateLoader(http: HttpClient) {
     LoginComponent,
     HomeComponent,
     DashboardComponent,
-    RealmsComponent,
-    RolesComponent,
     RoleInviteDialogComponent,
     MandatesComponent,
-    ControllersComponent,
     ControllerComponent,
     ControllerAddDialogComponent,
     ControllerBindDialogComponent,

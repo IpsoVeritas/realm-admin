@@ -8,7 +8,7 @@ import { MatSelect } from '@angular/material/select';
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { TranslateService } from '@ngx-translate/core';
-import { RoleInviteDialogComponent } from '../roles/role-invite-dialog.component';
+import { RoleInviteDialogComponent } from './role-invite-dialog.component';
 import { DialogsService, EventsService } from '@brickchain/integrity-angular';
 import { SessionService } from '../../../shared/services';
 import { RolesClient, MandatesClient, InvitesClient, ControllersClient } from '../../../shared/api-clients';

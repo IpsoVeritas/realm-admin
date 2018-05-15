@@ -7,10 +7,7 @@ import { BootstrapComponent } from './pages/bootstrap/bootstrap.component';
 import { LoginComponent } from './pages/login/login.component';
 import { HomeComponent } from './pages/home/home.component';
 import { DashboardComponent } from './pages/home/dashboard/dashboard.component';
-import { RealmsComponent } from './pages/home/realms/realms.component';
-import { RolesComponent } from './pages/home/roles/roles.component';
 import { MandatesComponent } from './pages/home/mandates/mandates.component';
-import { ControllersComponent } from './pages/home/controllers/controllers.component';
 import { ControllerComponent } from './pages/home/controller/controller.component';
 import { SettingsComponent } from './pages/home/settings/settings.component';
 
@@ -22,11 +19,7 @@ const appRoutes: Routes = [
     children: [
       { path: '', component: DashboardComponent },
       { path: 'dashboard', component: DashboardComponent },
-      { path: 'realms', component: RealmsComponent },
-      { path: 'roles', component: RolesComponent },
-      { path: 'mandates', component: MandatesComponent },
       { path: 'mandates/:id', component: MandatesComponent },
-      { path: 'controllers', component: ControllersComponent },
       { path: 'controller/:id', component: ControllerComponent },
       { path: 'settings', component: SettingsComponent }
     ]
