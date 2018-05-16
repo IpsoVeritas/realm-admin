@@ -13,6 +13,7 @@ export class SessionService {
   }
 
   public setItem(name: string, value: any | null | undefined) {
+    console.log(`${name} -> ${JSON.stringify(value)}`);
     if (value === null || value === undefined) {
       this.removeItem(name);
     } else {

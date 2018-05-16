@@ -1,6 +1,6 @@
 import { RealmDescriptor } from './../../shared/models/realm-descriptor.model';
 import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
@@ -35,7 +35,8 @@ export class LoginComponent implements OnInit, AfterViewInit {
   activeRealm: string;
   activeDescriptor: RealmDescriptor;
 
-  constructor(private router: Router,
+  constructor(private route: ActivatedRoute,
+    private router: Router,
     private fb: FormBuilder,
     private sanitizer: DomSanitizer,
     private authClient: AuthClient,
@@ -51,9 +52,18 @@ export class LoginComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+
+    this.route.paramMap.subscribe(paramMap => {
+      this.session.realm = paramMap.get('realm');
+      this.realmForm = this.fb.group({
+        'realm': [this.session.realm, Validators.required]
+      });
+    });
+    /*
     this.realmForm = this.fb.group({
       'realm': [this.session.realm, Validators.required]
     });
+    */
   }
 
   ngAfterViewInit() {

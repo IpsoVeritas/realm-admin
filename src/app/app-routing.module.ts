@@ -13,9 +13,9 @@ import { SettingsComponent } from './pages/home/settings/settings.component';
 
 const appRoutes: Routes = [
   { path: 'bootstrap', component: BootstrapComponent, canActivate: [BootmodeGuard] },
-  { path: 'login', component: LoginComponent, canActivate: [BootmodeGuard, LoginGuard] },
+  { path: ':realm/login', component: LoginComponent, canActivate: [] },
   {
-    path: 'home', component: HomeComponent, canActivate: [BootmodeGuard, LoginGuard],
+    path: ':realm/home', component: HomeComponent, canActivate: [],
     children: [
       { path: '', component: DashboardComponent },
       { path: 'dashboard', component: DashboardComponent },
@@ -23,8 +23,8 @@ const appRoutes: Routes = [
       { path: 'controller/:id', component: ControllerComponent },
       { path: 'settings', component: SettingsComponent }
     ]
-  },
-  { path: '**', redirectTo: '/home', pathMatch: 'full' }
+  }
+  // { path: '**', redirectTo: '/home', pathMatch: 'full' }
 ];
 
 @NgModule({

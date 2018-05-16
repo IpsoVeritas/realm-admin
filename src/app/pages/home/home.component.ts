@@ -78,7 +78,10 @@ export class HomeComponent implements OnInit {
     Promise.all([this.loadRealm(), this.loadRealms(), this.loadRoles(), this.loadControllers()])
       .then(() => this.accessClient.getUserAccess())
       .then(user => this.user = user)
-      .then(() => this.events.publish('ready', true));
+      .then(() => this.events.publish('ready', true))
+      .then(() => this.controllersClient.getControllers(this.session.realm))
+      .then(controllers => controllers.map(controller => this.controllersClient.syncController(controller)))
+      .catch(error => console.warn('Error syncing controllers', error));
   }
 
   loadRealm() {
