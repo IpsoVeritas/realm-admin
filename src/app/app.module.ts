@@ -55,6 +55,7 @@ import { BootstrapComponent } from './pages/bootstrap/bootstrap.component';
 import { LoginComponent } from './pages/login/login.component';
 import { HomeComponent } from './pages/home/home.component';
 import { DashboardComponent } from './pages/home/dashboard/dashboard.component';
+import { RealmsComponent } from './pages/home/realms/realms.component';
 import { RoleInviteDialogComponent } from './pages/home/mandates/role-invite-dialog.component';
 import { MandatesComponent } from './pages/home/mandates/mandates.component';
 import { ControllerComponent } from './pages/home/controller/controller.component';
@@ -82,7 +83,8 @@ export function createTranslateLoader(http: HttpClient) {
     ControllerAddDialogComponent,
     ControllerBindDialogComponent,
     ControllerSettingsDialogComponent,
-    SettingsComponent
+    SettingsComponent,
+    RealmsComponent
   ],
   entryComponents: [
     ControllerAddDialogComponent,
