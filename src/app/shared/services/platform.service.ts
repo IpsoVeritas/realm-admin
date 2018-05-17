@@ -43,7 +43,7 @@ export class PlatformService {
         this.webviewClient.cancel();
       } else {
         this.events.publish('ready', false);
-        this.router.navigate(['/login', {}]);
+        this.router.navigate([`/${this.session.realm}/login`, {}]);
       }
     });
   }

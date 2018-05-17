@@ -7,6 +7,7 @@ import { Realm, RealmDescriptor, Controller, ControllerDescriptor } from '../mod
 export class RealmsClient extends BaseClient {
 
   public getRealmDescriptor(realm: string): Promise<any> {
+    // Todo: Must go over HTTPS
     return this.http.get(`http://${realm}/.well-known/realm/realm.json`).toPromise()
       .then(jws => this.cryptoService.verifyAndParseJWS(jws))
       .then(obj => this.jsonConvert.deserializeObject(obj, RealmDescriptor));

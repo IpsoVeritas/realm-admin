@@ -24,9 +24,9 @@
       </form>
     </mat-expansion-panel>
     <integrity-qrcode *ngIf="qrUri" [qrdata]="qrUri" [integrityClipboard]="qrUri" (copySuccess)="showCopySuccess($event)"></integrity-qrcode>
-    <div class="instructions">
+    <div *ngIf="qrUri" class="instructions">
       {{'login.app_instructions' | translate:{value:activeDescriptor && activeDescriptor.description ? activeDescriptor.description : activeRealm} }}
     </div>
-    <mat-progress-bar mode="determinate" [value]="qrCountdown" color="accent"></mat-progress-bar>
+    <mat-progress-bar *ngIf="qrUri" mode="determinate" [value]="qrCountdown" color="accent"></mat-progress-bar>
   </div>
 </div>

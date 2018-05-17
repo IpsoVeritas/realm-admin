@@ -18,7 +18,7 @@ import { AuthUser, AuthInfo } from '../../shared/models';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit, AfterViewInit {
+export class LoginComponent implements OnInit {
 
   @ViewChild(MatExpansionPanel) realmPanel: MatExpansionPanel;
 
@@ -52,53 +52,39 @@ export class LoginComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-
     this.route.paramMap.subscribe(paramMap => {
-      this.session.realm = paramMap.get('realm');
-      this.realmForm = this.fb.group({
-        'realm': [this.session.realm, Validators.required]
-      });
-    });
-    /*
-    this.realmForm = this.fb.group({
-      'realm': [this.session.realm, Validators.required]
-    });
-    */
-  }
 
-  ngAfterViewInit() {
-    this.start(this.session.realm)
-      .then(() => this.activeRealm = this.session.realm)
-      .catch(error => {
-        this.activeRealm = '';
-        this.realmPanel.expanded = true;
-        if (error.status === 0) {
+      const realm = paramMap.get('realm');
+
+      this.realmForm = this.fb.group({
+        'realm': [realm, Validators.required]
+      });
+
+      this.start(realm)
+        .catch(error => {
+          this.realmPanel.expanded = true;
+          this.realm.setErrors({ 'startAuthFailed': true });
           this.snackBar.open(
             this.translate.instant('general.error_connecting', { value: this.config.backend }),
             this.translate.instant('label.close'),
-            { duration: 5000 });
-        } else {
-          this.realm.setValue('');
-        }
-      })
-      .then(() => this.events.publish('ready', !this.platform.inApp));
+            { duration: 3000 });
+        })
+        .then(() => this.events.publish('ready', !this.platform.inApp));
+
+    });
   }
 
   onSubmit() {
     if (this.activeRealm !== this.realm.value) {
-      this.start(this.realm.value)
-        .then(() => this.activeRealm = this.realm.value)
-        .then(() => this.realmPanel.expanded = false)
-        .then(() => this.session.realm = this.activeRealm)
+      console.log(this.realm.value);
+      return this.realmsClient.getRealmDescriptor(this.realm.value)
+        .then(descriptor => this.router.navigate([`/${descriptor.name}/login`, {}]))
         .catch(error => {
-          if (error.status === 0) {
-            this.snackBar.open(
-              this.translate.instant('general.error_connecting', { value: this.config.backend }),
-              this.translate.instant('label.close'),
-              { duration: 5000 });
-          } else {
-            this.realm.setErrors({ 'startAuthFailed': true });
-          }
+          this.realm.setErrors({ 'startAuthFailed': true });
+          this.snackBar.open(
+            this.translate.instant('general.error_connecting', { value: this.config.backend }),
+            this.translate.instant('label.close'),
+            { duration: 3000 });
         });
     } else {
       this.realmPanel.expanded = false;
@@ -120,6 +106,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
   start(realm: string): Promise<AuthInfo> {
     return this.realmsClient.getRealmDescriptor(realm)
       .then(descriptor => this.activeDescriptor = descriptor)
+      .then(() => this.activeRealm = realm)
       .then(() => this.authClient.postAuthRequest(realm)
         .then((authInfo: AuthInfo) => Promise.resolve(authInfo.requestURI) // this.config.getBaseURL(authInfo.requestURI)
           .then(url => {
@@ -157,7 +144,8 @@ export class LoginComponent implements OnInit, AfterViewInit {
           ).then(mandate => this.session.mandate = mandate)
             .then(() => this.authClient.getAuthInfo())
             .then(() => this.events.publish('login'))
-            .then(() => this.router.navigate(['/home', {}]))
+            .then(() => this.session.realm = this.activeRealm)
+            .then(() => this.router.navigate([`/${this.activeRealm}/home`, {}]))
             .catch(error => {
               if (error && error.error) {
                 console.error(error);
