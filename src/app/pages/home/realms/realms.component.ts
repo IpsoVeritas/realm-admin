@@ -3,7 +3,7 @@ import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import { MatTableDataSource, } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { TranslateService } from '@ngx-translate/core';
-import { DialogsService } from '@brickchain/integrity-angular';
+import { DialogsService, EventsService } from '@brickchain/integrity-angular';
 import { SessionService } from '../../../shared/services';
 import { RealmsClient } from '../../../shared/api-clients';
 import { Realm } from '../../../shared/models';
@@ -15,7 +15,7 @@ import { Realm } from '../../../shared/models';
 })
 export class RealmsComponent implements OnInit {
 
-  displayedColumns = ['id', 'action'];
+  displayedColumns = ['name', 'description', 'action'];
   dataSource: MatTableDataSource<any>;
   @ViewChild(MatSort) sort: MatSort;
   isSnackBarOpen = false;
@@ -28,6 +28,7 @@ export class RealmsComponent implements OnInit {
   constructor(private dialogs: DialogsService,
     private translate: TranslateService,
     public session: SessionService,
+    public events: EventsService,
     private realmsClient: RealmsClient,
     private snackBar: MatSnackBar) { }
 

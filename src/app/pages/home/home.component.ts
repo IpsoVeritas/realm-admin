@@ -28,8 +28,6 @@ export class HomeComponent implements OnInit {
   realm: Realm;
   roles: Role[];
   controllers: Controller[];
-  realms: Realm[];
-  ownerRealm: Realm;
 
   iconImage: SafeStyle;
 
@@ -75,7 +73,7 @@ export class HomeComponent implements OnInit {
     this.events.subscribe('toggle_drawer', () => this.drawer.toggle());
     this.events.subscribe('roles_updated', () => this.loadRoles());
     this.events.subscribe('controllers_updated', () => this.loadControllers());
-    Promise.all([this.loadRealm(), this.loadRealms(), this.loadRoles(), this.loadControllers()])
+    Promise.all([this.loadRealm(), this.loadRoles(), this.loadControllers()])
       .then(() => this.accessClient.getUserAccess())
       .then(user => this.user = user)
       .then(() => this.events.publish('ready', true))
@@ -110,14 +108,6 @@ export class HomeComponent implements OnInit {
       .then(controllers => controllers.filter(controller => !controller.hidden))
       .then(controllers => this.controllers = controllers)
       .then(() => this.controllers);
-  }
-
-  loadRealms(): Promise<Realm[]> {
-    return this.realmsClient.getRealms()
-      .then(realms => this.realms = realms)
-      .then(() => this.realms.filter(realm => realm.ownerRealm).pop())
-      .then(realm => this.ownerRealm = realm)
-      .then(() => this.realms);
   }
 
   logout() {
@@ -223,50 +213,6 @@ export class HomeComponent implements OnInit {
     this.isSnackBarOpen = true;
     const snackbarRef = this.snackBar.open(message, action, config);
     snackbarRef.afterDismissed().toPromise().then(() => this.isSnackBarOpen = false);
-  }
-
-  addRealm() {
-    this.dialogs.openSimpleInput({
-      message: this.translate.instant('realms.realm_name'),
-      ok: this.translate.instant('label.ok'),
-      cancel: this.translate.instant('label.cancel')
-    }).then(name => {
-      if (name) {
-        const realm = new Realm();
-        realm.id = name;
-        realm.name = name;
-        this.realmsClient.createRealm(realm)
-          .then(() => this.loadRealms())
-          .catch(error => this.snackBarOpen(
-            this.translate.instant('general.error_creating', { value: realm.name }),
-            this.translate.instant('label.close'),
-            this.snackBarErrorConfig));
-      }
-    });
-  }
-
-  selectRealm(realm): Promise<any> {
-    this.session.realm = realm.id;
-    return Promise.all([this.loadRealm(), this.loadRoles(), this.loadControllers()])
-      .then(() => this.router.navigateByUrl('/home/dashboard'));
-  }
-
-  deleteRealm() {
-    this.dialogs.openConfirm({
-      message: this.translate.instant('realms.delete_realm', { value: this.realm.id }),
-      ok: this.translate.instant('label.ok'),
-      cancel: this.translate.instant('label.cancel')
-    }).then(confirmed => {
-      if (confirmed) {
-        this.realmsClient.deleteRealm(this.realm)
-          .then(() => this.loadRealms())
-          .then(() => this.selectRealm(this.ownerRealm))
-          .catch(error => this.snackBarOpen(
-            this.translate.instant('general.error_deleting', { value: this.realm.id }),
-            this.translate.instant('label.close'),
-            this.snackBarErrorConfig));
-      }
-    });
   }
 
 }

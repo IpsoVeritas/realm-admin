@@ -1,28 +1,46 @@
-<div class="content mat-elevation-z0">
+<mat-toolbar class="content-header">
+  <app-stripe></app-stripe>
+  <mat-toolbar-row>
+    <mat-icon class="menu-icon" (click)="events.publish('toggle_drawer')">menu</mat-icon>
+    <span class="mat-display-1">Realms</span>
+    <span class="mat-spacer"></span>
+    <button mat-button color="accent" (click)="create()">
+      <mat-icon>add_circle</mat-icon> Create realm
+    </button>
+    <button mat-icon-button color="accent" (click)="create()">
+      <mat-icon>add_circle</mat-icon>
+    </button>
+  </mat-toolbar-row>
+</mat-toolbar>
 
-  <mat-table #table [dataSource]="dataSource" matSort>
+<mat-table #table [dataSource]="dataSource" matSort>
 
-    <!-- Name Column -->
-    <ng-container matColumnDef="id">
-      <mat-header-cell *matHeaderCellDef mat-sort-header>
-        <h2 translate>entities.Realms</h2>
-      </mat-header-cell>
-      <mat-cell *matCellDef="let realm" (click)="select(realm)">{{realm.name}}</mat-cell>
-    </ng-container>
+  <!-- Name Column -->
+  <ng-container matColumnDef="name">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
+    <mat-cell *matCellDef="let realm">{{realm.name}}</mat-cell>
+  </ng-container>
 
-    <!-- Action Column -->
-    <ng-container matColumnDef="action">
-      <mat-header-cell *matHeaderCellDef>
-        <mat-icon (click)="create()" color="accent">add_circle</mat-icon>
-      </mat-header-cell>
-      <mat-cell *matCellDef="let realm">
-        <mat-icon *ngIf="session.realm != realm.id" (click)="delete(realm)" color="accent">remove_circle_outline</mat-icon>
-      </mat-cell>
-    </ng-container>
+  <!-- Description Column -->
+  <ng-container matColumnDef="description">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Description</mat-header-cell>
+    <mat-cell *matCellDef="let realm">{{realm.description}}</mat-cell>
+  </ng-container>
 
-    <mat-header-row *matHeaderRowDef="displayedColumns" class="mat-toolbar"></mat-header-row>
-    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  <!-- Action Column -->
+  <ng-container matColumnDef="action">
+    <mat-header-cell *matHeaderCellDef>
+    </mat-header-cell>
+    <mat-cell *matCellDef="let realm">
 
-  </mat-table>
+      <button mat-icon-button color="accent" (click)="delete(realm)" *ngIf="session.realm != realm.id">
+        <mat-icon>delete</mat-icon>
+      </button>
 
-</div>
+    </mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumns" class="mat-toolbar"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+</mat-table>

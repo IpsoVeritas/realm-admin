@@ -1,10 +1,12 @@
-<div class="banner" [style.background-image]="bannerImage"></div>
+<div class="banner" [style.background-image]="bannerImage">
+  <div class="mat-display-1">{{session.realm}}</div>
+</div>
 
-<mat-toolbar>
+<mat-toolbar class="content-header">
   <app-stripe></app-stripe>
   <mat-toolbar-row>
     <mat-icon class="menu-icon" (click)="events.publish('toggle_drawer')">menu</mat-icon>
-    <h1> Welcome</h1>
+    <span class="mat-display-1">{{session.realm}}</span>
   </mat-toolbar-row>
 </mat-toolbar>
 

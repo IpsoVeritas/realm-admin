@@ -1,0 +1,33 @@
+.content-header {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.mat-table {
+  margin: 10px 30px;
+
+  .mat-header-row {
+    background: none;
+  }
+}
+
+.cdk-column-name {
+  flex: 1 1 0%;
+
+  @media (max-width: 550px) {
+    flex: 1 0 auto;
+  }
+}
+
+.cdk-column-description {
+  flex: 2 1 0%;
+
+  @media (max-width: 550px) {
+    display: none;
+  }
+}
+
+.cdk-column-action {
+  cursor: pointer;
+  flex: 0 1 40px;
+  min-width: 40px;
+}

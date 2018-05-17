@@ -5,6 +5,16 @@
   align-items: center;
   background-size: cover;
   background-position: center center;
+  overflow: hidden;
+
+  div {
+    color: #fff;
+    background: rgba(#000000, 0.2);
+    padding-left: 30px;
+    width: 842px;
+    height: 130px;
+    line-height: 130px;
+  }
 }
 
 .mat-toolbar {
