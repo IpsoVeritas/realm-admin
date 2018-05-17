@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { BootmodeGuard, LoginGuard } from './shared/guards';
 
+import { RealmComponent } from './realm.component';
 import { BootstrapComponent } from './pages/bootstrap/bootstrap.component';
 import { LoginComponent } from './pages/login/login.component';
 import { HomeComponent } from './pages/home/home.component';
@@ -12,10 +13,10 @@ import { ControllerComponent } from './pages/home/controller/controller.componen
 import { SettingsComponent } from './pages/home/settings/settings.component';
 
 const appRoutes: Routes = [
-  { path: 'bootstrap', component: BootstrapComponent, canActivate: [BootmodeGuard] },
-  { path: ':realm/login', component: LoginComponent, canActivate: [] },
+  { path: ':realm/bootstrap', component: BootstrapComponent, canActivate: [BootmodeGuard] },
+  { path: ':realm/login', component: LoginComponent, canActivate: [BootmodeGuard, LoginGuard] },
   {
-    path: ':realm/home', component: HomeComponent, canActivate: [],
+    path: ':realm/home', component: HomeComponent, canActivate: [BootmodeGuard, LoginGuard],
     children: [
       { path: '', component: DashboardComponent },
       { path: 'dashboard', component: DashboardComponent },
@@ -23,13 +24,13 @@ const appRoutes: Routes = [
       { path: 'controller/:id', component: ControllerComponent },
       { path: 'settings', component: SettingsComponent }
     ]
-  }
-  // { path: '**', redirectTo: '/home', pathMatch: 'full' }
+  },
+  { path: '**', component: RealmComponent }
 ];
 
 @NgModule({
   imports: [
-    RouterModule.forRoot(appRoutes, { enableTracing: false, useHash: true, onSameUrlNavigation: 'reload' })
+    RouterModule.forRoot(appRoutes, { enableTracing: false, useHash: true })
   ],
   exports: [
     RouterModule

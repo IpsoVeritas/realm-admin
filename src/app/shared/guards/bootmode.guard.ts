@@ -12,21 +12,19 @@ export class BootmodeGuard implements CanActivate {
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
+    const realm = route.paramMap.get('realm');
     return this.isBootModeEnabled()
       .then(isEnabled => {
-        switch (state.url) {
-          case '/bootstrap': {
-            if (!isEnabled) {
-              this.router.navigate(['/login', {}]);
-            }
-            return isEnabled;
+        if (state.url.endsWith('/bootstrap')) {
+          if (!isEnabled) {
+            this.router.navigate([`/${realm}/login`, {}]);
           }
-          default: {
-            if (isEnabled) {
-              this.router.navigate(['/bootstrap', {}]);
-            }
-            return !isEnabled;
+          return isEnabled;
+        } else {
+          if (isEnabled) {
+            this.router.navigate([`/${realm}/bootstrap`, {}]);
           }
+          return !isEnabled;
         }
       });
   }

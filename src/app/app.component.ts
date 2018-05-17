@@ -45,26 +45,16 @@ export class AppComponent implements OnInit {
     } else {
       this.useLanguage(this.session.getItem('language', this.translate.getBrowserLang()));
     }
-/*
-    Todo: Check this in a guard and redirect
-    if (params.has('realm')) {
-      this.session.realm = params.get('realm');
-    } else {
-      if (!this.session.realm) {
-        this.session.realm = window.location.host;
-      }
-    }
-*/
 
-/*
-    Todo: Move this to a guard
-    if (this.platform.isMobile && !this.platform.inApp) {
-      this.config.getBackendURL(`/realms/${this.session.realm}/login`)
-        .then(url => encodeURIComponent(url))
-        .then(url => `https://app.plusintegrity.com?data=${url}&label=Login%20to%20${this.session.realm}`)
-        .then(url => window.location.href = url);
-    }
-*/
+    /*
+        Todo: Move this to a guard
+        if (this.platform.isMobile && !this.platform.inApp) {
+          this.config.getBackendURL(`/realms/${this.session.realm}/login`)
+            .then(url => encodeURIComponent(url))
+            .then(url => `https://app.plusintegrity.com?data=${url}&label=Login%20to%20${this.session.realm}`)
+            .then(url => window.location.href = url);
+        }
+    */
     this.servicesClient.pruneTokens(24 * 60 * 60 * 1000); // 1day
 
     if (this.servicesClient.lookupToken(params.get('token')) && params.has('uri')) {

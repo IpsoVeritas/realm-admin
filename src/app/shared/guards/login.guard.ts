@@ -11,22 +11,22 @@ export class LoginGuard implements CanActivate {
     private authClient: AuthClient) { }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
+    const realm = route.paramMap.get('realm');
     return this.authClient.getAuthInfo()
       .then((user: AuthUser) => user.authenticated)
       .catch(() => false)
       .then(isAuthenticated => {
-        switch (state.url) {
-          case '/login': {
-            if (isAuthenticated) {
-              this.router.navigate(['/home', {}]);
-            }
-            return !isAuthenticated;
+        console.log(state.url, realm, isAuthenticated);
+        if (state.url.endsWith('/login')) {
+          if (realm && isAuthenticated) {
+            this.router.navigate([`/${realm}/home`, {}]);
           }
-          default:
-            if (!isAuthenticated) {
-              this.router.navigate(['/login', {}]);
-            }
-            return isAuthenticated;
+          return !isAuthenticated;
+        } else {
+          if (realm && !isAuthenticated) {
+            this.router.navigate([`/${realm}/login`, {}]);
+          }
+          return isAuthenticated;
         }
       });
   }

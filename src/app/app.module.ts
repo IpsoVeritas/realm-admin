@@ -50,6 +50,7 @@ import { SessionService, PlatformService, ConfigService, CryptoService } from '.
 
 import { StripeComponent } from './components/stripe.component';
 
+import { RealmComponent } from './realm.component';
 import { BootstrapComponent } from './pages/bootstrap/bootstrap.component';
 import { LoginComponent } from './pages/login/login.component';
 import { HomeComponent } from './pages/home/home.component';
@@ -70,6 +71,7 @@ export function createTranslateLoader(http: HttpClient) {
   declarations: [
     AppComponent,
     StripeComponent,
+    RealmComponent,
     BootstrapComponent,
     LoginComponent,
     HomeComponent,
