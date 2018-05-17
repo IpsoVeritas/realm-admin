@@ -50,27 +50,35 @@ export class SessionService {
   }
 
   get mandate(): string {
-    return this.getItem('mandate');
+    return this.getItem(`${this.realm}_mandate`);
   }
 
   set mandate(value: string) {
-    this.setItem('mandate', value);
+    this.setItem(`${this.realm}_mandate`, value);
   }
 
   get mandates(): string[] {
-    return this.getItem('mandates');
+    return this.getItem(`${this.realm}_mandates`);
   }
 
   set mandates(value: string[]) {
-    this.setItem('mandates', value);
+    this.setItem(`${this.realm}_mandates`, value);
+  }
+
+  get chain(): string {
+    return this.getItem(`${this.realm}_chain`);
+  }
+
+  set chain(value: string) {
+    this.setItem(`${this.realm}_chain`, value);
   }
 
   get expires(): number {
-    return this.getItem('expires');
+    return this.getItem(`${this.realm}_expires`);
   }
 
   set expires(value: number) {
-    this.setItem('expires', value);
+    this.setItem(`${this.realm}_expires`, value);
   }
 
   get language(): string {
@@ -95,14 +103,6 @@ export class SessionService {
 
   set key(value: Object) {
     this.setItem('key', value);
-  }
-
-  get chain(): string {
-    return this.getItem('chain');
-  }
-
-  set chain(value: string) {
-    this.setItem('chain', value);
   }
 
 }

@@ -112,7 +112,7 @@ export class LoginComponent implements OnInit {
           .then(url => {
             if (this.platform.inApp) {
               this.platform.handleURI(url)
-                .then(() => this.poll(realm, authInfo.token))
+                .then(() => this.poll(authInfo.token))
                 .catch(() => this.webviewClient.cancel());
             } else {
               this.qrUri = url;
@@ -122,18 +122,19 @@ export class LoginComponent implements OnInit {
               this.qrUriTimer = setTimeout(() => this.start(realm), this.qrTimeout);
               this.progressTimer = setInterval(() => this.updateCountdown(), 100);
               this.qrUriTimestamp = Date.now();
-              this.poll(realm, authInfo.token);
+              this.poll(authInfo.token);
             }
           })
           .then(() => authInfo)));
   }
 
-  poll(realm: string, token: string, count = 1): void {
+  poll(token: string, count = 1): void {
     this.authClient.getAuthInfo(token)
       .then((user: AuthUser) => {
         if (user.authenticated && user.mandates && user.chain && !user.expired) {
           clearTimeout(this.qrUriTimer);
           clearTimeout(this.progressTimer);
+          this.session.realm = this.activeRealm;
           this.session.mandates = user.mandates;
           this.session.chain = user.chain;
           this.session.expires = user.exp.getTime();
@@ -144,17 +145,16 @@ export class LoginComponent implements OnInit {
           ).then(mandate => this.session.mandate = mandate)
             .then(() => this.authClient.getAuthInfo())
             .then(() => this.events.publish('login'))
-            .then(() => this.session.realm = this.activeRealm)
             .then(() => this.router.navigate([`/${this.activeRealm}/home`, {}]))
             .catch(error => {
               if (error && error.error) {
                 console.error(error);
                 this.snackBar.open(error.error, this.translate.instant('label.close'), { duration: 5000, panelClass: 'error' });
               }
-              this.start(realm);
+              this.start(this.activeRealm);
             });
         } else {
-          this.pollTimer = setTimeout(() => this.poll(realm, token, count + 1), 1000);
+          this.pollTimer = setTimeout(() => this.poll(token, count + 1), 1000);
         }
       });
   }
