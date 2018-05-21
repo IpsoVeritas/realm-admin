@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class SessionService {
 
+  public realm: string;
+
   public getItem(name: string, defaultValue?: any): any {
     try {
       return localStorage.getItem(name) ? JSON.parse(localStorage.getItem(name)) : defaultValue;
@@ -13,7 +15,6 @@ export class SessionService {
   }
 
   public setItem(name: string, value: any | null | undefined) {
-    console.log(`${name} -> ${JSON.stringify(value)}`);
     if (value === null || value === undefined) {
       this.removeItem(name);
     } else {
@@ -23,14 +24,6 @@ export class SessionService {
 
   public removeItem(name: string) {
     localStorage.removeItem(name);
-  }
-
-  get realm(): string {
-    return this.getItem('realm');
-  }
-
-  set realm(value: string) {
-    this.setItem('realm', value);
   }
 
   get url(): string {

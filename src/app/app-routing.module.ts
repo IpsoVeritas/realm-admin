@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { BootmodeGuard, LoginGuard } from './shared/guards';
+import { RealmGuard, BootmodeGuard, LoginGuard } from './shared/guards';
 
 import { RealmComponent } from './realm.component';
 import { BootstrapComponent } from './pages/bootstrap/bootstrap.component';
@@ -14,10 +14,10 @@ import { ControllerComponent } from './pages/home/controller/controller.componen
 import { SettingsComponent } from './pages/home/settings/settings.component';
 
 const appRoutes: Routes = [
-  { path: ':realm/bootstrap', component: BootstrapComponent, canActivate: [BootmodeGuard] },
-  { path: ':realm/login', component: LoginComponent, canActivate: [BootmodeGuard, LoginGuard] },
+  { path: ':realm/bootstrap', component: BootstrapComponent, canActivate: [RealmGuard, BootmodeGuard] },
+  { path: ':realm/login', component: LoginComponent, canActivate: [RealmGuard, BootmodeGuard, LoginGuard] },
   {
-    path: ':realm/home', component: HomeComponent, canActivate: [BootmodeGuard, LoginGuard],
+    path: ':realm/home', component: HomeComponent, canActivate: [RealmGuard, BootmodeGuard, LoginGuard],
     children: [
       { path: '', component: DashboardComponent },
       { path: 'dashboard', component: DashboardComponent },
@@ -27,17 +27,19 @@ const appRoutes: Routes = [
       { path: 'settings', component: SettingsComponent }
     ]
   },
+  { path: ':realm', component: RealmComponent },
   { path: '**', component: RealmComponent }
 ];
 
 @NgModule({
   imports: [
-    RouterModule.forRoot(appRoutes, { enableTracing: false, useHash: true })
+    RouterModule.forRoot(appRoutes, { enableTracing: true, useHash: true })
   ],
   exports: [
     RouterModule
   ],
   providers: [
+    RealmGuard,
     BootmodeGuard,
     LoginGuard
   ]

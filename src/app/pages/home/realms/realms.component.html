@@ -33,9 +33,15 @@
     </mat-header-cell>
     <mat-cell *matCellDef="let realm">
 
-      <button mat-icon-button color="accent" (click)="delete(realm)" *ngIf="session.realm != realm.id">
-        <mat-icon>delete</mat-icon>
+      <button mat-icon-button color="accent" [matMenuTriggerFor]="realmMenu">
+        <mat-icon>more_vert</mat-icon>
       </button>
+
+      <mat-menu #realmMenu="matMenu" yPosition="below" [overlapTrigger]="false">
+        <button mat-menu-item (click)="invite(realm)">Send admin invite</button>
+        <button mat-menu-item (click)="delete(realm)" *ngIf="session.realm != realm.id && !realm.ownerRealm">Delete realm</button>
+      </mat-menu>
+
 
     </mat-cell>
   </ng-container>

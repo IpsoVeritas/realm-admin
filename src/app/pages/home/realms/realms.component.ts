@@ -2,11 +2,15 @@ import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import { MatTableDataSource, } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
+import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { DialogsService, EventsService } from '@brickchain/integrity-angular';
 import { SessionService } from '../../../shared/services';
-import { RealmsClient } from '../../../shared/api-clients';
+import { RealmsClient, InvitesClient } from '../../../shared/api-clients';
 import { Realm } from '../../../shared/models';
+import { RoleInviteDialogComponent } from '../mandates/role-invite-dialog.component';
+import { Invite } from '../../../shared/models';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'app-realms',
@@ -30,6 +34,8 @@ export class RealmsComponent implements OnInit {
     public session: SessionService,
     public events: EventsService,
     private realmsClient: RealmsClient,
+    private invitesClient: InvitesClient,
+    private dialog: MatDialog,
     private snackBar: MatSnackBar) { }
 
   ngOnInit() {
@@ -61,6 +67,30 @@ export class RealmsComponent implements OnInit {
 
   select(realm: Realm) {
     this.session.realm = realm.id;
+  }
+
+  invite(realm: Realm) {
+    this.dialog.open(RoleInviteDialogComponent, { data: new Invite() })
+      .afterClosed().toPromise()
+      .then(invite => {
+        if (invite) {
+          invite.realm = realm.name;
+          invite.role = realm.adminRoles[0];
+          invite.type = 'invite';
+          invite.messageType = 'email';
+          invite.messageURI = 'mailto:' + invite.name;
+          this.invitesClient.sendInvite(invite)
+            .then(() => this.snackBarOpen(
+              this.translate.instant('invites.admin_invite_sent', { value: invite.name }),
+              this.translate.instant('label.close'),
+              { duration: 3000 }))
+            .catch(error => this.snackBarOpen(
+              this.translate.instant('invites.error_sending', { value: invite.name }),
+              this.translate.instant('label.close'),
+              this.snackBarErrorConfig));
+        }
+      });
+
   }
 
   delete(realm: Realm) {

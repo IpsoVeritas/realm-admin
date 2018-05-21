@@ -1,28 +1,28 @@
 import { Injectable } from '@angular/core';
 import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { HttpClient, HttpResponseBase } from '@angular/common/http';
-import { ConfigService } from '../services';
+import { ConfigService, SessionService } from '../services';
 
 @Injectable()
 export class BootmodeGuard implements CanActivate {
 
   constructor(private router: Router,
+    private session: SessionService,
     private http: HttpClient,
     private config: ConfigService) {
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
-    const realm = route.paramMap.get('realm');
     return this.isBootModeEnabled()
       .then(isEnabled => {
         if (state.url.endsWith('/bootstrap')) {
           if (!isEnabled) {
-            this.router.navigate([`/${realm}/login`, {}]);
+            this.router.navigate([`/${this.session.realm}/login`, {}]);
           }
           return isEnabled;
         } else {
           if (isEnabled) {
-            this.router.navigate([`/${realm}/bootstrap`, {}]);
+            this.router.navigate([`/${this.session.realm}/bootstrap`, {}]);
           }
           return !isEnabled;
         }

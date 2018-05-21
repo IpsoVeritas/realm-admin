@@ -72,7 +72,10 @@ export class AppComponent implements OnInit {
     this.events.subscribe('ready', isReady => this.ready = isReady);
     this.events.subscribe('login', () => this.startExpirationTimer());
 
-    this.startExpirationTimer();
+    /*
+      Todo: start expiration timer when switching realms
+      this.startExpirationTimer();
+    */
 
   }
 
