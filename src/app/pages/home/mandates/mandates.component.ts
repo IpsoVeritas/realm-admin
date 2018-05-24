@@ -96,7 +96,6 @@ export class MandatesComponent implements OnInit {
   selectRole(roleId: string) {
     this.rolesClient.getRole(this.session.realm, roleId)
       .then(role => {
-        this.session.setItem('role', role.id);
         this.role = role;
         this.dataSource = new MatTableDataSource(this.getMandates(this.role));
         this.dataSource.sort = this.sort;
@@ -143,7 +142,7 @@ export class MandatesComponent implements OnInit {
       if (confirmed) {
         this.rolesClient.deleteRole(role)
           .then(() => this.events.publish('roles_updated'))
-          .then(() => this.router.navigateByUrl('/home'))
+          .then(() => this.router.navigateByUrl(`/${this.session.realm}/home`))
           .catch(error => this.snackBarOpen(
             this.translate.instant('general.error_deleting', { value: role.description }),
             this.translate.instant('label.close'),

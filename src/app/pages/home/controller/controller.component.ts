@@ -118,7 +118,7 @@ export class ControllerComponent implements OnInit, OnDestroy {
       if (confirmed) {
         this.controllersClient.deleteController(this.controller)
           .then(() => this.events.publish('controllers_updated'))
-          .then(() => this.router.navigateByUrl('/home'))
+          .then(() => this.router.navigateByUrl(`/${this.session.realm}/home`))
           .catch(error => this.snackBarOpen(
             this.translate.instant('general.error_deleting', { value: this.controller.name }),
             this.translate.instant('label.close'),

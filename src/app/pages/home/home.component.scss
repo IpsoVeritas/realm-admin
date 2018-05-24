@@ -195,7 +195,6 @@ mat-sidenav-container {
       }
     }
   }
-
 }
 
 @media (max-width: 1420px) {
@@ -229,6 +228,12 @@ mat-sidenav-container {
 
 @media (max-width: 850px) {
   .mat-sidenav-container {
+    .mat-sidenav {
+      .realm-list {
+        display: none;
+      }
+    }
+
     .mat-sidenav-content {
       .content {
         flex: 1 0 auto;

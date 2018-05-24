@@ -45,6 +45,10 @@ body {
   align-items: baseline;
 }
 
+.profile {
+  min-height: 50px;
+}
+
 .profile-popup {
   margin-top: 20px;
   width: 270px;
@@ -71,6 +75,10 @@ body {
 .content-header {
   .menu-icon {
     margin-right: 10px;
+    font-size: 30px !important;
+    width: 30px !important;
+    height: 30px !important;
+    line-height: 30px !important;
   }
 
   .mat-toolbar-row {

@@ -10,34 +10,45 @@
 
   <div class="settings-form">
 
-    <mat-form-field>
-      <input matInput [(ngModel)]="realm.description" (ngModelChange)="isChanged=true" placeholder="{{'label.description' | translate}}">
-    </mat-form-field>
+    <integrity-section title="General" enableExpansion="true" expansionId="settings.general">
+      <mat-form-field>
+        <input matInput [(ngModel)]="realm.description" (ngModelChange)="isChanged=true" placeholder="{{'label.description' | translate}}">
+      </mat-form-field>
+      <p class="mat-caption">This is what your users see when they connect. It can be the name of your organisation, or the name of your service.</p>
+    </integrity-section>
 
-    <mat-form-field>
-      <mat-select [(ngModel)]="realm.guestRole" (ngModelChange)="isChanged=true" placeholder="{{'settings.guest_role' | translate}}">
-        <mat-option [value]="undefined">
-          {{'settings.no_public_role' | translate}}
-        </mat-option>
-        <mat-option *ngFor="let role of roles" [value]="role.name">
-          {{ role.name }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+    <integrity-section title="Guest Role" enableExpansion="true" expansionId="settings.guestRole">
+      <mat-form-field>
+        <mat-select [(ngModel)]="realm.guestRole" (ngModelChange)="isChanged=true" placeholder="{{'settings.guest_role' | translate}}">
+          <mat-option [value]="undefined">
+            {{'settings.no_public_role' | translate}}
+          </mat-option>
+          <mat-option *ngFor="let role of roles" [value]="role.name">
+            {{ role.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <p class="mat-caption">This is the group a user is assigned when automatically joining your realm.</p>
+    </integrity-section>
 
-    <div class="dropzone icon" integrityDragAndDrop (filesDropped)="iconDropped($event)" [extensions]="['png', 'jpg', 'gif', 'svg']"
-      [style.background-image]="iconImage" [class.dnd-dropped]="iconImage">
-      <mat-icon *ngIf="!iconIsProcessing" color="accent">add</mat-icon>
-      <mat-progress-spinner *ngIf="iconIsProcessing" mode="indeterminate" diameter="30" color="accent"></mat-progress-spinner>
-      <input type="file" />
-    </div>
+    <mat-divider></mat-divider>
 
-    <div class="dropzone banner" integrityDragAndDrop (filesDropped)="bannerDropped($event)" [extensions]="['png', 'jpg', 'gif', 'svg']"
-      [style.background-image]="bannerImage" [class.dnd-dropped]="bannerImage">
-      <mat-icon *ngIf="!bannerIsProcessing" color="accent">add</mat-icon>
-      <mat-progress-spinner *ngIf="bannerIsProcessing" mode="indeterminate" diameter="30" color="accent"></mat-progress-spinner>
-      <input type="file" />
-    </div>
+    <integrity-section title="Images" enableExpansion="true" expansionId="settings.images">
+      <p class="mat-caption">Select images to personalise your realm. They will be visible to your users. Please select a dark image for
+        your banner, as your realm name will appear in white. You can directly drag an image from your desktop. </p>
+      <div class="dropzone banner" integrityDragAndDrop (filesDropped)="bannerDropped($event)" [extensions]="['png', 'jpg', 'gif', 'svg']"
+        [style.background-image]="bannerImage" [class.dnd-dropped]="bannerImage">
+        <mat-icon *ngIf="!bannerIsProcessing" color="accent">camera_alt</mat-icon>
+        <mat-progress-spinner *ngIf="bannerIsProcessing" mode="indeterminate" diameter="30" color="accent"></mat-progress-spinner>
+        <input type="file" />
+      </div>
+      <div class="dropzone icon" integrityDragAndDrop (filesDropped)="iconDropped($event)" [extensions]="['png', 'jpg', 'gif', 'svg']"
+        [style.background-image]="iconImage" [class.dnd-dropped]="iconImage">
+        <mat-icon *ngIf="!iconIsProcessing" color="accent">camera_alt</mat-icon>
+        <mat-progress-spinner *ngIf="iconIsProcessing" mode="indeterminate" diameter="30" color="accent"></mat-progress-spinner>
+        <input type="file" />
+      </div>
+    </integrity-section>
 
     <mat-divider></mat-divider>
 

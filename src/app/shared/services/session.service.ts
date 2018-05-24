@@ -35,11 +35,14 @@ export class SessionService {
   }
 
   get url(): string {
-    return this.getItem('url');
+    console.log(`Get url for ${this.realm}`);
+    return this.getItem(`${this.realm}_url`);
   }
 
   set url(value: string) {
-    this.setItem('url', value);
+    if (this.realm) {
+      this.setItem(`${this.realm}_url`, value);
+    }
   }
 
   get backend(): string {

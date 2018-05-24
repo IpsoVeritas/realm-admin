@@ -139,7 +139,7 @@ export class HomeComponent implements OnInit {
         this.rolesClient.createRole(role)
           .then(() => this.loadRoles())
           .then(roles => roles.filter(r => r.name === role.name))
-          .then(roles => this.router.navigateByUrl(`/home/mandates/${roles[0].id}`))
+          .then(roles => this.router.navigateByUrl(`/${this.session.realm}/home/mandates/${roles[0].id}`))
           .catch(error => this.snackBarOpen(
             this.translate.instant('general.error_creating', { value: role.description }),
             this.translate.instant('label.close'),

@@ -35,7 +35,7 @@ export class SettingsComponent implements OnInit {
   };
 
   constructor(private sanitizer: DomSanitizer,
-    private events: EventsService,
+    public events: EventsService,
     private translate: TranslateService,
     private imgTools: Ng2ImgToolsService,
     public session: SessionService,

@@ -19,13 +19,28 @@
     }
   }
 
+  .mat-caption {
+    color: #7f7f7f;
+  }
+
+  .mat-form-field {
+    width: 100%;
+  }
+
   .dropzone {
-    margin: 12px 0;
+    margin: 15px auto;
     display: flex;
     justify-content: center;
     align-items: center;
     background-size: cover;
     background-position: center center;
+
+    .mat-icon {
+      font-size: 30px !important;
+      width: 30px !important;
+      height: 30px !important;
+      line-height: 30px !important;
+    }
 
     &.icon {
       height: 100px;

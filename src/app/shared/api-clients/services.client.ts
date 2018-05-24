@@ -17,7 +17,8 @@ export class ServicesClient extends BaseClient {
     const token = this.generateToken(service);
     switch (service.mode) {
       case 'redirect': {
-        const url = `${service.url}${service.url.indexOf('?') === -1 ? '?' : '&'}token=${token}`;
+        const referer = `${window.location.href}${window.location.href.indexOf('?') === -1 ? '?' : '&'}token=${token}`;
+        const url = `${service.url}${service.url.indexOf('?') === -1 ? '?' : '&'}referer=${encodeURIComponent(referer)}`;
         window.location.href = url;
         return Promise.resolve(null);
       }

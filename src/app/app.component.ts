@@ -57,12 +57,13 @@ export class AppComponent implements OnInit {
     */
     this.servicesClient.pruneTokens(24 * 60 * 60 * 1000); // 1day
 
+    console.log(params.get('token'), params.get('uri'));
     if (this.servicesClient.lookupToken(params.get('token')) && params.has('uri')) {
-      this.router.navigate(['/home/controllers'], {
+      this.router.navigate([`/${this.session.realm}/home`], {
         queryParams: { token: params.get('token'), uri: decodeURIComponent(params.get('uri')) }
       });
     } else if (this.session.url) {
-      this.router.navigate([this.session.url, {}]);
+      // this.router.navigate([this.session.url, {}]);
     }
 
     this.router.events
