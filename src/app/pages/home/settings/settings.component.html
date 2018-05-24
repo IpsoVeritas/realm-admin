@@ -1,3 +1,11 @@
+<mat-toolbar class="content-header">
+  <app-stripe></app-stripe>
+  <mat-toolbar-row>
+    <mat-icon class="menu-icon" (click)="events.publish('toggle_drawer')">menu</mat-icon>
+    <span class="mat-display-1">Settings</span>
+    <span class="mat-spacer"></span>
+  </mat-toolbar-row>
+</mat-toolbar>
 <div class="content mat-elevation-z0" *ngIf="realm && roles">
 
   <div class="settings-form">
@@ -41,12 +49,3 @@
   </div>
 
 </div>
-
-<div class="content guide" [hidden]="session.getItem('hide_settings_guide',false)">
-  <button mat-icon-button color="accent">
-    <mat-icon (click)="session.setItem('hide_settings_guide',true)">cancel</mat-icon>
-  </button>
-  <div [innerHTML]="'guide.settings' | translate"></div>
-</div>
-
-<pre class="content developer" *ngIf="session.getItem('developer',false)">{{realm | json }}</pre>

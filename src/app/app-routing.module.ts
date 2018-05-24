@@ -33,7 +33,7 @@ const appRoutes: Routes = [
 
 @NgModule({
   imports: [
-    RouterModule.forRoot(appRoutes, { enableTracing: true, useHash: true })
+    RouterModule.forRoot(appRoutes, { enableTracing: false, useHash: true })
   ],
   exports: [
     RouterModule

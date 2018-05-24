@@ -134,7 +134,10 @@ export class LoginComponent implements OnInit {
         if (user.authenticated && user.mandates && user.chain && !user.expired) {
           clearTimeout(this.qrUriTimer);
           clearTimeout(this.progressTimer);
+          const realms = this.session.realms;
+          realms.push(this.activeRealm);
           this.session.realm = this.activeRealm;
+          this.session.realms = realms.sort().filter((elem, pos, arr) => arr.indexOf(elem) === pos);
           this.session.mandates = user.mandates;
           this.session.chain = user.chain;
           this.session.expires = user.exp.getTime();

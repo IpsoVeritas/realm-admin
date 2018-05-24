@@ -109,6 +109,12 @@
       <button mat-menu-item (click)="logout()">
         <mat-icon>exit_to_app</mat-icon>{{ 'label.logout' | translate }}
       </button>
+      <div *ngIf="session.realms.length > 1">
+        <mat-divider></mat-divider>
+        <button mat-menu-item routerLink="/{{realm}}/home" *ngFor="let realm of session.realms">
+          <mat-icon>domain</mat-icon>{{ realm }}
+        </button>
+      </div>
     </mat-menu>
 
     <!--

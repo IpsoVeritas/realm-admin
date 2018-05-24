@@ -72,6 +72,7 @@ export class HomeComponent implements OnInit {
     this.events.subscribe('active_http_requests', count => this.requestCount = count);
     this.events.subscribe('toggle_drawer', () => this.drawer.toggle());
     this.events.subscribe('roles_updated', () => this.loadRoles());
+    this.events.subscribe('realm_updated', () => this.loadRealm());
     this.events.subscribe('controllers_updated', () => this.loadControllers());
     Promise.all([this.loadRealm(), this.loadRoles(), this.loadControllers()])
       .then(() => this.accessClient.getUserAccess())

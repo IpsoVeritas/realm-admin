@@ -65,10 +65,6 @@ export class RealmsComponent implements OnInit {
     });
   }
 
-  select(realm: Realm) {
-    this.session.realm = realm.id;
-  }
-
   invite(realm: Realm) {
     this.dialog.open(RoleInviteDialogComponent, { data: new Invite() })
       .afterClosed().toPromise()

@@ -26,6 +26,14 @@ export class SessionService {
     localStorage.removeItem(name);
   }
 
+  get realms(): string[] {
+    return this.getItem('realms', []);
+  }
+
+  set realms(value: string[]) {
+    this.setItem('realms', value);
+  }
+
   get url(): string {
     return this.getItem('url');
   }
