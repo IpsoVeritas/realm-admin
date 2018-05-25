@@ -1,11 +1,8 @@
 import { Component, HostBinding, OnInit } from '@angular/core';
-import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { URLSearchParams } from '@angular/http';
 import { TranslateService } from '@ngx-translate/core';
 import { EventsService } from '@brickchain/integrity-angular';
 import { PlatformService, ConfigService, SessionService } from './shared/services';
-import { ControllersClient, ServicesClient } from './shared/api-clients';
-import { AuthUser } from './shared/models';
 import 'rxjs/add/operator/filter';
 
 @Component({
@@ -17,18 +14,12 @@ export class AppComponent implements OnInit {
 
   @HostBinding('class.ready') ready = false;
 
-  expirationTimer: any;
-
   constructor(
-    private router: Router,
-    private activatedRoute: ActivatedRoute,
     private translate: TranslateService,
     private platform: PlatformService,
     private config: ConfigService,
     private session: SessionService,
-    private events: EventsService,
-    private controllersClient: ControllersClient,
-    private servicesClient: ServicesClient) {
+    private events: EventsService) {
     translate.setDefaultLang('en');
   }
 
@@ -55,37 +46,9 @@ export class AppComponent implements OnInit {
             .then(url => window.location.href = url);
         }
     */
-    this.servicesClient.pruneTokens(24 * 60 * 60 * 1000); // 1day
-
-    console.log(params.get('token'), params.get('uri'));
-    if (this.servicesClient.lookupToken(params.get('token')) && params.has('uri')) {
-      this.router.navigate([`/${this.session.realm}/home`], {
-        queryParams: { token: params.get('token'), uri: decodeURIComponent(params.get('uri')) }
-      });
-    } else if (this.session.url) {
-      // this.router.navigate([this.session.url, {}]);
-    }
-
-    this.router.events
-      .filter((event) => event instanceof NavigationEnd)
-      .subscribe((event: NavigationEnd) => this.session.url = event.urlAfterRedirects);
 
     this.events.subscribe('ready', isReady => this.ready = isReady);
-    this.events.subscribe('login', () => this.startExpirationTimer());
 
-    /*
-      Todo: start expiration timer when switching realms
-      this.startExpirationTimer();
-    */
-
-  }
-
-  startExpirationTimer(): void {
-    clearTimeout(this.expirationTimer);
-    const timeout = this.session.expires - Date.now();
-    if (timeout > 0) {
-      this.expirationTimer = setTimeout(() => this.events.publish('logout'), timeout);
-    }
   }
 
   useLanguage(language: string) {

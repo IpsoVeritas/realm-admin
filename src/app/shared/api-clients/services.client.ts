@@ -39,30 +39,30 @@ export class ServicesClient extends BaseClient {
 
   public generateToken(service: Service): string {
     const token = uuid();
-    const services = this.session.getItem('pending_services', {});
+    const services = this.session.getRealmItem('pending_services', {});
     services[token] = { timestamp: Date.now(), service: service };
-    this.session.setItem('pending_services', services);
+    this.session.setRealmItem('pending_services', services);
     return token;
   }
 
   public lookupToken(token: string): { timestamp: number, service: Service } {
-    const services = this.session.getItem('pending_services', {});
+    const services = this.session.getRealmItem('pending_services', {});
     return services[token];
   }
 
   public deleteToken(token: string): void {
-    const services = this.session.getItem('pending_services', {});
+    const services = this.session.getRealmItem('pending_services', {});
     delete services[token];
-    this.session.setItem('pending_services', services);
+    this.session.setRealmItem('pending_services', services);
   }
 
   public pruneTokens(maxAge: number) {
     const now = Date.now();
     const services = {};
-    Object.entries(this.session.getItem('pending_services', {}))
+    Object.entries(this.session.getRealmItem('pending_services', {}))
       .filter(([key, value]) => now - value['timestamp'] < maxAge)
       .forEach(([key, value]) => services[key] = value);
-    this.session.setItem('pending_services', services);
+    this.session.setRealmItem('pending_services', services);
   }
 
 }

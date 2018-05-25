@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
@@ -20,7 +20,9 @@ import * as uuid from 'uuid/v1';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, AfterViewInit {
+
+  maxServiceTokenAge = 5 * 60 * 1000;
 
   requestCount = 0;
   user: User;
@@ -30,6 +32,8 @@ export class HomeComponent implements OnInit {
   controllers: Controller[];
 
   iconImage: SafeStyle;
+
+  sessionTimer: any;
 
   public drawerMode: string;
   public profileMode: string;
@@ -80,7 +84,25 @@ export class HomeComponent implements OnInit {
       .then(() => this.events.publish('ready', true))
       .then(() => this.controllersClient.getControllers(this.session.realm))
       .then(controllers => controllers.map(controller => this.controllersClient.syncController(controller)))
+      .then(() => this.startServiceTokenPruning())
+      .then(() => this.startSessionTimer())
       .catch(error => console.warn('Error syncing controllers', error));
+  }
+
+  ngAfterViewInit() {
+    const token = this.route.snapshot.queryParamMap.get('token');
+    const uri = this.route.snapshot.queryParamMap.get('uri');
+    if (token && uri) {
+      const data = this.servicesClient.lookupToken(token);
+      if (data && Date.now() - data.timestamp < this.maxServiceTokenAge) {
+        this.bindController(token, uri);
+      } else {
+        this.snackBarOpen(
+          this.translate.instant('binding.error_invalid_token'),
+          this.translate.instant('label.close'),
+          this.snackBarErrorConfig);
+      }
+    }
   }
 
   loadRealm() {
@@ -109,6 +131,18 @@ export class HomeComponent implements OnInit {
       .then(controllers => controllers.filter(controller => !controller.hidden))
       .then(controllers => this.controllers = controllers)
       .then(() => this.controllers);
+  }
+
+  startServiceTokenPruning(): void {
+    setInterval(() => this.servicesClient.pruneTokens(this.maxServiceTokenAge), 60 * 1000);
+  }
+
+  startSessionTimer(): void {
+    clearTimeout(this.sessionTimer);
+    const timeout = this.session.expires - Date.now();
+    if (timeout > 0) {
+      this.sessionTimer = setTimeout(() => this.events.publish('logout'), timeout);
+    }
   }
 
   logout() {

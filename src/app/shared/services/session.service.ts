@@ -26,6 +26,18 @@ export class SessionService {
     localStorage.removeItem(name);
   }
 
+  public getRealmItem(name: string, defaultValue?: any): any {
+    return this.getItem(`${this.realm}_${name}`, defaultValue);
+  }
+
+  public setRealmItem(name: string, value: any | null | undefined) {
+    this.setItem(`${this.realm}_${name}`, value);
+  }
+
+  public removeRealmItem(name: string) {
+    this.removeItem(`${this.realm}_${name}`);
+  }
+
   get realms(): string[] {
     return this.getItem('realms', []);
   }
@@ -35,13 +47,12 @@ export class SessionService {
   }
 
   get url(): string {
-    console.log(`Get url for ${this.realm}`);
-    return this.getItem(`${this.realm}_url`);
+    return this.getRealmItem('url');
   }
 
   set url(value: string) {
     if (this.realm) {
-      this.setItem(`${this.realm}_url`, value);
+      this.setRealmItem('url', value);
     }
   }
 
@@ -54,35 +65,35 @@ export class SessionService {
   }
 
   get mandate(): string {
-    return this.getItem(`${this.realm}_mandate`);
+    return this.getRealmItem('mandate');
   }
 
   set mandate(value: string) {
-    this.setItem(`${this.realm}_mandate`, value);
+    this.setRealmItem('mandate', value);
   }
 
   get mandates(): string[] {
-    return this.getItem(`${this.realm}_mandates`);
+    return this.getRealmItem('mandates');
   }
 
   set mandates(value: string[]) {
-    this.setItem(`${this.realm}_mandates`, value);
+    this.setRealmItem('mandates', value);
   }
 
   get chain(): string {
-    return this.getItem(`${this.realm}_chain`);
+    return this.getRealmItem('chain');
   }
 
   set chain(value: string) {
-    this.setItem(`${this.realm}_chain`, value);
+    this.setRealmItem('chain', value);
   }
 
   get expires(): number {
-    return this.getItem(`${this.realm}_expires`);
+    return this.getRealmItem('expires');
   }
 
   set expires(value: number) {
-    this.setItem(`${this.realm}_expires`, value);
+    this.setRealmItem('expires', value);
   }
 
   get language(): string {

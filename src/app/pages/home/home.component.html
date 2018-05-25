@@ -58,7 +58,7 @@
       </a>
     </mat-nav-list>
 
-    <integrity-section title="Manage user groups" enableExpansion="true" expansionId="home.1" class="nav-list">
+    <integrity-section title="Manage user groups" enableExpansion="true" expansionId="home.roles" class="nav-list">
       <mat-nav-list>
         <a mat-list-item [routerLink]="['mandates', role.id]" routerLinkActive="active" (click)="drawerMode == 'over' ? drawer.close() : false"
           *ngFor="let role of roles">
@@ -68,7 +68,7 @@
       </mat-nav-list>
     </integrity-section>
 
-    <integrity-section title="Manage services" enableExpansion="true" expansionId="home.2" class="nav-list">
+    <integrity-section title="Manage services" enableExpansion="true" expansionId="home.controllers" class="nav-list">
       <mat-nav-list>
         <a mat-list-item [routerLink]="['controller', controller.id]" routerLinkActive="active" (click)="drawerMode == 'over' ? drawer.close() : false"
           *ngFor="let controller of controllers">
