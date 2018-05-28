@@ -25,6 +25,7 @@ export class ControllerComponent implements OnInit, OnDestroy {
 
   isSnackBarOpen = false;
 
+  resumeHandler: Function;
   stopListening: Function;
 
   realmId: string;
@@ -56,21 +57,23 @@ export class ControllerComponent implements OnInit, OnDestroy {
     private cryptoService: CryptoService,
     private snackBar: MatSnackBar
   ) {
+    this.resumeHandler = () => this.resume();
   }
 
   ngOnInit() {
     this.realmId = this.session.realm;
     this.route.paramMap.subscribe(paramMap => this.loadController(paramMap.get('id')));
+    this.events.subscribe('session_resumed', this.resumeHandler);
   }
 
   ngOnDestroy() {
     if (this.stopListening !== undefined) {
       this.stopListening();
     }
+    this.events.unsubscribe('session_resumed', this.resumeHandler);
   }
 
   loadController(controllerId: string) {
-    console.log(this.realmId, controllerId);
     this.controllersClient.getController(this.realmId, controllerId)
       .then(controller => this.cryptoService.filterMandates(controller.adminRoles)
         .then(mandates => this.cryptoService.createMandateToken(
@@ -89,6 +92,23 @@ export class ControllerComponent implements OnInit, OnDestroy {
             this.uri = this.sanitizer.bypassSecurityTrustResourceUrl(uri);
           }
         })));
+  }
+
+  resume() {
+    this.cryptoService.filterMandates(this.controller.adminRoles)
+      .then(mandates => this.cryptoService.createMandateToken(
+        this.controller.descriptor.adminUI,
+        mandates,
+        (this.session.expires - Date.now()) / 1000
+      ).then(token => {
+        console.log(`New token: ${token}`);
+        const message = {
+          '@type': 'token-refresh',
+          'token': token
+        };
+        const contentWindow = this.iframe.nativeElement.contentWindow;
+        contentWindow.postMessage(message, this.controller.descriptor.adminUI);
+      }));
   }
 
   edit() {

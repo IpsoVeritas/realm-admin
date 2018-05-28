@@ -62,6 +62,7 @@ import { ControllerComponent } from './pages/home/controller/controller.componen
 import { ControllerAddDialogComponent } from './pages/home/controller/controller-add-dialog.component';
 import { ControllerBindDialogComponent } from './pages/home/controller/controller-bind-dialog.component';
 import { ControllerSettingsDialogComponent } from './pages/home/controller/controller-settings-dialog.component';
+import { SessionTimeoutDialogComponent } from './pages/home/session-timeout-dialog.component';
 import { SettingsComponent } from './pages/home/settings/settings.component';
 
 export function createTranslateLoader(http: HttpClient) {
@@ -83,6 +84,7 @@ export function createTranslateLoader(http: HttpClient) {
     ControllerAddDialogComponent,
     ControllerBindDialogComponent,
     ControllerSettingsDialogComponent,
+    SessionTimeoutDialogComponent,
     SettingsComponent,
     RealmsComponent
   ],
@@ -90,6 +92,7 @@ export function createTranslateLoader(http: HttpClient) {
     ControllerAddDialogComponent,
     ControllerBindDialogComponent,
     ControllerSettingsDialogComponent,
+    SessionTimeoutDialogComponent,
     RoleInviteDialogComponent
   ],
   imports: [

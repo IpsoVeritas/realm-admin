@@ -12,6 +12,7 @@ import { AccessClient, RealmsClient, RolesClient, ControllersClient, ServicesCli
 import { User, Realm, Role, Controller, Service } from '../../shared/models';
 import { ControllerAddDialogComponent } from './controller/controller-add-dialog.component';
 import { ControllerBindDialogComponent } from './controller/controller-bind-dialog.component';
+import { SessionTimeoutDialogComponent } from './session-timeout-dialog.component';
 
 import * as uuid from 'uuid/v1';
 
@@ -142,7 +143,20 @@ export class HomeComponent implements OnInit, AfterViewInit {
     const timeout = this.session.expires - Date.now();
     if (timeout > 0) {
       this.sessionTimer = setTimeout(() => this.events.publish('logout'), timeout);
+    } else {
+      this.timeout();
     }
+  }
+
+  timeout() {
+    const dialogRef = this.dialog.open(SessionTimeoutDialogComponent, { disableClose: true });
+    dialogRef.afterClosed().toPromise()
+      .then(resumed => {
+        this.events.publish(resumed ? 'session_resumed' : 'logout');
+        if (resumed) {
+          this.startSessionTimer();
+        }
+      });
   }
 
   logout() {
