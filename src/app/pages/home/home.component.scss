@@ -116,6 +116,10 @@ mat-sidenav-container {
         float: left;
         margin: 0 10px;
       }
+
+      .profile-description, .profile-name {
+        max-width: 230px;
+      }
     }
 
     .profile-expansion-panel {
@@ -195,6 +199,13 @@ mat-sidenav-container {
       }
     }
   }
+
+  .profile-description, .profile-name {
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 }
 
 @media (max-width: 1420px) {
@@ -240,6 +251,17 @@ mat-sidenav-container {
         max-width: 100%;
         margin: 0;
         border: none;
+      }
+    }
+  }
+}
+
+@media (max-width: 375px) {
+  .mat-sidenav-container {
+    .mat-sidenav {
+      width: 85%;
+      .profile-description, .profile-name {
+        width: auto;
       }
     }
   }

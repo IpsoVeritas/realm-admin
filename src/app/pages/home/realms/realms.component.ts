@@ -55,7 +55,8 @@ export class RealmsComponent implements OnInit {
         realm.id = name;
         realm.name = name;
         this.realmsClient.createRealm(realm)
-          .then(() => this.dataSource.data.push(realm))
+          .then(() => this.realmsClient.getRealm(realm.id))
+          .then(newRealm => this.dataSource.data.push(newRealm))
           .then(() => this.dataSource.data = this.dataSource.data)
           .catch(error => this.snackBarOpen(
             this.translate.instant('general.error_creating', { value: realm.name }),
@@ -66,6 +67,7 @@ export class RealmsComponent implements OnInit {
   }
 
   invite(realm: Realm) {
+    console.log(realm);
     this.dialog.open(RoleInviteDialogComponent, { data: new Invite() })
       .afterClosed().toPromise()
       .then(invite => {

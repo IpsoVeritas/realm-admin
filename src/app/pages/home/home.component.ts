@@ -7,7 +7,7 @@ import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { EventsService, DialogsService } from '@brickchain/integrity-angular';
-import { SessionService } from '../../shared/services';
+import { PlatformService, SessionService } from '../../shared/services';
 import { AccessClient, RealmsClient, RolesClient, ControllersClient, ServicesClient } from '../../shared/api-clients';
 import { User, Realm, Role, Controller, Service } from '../../shared/models';
 import { ControllerAddDialogComponent } from './controller/controller-add-dialog.component';
@@ -55,6 +55,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     private dialogs: DialogsService,
     private router: Router,
     private route: ActivatedRoute,
+    private platform: PlatformService,
     public session: SessionService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
@@ -160,11 +161,15 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   logout() {
-    this.dialogs.openConfirm({
-      message: this.translate.instant('label.logout'),
-      ok: this.translate.instant('label.ok'),
-      cancel: this.translate.instant('label.cancel')
-    }).then(confirmed => confirmed ? this.events.publish('logout') : false);
+    if (this.platform.inApp) {
+      this.events.publish('logout');
+    } else {
+      this.dialogs.openConfirm({
+        message: this.translate.instant('label.logout'),
+        ok: this.translate.instant('label.ok'),
+        cancel: this.translate.instant('label.cancel')
+      }).then(confirmed => confirmed ? this.events.publish('logout') : false);
+    }
   }
 
   toggleProfile() {

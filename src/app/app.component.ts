@@ -37,16 +37,6 @@ export class AppComponent implements OnInit {
       this.useLanguage(this.session.getItem('language', this.translate.getBrowserLang()));
     }
 
-    /*
-        Todo: Move this to a guard
-        if (this.platform.isMobile && !this.platform.inApp) {
-          this.config.getBackendURL(`/realms/${this.session.realm}/login`)
-            .then(url => encodeURIComponent(url))
-            .then(url => `https://app.plusintegrity.com?data=${url}&label=Login%20to%20${this.session.realm}`)
-            .then(url => window.location.href = url);
-        }
-    */
-
     this.events.subscribe('ready', isReady => this.ready = isReady);
 
   }

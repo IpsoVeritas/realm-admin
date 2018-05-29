@@ -17,6 +17,12 @@
   }
 }
 
+.mat-display-1 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .mat-toolbar {
   display: none;
 }

@@ -15,7 +15,7 @@
 -->
 <mat-sidenav-container class="integrity-background-color">
 
-  <mat-sidenav #drawer class="integrity-background-color" [mode]="drawerMode" [opened]="drawerMode == 'side'">
+  <mat-sidenav #drawer class="integrity-background-color" [mode]="drawerMode" [opened]="drawerMode == 'side'" (swipeleft)="drawer.close()">
 
     <img class="logo" src="assets/img/integrity_grey_landscape.svg" *ngIf="drawerMode == 'side'">
 
@@ -28,8 +28,8 @@
         <div class="overlay"></div>
         <mat-icon [class.popup-visible]="profile.expanded">keyboard_arrow_down</mat-icon>
       </div>
-      <h3>{{realm.description}}</h3>
-      <p>{{realm.name}}</p>
+      <h3 class="profile-description">{{realm.description}}</h3>
+      <p class="profile-name">{{realm.name}}</p>
     </div>
 
     <mat-expansion-panel #profile class="profile-expansion-panel">
@@ -104,8 +104,8 @@
         <div class="overlay"></div>
         <mat-icon [class.popup-visible]="profileMenuTrigger.menuOpen">keyboard_arrow_down</mat-icon>
       </div>
-      <h3>{{realm.description}}</h3>
-      <p>{{realm.name}}</p>
+      <h3 class="profile-description">{{realm.description}}</h3>
+      <p class="profile-name">{{realm.name}}</p>
     </div>
 
     <mat-menu class="profile-popup" #profileMenu="matMenu" xPosition="before" yPosition="below" [overlapTrigger]="false">
