@@ -1,30 +1,10 @@
 <div class="realm-popup">
-  <h1>{{ title }}</h1>
-  <p>A</p>
-  <p>A</p>
-  <p>A</p>
-  <p>A</p>
-  <p>A</p>
-  <p>A</p>
-  <p>A</p>
-  <p>A</p>
-  <p>A</p>
-  <p>A</p>
-  <p>A</p>
-  <p>A</p>
-  <p>A</p>
-  <p>A</p>
-  <p>A</p>
-  <p>A</p>
-  <p>A</p>
-  <p>A</p>
-  <p>A</p>
-  <p>A</p>
-  <p>A</p>
-  <p>A</p>
-  <p>A</p>
-  <p>A</p>
-  <p>A</p>
-  <p>A</p>
-  <p>A</p>
+  <form [formGroup]="realmForm" (ngSubmit)="onSubmit()">
+    <mat-form-field>
+      <input formControlName="realm" matInput placeholder="{{ 'entities.Realm' | translate }}">
+      <mat-error *ngIf="realm.errors && realm.errors['required']" translate>login.realm_required</mat-error>
+      <mat-error *ngIf="realm.errors && realm.errors['startAuthFailed']" translate>login.realm_invalid</mat-error>
+    </mat-form-field>
+    <button type="submit" mat-raised-button [disabled]="realmForm.invalid" color="accent">{{ 'general.change_realm' | translate }}</button>
+  </form>
 </div>
