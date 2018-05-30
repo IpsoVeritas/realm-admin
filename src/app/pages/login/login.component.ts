@@ -1,17 +1,18 @@
-import { RealmDescriptor } from './../../shared/models/realm-descriptor.model';
-import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit, AfterViewInit } from '@angular/core';
+import { Overlay } from '@angular/cdk/overlay';
+import { ComponentPortal } from '@angular/cdk/portal';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
 import { EventsService } from '@brickchain/integrity-angular';
 import { WebviewClientService } from '@brickchain/integrity-webview-client';
+import { AuthUser, AuthInfo, RealmDescriptor } from '../../shared/models';
 import { AuthClient, RealmsClient } from '../../shared/api-clients';
 import { ConfigService, SessionService, CryptoService, PlatformService } from '../../shared/services';
 import { MatExpansionPanel } from '@angular/material/expansion';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
-import { AuthUser, AuthInfo } from '../../shared/models';
+import { RealmPopupComponent } from './realm-popup.component';
 
 @Component({
   selector: 'app-login',
@@ -21,6 +22,7 @@ import { AuthUser, AuthInfo } from '../../shared/models';
 export class LoginComponent implements OnInit {
 
   @ViewChild(MatExpansionPanel) realmPanel: MatExpansionPanel;
+  @ViewChild('realmPopupTrigger') realmPopupTrigger: ElementRef;
 
   qrUri: string;
   qrUriTimer: any;
@@ -36,6 +38,7 @@ export class LoginComponent implements OnInit {
   activeDescriptor: RealmDescriptor;
 
   constructor(private route: ActivatedRoute,
+    private overlay: Overlay,
     private router: Router,
     private fb: FormBuilder,
     private sanitizer: DomSanitizer,
@@ -72,6 +75,22 @@ export class LoginComponent implements OnInit {
         .then(() => this.events.publish('ready', !this.platform.inApp));
 
     });
+  }
+
+  showRealmPopup() {
+    const positionStrategy = this.overlay
+      .position()
+      .connectedTo(this.realmPopupTrigger, { originX: 'center', originY: 'bottom' }, { overlayX: 'center', overlayY: 'top' });
+    const overlayRef = this.overlay.create({
+      width: '400px',
+      height: '325px',
+      hasBackdrop: true,
+      backdropClass: 'invisible-backdrop',
+      positionStrategy
+    });
+    overlayRef.backdropClick().subscribe(_ => overlayRef.dispose());
+    const realmPopupPortal = new ComponentPortal(RealmPopupComponent);
+    const realmPopupComponentRef = overlayRef.attach(realmPopupPortal);
   }
 
   onSubmit() {

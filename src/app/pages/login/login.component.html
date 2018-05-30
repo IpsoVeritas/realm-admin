@@ -4,13 +4,19 @@
     <img src="assets/img/integrity_colour_landscape.svg" height="50%">
   </div>
   <div class="content">
+
+    <div #realmPopupTrigger (click)="showRealmPopup()">Popup</div>
+
     <mat-expansion-panel class="mat-elevation-z0">
       <mat-expansion-panel-header>
         <mat-panel-title *ngIf="activeRealm">
           <div class="description">
-            {{'login.login_to' | translate:{value:activeDescriptor && activeDescriptor.description ? activeDescriptor.description : activeRealm} }}
+            {{'login.login_to' | translate:{value:activeDescriptor && activeDescriptor.description ? activeDescriptor.description : activeRealm}
+            }}
           </div>
-          <div class="realm" *ngIf="activeDescriptor && activeDescriptor.description">{{ activeRealm }}</div>
+          <div class="realm" *ngIf="activeDescriptor && activeDescriptor.description">
+            {{ activeRealm }}
+          </div>
         </mat-panel-title>
         <mat-panel-title *ngIf="!activeRealm" translate>login.enter_realm</mat-panel-title>
       </mat-expansion-panel-header>
@@ -25,7 +31,8 @@
     </mat-expansion-panel>
     <integrity-qrcode *ngIf="qrUri" [qrdata]="qrUri" [integrityClipboard]="qrUri" (copySuccess)="showCopySuccess($event)"></integrity-qrcode>
     <div *ngIf="qrUri" class="instructions">
-      {{'login.app_instructions' | translate:{value:activeDescriptor && activeDescriptor.description ? activeDescriptor.description : activeRealm} }}
+      {{'login.app_instructions' | translate:{value:activeDescriptor && activeDescriptor.description ? activeDescriptor.description
+      : activeRealm} }}
     </div>
     <mat-progress-bar *ngIf="qrUri" mode="determinate" [value]="qrCountdown" color="accent"></mat-progress-bar>
   </div>

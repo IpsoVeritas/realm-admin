@@ -6,6 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HTTP_INTERCEPTORS, HttpClientModule, HttpClient } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LayoutModule } from '@angular/cdk/layout';
+import { OverlayModule } from '@angular/cdk/overlay';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -53,6 +54,7 @@ import { StripeComponent } from './components/stripe.component';
 import { RealmComponent } from './realm.component';
 import { BootstrapComponent } from './pages/bootstrap/bootstrap.component';
 import { LoginComponent } from './pages/login/login.component';
+import { RealmPopupComponent } from './pages/login/realm-popup.component';
 import { HomeComponent } from './pages/home/home.component';
 import { DashboardComponent } from './pages/home/dashboard/dashboard.component';
 import { RealmsComponent } from './pages/home/realms/realms.component';
@@ -76,6 +78,7 @@ export function createTranslateLoader(http: HttpClient) {
     RealmComponent,
     BootstrapComponent,
     LoginComponent,
+    RealmPopupComponent,
     HomeComponent,
     DashboardComponent,
     RoleInviteDialogComponent,
@@ -93,7 +96,8 @@ export function createTranslateLoader(http: HttpClient) {
     ControllerBindDialogComponent,
     ControllerSettingsDialogComponent,
     SessionTimeoutDialogComponent,
-    RoleInviteDialogComponent
+    RoleInviteDialogComponent,
+    RealmPopupComponent
   ],
   imports: [
     BrowserModule,
@@ -104,6 +108,7 @@ export function createTranslateLoader(http: HttpClient) {
     HttpClientModule,
     FormsModule,
     LayoutModule,
+    OverlayModule,
     ReactiveFormsModule,
     MatInputModule,
     MatButtonModule,
