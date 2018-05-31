@@ -12,7 +12,7 @@ import { AuthClient, RealmsClient } from '../../shared/api-clients';
 import { ConfigService, SessionService, CryptoService, PlatformService } from '../../shared/services';
 import { MatExpansionPanel } from '@angular/material/expansion';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { RealmPopupComponent } from './realm-popup.component';
+import { RealmListComponent } from '../../shared/components';
 
 @Component({
   selector: 'app-login',
@@ -77,7 +77,7 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  showRealmPopup() {
+  showRealmList() {
     const positionStrategy = this.overlay
       .position()
       .connectedTo(this.realmPopupTrigger, { originX: 'center', originY: 'bottom' }, { overlayX: 'center', overlayY: 'top' });
@@ -88,8 +88,9 @@ export class LoginComponent implements OnInit {
       backdropClass: 'invisible-backdrop',
       positionStrategy
     });
+    overlayRef.overlayElement.classList.add('cdk-overlay-shadow');
     overlayRef.backdropClick().subscribe(_ => overlayRef.dispose());
-    const realmPopupPortal = new ComponentPortal(RealmPopupComponent);
+    const realmPopupPortal = new ComponentPortal(RealmListComponent);
     const realmPopupComponentRef = overlayRef.attach(realmPopupPortal);
   }
 

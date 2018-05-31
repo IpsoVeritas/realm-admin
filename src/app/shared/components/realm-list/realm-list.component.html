@@ -1,4 +1,5 @@
-<div class="realm-popup">
+<div class="realm-list">
+  <app-realm-card [realm]="realm" *ngFor="let realm of session.realms"></app-realm-card>
   <form [formGroup]="realmForm" (ngSubmit)="onSubmit()">
     <mat-form-field>
       <input formControlName="realm" matInput placeholder="{{ 'entities.Realm' | translate }}">

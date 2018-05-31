@@ -3,6 +3,7 @@ export * from './guards';
 export * from './interceptors';
 export * from './models';
 export * from './services';
+export * from './components';
 
 export function structuralClone<T>(source: T, constructor: new () => T): Promise<T> {
   return new Promise(resolve => {

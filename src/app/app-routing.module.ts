@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { RealmGuard, BootmodeGuard, LoginGuard } from './shared/guards';
+import { RealmGuard, BootmodeGuard, LoginGuard, RealmRedirectGuard } from './shared/guards';
 
-import { RealmComponent } from './realm.component';
+import { AppComponent } from './app.component';
 import { BootstrapComponent } from './pages/bootstrap/bootstrap.component';
 import { LoginComponent } from './pages/login/login.component';
 import { HomeComponent } from './pages/home/home.component';
@@ -27,8 +27,8 @@ const appRoutes: Routes = [
       { path: 'settings', component: SettingsComponent }
     ]
   },
-  { path: ':realm', component: RealmComponent },
-  { path: '**', component: RealmComponent }
+  { path: ':realm', component: AppComponent, canActivate: [RealmRedirectGuard], pathMatch: 'full' },
+  { path: '**', component: AppComponent, canActivate: [RealmRedirectGuard] }
 ];
 
 @NgModule({
@@ -41,7 +41,8 @@ const appRoutes: Routes = [
   providers: [
     RealmGuard,
     BootmodeGuard,
-    LoginGuard
+    LoginGuard,
+    RealmRedirectGuard
   ]
 })
 export class AppRoutingModule { }

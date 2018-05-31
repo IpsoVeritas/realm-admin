@@ -49,12 +49,10 @@ import {
 } from './shared/api-clients';
 import { SessionService, PlatformService, ConfigService, CryptoService } from './shared/services';
 
-import { StripeComponent } from './components/stripe.component';
+import { StripeComponent, RealmCardComponent, RealmListComponent } from './shared/components';
 
-import { RealmComponent } from './realm.component';
 import { BootstrapComponent } from './pages/bootstrap/bootstrap.component';
 import { LoginComponent } from './pages/login/login.component';
-import { RealmPopupComponent } from './pages/login/realm-popup.component';
 import { HomeComponent } from './pages/home/home.component';
 import { DashboardComponent } from './pages/home/dashboard/dashboard.component';
 import { RealmsComponent } from './pages/home/realms/realms.component';
@@ -75,10 +73,10 @@ export function createTranslateLoader(http: HttpClient) {
   declarations: [
     AppComponent,
     StripeComponent,
-    RealmComponent,
+    RealmCardComponent,
+    RealmListComponent,
     BootstrapComponent,
     LoginComponent,
-    RealmPopupComponent,
     HomeComponent,
     DashboardComponent,
     RoleInviteDialogComponent,
@@ -97,7 +95,7 @@ export function createTranslateLoader(http: HttpClient) {
     ControllerSettingsDialogComponent,
     SessionTimeoutDialogComponent,
     RoleInviteDialogComponent,
-    RealmPopupComponent
+    RealmListComponent,
   ],
   imports: [
     BrowserModule,
