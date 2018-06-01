@@ -1,7 +1,8 @@
-import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SessionService } from '../../services';
 import { RealmsClient } from '../../api-clients';
+import { RealmDescriptor } from '../../models';
 
 @Component({
   selector: 'app-realm-list',
@@ -9,6 +10,9 @@ import { RealmsClient } from '../../api-clients';
   styleUrls: ['./realm-list.component.scss']
 })
 export class RealmListComponent implements OnInit {
+
+  @Output() select: EventEmitter<RealmDescriptor> = new EventEmitter();
+  @Output() cancel: EventEmitter<void> = new EventEmitter();
 
   realmForm: FormGroup;
 
@@ -18,8 +22,6 @@ export class RealmListComponent implements OnInit {
   }
 
   ngOnInit() {
-    //console.log(this.session.realm);
-    //console.log(this.session.realms);
     this.realmForm = this.fb.group({
       'realm': [this.session.realm, Validators.required]
     });
@@ -29,13 +31,20 @@ export class RealmListComponent implements OnInit {
     return this.realmForm.get('realm');
   }
 
+  realmSelected(descriptor: RealmDescriptor) {
+    this.select.emit(descriptor);
+  }
+
   onSubmit() {
     return this.realmsClient.getRealmDescriptor(this.realm.value)
-      .then(descriptor => console.log(descriptor))
+      .then(descriptor => this.realmSelected(descriptor))
       .catch(error => {
-        console.log(error);
-        this.realm.setErrors({ 'startAuthFailed': true });
+        this.realm.setErrors({ 'descriptor': true });
       });
+  }
+
+  onCancel() {
+    this.cancel.emit();
   }
 
 }

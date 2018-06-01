@@ -1,3 +1,13 @@
-<p>
-  realm-card works!
-</p>
+<div class="realm" (click)="click()" [class.no-descriptor]="!descriptor">
+
+  <div class="icon" [style.background-image]="icon">
+    <div class="overlay"></div>
+  </div>
+
+  <p class="description" *ngIf="descriptor">{{descriptor.description ? descriptor.description : descriptor.name}}</p>
+  <p class="name" *ngIf="descriptor">{{descriptor.name}}</p>
+
+  <p class="description" *ngIf="!descriptor" translate>realm_card.no_descriptor</p>
+  <p class="name" *ngIf="!descriptor">{{realm}}</p>
+
+</div>

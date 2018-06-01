@@ -40,7 +40,7 @@ export class PlatformService {
       this.session.mandates = undefined;
 
       const realms = this.session.realms;
-      this.session.realms = realms.filter((elem, pos, arr) => elem !== this.session.realm);
+      // this.session.realms = realms.filter((elem, pos, arr) => elem !== this.session.realm);
 
       if (this.inApp) {
         this.webviewClient.cancel();

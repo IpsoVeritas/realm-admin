@@ -1,11 +1,16 @@
 <div class="realm-list">
-  <app-realm-card [realm]="realm" *ngFor="let realm of session.realms"></app-realm-card>
-  <form [formGroup]="realmForm" (ngSubmit)="onSubmit()">
+  <div class="realm" *ngFor="let realm of session.realms">
+    <app-realm-card [realm]="realm" (select)="realmSelected($event)"></app-realm-card>
+  </div>
+  <form [formGroup]="realmForm">
     <mat-form-field>
-      <input formControlName="realm" matInput placeholder="{{ 'entities.Realm' | translate }}">
-      <mat-error *ngIf="realm.errors && realm.errors['required']" translate>login.realm_required</mat-error>
-      <mat-error *ngIf="realm.errors && realm.errors['startAuthFailed']" translate>login.realm_invalid</mat-error>
+      <input formControlName="realm" matInput placeholder="{{ 'realm_list.enter_realm' | translate }}">
+      <mat-error *ngIf="realm.errors && realm.errors['required']" translate>realm_list.error_required</mat-error>
+      <mat-error *ngIf="realm.errors && realm.errors['descriptor']" translate>realm_list.error_descriptor</mat-error>
     </mat-form-field>
-    <button type="submit" mat-raised-button [disabled]="realmForm.invalid" color="accent">{{ 'general.change_realm' | translate }}</button>
+    <div class="button-row">
+      <button (click)="onCancel()" type="button" mat-button color="accent">{{ 'general.cancel' | translate }}</button>
+      <button (click)="onSubmit()" type="button" mat-raised-button [disabled]="realmForm.invalid" color="accent">{{ 'realm_list.change_realm' | translate }}</button>
+    </div>
   </form>
 </div>
