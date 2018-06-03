@@ -117,4 +117,15 @@ body {
 
 .cdk-overlay-shadow {
   box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.1);
+  animation: fadein 0.2s ease-in-out;
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }

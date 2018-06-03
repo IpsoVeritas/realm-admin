@@ -1,106 +1,32 @@
 {
-    "entities": {
-        "Realm": "Rike",
-        "Realms": "Riken",
-        "Role": "Roll",
-        "Roles": "Roller",
-        "Mandate": "Mandat",
-        "Mandates": "Mandat",
-        "Controller": "Tjänst",
-        "Controllers": "Tjänster"
+    "bootstrap": {
+        "password": "",
+        "admin_mandate": ""
+    },
+    "error": {
+        "password_required": "",
+        "invalid_password": "",
+        "connecting": ""
     },
     "label": {
-        "close": "Stäng",
-        "ok": "OK",
-        "cancel": "Avbryt",
-        "email": "E-post",
-        "message": "Medelande",
-        "send": "Skicka",
-        "members": "Medlemmar",
-        "status": "Status",
-        "reset": "Återställ",
-        "save": "Spara",
-        "name": "Namn",
-        "description": "Beskrivning",
-        "settings": "Inställningar",
-        "logout": "Logga ut",
-        "active": "Aktiv",
-        "pending": "Pågående"
-    },
-    "general": {
-        "change_realm": "Byt Rike",
-        "copied_to_clipboard": "Kopierade '{{value}}' till urklipp",
-        "error_password_required": "Ett lösenord krävs",
-        "error_invalid_password": "Ogiltigt lösenord",
-        "error_connecting": "Fel uppstod vid anslutning till '{{value}}'",
-        "error_calling": "Fel uppstod vid anrop till '{{value}}'",
-        "error_creating": "Gick ej att skapa '{{value}}'",
-        "error_deleting": "Gick ej att radera '{{value}}'",
-        "error_updating": "Gick ej att updatera '{{value}}'",
-        "success_updating": "Sparade ändringar för '{{value}}'",
-        "setup_required": "Inställningar saknas"
-    },
-    "bootstrap": {
-        "password": "Bootstrap lösenord",
-        "admin_mandate": "Skanna för att hämta Admin mandat"
+        "ok": "",
+        "close": "",
+        "cancel": "",
+        "done": ""
     },
     "login": {
-        "realm_required": "Ett rike krävs",
-        "realm_invalid": "Ogiltigt rike",
-        "scan_qr_code": "Skanna QR koden för att öppna '{{value}}'",
-        "enter_realm": "Ange rike för att logga in",
-        "login_to": "",
-        "app_instructions": ""
+        "title": "",
+        "instructions": ""
     },
-    "realms": {
-        "realm_name": "Ange rikets namn",
-        "delete_realm": "Radera rike '{{value}}'?"
+    "toast": {
+        "copied_to_clipboard": ""
     },
-    "roles": {
-        "role_name": "Ange roll namn",
-        "delete_role": "Radera roll '{{value}}'?"
+    "realm-list": {
+        "enter_realm": "",
+        "error_required": "",
+        "error_descriptor": ""
     },
-    "invites": {
-        "send_invite": "Skicka inbjudan",
-        "resend_invite": "Skicka om inbjudan till '{{value}}'?",
-        "delete_invite": "Radera inbjudan till '{{value}}'?",
-        "error_loading": "Fel uppstod vid laddning av '{{value}}'",
-        "error_sending": "Gick ej att skicka inbjudan till '{{value}}'",
-        "error_deleting": "Gick ej att radera inbjudan till '{{value}}'",
-        "error_email_invalid": "E-postadressen är ogiltig",
-        "error_email_required": "E-postadress krävs"
-    },
-    "mandates": {
-        "revoke_mandate": "Upphäv mandat '{{mandate}}' för '{{recipient}}'?",
-        "error_revoking": "Gick ej upphäva mandat '{{value}}'"
-    },
-    "binding": {
-        "binding_url": "Bindnings URL",
-        "binding_success": "Bunden till '{{value}}'",
-        "bind_controller": "Bind Tjänst",
-        "error_binding_failed": "Fel vid bindning!",
-        "url_copied": "Kopierade bindnings URL till urklipp",
-        "error_add_failed": "Fel vid tillägg av tjänst",
-        "error_invalid_token": "Ogiltig biljett för tillägg av tjänst"
-    },
-    "controllers": {
-        "controller_settings": "Inställningar för Tjänst",
-        "delete_controller": "Radera tjänst '{{value}}'?",
-        "error_syncing_controller": "Gick ej att synka '{{value}}'",
-        "error_syncing_controllers": "Fel vid synkning av tjänster",
-        "add_service": "Bind Ny Tjänst",
-        "custom_binding_url": "Ange Bindings URL..."
-    },
-    "settings": {
-        "no_public_role": "Ingen publik roll",
-        "guest_role": "Gästroll"
-    },
-    "guide": {
-        "dashboard": "<h2>Guide till översikt</h2>",
-        "realms": "<h2>Guide till rike</h2>",
-        "roles": "<h2>Guide till roller</h2>",
-        "mandates": "<h2>Guide till mandat</h2>",
-        "controllers": "<h2>Guide till tjänster</h2>",
-        "settings": "<h2>Guide till inställningar</h2>"
+    "realm-card": {
+        "no_descriptor": ""
     }
 }

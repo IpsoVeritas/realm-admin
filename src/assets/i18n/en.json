@@ -1,106 +1,32 @@
 {
-    "entities": {
-        "Realm": "Realm",
-        "Realms": "Realms",
-        "Role": "Role",
-        "Roles": "Roles",
-        "Mandate": "Mandate",
-        "Mandates": "Mandates",
-        "Controller": "Controller",
-        "Controllers": "Controllers"
-    },
-    "label": {
-        "close": "Close",
-        "ok": "OK",
-        "cancel": "Cancel",
-        "email": "Email",
-        "message": "Message",
-        "send": "Send",
-        "members": "Members",
-        "status": "Status",
-        "reset": "Reset",
-        "save": "Save",
-        "name": "Name",
-        "description": "Description",
-        "settings": "Settings",
-        "logout": "Logout",
-        "active": "Active",
-        "pending": "Pending"
-    },
-    "general": {
-        "change_realm": "Change Realm",
-        "copied_to_clipboard": "Copied '{{value}}' to clipboard",
-        "error_password_required": "A password is required",
-        "error_invalid_password": "The password is invalid",
-        "error_connecting": "Error connecting to '{{value}}'",
-        "error_calling": "Error calling '{{value}}'",
-        "error_creating": "Error creating '{{value}}'",
-        "error_deleting": "Error deleting '{{value}}'",
-        "error_updating": "Error updating '{{value}}'",
-        "success_updating": "Saved changes to '{{value}}'",
-        "setup_required": "Setup required"
-    },
     "bootstrap": {
         "password": "Bootstrap password",
         "admin_mandate": "Scan to collect Admin Mandate"
     },
+    "error": {
+        "password_required": "A password is required",
+        "invalid_password": "The password is invalid",
+        "connecting": "Error connecting to {{host}}"
+    },
+    "label": {
+        "ok": "OK",
+        "close": "Close",
+        "cancel": "Cancel",
+        "done": "Done"
+    },
     "login": {
-        "realm_required": "A realm is required",
-        "realm_invalid": "Invalid realm",
-        "scan_qr_code": "Scan QR code to access '{{value}}'",
-        "enter_realm": "Enter realm to login",
-        "login_to": "Login to {{value}}",
-        "app_instructions": "You need the Integrity App to scan this QR Code and access your admin interface for {{value}}"
+        "title": "Login to {{realm}}",
+        "instructions": "You need the Integrity App to scan this QR Code and access your admin interface for {{realm}}"
     },
-    "realms": {
-        "realm_name": "Enter realm name",
-        "delete_realm": "Delete realm '{{value}}'?"
+    "toast": {
+        "copied_to_clipboard": "Copied '{{value}}' to clipboard"
     },
-    "roles": {
-        "role_name": "Enter role name",
-        "delete_role": "Delete role '{{value}}'?"
+    "realm-list": {
+        "enter_realm": "Enter the realm name",
+        "error_required": "A realm name is required",
+        "error_descriptor": "Unable to resolve realm"
     },
-    "invites": {
-        "send_invite": "Send Invite",
-        "resend_invite": "Re-send invite to '{{value}}'?",
-        "delete_invite": "Delete invite to '{{value}}'?",
-        "error_loading": "Error loading '{{value}}'",
-        "error_sending": "Error sending invite to '{{value}}'",
-        "error_deleting": "Error deleting invite to '{{value}}'",
-        "error_email_invalid": "The email address is invalid",
-        "error_email_required": "Email address is required"
-    },
-    "mandates": {
-        "revoke_mandate": "Revoke mandate '{{mandate}}' for '{{recipient}}'?",
-        "error_revoking": "Error revoking '{{value}}' mandate"
-    },
-    "binding": {
-        "binding_url": "Binding URL",
-        "binding_success": "Successfully bound '{{value}}'",
-        "bind_controller": "Bind Controller",
-        "error_binding_failed": "Binding failed!",
-        "url_copied": "Copied binding URL to clipboard",
-        "error_add_failed": "Error adding service",
-        "error_invalid_token": "Add token is invalid"
-    },
-    "controllers": {
-        "controller_settings": "Controller Settings",
-        "delete_controller": "Delete controller '{{value}}'?",
-        "error_syncing_controller": "Error syncing '{{value}}'",
-        "error_syncing_controllers": "Error syncing controllers",
-        "add_service": "Add Service Binding",
-        "custom_binding_url": "Custom Binding URL..."
-    },
-    "settings": {
-        "no_public_role": "No public role",
-        "guest_role": "Guest Role"
-    },
-    "guide": {
-        "dashboard": "<h2>Guide to dashboard</h2>",
-        "realms": "<h2>Guide to realms</h2>",
-        "roles": "<h2>Guide to roles</h2>",
-        "mandates": "<h2>Guide to mandates</h2>",
-        "controllers": "<h2>Guide to controllers</h2>",
-        "settings": "<h2>Guide to settings</h2>"
+    "realm-card": {
+        "no_descriptor": "Realm is offline"
     }
 }

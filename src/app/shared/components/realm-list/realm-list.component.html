@@ -4,13 +4,13 @@
   </div>
   <form [formGroup]="realmForm">
     <mat-form-field>
-      <input formControlName="realm" matInput placeholder="{{ 'realm_list.enter_realm' | translate }}">
-      <mat-error *ngIf="realm.errors && realm.errors['required']" translate>realm_list.error_required</mat-error>
-      <mat-error *ngIf="realm.errors && realm.errors['descriptor']" translate>realm_list.error_descriptor</mat-error>
+      <input formControlName="realm" matInput placeholder="{{ 'realm-list.enter_realm' | translate }}">
+      <mat-error *ngIf="realm.errors && realm.errors['required']" translate>realm-list.error_required</mat-error>
+      <mat-error *ngIf="realm.errors && realm.errors['descriptor']" translate>realm-list.error_descriptor</mat-error>
     </mat-form-field>
     <div class="button-row">
-      <button (click)="onCancel()" type="button" mat-button color="accent">{{ 'general.cancel' | translate }}</button>
-      <button (click)="onSubmit()" type="button" mat-raised-button [disabled]="realmForm.invalid" color="accent">{{ 'realm_list.change_realm' | translate }}</button>
+      <button (click)="onCancel()" type="button" mat-button color="accent">{{ 'label.cancel' | translate }}</button>
+      <button (click)="onSubmit()" type="button" mat-raised-button [disabled]="realmForm.invalid" color="accent">{{ 'label.done' | translate }}</button>
     </div>
   </form>
 </div>

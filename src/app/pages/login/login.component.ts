@@ -53,7 +53,7 @@ export class LoginComponent implements OnInit {
         .catch(error => {
           this.showRealmList();
           this.snackBar.open(
-            this.translate.instant('general.error_connecting', { value: this.config.backend }),
+            this.translate.instant('error.connecting', { host: this.config.backend }),
             this.translate.instant('label.close'),
             { duration: 3000 });
         })
@@ -66,28 +66,36 @@ export class LoginComponent implements OnInit {
       .position()
       .connectedTo(this.realmPopupTrigger, { originX: 'center', originY: 'bottom' }, { overlayX: 'center', overlayY: 'top' });
     const overlayRef = this.overlay.create({
-      width: '342px',
+      width: '344px',
       height: '325px',
       hasBackdrop: true,
       backdropClass: 'invisible-backdrop',
       positionStrategy
     });
     overlayRef.overlayElement.classList.add('cdk-overlay-shadow');
-    overlayRef.backdropClick().subscribe(_ => overlayRef.dispose());
     const realmPopupPortal = new ComponentPortal(RealmListComponent);
     const realmPopupComponentRef = overlayRef.attach(realmPopupPortal);
     const realmListComponentInstance = realmPopupComponentRef.instance;
+    overlayRef.backdropClick().subscribe(() => {
+      if (this.descriptor) {
+        overlayRef.dispose();
+      }
+    });
     realmListComponentInstance.select.subscribe(descriptor => {
       overlayRef.dispose();
       if (!this.descriptor || this.descriptor.name !== descriptor.name) {
         this.router.navigate([`/${descriptor.name}/login`, {}]);
       }
     });
-    realmListComponentInstance.cancel.subscribe(() => overlayRef.dispose());
+    realmListComponentInstance.cancel.subscribe(() => {
+      if (this.descriptor) {
+        overlayRef.dispose();
+      }
+    });
   }
 
   showCopySuccess(value: string) {
-    this.snackBar.open(this.translate.instant('general.copied_to_clipboard', { value: value }), '', { duration: 2000 });
+    this.snackBar.open(this.translate.instant('toast.copied_to_clipboard', { value: value }), '', { duration: 2000 });
   }
 
   updateCountdown() {
@@ -139,7 +147,6 @@ export class LoginComponent implements OnInit {
             .then(() => this.router.navigate([`/${this.descriptor.name}/home`, {}]))
             .catch(error => {
               if (error && error.error) {
-                console.error(error);
                 this.snackBar.open(error.error, this.translate.instant('label.close'), { duration: 5000, panelClass: 'error' });
               }
               this.start();

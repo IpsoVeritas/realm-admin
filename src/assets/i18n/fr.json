@@ -1,106 +1,32 @@
 {
-    "entities": {
-        "Realm": "Domaine",
-        "Realms": "Domaines",
-        "Role": "Rôle",
-        "Roles": "Rôles",
-        "Mandate": "Mandat",
-        "Mandates": "Mandats",
-        "Controller": "Contrôleur",
-        "Controllers": "Contrôleurs"
+    "bootstrap": {
+        "password": "",
+        "admin_mandate": ""
+    },
+    "error": {
+        "password_required": "",
+        "invalid_password": "",
+        "connecting": ""
     },
     "label": {
-        "close": "Fermer",
-        "ok": "Valider",
-        "cancel": "Annuler",
-        "email": "Email",
-        "message": "Message",
-        "send": "Envoyer",
-        "members": "Membres",
-        "status": "Statut",
-        "reset": "Réinitialiser",
-        "save": "Sauvegarder",
-        "name": "Nom",
-        "description": "Description",
-        "settings": "Paramètres",
-        "logout": "Déconnexion",
-        "active": "Actif",
-        "pending": "En attente"
-    },
-    "general": {
-        "change_realm": "Changer de Domaine",
-        "copied_to_clipboard": "Copié '{{value}}' dans le presse-papier",
-        "error_password_required": "Un mot de passe est requis",
-        "error_invalid_password": "Le mot de passe est incorrect",
-        "error_connecting": "Erreur de connexion à '{{value}}'",
-        "error_calling": "Erreur lors de l'appel à '{{value}}'",
-        "error_creating": "Erreur lors de la créaton de '{{value}}'",
-        "error_deleting": "Erreur lors de la suppression de '{{value}}'",
-        "error_updating": "Erreur lors de la mise à jour de '{{value}}'",
-        "success_updating": "Changements enregistrés à '{{value}}'",
-        "setup_required": "Configuration demandée"
-    },
-    "bootstrap": {
-        "password": "Mot de passe Bootstrap",
-        "admin_mandate": "Scanner pour recueillir le mandat d'administrateur"
+        "ok": "",
+        "close": "",
+        "cancel": "",
+        "done": ""
     },
     "login": {
-        "realm_required": "Un domaine est obligatoire",
-        "realm_invalid": "Domaine non valide",
-        "scan_qr_code": "Scanner le QR code pour accéder à '{{value}}'",
-        "enter_realm": "Saisir un domaine pour se connecter",
-        "login_to": "",
-        "app_instructions": ""
+        "title": "",
+        "instructions": ""
     },
-    "realms": {
-        "realm_name": "Saisir un nom de domaine",
-        "delete_realm": "Effacer le domaine '{{value}}' ?"
+    "toast": {
+        "copied_to_clipboard": ""
     },
-    "roles": {
-        "role_name": "Saisir le nom du rôle",
-        "delete_role": "Effacer le rôle '{{value}}' ?"
+    "realm-list": {
+        "enter_realm": "",
+        "error_required": "",
+        "error_descriptor": ""
     },
-    "invites": {
-        "send_invite": "Envoyer une invitation",
-        "resend_invite": "Envoyer à nouveau une invitation à '{{value}}' ?",
-        "delete_invite": "Supprimer l'invitation à '{{value}}' ?",
-        "error_loading": "Erreur lors du chargement de '{{value}}'",
-        "error_sending": "Erreur lors de l'envoi de l'invitation à '{{value}}'",
-        "error_deleting": "Erreur lors de la suppression de l'invitation à '{{value}}'",
-        "error_email_invalid": "L'email n'est pas valide",
-        "error_email_required": "Un adresse email est obligatoire"
-    },
-    "mandates": {
-        "revoke_mandate": "Révoquer le mandat '{{mandate}}' pour '{{recipient}}'?",
-        "error_revoking": "Erreur lors de la révocation du mandat '{{value}}'"
-    },
-    "binding": {
-        "binding_url": "URL de liaison",
-        "binding_success": "Liaison avec '{{value}}' réussie",
-        "bind_controller": "Contrôleur de liaison",
-        "error_binding_failed": "Liaison échouée !",
-        "url_copied": "URL de liaison copiée dans le presse-papiers",
-        "error_add_failed": "Erreur lors de l’ajout du service",
-        "error_invalid_token": "Jeton est invalide"
-    },
-    "controllers": {
-        "controller_settings": "Paramètres du contrôleur",
-        "delete_controller": "Effacer le contrôleur '{{value}}'?",
-        "error_syncing_controller": "Erreur lor de la synchronisation avec '{{value}}'",
-        "error_syncing_controllers": "Erreur de synchronisation des contrôleurs",
-        "add_service": "Ajouter un service de liaison",
-        "custom_binding_url": "URL de liaison personnalisée..."
-    },
-    "settings": {
-        "no_public_role": "Aucun rôle public",
-        "guest_role": "Rôle invité"
-    },
-    "guide": {
-        "dashboard": "<h2>Guide du tableau de bord</h2>",
-        "realms": "<h2>Guide des domaines</h2>",
-        "roles": "<h2>Guide des rôles</h2>",
-        "mandates": "<h2>Guide des mandats</h2>",
-        "controllers": "<h2>Guide des contrôleurs</h2>",
-        "settings": "<h2>Guide des paramètres</h2>"
+    "realm-card": {
+        "no_descriptor": ""
     }
 }

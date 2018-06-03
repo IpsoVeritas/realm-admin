@@ -7,7 +7,7 @@
 
     <div class="realm" #realmPopupTrigger (click)="showRealmList()">
       <div *ngIf="descriptor" class="description">
-        {{ 'login.login_to' | translate:{value:descriptor.description ? descriptor.description : descriptor.name} }}
+        {{ 'login.title' | translate:{realm:descriptor.description ? descriptor.description : descriptor.name} }}
       </div>
       <div *ngIf="descriptor" class="name">
         {{ descriptor.name }}
@@ -19,7 +19,7 @@
     </div>
 
     <div *ngIf="descriptor" class="instructions">
-      {{'login.app_instructions' | translate:{value:descriptor.description ? descriptor.description : descriptor.name} }}
+      {{'login.instructions' | translate:{realm:descriptor.description ? descriptor.description : descriptor.name} }}
     </div>
 
     <mat-progress-bar *ngIf="qrUri" mode="determinate" [value]="qrCountdown" color="accent"></mat-progress-bar>
