@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { MatDrawer } from '@angular/material/sidenav';
@@ -29,11 +29,13 @@ export class HomeComponent implements OnInit, AfterViewInit {
   user: User;
 
   realm: Realm;
+  realms: string[];
   roles: Role[];
   controllers: Controller[];
 
   iconImage: SafeStyle;
 
+  pruningTimer: any;
   sessionTimer: any;
 
   navigationSubscription;
@@ -74,9 +76,14 @@ export class HomeComponent implements OnInit, AfterViewInit {
     breakpointObserver.observe(['(max-width: 1420px)']).subscribe(result => {
       this.profileMode = result.matches ? 'drawer' : 'side';
     });
+    /*
     this.navigationSubscription = this.router.events.subscribe((event: any) => {
-      console.log(event);
+      if (event instanceof NavigationEnd && event.urlAfterRedirects.endsWith('/home')) {
+        console.log('Navigate to home');
+        this.load();
+      }
     });
+    */
   }
 
   ngOnInit() {
@@ -85,15 +92,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.events.subscribe('roles_updated', () => this.loadRoles());
     this.events.subscribe('realm_updated', () => this.loadRealm());
     this.events.subscribe('controllers_updated', () => this.loadControllers());
-    Promise.all([this.loadRealm(), this.loadRoles(), this.loadControllers()])
-      .then(() => this.accessClient.getUserAccess())
-      .then(user => this.user = user)
-      .then(() => this.events.publish('ready', true))
-      .then(() => this.controllersClient.getControllers(this.session.realm))
-      .then(controllers => controllers.map(controller => this.controllersClient.syncController(controller)))
-      .then(() => this.startServiceTokenPruning())
-      .then(() => this.startSessionTimer())
-      .catch(error => console.warn('Error syncing controllers', error));
+    this.load();
   }
 
   ngAfterViewInit() {
@@ -112,8 +111,22 @@ export class HomeComponent implements OnInit, AfterViewInit {
     }
   }
 
-  loadRealm() {
-    this.realmsClient.getRealm(this.session.realm)
+  load(): Promise<any> {
+    console.log(`Loading home for ${this.session.realm}`);
+    return Promise.all([this.loadRealm(), this.loadRoles(), this.loadControllers()])
+      .then(() => this.accessClient.getUserAccess())
+      .then(user => this.user = user)
+      .then(() => this.events.publish('ready', true))
+      .then(() => this.controllersClient.getControllers(this.session.realm))
+      .then(controllers => controllers.map(controller => this.controllersClient.syncController(controller)))
+      .then(() => this.startServiceTokenPruning())
+      .then(() => this.startSessionTimer())
+      .catch(error => console.warn('Error syncing controllers', error));
+  }
+
+  loadRealm(): Promise<Realm> {
+    this.realms = this.session.realms.slice();
+    return this.realmsClient.getRealm(this.session.realm)
       .then(realm => {
         this.realm = realm;
         if (realm.realmDescriptor.icon) {
@@ -122,7 +135,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
         } else {
           this.iconImage = undefined;
         }
-      });
+      })
+      .then(() => this.realm);
   }
 
   loadRoles(): Promise<Role[]> {
@@ -141,7 +155,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   startServiceTokenPruning(): void {
-    setInterval(() => this.servicesClient.pruneTokens(this.maxServiceTokenAge), 60 * 1000);
+    clearInterval(this.pruningTimer);
+    this.pruningTimer = setInterval(() => this.servicesClient.pruneTokens(this.maxServiceTokenAge), 60 * 1000);
   }
 
   startSessionTimer(): void {
@@ -181,7 +196,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
     if (this.drawerMode === 'over') {
       this.drawer.close();
     }
-    this.router.navigateByUrl(`/${descriptor.name}/home`);
+    // this.events.publish('ready', false);
+    this.router.navigateByUrl(`/${descriptor.name}/home/dashboard`);
   }
 
   toggleProfile() {

@@ -6,8 +6,10 @@ import { Realm, RealmDescriptor, Controller, ControllerDescriptor } from '../mod
 @Injectable()
 export class RealmsClient extends BaseClient {
 
-  public getRealmDescriptor(realm: string): Promise<any> {
-    return this.http.get(`https://${realm}/.well-known/realm/realm.json`).toPromise()
+  public getRealmDescriptor(realmId: string): Promise<any> {
+    // Todo: go back to return this.http.get(`https://${realmId}/.well-known/realm/realm.json`).toPromise()
+    return this.config.getBackendURL(`/realms/${realmId}/realm.json?ts=${Date.now()}`)
+      .then(url => this.http.get(url).toPromise())
       .then(jws => this.cryptoService.verifyAndParseJWS(jws))
       .then(obj => this.jsonConvert.deserializeObject(obj, RealmDescriptor));
   }

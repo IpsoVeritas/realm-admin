@@ -19,12 +19,12 @@ const appRoutes: Routes = [
   {
     path: ':realm/home', component: HomeComponent, canActivate: [RealmGuard, BootmodeGuard, LoginGuard],
     children: [
-      { path: '', component: DashboardComponent },
       { path: 'dashboard', component: DashboardComponent },
       { path: 'realms', component: RealmsComponent },
       { path: 'mandates/:id', component: MandatesComponent },
       { path: 'controller/:id', component: ControllerComponent },
-      { path: 'settings', component: SettingsComponent }
+      { path: 'settings', component: SettingsComponent },
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   },
   { path: ':realm', component: AppComponent, canActivate: [RealmRedirectGuard], pathMatch: 'full' },

@@ -40,18 +40,23 @@ export class DashboardComponent implements OnInit {
     private servicesClient: ServicesClient,
     private realmsClient: RealmsClient,
     private snackBar: MatSnackBar) {
+      /*
     this.navigationSubscription = this.router.events.subscribe((event: any) => {
-      if (event instanceof NavigationEnd) {
+      if (event instanceof NavigationEnd && event.urlAfterRedirects.endsWith('/dashboard')) {
+        console.log('Navigate to dashboard');
         this.load();
       }
     });
+    */
   }
 
   ngOnInit() {
     setTimeout(() => this.updateClock(), 500);
+    this.load();
   }
 
   load(): Promise<any> {
+    console.log(`Loading dashboard for ${this.session.realm}`);
     return Promise.all([this.loadRealm(), this.loadControllers(), this.loadServices()]);
   }
 
