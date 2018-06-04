@@ -30,6 +30,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { POEditorLoader } from './shared/utils/poeditor.loader';
 
 import { EventsModule, QRCodeModule, DialogsModule } from '@brickchain/integrity-angular';
 import { ClipboardModule, DragAndDropModule, SectionModule } from '@brickchain/integrity-angular';
@@ -66,7 +67,11 @@ import { SessionTimeoutDialogComponent } from './pages/home/session-timeout-dial
 import { SettingsComponent } from './pages/home/settings/settings.component';
 
 export function createTranslateLoader(http: HttpClient) {
-  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+  if (environment.production) {
+    return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+  } else {
+    return new POEditorLoader(http, environment.poeditor_url, environment.poeditor_api_token, environment.poeditor_project_id);
+  }
 }
 
 @NgModule({

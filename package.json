@@ -4,6 +4,7 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
+    "config": "dotenv render -t src/environments/environment.template.ts -o src/environments/environment.ts",
     "start": "ng serve --port 6580 --live-reload false",
     "build": "ng build --prod --stats-json",
     "build-dev": "ng build --dev --stats-json",

@@ -4,5 +4,8 @@
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  poeditor_url: '{{.POEDITOR_URL}}',
+  poeditor_api_token: '{{.POEDITOR_API_TOKEN}}',
+  poeditor_project_id: '{{.POEDITOR_PROJECT_ID}}'
 };

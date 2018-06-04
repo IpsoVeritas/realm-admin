@@ -152,7 +152,7 @@ export class LoginComponent implements OnInit {
               this.start();
             });
         } else {
-          this.pollTimer = setTimeout(() => this.poll(token, count + 1), 3000);
+          this.pollTimer = setTimeout(() => this.poll(token, count + 1), 1000);
         }
       });
   }

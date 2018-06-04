@@ -45,5 +45,9 @@ Thumbs.db
 bindata.go
 realm-admin-ng
 
+# Dev configuration
+.env
+src/environments/environment.ts
+
 # PO editor
 .poeditor-config
