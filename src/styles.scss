@@ -55,6 +55,12 @@ body {
   position: relative;
   overflow: visible !important;
   left: 15px;
+
+  .realm {
+    .icon {
+      margin: 4px 10px 4px 10px !important;
+    }
+  }
 }
 
 .profile-popup::after {

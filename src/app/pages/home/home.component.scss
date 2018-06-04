@@ -1,90 +1,3 @@
-/*
-$break-handset-portrait: 599px;
-
-mat-toolbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 2;
-
-  a {
-    text-decoration: none;
-  }
-
-  mat-progress-spinner {
-    &.paused {
-      animation-play-state: paused;
-      opacity: 0.5;
-    }
-  }
-
-  mat-icon {
-    cursor: pointer;
-
-    &.menu-icon {
-      display: none;
-
-      @media (max-width: $break-handset-portrait) and (orientation: portrait) {
-        display: block;
-      }
-    }
-  }
-}
-
-mat-sidenav-container {
-  position: fixed;
-  top: 64px;
-  bottom: 0;
-  left: 0;
-  right: 0;
-
-  @media (max-width: $break-handset-portrait) and (orientation: portrait) {
-    top: 56px;
-  }
-
-  mat-sidenav {
-    z-index: 3;
-
-    mat-icon {
-      margin-right: 12px;
-    }
-  }
-
-  mat-sidenav-content {
-    ::ng-deep {
-      .content {
-        position: relative;
-        width: calc(100% - 40px);
-        max-width: 800px;
-        margin: 20px auto 0 auto;
-
-        @media (max-width: $break-handset-portrait) and (orientation: portrait) {
-          width: 100%;
-          margin: 0;
-        }
-      }
-
-      .iframe {
-        overflow: hidden;
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        height: 100%;
-
-        iframe {
-          margin: 0;
-          padding: 0;
-          border: none;
-          width: 100%;
-          height: 100%;
-        }
-      }
-    }
-  }
-}
-*/
-
 .mat-sidenav-container {
   max-width: 1420px;
   margin: 0 auto;
@@ -94,7 +7,6 @@ mat-sidenav-container {
     width: 320px;
     padding: 10px;
 
-    //background-color: #fcc;
     .logo {
       width: 200px;
       position: relative;
@@ -128,6 +40,12 @@ mat-sidenav-container {
 
       ::ng-deep .mat-expansion-panel-body {
         padding: 0;
+
+        .realm {
+          .icon {
+            margin: 4px 8px 4px 10px !important;
+          }
+        }
       }
     }
   }
@@ -260,6 +178,7 @@ mat-sidenav-container {
   .mat-sidenav-container {
     .mat-sidenav {
       width: 85%;
+
       .profile-description, .profile-name {
         width: auto;
       }

@@ -1,18 +1,3 @@
-<!--
-<mat-toolbar class="integrity-background-color">
-  <mat-toolbar-row>
-    <mat-icon class="menu-icon" (click)="drawer.toggle()">{{ drawer.opened ? 'close' : 'menu' }}</mat-icon>
-    <a [routerLink]="['dashboard']">
-      <img [class.hidden]="isHandsetPortrait" src="assets/img/integrity.svg" height="50%">
-    </a>
-    <span class="spacer"></span>
-    <a [routerLink]="['dashboard']">{{ session.realm }}</a>
-    <span class="spacer"></span>
-    <mat-progress-spinner [mode]="requestCount == 0 ? 'determinate' : 'indeterminate'" diameter="20" color="accent"></mat-progress-spinner>
-    <mat-icon *ngIf="isHandsetPortrait" (click)="logout()">exit_to_app</mat-icon>
-  </mat-toolbar-row>
-</mat-toolbar>
--->
 <mat-sidenav-container class="integrity-background-color">
 
   <mat-sidenav #drawer class="integrity-background-color" [mode]="drawerMode" [opened]="drawerMode == 'side'" (swipeleft)="drawer.close()">
@@ -36,15 +21,16 @@
       <mat-nav-list *ngIf="profileMode == 'drawer'">
         <a mat-list-item [routerLink]="['settings']" routerLinkActive="active" (click)="drawerMode == 'over' ? drawer.close() : false">
           <mat-icon>settings</mat-icon>{{ 'label.settings' | translate }}</a>
+      </mat-nav-list>
+      <ng-container *ngFor="let realm of session.realms">
+        <mat-divider></mat-divider>
+        <app-realm-card [realm]="realm" (select)="switchRealm($event)"></app-realm-card>
+      </ng-container>
+      <mat-divider></mat-divider>
+      <mat-nav-list *ngIf="profileMode == 'drawer'">
         <a mat-list-item (click)="logout()">
           <mat-icon>exit_to_app</mat-icon>{{ 'label.logout' | translate }}</a>
       </mat-nav-list>
-      <div class="realm-list" *ngIf="session.realms.length > 1">
-        <mat-divider></mat-divider>
-        <button mat-menu-item routerLink="/{{realm}}/home" *ngFor="let realm of session.realms">
-          <mat-icon>domain</mat-icon>{{ realm }}
-        </button>
-      </div>
     </mat-expansion-panel>
 
     <mat-divider *ngIf="profileMode == 'drawer'"></mat-divider>
@@ -85,20 +71,14 @@
       </mat-nav-list>
     </integrity-section>
 
-    <!--
-    <mat-divider *ngIf="profileMode == 'drawer'"></mat-divider>
-
-    <mat-nav-list>
-      <a *ngIf="user?.owner" mat-list-item [routerLink]="['realms']" routerLinkActive="active" (click)="drawerMode == 'over' ? drawer.close() : false">
-        <mat-icon>domain</mat-icon>{{ 'entities.Realm' | translate }}</a>
-    </mat-nav-list>
-    -->
   </mat-sidenav>
 
   <mat-sidenav-content>
+
     <div class="content" [ngClass]="'drawer-'+drawerMode">
       <router-outlet></router-outlet>
     </div>
+
     <div class="profile" *ngIf="realm">
       <div class="profile-icon" #profileMenuTrigger="matMenuTrigger" [style.background-image]="iconImage" [matMenuTriggerFor]="profileMenu">
         <div class="overlay"></div>
@@ -112,28 +92,16 @@
       <button mat-menu-item [routerLink]="['settings']">
         <mat-icon>settings</mat-icon>{{ 'label.settings' | translate }}
       </button>
+      <ng-container *ngFor="let realm of session.realms">
+        <mat-divider></mat-divider>
+        <app-realm-card [realm]="realm" (select)="switchRealm($event)"></app-realm-card>
+      </ng-container>
+      <mat-divider></mat-divider>
       <button mat-menu-item (click)="logout()">
         <mat-icon>exit_to_app</mat-icon>{{ 'label.logout' | translate }}
       </button>
-      <div class="realm-list" *ngIf="session.realms.length > 1">
-        <mat-divider></mat-divider>
-        <button mat-menu-item routerLink="/{{realm}}/home" *ngFor="let realm of session.realms">
-          <mat-icon>domain</mat-icon>{{ realm }}
-        </button>
-      </div>
     </mat-menu>
 
-    <!--
-    <div class="profile-popup" [class.visible]="showProfile">
-      <mat-nav-list>
-        <a mat-list-item [routerLink]="['settings']" routerLinkActive="active" (click)="toggleProfile()">
-          <mat-icon>settings</mat-icon>{{ 'label.settings' | translate }}</a>
-        <mat-divider></mat-divider>
-        <a mat-list-item (click)="toggleProfile();logout()">
-          <mat-icon>exit_to_app</mat-icon>{{ 'label.logout' | translate }}</a>
-      </mat-nav-list>
-    </div>
-  -->
   </mat-sidenav-content>
 
 </mat-sidenav-container>

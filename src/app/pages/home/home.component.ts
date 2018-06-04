@@ -9,7 +9,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { EventsService, DialogsService } from '@brickchain/integrity-angular';
 import { PlatformService, SessionService } from '../../shared/services';
 import { AccessClient, RealmsClient, RolesClient, ControllersClient, ServicesClient } from '../../shared/api-clients';
-import { User, Realm, Role, Controller, Service } from '../../shared/models';
+import { User, Realm, RealmDescriptor, Role, Controller, Service } from '../../shared/models';
 import { ControllerAddDialogComponent } from './controller/controller-add-dialog.component';
 import { ControllerBindDialogComponent } from './controller/controller-bind-dialog.component';
 import { SessionTimeoutDialogComponent } from './session-timeout-dialog.component';
@@ -35,6 +35,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
   iconImage: SafeStyle;
 
   sessionTimer: any;
+
+  navigationSubscription;
 
   public drawerMode: string;
   public profileMode: string;
@@ -71,6 +73,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
     });
     breakpointObserver.observe(['(max-width: 1420px)']).subscribe(result => {
       this.profileMode = result.matches ? 'drawer' : 'side';
+    });
+    this.navigationSubscription = this.router.events.subscribe((event: any) => {
+      console.log(event);
     });
   }
 
@@ -170,6 +175,13 @@ export class HomeComponent implements OnInit, AfterViewInit {
         cancel: this.translate.instant('label.cancel')
       }).then(confirmed => confirmed ? this.events.publish('logout') : false);
     }
+  }
+
+  switchRealm(descriptor: RealmDescriptor) {
+    if (this.drawerMode === 'over') {
+      this.drawer.close();
+    }
+    this.router.navigateByUrl(`/${descriptor.name}/home`);
   }
 
   toggleProfile() {
