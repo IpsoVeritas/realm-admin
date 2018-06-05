@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
@@ -13,7 +13,7 @@ import { Realm, Controller, Service } from '../../../shared/models';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
 
   isSnackBarOpen = false;
 
@@ -40,23 +40,26 @@ export class DashboardComponent implements OnInit {
     private servicesClient: ServicesClient,
     private realmsClient: RealmsClient,
     private snackBar: MatSnackBar) {
-      /*
     this.navigationSubscription = this.router.events.subscribe((event: any) => {
-      if (event instanceof NavigationEnd && event.urlAfterRedirects.endsWith('/dashboard')) {
-        console.log('Navigate to dashboard');
+      if (event instanceof NavigationEnd &&
+        event.urlAfterRedirects.endsWith('/home') &&
+        (!this.realm || session.realm !== this.realm.name)) {
         this.load();
       }
     });
-    */
   }
 
   ngOnInit() {
     setTimeout(() => this.updateClock(), 500);
-    this.load();
+  }
+
+  ngOnDestroy() {
+    if (this.navigationSubscription) {
+      this.navigationSubscription.unsubscribe();
+    }
   }
 
   load(): Promise<any> {
-    console.log(`Loading dashboard for ${this.session.realm}`);
     return Promise.all([this.loadRealm(), this.loadControllers(), this.loadServices()]);
   }
 

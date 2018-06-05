@@ -109,7 +109,7 @@ export class SettingsComponent implements OnInit {
       .then(() => this.iconFile ? this.realmsClient.uploadIcon(this.realm.id, this.iconFile) : false)
       .then(() => this.bannerFile ? this.realmsClient.uploadBanner(this.realm.id, this.bannerFile) : false)
       .then(() => this.isChanged = false)
-      .then(() => this.events.publish('realm_updated'))
+      .then(() => this.events.publish('realm_updated', this.realm))
       .then(() => this.snackBarOpen(
         this.translate.instant('general.success_updating', { value: this.realm.id }),
         this.translate.instant('label.close'),

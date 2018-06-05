@@ -18,25 +18,27 @@
     </div>
 
     <mat-expansion-panel #profile class="profile-expansion-panel">
-      <mat-nav-list *ngIf="profileMode == 'drawer'">
-        <a mat-list-item [routerLink]="['settings']" routerLinkActive="active" (click)="drawerMode == 'over' ? drawer.close() : false">
-          <mat-icon>settings</mat-icon>{{ 'label.settings' | translate }}</a>
-      </mat-nav-list>
-      <ng-container *ngFor="let realm of realms">
+      <ng-container *ngIf="profileMode == 'drawer'">
+        <mat-nav-list>
+          <a mat-list-item [routerLink]="['settings']" routerLinkActive="active" (click)="drawerMode == 'over' ? drawer.close() : false">
+            <mat-icon>settings</mat-icon>{{ 'label.settings' | translate }}</a>
+        </mat-nav-list>
+        <ng-container *ngFor="let realm of session.realms">
+          <mat-divider></mat-divider>
+          <app-realm-card [realm]="realm" (select)="switchRealm($event)"></app-realm-card>
+        </ng-container>
         <mat-divider></mat-divider>
-        <app-realm-card [realm]="realm" (select)="switchRealm($event)"></app-realm-card>
+        <mat-nav-list>
+          <a mat-list-item (click)="logout()">
+            <mat-icon>exit_to_app</mat-icon>{{ 'label.logout' | translate }}</a>
+        </mat-nav-list>
       </ng-container>
-      <mat-divider></mat-divider>
-      <mat-nav-list *ngIf="profileMode == 'drawer'">
-        <a mat-list-item (click)="logout()">
-          <mat-icon>exit_to_app</mat-icon>{{ 'label.logout' | translate }}</a>
-      </mat-nav-list>
     </mat-expansion-panel>
 
     <mat-divider *ngIf="profileMode == 'drawer'"></mat-divider>
 
     <mat-nav-list>
-      <a mat-list-item [routerLink]="['dashboard']" routerLinkActive="active" (click)="drawerMode == 'over' ? drawer.close() : false">
+      <a mat-list-item routerLink="/{{session.realm}}/home" routerLinkActive="active" (click)="drawerMode == 'over' ? drawer.close() : false">
         <mat-icon>dashboard</mat-icon>Your dashboard
       </a>
       <a *ngIf="user?.owner" mat-list-item [routerLink]="['realms']" routerLinkActive="active" (click)="drawerMode == 'over' ? drawer.close() : false">
@@ -92,7 +94,7 @@
       <button mat-menu-item [routerLink]="['settings']">
         <mat-icon>settings</mat-icon>{{ 'label.settings' | translate }}
       </button>
-      <ng-container *ngFor="let realm of realms">
+      <ng-container *ngFor="let realm of session.realms">
         <mat-divider></mat-divider>
         <app-realm-card [realm]="realm" (select)="switchRealm($event)"></app-realm-card>
       </ng-container>

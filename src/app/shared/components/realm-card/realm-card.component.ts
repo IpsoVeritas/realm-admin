@@ -1,6 +1,7 @@
-import { Component, EventEmitter, OnInit, OnChanges, Input, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, OnInit, OnDestroy, OnChanges, Input, Output, SimpleChanges } from '@angular/core';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { HttpErrorResponse } from '@angular/common/http';
+import { EventsService } from '@brickchain/integrity-angular';
 import { RealmsClient } from '../../api-clients';
 import { RealmDescriptor } from '../../models';
 
@@ -9,7 +10,7 @@ import { RealmDescriptor } from '../../models';
   templateUrl: './realm-card.component.html',
   styleUrls: ['./realm-card.component.scss']
 })
-export class RealmCardComponent implements OnChanges {
+export class RealmCardComponent implements OnInit, OnDestroy, OnChanges {
 
   @Input() realm = '';
   @Output() select: EventEmitter<RealmDescriptor> = new EventEmitter();
@@ -18,7 +19,25 @@ export class RealmCardComponent implements OnChanges {
   error: HttpErrorResponse;
   icon: SafeStyle;
 
-  constructor(private sanitizer: DomSanitizer, private realmsClient: RealmsClient) { }
+  realmUpdateListener: Function;
+
+  constructor(private sanitizer: DomSanitizer,
+    public events: EventsService,
+    private realmsClient: RealmsClient) {
+    this.realmUpdateListener = (realm) => {
+      if (this.realm && this.realm === realm.name) {
+        this.loadRealmDescriptor();
+      }
+    };
+  }
+
+  public ngOnInit() {
+    this.events.subscribe('realm_updated', this.realmUpdateListener);
+  }
+
+  public ngOnDestroy() {
+    this.events.unsubscribe('realm_updated', this.realmUpdateListener);
+  }
 
   public ngOnChanges(changes: SimpleChanges) {
     if ('realm' in changes) {

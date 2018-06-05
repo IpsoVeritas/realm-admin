@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild } from '@angular/core';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
@@ -21,7 +21,7 @@ import * as uuid from 'uuid/v1';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit, AfterViewInit {
+export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   maxServiceTokenAge = 5 * 60 * 1000;
 
@@ -29,7 +29,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
   user: User;
 
   realm: Realm;
-  realms: string[];
   roles: Role[];
   controllers: Controller[];
 
@@ -76,14 +75,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
     breakpointObserver.observe(['(max-width: 1420px)']).subscribe(result => {
       this.profileMode = result.matches ? 'drawer' : 'side';
     });
-    /*
     this.navigationSubscription = this.router.events.subscribe((event: any) => {
-      if (event instanceof NavigationEnd && event.urlAfterRedirects.endsWith('/home')) {
-        console.log('Navigate to home');
+      if (event instanceof NavigationEnd &&
+        (!this.realm || session.realm !== this.realm.name)) {
         this.load();
       }
     });
-    */
   }
 
   ngOnInit() {
@@ -92,7 +89,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.events.subscribe('roles_updated', () => this.loadRoles());
     this.events.subscribe('realm_updated', () => this.loadRealm());
     this.events.subscribe('controllers_updated', () => this.loadControllers());
-    this.load();
+  }
+
+  ngOnDestroy() {
+    if (this.navigationSubscription) {
+      this.navigationSubscription.unsubscribe();
+    }
   }
 
   ngAfterViewInit() {
@@ -112,7 +114,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   load(): Promise<any> {
-    console.log(`Loading home for ${this.session.realm}`);
     return Promise.all([this.loadRealm(), this.loadRoles(), this.loadControllers()])
       .then(() => this.accessClient.getUserAccess())
       .then(user => this.user = user)
@@ -125,7 +126,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   loadRealm(): Promise<Realm> {
-    this.realms = this.session.realms.slice();
     return this.realmsClient.getRealm(this.session.realm)
       .then(realm => {
         this.realm = realm;
@@ -196,8 +196,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     if (this.drawerMode === 'over') {
       this.drawer.close();
     }
-    // this.events.publish('ready', false);
-    this.router.navigateByUrl(`/${descriptor.name}/home/dashboard`);
+    this.router.navigateByUrl(`/${descriptor.name}`);
   }
 
   toggleProfile() {
