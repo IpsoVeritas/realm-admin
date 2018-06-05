@@ -6,6 +6,10 @@ import { Invite } from '../models';
 @Injectable()
 export class InvitesClient extends BaseClient {
 
+  public cloneInvite(invite: Invite): Promise<Invite> {
+    return super.clone<Invite>(invite, Invite);
+  }
+
   public getInviteIds(realmId: string): Promise<string[]> {
     return this.cache.get(`inviteIds:${realmId}`)
       .catch(() => this.config.getBackendURL(`/realms/${realmId}/invite`)

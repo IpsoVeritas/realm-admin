@@ -20,9 +20,9 @@ export class BaseClient {
     this.jsonConvert.valueCheckingMode = ValueCheckingMode.DISALLOW_NULL; // never allow null
   }
 
-  public clone<T>(source: T, constructor: new () => T): T {
+  protected clone<T>(source: T, constructor: new () => T): Promise<T> {
     const obj = this.jsonConvert.serialize(source);
-    return this.jsonConvert.deserializeObject(obj, constructor);
+    return Promise.resolve(this.jsonConvert.deserializeObject(obj, constructor));
   }
 
 }

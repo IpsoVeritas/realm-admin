@@ -7,6 +7,10 @@ import * as uuid from 'uuid/v1';
 @Injectable()
 export class ServicesClient extends BaseClient {
 
+  public cloneService(service: Service): Promise<Service> {
+    return super.clone<Service>(service, Service);
+  }
+
   public getServices(): Promise<Service[]> {
     return this.config.get('servicesFeed')
       .then(url => url ? this.http.get(url).toPromise() : [])

@@ -6,6 +6,10 @@ import { Realm, RealmDescriptor, Controller, ControllerDescriptor } from '../mod
 @Injectable()
 export class RealmsClient extends BaseClient {
 
+  public cloneRealm(realm: Realm): Promise<Realm> {
+    return super.clone<Realm>(realm, Realm);
+  }
+
   public getRealmDescriptor(realmId: string): Promise<any> {
     return this.cache.get(`realmDescriptor:${realmId}`)
       .catch(() => this.config.getBackendURL(`/realms/${realmId}/realm.json?ts=${Date.now()}`)
@@ -46,14 +50,14 @@ export class RealmsClient extends BaseClient {
   public updateRealm(realm: Realm): Promise<Realm> {
     return this.config.getBackendURL(`/realms/${realm.id}`)
       .then(url => this.http.put(url, this.jsonConvert.serializeObject(realm)).toPromise())
-      .then(() => this.cache.invalidate(`realm:${realm.id}`))
+      .then(() => this.cache.invalidate(`realm:${realm.id}`, `realmDescriptor:${realm.id}`))
       .then(() => realm);
   }
 
   public deleteRealm(realm: Realm): Promise<any> {
     return this.config.getBackendURL(`/realms/${realm.id}`)
       .then(url => this.http.delete(url).toPromise())
-      .then(() => this.cache.invalidate('realmIds', `realm:${realm.id}`));
+      .then(() => this.cache.invalidate('realmIds', `realm:${realm.id}`, `realmDescriptor:${realm.id}`));
   }
 
   public uploadIcon(id: string, icon: File): Promise<any> {

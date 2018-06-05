@@ -6,6 +6,10 @@ import { IssuedMandate } from '../models';
 @Injectable()
 export class MandatesClient extends BaseClient {
 
+  public cloneMandate(mandate: IssuedMandate): Promise<IssuedMandate> {
+    return super.clone<IssuedMandate>(mandate, IssuedMandate);
+  }
+
   public getMandateIds(realmId: string): Promise<string[]> {
     return this.cache.get(`mandateIds:${realmId}`)
       .catch(() => this.config.getBackendURL(`/realms/${realmId}/mandates`)

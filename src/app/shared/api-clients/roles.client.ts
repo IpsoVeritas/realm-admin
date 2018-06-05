@@ -6,6 +6,10 @@ import { Role } from '../models';
 @Injectable()
 export class RolesClient extends BaseClient {
 
+  public cloneRole(role: Role): Promise<Role> {
+    return super.clone<Role>(role, Role);
+  }
+
   public getRoleIds(realmId: string): Promise<string[]> {
     return this.cache.get(`roleIds:${realmId}`)
       .catch(() => this.config.getBackendURL(`/realms/${realmId}/roles`)

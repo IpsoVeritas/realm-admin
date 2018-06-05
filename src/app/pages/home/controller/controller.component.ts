@@ -12,8 +12,6 @@ import { ControllersClient, RealmsClient } from '../../../shared/api-clients';
 import { Controller, ControllerDescriptor } from './../../../shared/models/';
 import { ControllerSettingsDialogComponent } from './controller-settings-dialog.component';
 
-import { structuralClone } from './../../../shared';
-
 @Component({
   selector: 'app-controller',
   templateUrl: './controller.component.html',
@@ -112,7 +110,7 @@ export class ControllerComponent implements OnInit, OnDestroy {
   }
 
   edit() {
-    structuralClone(this.controller, Controller)
+    this.controllersClient.cloneController(this.controller)
       .then(clone => {
         const dialogRef = this.dialog.open(ControllerSettingsDialogComponent, { data: clone });
         return dialogRef.afterClosed().toPromise();

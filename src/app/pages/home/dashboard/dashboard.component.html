@@ -1,12 +1,12 @@
 <div class="banner" [style.background-image]="bannerImage">
-  <div class="mat-display-1">{{session.realm}}</div>
+  <div class="mat-display-1" *ngIf="realm">{{realm.description ? realm.description : realm.id}}</div>
 </div>
 
 <mat-toolbar class="content-header">
   <app-stripe></app-stripe>
   <mat-toolbar-row>
     <mat-icon class="menu-icon" (click)="events.publish('toggle_drawer')">menu</mat-icon>
-    <span class="mat-display-1">{{session.realm}}</span>
+    <span class="mat-display-1" *ngIf="realm">{{realm.description ? realm.description : realm.id}}</span>
   </mat-toolbar-row>
 </mat-toolbar>
 

@@ -14,8 +14,6 @@ import { SessionService } from '../../../shared/services';
 import { RolesClient, MandatesClient, InvitesClient, ControllersClient } from '../../../shared/api-clients';
 import { Role, IssuedMandate, Invite, Controller } from '../../../shared/models';
 
-import { structuralClone } from '../../../shared';
-
 @Component({
   selector: 'app-mandates',
   templateUrl: './mandates.component.html',
@@ -116,7 +114,7 @@ export class MandatesComponent implements OnInit {
       cancelColor: 'accent',
     }).then(name => {
       if (name) {
-        structuralClone(role, Role)
+        this.rolesClient.cloneRole(role)
           .then(updated => {
             updated.description = name;
             this.rolesClient.updateRole(updated)

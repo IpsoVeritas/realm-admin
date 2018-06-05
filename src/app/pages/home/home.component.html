@@ -29,6 +29,11 @@
         </ng-container>
         <mat-divider></mat-divider>
         <mat-nav-list>
+          <a mat-list-item routerLink="/other/login">
+            <mat-icon>add</mat-icon>{{ 'label.login_other' | translate }}</a>
+        </mat-nav-list>
+        <mat-divider></mat-divider>
+        <mat-nav-list>
           <a mat-list-item (click)="logout()">
             <mat-icon>exit_to_app</mat-icon>{{ 'label.logout' | translate }}</a>
         </mat-nav-list>
@@ -86,7 +91,7 @@
         <div class="overlay"></div>
         <mat-icon [class.popup-visible]="profileMenuTrigger.menuOpen">keyboard_arrow_down</mat-icon>
       </div>
-      <h3 class="profile-description">{{realm.description}}</h3>
+      <h3 class="profile-description">{{realm.description ? realm.description : realm.name}}</h3>
       <p class="profile-name">{{realm.name}}</p>
     </div>
 
@@ -98,6 +103,10 @@
         <mat-divider></mat-divider>
         <app-realm-card [realm]="realm" (select)="switchRealm($event)"></app-realm-card>
       </ng-container>
+      <mat-divider></mat-divider>
+      <button mat-menu-item routerLink="/other/login">
+        <mat-icon>add</mat-icon>{{ 'label.login_other' | translate }}
+      </button>
       <mat-divider></mat-divider>
       <button mat-menu-item (click)="logout()">
         <mat-icon>exit_to_app</mat-icon>{{ 'label.logout' | translate }}

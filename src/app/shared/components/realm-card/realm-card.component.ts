@@ -2,6 +2,7 @@ import { Component, EventEmitter, OnInit, OnDestroy, OnChanges, Input, Output, S
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { HttpErrorResponse } from '@angular/common/http';
 import { EventsService } from '@brickchain/integrity-angular';
+import { CacheService } from '../../services';
 import { RealmsClient } from '../../api-clients';
 import { RealmDescriptor } from '../../models';
 
@@ -22,7 +23,8 @@ export class RealmCardComponent implements OnInit, OnDestroy, OnChanges {
   realmUpdateListener: Function;
 
   constructor(private sanitizer: DomSanitizer,
-    public events: EventsService,
+    private events: EventsService,
+    private cache: CacheService,
     private realmsClient: RealmsClient) {
     this.realmUpdateListener = (realm) => {
       if (this.realm && this.realm === realm.name) {
@@ -56,7 +58,8 @@ export class RealmCardComponent implements OnInit, OnDestroy, OnChanges {
       .then(descriptor => this.descriptor = descriptor)
       .then(() => {
         if (this.descriptor.icon) {
-          this.icon = this.sanitizer.bypassSecurityTrustStyle(`url(${this.descriptor.icon}?ts=${Date.now()})`);
+          this.cache.timestamp(`realm:${this.descriptor.realm}`)
+            .then(ts => this.icon = this.sanitizer.bypassSecurityTrustStyle(`url(${this.descriptor.icon}?ts=${ts})`));
         } else {
           this.icon = undefined;
         }

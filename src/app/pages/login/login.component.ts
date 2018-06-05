@@ -47,15 +47,20 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     this.route.paramMap.subscribe(paramMap => {
-      this.realmsClient.getRealmDescriptor(paramMap.get('realm'))
+      const realm = paramMap.get('realm');
+      this.realmsClient.getRealmDescriptor(realm)
         .then(descriptor => this.descriptor = descriptor)
         .then(() => this.start())
         .catch(error => {
+          if (realm === 'other') {
+            this.session.realm = '';
+          } else {
+            this.snackBar.open(
+              this.translate.instant('error.connecting', { host: this.config.backend }),
+              this.translate.instant('label.close'),
+              { duration: 3000 });
+          }
           this.showRealmList();
-          this.snackBar.open(
-            this.translate.instant('error.connecting', { host: this.config.backend }),
-            this.translate.instant('label.close'),
-            { duration: 3000 });
         })
         .then(() => this.events.publish('ready', !this.platform.inApp));
     });

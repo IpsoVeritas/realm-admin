@@ -6,6 +6,10 @@ import { Controller, ControllerDescriptor } from '../models';
 @Injectable()
 export class ControllersClient extends BaseClient {
 
+  public cloneController(controller: Controller): Promise<Controller> {
+    return super.clone<Controller>(controller, Controller);
+  }
+
   public getControllerIds(realmId: string): Promise<string[]> {
     return this.cache.get(`controllerIds:${realmId}`)
       .catch(() => this.config.getBackendURL(`/realms/${realmId}/controllers`)

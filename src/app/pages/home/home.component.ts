@@ -7,7 +7,7 @@ import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { EventsService, DialogsService } from '@brickchain/integrity-angular';
-import { PlatformService, SessionService } from '../../shared/services';
+import { PlatformService, SessionService, CacheService } from '../../shared/services';
 import { AccessClient, RealmsClient, RolesClient, ControllersClient, ServicesClient } from '../../shared/api-clients';
 import { User, Realm, RealmDescriptor, Role, Controller, Service } from '../../shared/models';
 import { ControllerAddDialogComponent } from './controller/controller-add-dialog.component';
@@ -60,6 +60,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     private route: ActivatedRoute,
     private platform: PlatformService,
     public session: SessionService,
+    private cache: CacheService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private realmsClient: RealmsClient,
@@ -131,7 +132,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         this.realm = realm;
         if (realm.realmDescriptor.icon) {
           const url = realm.realmDescriptor.icon;
-          this.iconImage = this.sanitizer.bypassSecurityTrustStyle(`url(${url}?ts=${Date.now()})`);
+          this.cache.timestamp(`realm:${this.session.realm}`)
+            .then(ts => this.iconImage = this.sanitizer.bypassSecurityTrustStyle(`url(${url}?ts=${ts})`));
         } else {
           this.iconImage = undefined;
         }
