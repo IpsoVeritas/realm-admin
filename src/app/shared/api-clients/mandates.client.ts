@@ -7,15 +7,18 @@ import { IssuedMandate } from '../models';
 export class MandatesClient extends BaseClient {
 
   public getMandateIds(realmId: string): Promise<string[]> {
-    return this.config.getBackendURL(`/realms/${realmId}/mandates`)
-      .then(url => this.http.get(url).toPromise())
-      .then(obj => <string[]>obj);
+    return this.cache.get(`mandateIds:${realmId}`)
+      .catch(() => this.config.getBackendURL(`/realms/${realmId}/mandates`)
+        .then(url => this.http.get(url).toPromise())
+        .then(ids => this.cache.set(`mandateIds:${realmId}`, <string[]>ids)));
   }
 
   public getMandate(realmId: string, mandateId: string): Promise<IssuedMandate> {
-    return this.config.getBackendURL(`/realms/${realmId}/mandates/${mandateId}`)
-      .then(url => this.http.get(url).toPromise())
-      .then(obj => this.jsonConvert.deserializeObject(obj, IssuedMandate));
+    return this.cache.get(`mandate:${realmId}/${mandateId}`)
+      .catch(() => this.config.getBackendURL(`/realms/${realmId}/mandates/${mandateId}`)
+        .then(url => this.http.get(url).toPromise())
+        .then(obj => this.jsonConvert.deserializeObject(obj, IssuedMandate))
+        .then(mandate => this.cache.set(`mandate:${realmId}/${mandateId}`, mandate)));
   }
 
   public getMandates(realmId: string): Promise<IssuedMandate[]> {
@@ -26,7 +29,8 @@ export class MandatesClient extends BaseClient {
 
   public revokeMandate(mandate: IssuedMandate): Promise<any> {
     return this.config.getBackendURL(`/realms/${mandate.realm}/mandates/${mandate.id}/revoke`)
-      .then(url => this.http.put(url, {}).toPromise());
+      .then(url => this.http.put(url, {}).toPromise())
+      .then(() => this.cache.invalidate(`mandate:${mandate.realm}/${mandate.id}`));
   }
 
 }

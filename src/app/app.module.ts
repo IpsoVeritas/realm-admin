@@ -48,7 +48,7 @@ import {
   AuthClient, AccessClient, RealmsClient, MandatesClient,
   ControllersClient, RolesClient, InvitesClient, ServicesClient
 } from './shared/api-clients';
-import { SessionService, PlatformService, ConfigService, CryptoService } from './shared/services';
+import { SessionService, PlatformService, ConfigService, CryptoService, CacheService } from './shared/services';
 
 import { StripeComponent, RealmCardComponent, RealmListComponent } from './shared/components';
 
@@ -162,6 +162,7 @@ export function createTranslateLoader(http: HttpClient) {
     PlatformService,
     ConfigService,
     CryptoService,
+    CacheService,
     DocumentHandlerService,
     {
       provide: HTTP_INTERCEPTORS,

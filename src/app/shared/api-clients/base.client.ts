@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { JsonConvert, OperationMode, ValueCheckingMode } from 'json2typescript';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { ConfigService, CryptoService, SessionService } from '../services';
+import { ConfigService, CryptoService, SessionService, CacheService } from '../services';
 
 @Injectable()
 export class BaseClient {
@@ -11,12 +11,18 @@ export class BaseClient {
 
   constructor(protected http: HttpClient,
     protected config: ConfigService,
-    protected cryptoService: CryptoService,
+    protected crypto: CryptoService,
+    protected cache: CacheService,
     public session: SessionService) {
     this.jsonConvert = new JsonConvert();
     this.jsonConvert.operationMode = OperationMode.ENABLE; // print some debug data
     this.jsonConvert.ignorePrimitiveChecks = false; // don't allow assigning number to string etc.
     this.jsonConvert.valueCheckingMode = ValueCheckingMode.DISALLOW_NULL; // never allow null
+  }
+
+  public clone<T>(source: T, constructor: new () => T): T {
+    const obj = this.jsonConvert.serialize(source);
+    return this.jsonConvert.deserializeObject(obj, constructor);
   }
 
 }

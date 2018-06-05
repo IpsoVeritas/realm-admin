@@ -7,23 +7,27 @@ import { Realm, RealmDescriptor, Controller, ControllerDescriptor } from '../mod
 export class RealmsClient extends BaseClient {
 
   public getRealmDescriptor(realmId: string): Promise<any> {
-    // Todo: go back to return this.http.get(`https://${realmId}/.well-known/realm/realm.json`).toPromise()
-    return this.config.getBackendURL(`/realms/${realmId}/realm.json?ts=${Date.now()}`)
-      .then(url => this.http.get(url).toPromise())
-      .then(jws => this.cryptoService.verifyAndParseJWS(jws))
-      .then(obj => this.jsonConvert.deserializeObject(obj, RealmDescriptor));
+    return this.cache.get(`realmDescriptor:${realmId}`)
+      .catch(() => this.config.getBackendURL(`/realms/${realmId}/realm.json?ts=${Date.now()}`)
+        .then(url => this.http.get(url).toPromise())
+        .then(jws => this.crypto.verifyAndParseJWS(jws))
+        .then(obj => this.jsonConvert.deserializeObject(obj, RealmDescriptor))
+        .then(descriptor => this.cache.set(`realmDescriptor:${realmId}`, descriptor)));
   }
 
   public getRealmsIds(): Promise<string[]> {
-    return this.config.getBackendURL('/realms')
-      .then(url => this.http.get(url).toPromise())
-      .then(obj => <string[]>obj);
+    return this.cache.get('realmIds')
+      .catch(() => this.config.getBackendURL('/realms')
+        .then(url => this.http.get(url).toPromise())
+        .then(ids => this.cache.set('realmIds', <string[]>ids)));
   }
 
   public getRealm(realmId: string): Promise<Realm> {
-    return this.config.getBackendURL(`/realms/${realmId}`)
-      .then(url => this.http.get(url).toPromise())
-      .then(obj => this.jsonConvert.deserializeObject(obj, Realm));
+    return this.cache.get(`realm:${realmId}`)
+      .catch(() => this.config.getBackendURL(`/realms/${realmId}`)
+        .then(url => this.http.get(url).toPromise())
+        .then(obj => this.jsonConvert.deserializeObject(obj, Realm))
+        .then(realm => this.cache.set(`realm:${realmId}`, realm)));
   }
 
   public getRealms(): Promise<Realm[]> {
@@ -35,18 +39,21 @@ export class RealmsClient extends BaseClient {
   public createRealm(realm: Realm): Promise<Realm> {
     return this.config.getBackendURL('/realms')
       .then(url => this.http.post(url, this.jsonConvert.serializeObject(realm)).toPromise())
+      .then(() => this.cache.invalidate('realmIds'))
       .then(() => realm);
   }
 
   public updateRealm(realm: Realm): Promise<Realm> {
     return this.config.getBackendURL(`/realms/${realm.id}`)
       .then(url => this.http.put(url, this.jsonConvert.serializeObject(realm)).toPromise())
+      .then(() => this.cache.invalidate(`realm:${realm.id}`))
       .then(() => realm);
   }
 
   public deleteRealm(realm: Realm): Promise<any> {
     return this.config.getBackendURL(`/realms/${realm.id}`)
-      .then(url => this.http.delete(url).toPromise());
+      .then(url => this.http.delete(url).toPromise())
+      .then(() => this.cache.invalidate('realmIds', `realm:${realm.id}`));
   }
 
   public uploadIcon(id: string, icon: File): Promise<any> {

@@ -4,7 +4,7 @@ import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { EventsService } from '@brickchain/integrity-angular';
-import { SessionService } from '../../../shared/services';
+import { SessionService, CacheService } from '../../../shared/services';
 import { ControllersClient, ServicesClient, RealmsClient } from '../../../shared/api-clients';
 import { Realm, Controller, Service } from '../../../shared/models';
 
@@ -34,6 +34,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   constructor(private router: Router,
     private sanitizer: DomSanitizer,
     public session: SessionService,
+    public cache: CacheService,
     public events: EventsService,
     private translate: TranslateService,
     private controllersClient: ControllersClient,
@@ -71,7 +72,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
         if (realm.realmDescriptor.banner) {
           url = realm.realmDescriptor.banner;
         }
-        this.bannerImage = this.sanitizer.bypassSecurityTrustStyle(`url(${url}?ts=${Date.now()})`);
+        this.cache.timestamp(`realm:${this.session.realm}`)
+          .then(ts => {
+            console.log(`url(${url}?ts=${ts})`);
+            this.bannerImage = this.sanitizer.bypassSecurityTrustStyle(`url(${url}?ts=${ts})`);
+          });
       })
       .then(() => this.realm);
   }

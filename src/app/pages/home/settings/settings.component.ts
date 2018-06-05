@@ -8,6 +8,9 @@ import { SessionService } from '../../../shared/services';
 import { RealmsClient, RolesClient } from '../../../shared/api-clients';
 import { Realm, Role } from '../../../shared/models';
 
+import { structuralClone } from '../../../shared';
+import { JsonConvert, OperationMode, ValueCheckingMode } from 'json2typescript';
+
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html',
@@ -53,6 +56,7 @@ export class SettingsComponent implements OnInit {
 
   loadRealm() {
     this.realmsClient.getRealm(this.session.realm)
+      // .then(realm => structuralClone(realm, Realm))
       .then(realm => this.realm = realm)
       .then(() => {
         if (this.realm.realmDescriptor.icon) {
@@ -104,6 +108,18 @@ export class SettingsComponent implements OnInit {
   }
 
   updateRealm() {
+    /*
+        const jsonConvert = new JsonConvert();
+        jsonConvert.operationMode = OperationMode.ENABLE; // print some debug data
+        jsonConvert.ignorePrimitiveChecks = false; // don't allow assigning number to string etc.
+        jsonConvert.valueCheckingMode = ValueCheckingMode.DISALLOW_NULL; // never allow null
+    */
+    // console.log(jsonConvert.serializeObject(this.realm));
+    // structuralClone(this.realm, Realm).then((clone: Realm) => console.log(clone, jsonConvert.serializeObject(clone)));
+    const c = this.realmsClient.clone(this.realm, Realm);
+    console.log(this.realm, c);
+
+    /*
     this.realm.realmDescriptor.timestamp = new Date();
     this.realmsClient.updateRealm(this.realm)
       .then(() => this.iconFile ? this.realmsClient.uploadIcon(this.realm.id, this.iconFile) : false)
@@ -118,6 +134,7 @@ export class SettingsComponent implements OnInit {
         this.translate.instant('general.error_updating', { value: this.realm.id }),
         this.translate.instant('label.close'),
         this.snackBarErrorConfig));
+    */
   }
 
   snackBarOpen(message: string, action?: string, config?: MatSnackBarConfig) {

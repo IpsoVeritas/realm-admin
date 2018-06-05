@@ -14,7 +14,7 @@ import { SessionService } from '../../../shared/services';
 import { RolesClient, MandatesClient, InvitesClient, ControllersClient } from '../../../shared/api-clients';
 import { Role, IssuedMandate, Invite, Controller } from '../../../shared/models';
 
-import { structuralClone } from './../../../shared';
+import { structuralClone } from '../../../shared';
 
 @Component({
   selector: 'app-mandates',

@@ -7,15 +7,18 @@ import { Controller, ControllerDescriptor } from '../models';
 export class ControllersClient extends BaseClient {
 
   public getControllerIds(realmId: string): Promise<string[]> {
-    return this.config.getBackendURL(`/realms/${realmId}/controllers`)
-      .then(url => this.http.get(url).toPromise())
-      .then(obj => <string[]>obj);
+    return this.cache.get(`controllerIds:${realmId}`)
+      .catch(() => this.config.getBackendURL(`/realms/${realmId}/controllers`)
+        .then(url => this.http.get(url).toPromise())
+        .then(ids => this.cache.set(`controllerIds:${realmId}`, <string[]>ids)));
   }
 
   public getController(realmId: string, controllerId: string): Promise<Controller> {
-    return this.config.getBackendURL(`/realms/${realmId}/controllers/${controllerId}`)
-      .then(url => this.http.get(url).toPromise())
-      .then(obj => this.jsonConvert.deserializeObject(obj, Controller));
+    return this.cache.get(`controller:${realmId}/${controllerId}`)
+      .catch(() => this.config.getBackendURL(`/realms/${realmId}/controllers/${controllerId}`)
+        .then(url => this.http.get(url).toPromise())
+        .then(obj => this.jsonConvert.deserializeObject(obj, Controller))
+        .then(controller => this.cache.set(`controller:${realmId}/${controllerId}`, controller)));
   }
 
   public getControllers(realmId: string): Promise<Controller[]> {
@@ -27,12 +30,15 @@ export class ControllersClient extends BaseClient {
   public updateController(controller: Controller): Promise<Controller> {
     return this.config.getBackendURL(`/realms/${controller.realm}/controllers/${controller.id}`)
       .then(url => this.http.put(url, this.jsonConvert.serializeObject(controller)).toPromise())
+      .then(() => this.cache.invalidate(`controller:${controller.realm}/${controller.id}`))
       .then(() => controller);
   }
 
   public deleteController(controller: Controller): Promise<any> {
     return this.config.getBackendURL(`/realms/${controller.realm}/controllers/${controller.id}`)
-      .then(url => this.http.delete(url).toPromise());
+      .then(url => this.http.delete(url).toPromise())
+      .then(() => this.cache.invalidate(`controllerIds:${controller.realm}`, `controller:${controller.realm}/${controller.id}`));
+
   }
 
   public updateActions(controller: Controller, actions: string): Promise<any> {
@@ -62,12 +68,12 @@ export class ControllersClient extends BaseClient {
 
   public getControllerActions(controller: Controller): Promise<any> {
     return this.getControllerActionsJWS(controller)
-      .then(jws => this.cryptoService.verifyAndParseJWS(jws));
+      .then(jws => this.crypto.verifyAndParseJWS(jws));
   }
 
   public getControllerActionsJWS(controller: Controller): Promise<any> {
-    return this.cryptoService.filterMandates(controller.adminRoles)
-      .then(mandates => this.cryptoService.createMandateToken(controller.descriptor.adminUI, mandates, 30))
+    return this.crypto.filterMandates(controller.adminRoles)
+      .then(mandates => this.crypto.createMandateToken(controller.descriptor.adminUI, mandates, 30))
       .then(token => {
         const options: any = {
           responseType: 'text',

@@ -24,7 +24,7 @@
             {{'settings.no_public_role' | translate}}
           </mat-option>
           <mat-option *ngFor="let role of roles" [value]="role.name">
-            {{ role.name }}
+            {{ role.description }}
           </mat-option>
         </mat-select>
       </mat-form-field>
