@@ -150,14 +150,15 @@ export class MandatesComponent implements OnInit {
   }
 
   inviteToRole(role: Role) {
-    this.dialog.open(RoleInviteDialogComponent, { data: new Invite() })
+    const invite = new Invite();
+    invite.realm = role.realm;
+    invite.role = role.name;
+    invite.type = 'invite';
+    invite.messageType = 'email';
+    this.dialog.open(RoleInviteDialogComponent, { data: invite })
       .afterClosed().toPromise()
-      .then(invite => {
-        if (invite) {
-          invite.realm = role.realm;
-          invite.role = role.name;
-          invite.type = 'invite';
-          invite.messageType = 'email';
+      .then(i => {
+        if (i) {
           invite.messageURI = 'mailto:' + invite.name;
           this.invitesClient.sendInvite(invite)
             .then(() => {
@@ -172,7 +173,7 @@ export class MandatesComponent implements OnInit {
               this.dataSource.sort = this.sort;
             })
             .catch(error => this.snackBarOpen(
-              this.translate.instant('invites.error_sending', { value: invite.name }),
+              this.translate.instant('invite.error_sending', { value: invite.name }),
               this.translate.instant('label.close'),
               this.snackBarErrorConfig));
         }

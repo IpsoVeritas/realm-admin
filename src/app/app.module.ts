@@ -28,7 +28,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTabsModule } from '@angular/material/tabs';
 
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateModule, TranslateLoader, TranslateFakeLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { POEditorLoader } from './shared/utils/poeditor.loader';
 
@@ -70,6 +70,7 @@ export function createTranslateLoader(http: HttpClient) {
   if (environment.production) {
     return new TranslateHttpLoader(http, './assets/i18n/', '.json');
   } else {
+    // return new TranslateFakeLoader();
     return new POEditorLoader(http, environment.poeditor_url, environment.poeditor_api_token, environment.poeditor_project_id);
   }
 }

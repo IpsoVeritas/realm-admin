@@ -2,10 +2,10 @@
   <app-stripe></app-stripe>
   <mat-toolbar-row>
     <mat-icon class="menu-icon" (click)="events.publish('toggle_drawer')">menu</mat-icon>
-    <span class="mat-display-1">Realms</span>
+    <span class="mat-display-1" translate>label.realms</span>
     <span class="mat-spacer"></span>
     <button mat-button color="accent" (click)="create()">
-      <mat-icon>add_circle</mat-icon> Create realm
+      <mat-icon>add_circle</mat-icon>{{ 'label.create_realm' | translate }}
     </button>
     <button mat-icon-button color="accent" (click)="create()">
       <mat-icon>add_circle</mat-icon>
@@ -17,13 +17,13 @@
 
   <!-- Name Column -->
   <ng-container matColumnDef="name">
-    <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
+    <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'label.name' | translate }}</mat-header-cell>
     <mat-cell *matCellDef="let realm">{{realm.name}}</mat-cell>
   </ng-container>
 
   <!-- Description Column -->
   <ng-container matColumnDef="description">
-    <mat-header-cell *matHeaderCellDef mat-sort-header>Description</mat-header-cell>
+    <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'label.description' | translate }}</mat-header-cell>
     <mat-cell *matCellDef="let realm">{{realm.description}}</mat-cell>
   </ng-container>
 
@@ -33,6 +33,7 @@
     </mat-header-cell>
     <mat-cell *matCellDef="let realm">
 
+      <!--
       <button mat-icon-button color="accent" [matMenuTriggerFor]="realmMenu">
         <mat-icon>more_vert</mat-icon>
       </button>
@@ -41,7 +42,13 @@
         <button mat-menu-item (click)="invite(realm)">Send admin invite</button>
         <button mat-menu-item (click)="delete(realm)" *ngIf="session.realm != realm.id && !realm.ownerRealm">Delete realm</button>
       </mat-menu>
-
+    -->
+      <button mat-icon-button (click)="invite(realm)">
+        <mat-icon>person_add</mat-icon>
+      </button>
+      <button mat-icon-button (click)="delete(realm)" *ngIf="session.realm != realm.id && !realm.ownerRealm">
+        <mat-icon>delete</mat-icon>
+      </button>
 
     </mat-cell>
   </ng-container>

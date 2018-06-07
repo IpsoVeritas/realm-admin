@@ -2,11 +2,11 @@
   <mat-card class="mat-elevation-z1">
     <form [formGroup]="bootstrapForm" (ngSubmit)="onSubmit()">
       <mat-form-field>
-        <input formControlName="password" matInput placeholder="{{'bootstrap.password' | translate}}">
-        <mat-error *ngIf="password.errors && password.errors['required']" translate>error.password_required</mat-error>
-        <mat-error *ngIf="password.errors && password.errors['bootstrapFailed']" translate>error.invalid_password</mat-error>
+        <input formControlName="password" matInput [placeholder]="'bootstrap.password_placeholder' | translate">
+        <mat-error *ngIf="password.errors && password.errors['required']" translate>bootstrap.error_password_required</mat-error>
+        <mat-error *ngIf="password.errors && password.errors['bootstrapFailed']" translate>bootstrap.error_invalid_password</mat-error>
       </mat-form-field>
-      <button type="submit" mat-raised-button [disabled]="bootstrapForm.invalid" color="accent">{{'label.ok' | translate}}</button>
+      <button type="submit" mat-raised-button [disabled]="bootstrapForm.invalid" color="accent" translate>label.ok</button>
     </form>
   </mat-card>
 </div>

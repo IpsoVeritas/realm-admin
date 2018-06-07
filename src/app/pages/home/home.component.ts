@@ -187,9 +187,11 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       this.events.publish('logout');
     } else {
       this.dialogs.openConfirm({
-        message: this.translate.instant('label.logout'),
+        message: this.translate.instant('logout.confirm', { realm: this.session.realm }),
         ok: this.translate.instant('label.ok'),
-        cancel: this.translate.instant('label.cancel')
+        okColor: 'accent',
+        cancel: this.translate.instant('label.cancel'),
+        cancelColor: 'accent'
       }).then(confirmed => confirmed ? this.events.publish('logout') : false);
     }
   }

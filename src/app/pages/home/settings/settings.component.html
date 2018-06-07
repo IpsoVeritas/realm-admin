@@ -2,7 +2,7 @@
   <app-stripe></app-stripe>
   <mat-toolbar-row>
     <mat-icon class="menu-icon" (click)="events.publish('toggle_drawer')">menu</mat-icon>
-    <span class="mat-display-1">Settings</span>
+    <span class="mat-display-1" translate>menu.settings</span>
     <span class="mat-spacer"></span>
   </mat-toolbar-row>
 </mat-toolbar>
@@ -10,32 +10,31 @@
 
   <div class="settings-form">
 
-    <integrity-section title="General" enableExpansion="true" expansionId="settings.general">
+    <integrity-section [title]="'label.general' | translate" enableExpansion="true" expansionId="settings.general">
       <mat-form-field>
         <input matInput [(ngModel)]="realm.description" (ngModelChange)="isChanged=true" placeholder="{{'label.description' | translate}}">
       </mat-form-field>
-      <p class="mat-caption">This is what your users see when they connect. It can be the name of your organisation, or the name of your service.</p>
+      <p class="mat-caption" translate>settings.description_instructions</p>
     </integrity-section>
 
-    <integrity-section title="Guest Role" enableExpansion="true" expansionId="settings.guestRole">
+    <integrity-section [title]="'settings.guest_role' | translate" enableExpansion="true" expansionId="settings.guestRole">
       <mat-form-field>
-        <mat-select [(ngModel)]="realm.guestRole" (ngModelChange)="isChanged=true" placeholder="{{'settings.guest_role' | translate}}">
+        <mat-select [(ngModel)]="realm.guestRole" (ngModelChange)="isChanged=true" placeholder="{{'settings.guest_role_placeholder' | translate}}">
           <mat-option [value]="undefined">
-            {{'settings.no_public_role' | translate}}
+            {{'settings.no_guest_role' | translate}}
           </mat-option>
           <mat-option *ngFor="let role of roles" [value]="role.name">
             {{ role.description }}
           </mat-option>
         </mat-select>
       </mat-form-field>
-      <p class="mat-caption">This is the group a user is assigned when automatically joining your realm.</p>
+      <p class="mat-caption" translate>settings.guest_role_instructions</p>
     </integrity-section>
 
     <mat-divider></mat-divider>
 
-    <integrity-section title="Images" enableExpansion="true" expansionId="settings.images">
-      <p class="mat-caption">Select images to personalise your realm. They will be visible to your users. Please select a dark image for
-        your banner, as your realm name will appear in white. You can directly drag an image from your desktop. </p>
+    <integrity-section [title]="'label.images' | translate" enableExpansion="true" expansionId="settings.images">
+      <p class="mat-caption" translate>settings.image_instructions</p>
       <div class="dropzone banner" integrityDragAndDrop (filesDropped)="bannerDropped($event)" [extensions]="['png', 'jpg', 'gif', 'svg']"
         [style.background-image]="bannerImage" [class.dnd-dropped]="bannerImage">
         <mat-icon *ngIf="!bannerIsProcessing" color="accent">camera_alt</mat-icon>
@@ -53,7 +52,7 @@
     <mat-divider></mat-divider>
 
     <div class="buttons">
-      <button mat-button (click)="loadRealm()" [disabled]="!isChanged">{{'label.reset' | translate}}</button>
+      <button mat-button color="accent" (click)="loadRealm()" [disabled]="!isChanged">{{'label.reset' | translate}}</button>
       <button mat-raised-button color="accent" (click)="updateRealm()">{{'label.save' | translate}}</button>
     </div>
 

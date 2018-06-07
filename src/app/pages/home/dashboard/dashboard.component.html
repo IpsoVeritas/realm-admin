@@ -10,53 +10,66 @@
   </mat-toolbar-row>
 </mat-toolbar>
 
-<integrity-section title="Personalise your space" enableExpansion="true" expansionId="dashboard.1" *ngIf="realm && realm.realmDescriptor && !realm.realmDescriptor.banner">
+<!-- integrity-section [title]="'dashboard.personalise_section' | translate" enableExpansion="true" expansionId="dashboard.personalise" *ngIf="realm && realm.realmDescriptor && !realm.realmDescriptor.banner" -->
+<integrity-section [title]="'dashboard.personalise_section' | translate" enableExpansion="true" expansionId="dashboard.personalise" *ngIf="realm && realm.realmDescriptor">
   <mat-card>
-    <mat-card-title>Add pictures to your realm</mat-card-title>
+    <mat-card-header>
+      <mat-card-title><p class="mat-body-2" translate>dashboard.personalise_title</p></mat-card-title>
+    </mat-card-header>
     <mat-card-content>
-      <p>
-        Add a banner and a profile picture to make your realm easily identified by your users
-      </p>
+      <p translate>dashboard.personalise_content</p>
     </mat-card-content>
     <mat-card-actions>
-      <button mat-button routerLink="/home/settings">
-        <mat-icon>camera_alt</mat-icon> Add pictures
+      <button mat-button routerLink="/{{session.realm}}/home/settings" color="accent">
+        <mat-icon>camera_alt</mat-icon>{{ 'dashboard.add_pictures' | translate }}
       </button>
     </mat-card-actions>
   </mat-card>
 </integrity-section>
 
-<integrity-section title="Controllers" enableExpansion="true" expansionId="controllersSection" *ngIf="controllers && controllers.length > 0">
-  <button mat-button *ngFor="let controller of controllers" [routerLink]="['../controller', controller.id]">{{controller.name}}</button>
+<integrity-section [title]="'dashboard.controllers_section' | translate" enableExpansion="true" expansionId="dashboard.controllers" *ngIf="controllers && controllers.length > 0">
+  <mat-card *ngFor="let controller of controllers">
+    <mat-card-header>
+      <mat-card-title><p class="mat-body-2">{{controller.name}}</p></mat-card-title>
+    </mat-card-header>
+    <mat-card-actions>
+      <button mat-button color="accent" routerLink="/{{session.realm}}/home/controller/{{controller.id}}">
+          <mat-icon>settings</mat-icon>{{ 'dashboard.setup_now' | translate }}
+      </button>
+    </mat-card-actions>
+  </mat-card>
+
 </integrity-section>
 
-<integrity-section title="Services" enableExpansion="true" expansionId="controllersSection" *ngIf="services && services.length > 0">
-  <button mat-button *ngFor="let service of services" (click)="install(service)">{{service.name}}</button>
+<integrity-section [title]="'dashboard.services_section' | translate" enableExpansion="true" expansionId="dashboard.services" *ngIf="services && services.length > 0">
+  <mat-card *ngFor="let service of services">
+    <mat-card-header>
+      <mat-card-title><p class="mat-body-2">{{service.name}}</p></mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <p>{{service.description}}</p>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-button color="accent" (click)="install(service)">
+          <mat-icon>add</mat-icon>{{ 'menu.add_service' | translate }}
+      </button>
+    </mat-card-actions>
+  </mat-card>
+
 </integrity-section>
 
-<integrity-section title="Session">
+<integrity-section [title]="'dashboard.session_section' | translate">
   <mat-card>
-    Expires in {{ seconds / 60 | number:'1.0-0' }} minutes and {{ seconds % 60 | number:'1.0-0' }} seconds
-  </mat-card>
-</integrity-section>
-
-<integrity-section title="Developer" enableExpansion="true" expansionId="dashboardDev" *ngIf="session.getItem('developer',false)">
-  <mat-card>
-    <mat-card-title>Realm</mat-card-title>
+    <mat-card-header>
+      <mat-card-title><p class="mat-body-2" translate>dashboard.session_expires_title</p></mat-card-title>
+    </mat-card-header>
     <mat-card-content>
-      <pre>{{realm | json }}</pre>
+      <p>{{ 'dashboard.session_expires_content' | translate:{minutes:min, seconds:sec} }}</p>
     </mat-card-content>
-  </mat-card>
-  <mat-card>
-    <mat-card-title>Controllers</mat-card-title>
-    <mat-card-content>
-      <pre>{{controllers | json }}</pre>
-    </mat-card-content>
-  </mat-card>
-  <mat-card>
-    <mat-card-title>Services</mat-card-title>
-    <mat-card-content>
-      <pre>{{services | json }}</pre>
-    </mat-card-content>
+    <mat-card-actions>
+        <button mat-button color="accent" (click)="logout()">
+            <mat-icon>exit_to_app</mat-icon>{{ 'menu.logout' | translate }}
+        </button>
+    </mat-card-actions>
   </mat-card>
 </integrity-section>

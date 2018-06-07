@@ -56,7 +56,7 @@ export class LoginComponent implements OnInit {
             this.session.realm = '';
           } else {
             this.snackBar.open(
-              this.translate.instant('error.connecting', { host: this.config.backend }),
+              this.translate.instant('error.connecting_to_host', { host: this.config.backend }),
               this.translate.instant('label.close'),
               { duration: 3000 });
           }
@@ -100,7 +100,7 @@ export class LoginComponent implements OnInit {
   }
 
   showCopySuccess(value: string) {
-    this.snackBar.open(this.translate.instant('toast.copied_to_clipboard', { value: value }), '', { duration: 2000 });
+    this.snackBar.open(this.translate.instant('message.copied_to_clipboard', { value: value }), '', { duration: 2000 });
   }
 
   updateCountdown() {

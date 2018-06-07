@@ -69,7 +69,7 @@ export class PlatformService {
       window.location.href = `integrity://app/webapp/${url}`;
       return Promise.resolve();
     } else {
-      const message = this.translate.instant('general.copied_to_clipboard', { value: uri });
+      const message = this.translate.instant('message.copied_to_clipboard', { value: uri });
       return this.dialogs.openQRCode({ title: title, qrdata: uri, copySuccessMessage: message })
         .then(() => console.log('closed'));
     }

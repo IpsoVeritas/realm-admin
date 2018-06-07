@@ -10,7 +10,6 @@ import { RealmsClient, InvitesClient } from '../../../shared/api-clients';
 import { Realm } from '../../../shared/models';
 import { RoleInviteDialogComponent } from '../mandates/role-invite-dialog.component';
 import { Invite } from '../../../shared/models';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'app-realms',
@@ -47,8 +46,11 @@ export class RealmsComponent implements OnInit {
   create() {
     this.dialogs.openSimpleInput({
       message: this.translate.instant('realms.realm_name'),
-      ok: this.translate.instant('label.ok'),
-      cancel: this.translate.instant('label.cancel')
+      ok: this.translate.instant('label.create'),
+      okIcon: 'add',
+      okColor: 'accent',
+      cancel: this.translate.instant('label.cancel'),
+      cancelColor: 'accent'
     }).then(name => {
       if (name) {
         const realm = new Realm();
@@ -59,7 +61,7 @@ export class RealmsComponent implements OnInit {
           .then(newRealm => this.dataSource.data.push(newRealm))
           .then(() => this.dataSource.data = this.dataSource.data)
           .catch(error => this.snackBarOpen(
-            this.translate.instant('general.error_creating', { value: realm.name }),
+            this.translate.instant('error.creating', { value: realm.name }),
             this.translate.instant('label.close'),
             this.snackBarErrorConfig));
       }
@@ -67,23 +69,23 @@ export class RealmsComponent implements OnInit {
   }
 
   invite(realm: Realm) {
-    console.log(realm);
-    this.dialog.open(RoleInviteDialogComponent, { data: new Invite() })
+    const invite = new Invite();
+    invite.realm = realm.name;
+    invite.role = realm.adminRoles[0];
+    invite.type = 'invite';
+    invite.messageType = 'email';
+    this.dialog.open(RoleInviteDialogComponent, { data: invite })
       .afterClosed().toPromise()
-      .then(invite => {
-        if (invite) {
-          invite.realm = realm.name;
-          invite.role = realm.adminRoles[0];
-          invite.type = 'invite';
-          invite.messageType = 'email';
+      .then(i => {
+        if (i) {
           invite.messageURI = 'mailto:' + invite.name;
           this.invitesClient.sendInvite(invite)
             .then(() => this.snackBarOpen(
-              this.translate.instant('invites.admin_invite_sent', { value: invite.name }),
+              this.translate.instant('invite.admin_invite_sent', { email: invite.name }),
               this.translate.instant('label.close'),
               { duration: 3000 }))
             .catch(error => this.snackBarOpen(
-              this.translate.instant('invites.error_sending', { value: invite.name }),
+              this.translate.instant('invite.error_sending', { email: invite.name }),
               this.translate.instant('label.close'),
               this.snackBarErrorConfig));
         }
@@ -93,15 +95,17 @@ export class RealmsComponent implements OnInit {
 
   delete(realm: Realm) {
     this.dialogs.openConfirm({
-      message: this.translate.instant('realms.delete_realm', { value: realm.id }),
-      ok: this.translate.instant('label.ok'),
+      message: this.translate.instant('realms.delete_realm', { realm: realm.id }),
+      ok: this.translate.instant('label.delete'),
+      okIcon: 'delete',
+      okColor: 'warn',
       cancel: this.translate.instant('label.cancel')
     }).then(confirmed => {
       if (confirmed) {
         this.realmsClient.deleteRealm(realm)
           .then(() => this.dataSource.data = this.dataSource.data.filter(item => item !== realm))
           .catch(error => this.snackBarOpen(
-            this.translate.instant('general.error_deleting', { value: realm.id }),
+            this.translate.instant('error.deleting', { value: realm.id }),
             this.translate.instant('label.close'),
             this.snackBarErrorConfig));
       }

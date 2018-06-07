@@ -21,7 +21,7 @@
       <ng-container *ngIf="profileMode == 'drawer'">
         <mat-nav-list>
           <a mat-list-item [routerLink]="['settings']" routerLinkActive="active" (click)="drawerMode == 'over' ? drawer.close() : false">
-            <mat-icon>settings</mat-icon>{{ 'label.settings' | translate }}</a>
+            <mat-icon>settings</mat-icon>{{ 'menu.settings' | translate }}</a>
         </mat-nav-list>
         <ng-container *ngFor="let realm of session.realms">
           <mat-divider></mat-divider>
@@ -30,12 +30,12 @@
         <mat-divider></mat-divider>
         <mat-nav-list>
           <a mat-list-item routerLink="/other/login">
-            <mat-icon>add</mat-icon>{{ 'label.login_other' | translate }}</a>
+            <mat-icon>add</mat-icon>{{ 'menu.login_other' | translate }}</a>
         </mat-nav-list>
         <mat-divider></mat-divider>
         <mat-nav-list>
           <a mat-list-item (click)="logout()">
-            <mat-icon>exit_to_app</mat-icon>{{ 'label.logout' | translate }}</a>
+            <mat-icon>exit_to_app</mat-icon>{{ 'menu.logout' | translate }}</a>
         </mat-nav-list>
       </ng-container>
     </mat-expansion-panel>
@@ -44,24 +44,24 @@
 
     <mat-nav-list>
       <a mat-list-item routerLink="/{{session.realm}}/home" routerLinkActive="active" (click)="drawerMode == 'over' ? drawer.close() : false">
-        <mat-icon>dashboard</mat-icon>Your dashboard
+        <mat-icon>dashboard</mat-icon>{{ 'menu.dashboard' | translate }}
       </a>
       <a *ngIf="user?.owner" mat-list-item [routerLink]="['realms']" routerLinkActive="active" (click)="drawerMode == 'over' ? drawer.close() : false">
-        <mat-icon>domain</mat-icon>Manage realms
+        <mat-icon>domain</mat-icon>{{ 'menu.realms' | translate }}
       </a>
     </mat-nav-list>
 
-    <integrity-section title="Manage user groups" enableExpansion="true" expansionId="home.roles" class="nav-list">
+    <integrity-section [title]="'menu.roles' | translate" enableExpansion="true" expansionId="home.roles" class="nav-list">
       <mat-nav-list>
         <a mat-list-item [routerLink]="['mandates', role.id]" routerLinkActive="active" (click)="drawerMode == 'over' ? drawer.close() : false"
           *ngFor="let role of roles">
           <mat-icon>group</mat-icon>{{role.description}}</a>
         <a mat-list-item (click)="createRole()" routerLinkActive="active">
-          <mat-icon>add</mat-icon>New group</a>
+          <mat-icon>add</mat-icon>{{ 'menu.create_role' | translate }}</a>
       </mat-nav-list>
     </integrity-section>
 
-    <integrity-section title="Manage services" enableExpansion="true" expansionId="home.controllers" class="nav-list">
+    <integrity-section [title]="'menu.controllers' | translate" enableExpansion="true" expansionId="home.controllers" class="nav-list">
       <mat-nav-list>
         <a mat-list-item [routerLink]="['controller', controller.id]" routerLinkActive="active" (click)="drawerMode == 'over' ? drawer.close() : false"
           *ngFor="let controller of controllers">
@@ -72,9 +72,9 @@
           <!-- span *ngIf="controller.descriptor?.requireSetup" translate>general.setup_required</span -->
         </a>
         <a mat-list-item (click)="syncControllers()" routerLinkActive="active">
-          <mat-icon>sync</mat-icon>Sync services</a>
+          <mat-icon>sync</mat-icon>{{ 'menu.sync_controllers' | translate }}</a>
         <a mat-list-item (click)="addController()" routerLinkActive="active">
-          <mat-icon>add</mat-icon>Add service</a>
+          <mat-icon>add</mat-icon>{{ 'menu.add_service' | translate }}</a>
       </mat-nav-list>
     </integrity-section>
 
@@ -97,7 +97,7 @@
 
     <mat-menu class="profile-popup" #profileMenu="matMenu" xPosition="before" yPosition="below" [overlapTrigger]="false">
       <button mat-menu-item [routerLink]="['settings']">
-        <mat-icon>settings</mat-icon>{{ 'label.settings' | translate }}
+        <mat-icon>settings</mat-icon>{{ 'menu.settings' | translate }}
       </button>
       <ng-container *ngFor="let realm of session.realms">
         <mat-divider></mat-divider>
@@ -105,11 +105,11 @@
       </ng-container>
       <mat-divider></mat-divider>
       <button mat-menu-item routerLink="/other/login">
-        <mat-icon>add</mat-icon>{{ 'label.login_other' | translate }}
+        <mat-icon>add</mat-icon>{{ 'menu.login_other' | translate }}
       </button>
       <mat-divider></mat-divider>
       <button mat-menu-item (click)="logout()">
-        <mat-icon>exit_to_app</mat-icon>{{ 'label.logout' | translate }}
+        <mat-icon>exit_to_app</mat-icon>{{ 'menu.logout' | translate }}
       </button>
     </mat-menu>
 
