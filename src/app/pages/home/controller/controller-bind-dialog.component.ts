@@ -15,16 +15,16 @@ import { RolesClient } from '../../../shared/api-clients';
       </mat-form-field>
 
       <mat-form-field>
-        <mat-select [(ngModel)]="controller.mandateRole" placeholder="{{'entities.Role' | translate}}">
+        <mat-select [(ngModel)]="controller.mandateRole" placeholder="{{'binding.mandate_role_placeholder' | translate}}">
           <mat-option *ngFor="let role of roles" [value]="role.name">
-            {{ role.name }}
+            {{ role.description }}
           </mat-option>
         </mat-select>
       </mat-form-field>
 
     </mat-dialog-content>
     <mat-dialog-actions>
-      <button mat-button [mat-dialog-close]="null">{{'label.cancel' | translate}}</button>
+      <button mat-button [mat-dialog-close]="null" color="accent">{{'label.cancel' | translate}}</button>
       <button mat-raised-button [mat-dialog-close]="controller" color="accent">{{'label.ok' | translate}}</button>
     </mat-dialog-actions>`,
   styles: [`

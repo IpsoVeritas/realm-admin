@@ -209,9 +209,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   createRole() {
     this.dialogs.openSimpleInput({
-      message: this.translate.instant('roles.role_name'),
-      ok: this.translate.instant('label.ok'),
+      message: this.translate.instant('mandates.enter_role_name'),
+      ok: this.translate.instant('label.create'),
       okColor: 'accent',
+      okIcon: 'add',
       cancel: this.translate.instant('label.cancel'),
       cancelColor: 'accent'
     }).then(name => {
@@ -225,7 +226,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
           .then(roles => roles.filter(r => r.name === role.name))
           .then(roles => this.router.navigateByUrl(`/${this.session.realm}/home/mandates/${roles[0].id}`))
           .catch(error => this.snackBarOpen(
-            this.translate.instant('general.error_creating', { value: role.description }),
+            this.translate.instant('error.creating', { value: role.description }),
             this.translate.instant('label.close'),
             this.snackBarErrorConfig));
       }
@@ -270,9 +271,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
             .then(binding => this.controllersClient.bindController(controller, binding))
             .then(() => this.servicesClient.deleteToken(token))
             .then(() => this.snackBarOpen(
-              this.translate.instant('binding.binding_success', { value: controller.name }),
+              this.translate.instant('binding.binding_success', { controller: controller.name }),
               this.translate.instant('label.close'),
               { duration: 2000 }))
+            .then(() => this.events.publish('controllers_updated'))
             .catch(error => {
               console.error('Error binding controller:', error);
               this.snackBarOpen(
@@ -280,8 +282,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.translate.instant('label.close'),
                 this.snackBarErrorConfig
               );
-            })
-            .then(() => this.loadControllers());
+            });
         }
       });
   }

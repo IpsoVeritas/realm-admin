@@ -90,23 +90,25 @@
     </mat-table>
   </mat-tab>
   <mat-tab [label]="'mandates.authorizations_tab' | translate">
-    <mat-expansion-panel class="mat-elevation-z0" *ngFor="let controller of controllers">
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          <a routerLink="/{{session.realm}}/home/controller/{{controller.id}}">{{controller.name}}</a>
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-      <mat-list>
-        <mat-divider></mat-divider>
-        <ng-container *ngFor="let action of controller['actions']">
-          <mat-list-item>
-            {{action.label}}
-            <span class="mat-spacer"></span>
-            <mat-icon color="accent" *ngIf="action.roles.includes(role.name)">check</mat-icon>
-          </mat-list-item>
+    <ng-container *ngFor="let controller of controllers">
+      <mat-expansion-panel class="mat-elevation-z0" *ngIf="controller['actions'] && controller['actions'].length > 0">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <a routerLink="/{{session.realm}}/home/controller/{{controller.id}}">{{controller.name}}</a>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-list>
           <mat-divider></mat-divider>
-        </ng-container>
-      </mat-list>
-    </mat-expansion-panel>
+          <ng-container *ngFor="let action of controller['actions']">
+            <mat-list-item>
+              {{action.label}}
+              <span class="mat-spacer"></span>
+              <mat-icon color="accent" *ngIf="action.roles.includes(role.name)">check</mat-icon>
+            </mat-list-item>
+            <mat-divider></mat-divider>
+          </ng-container>
+        </mat-list>
+      </mat-expansion-panel>
+    </ng-container>
   </mat-tab>
 </mat-tab-group>

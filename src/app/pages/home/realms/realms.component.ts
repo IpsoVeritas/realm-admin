@@ -74,7 +74,7 @@ export class RealmsComponent implements OnInit {
     invite.role = realm.adminRoles[0];
     invite.type = 'invite';
     invite.messageType = 'email';
-    this.dialog.open(RoleInviteDialogComponent, { data: invite })
+    this.dialog.open(RoleInviteDialogComponent, { data: { invite: invite, role: realm.adminRoles[0] } })
       .afterClosed().toPromise()
       .then(i => {
         if (i) {

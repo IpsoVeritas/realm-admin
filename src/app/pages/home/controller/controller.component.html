@@ -6,25 +6,25 @@
       <span *ngIf="controller" class="mat-display-1"> {{controller?.name}}</span>
       <span class="mat-spacer"></span>
       <button mat-button color="accent" (click)="edit()">
-        <mat-icon>mode_edit</mat-icon> Edit service
+        <mat-icon>mode_edit</mat-icon> {{'controllers.edit_service' | translate}}
       </button>
       <button mat-icon-button color="accent" (click)="edit()">
         <mat-icon>mode_edit</mat-icon>
       </button>
       <button mat-button color="accent" (click)="delete()">
-        <mat-icon>delete</mat-icon> Delete service
+        <mat-icon>delete</mat-icon> {{'controllers.delete_service' | translate}}
       </button>
       <button mat-icon-button color="accent" (click)="delete()">
         <mat-icon>delete</mat-icon>
       </button>
       <button mat-button color="accent" (click)="sync()">
-        <mat-icon>sync</mat-icon> Sync service
+        <mat-icon>sync</mat-icon> {{'controllers.sync_service' | translate}}
       </button>
       <button mat-icon-button color="accent" (click)="sync()">
         <mat-icon>sync</mat-icon>
       </button>
       <button *ngIf="controller?.descriptor?.addBindingEndpoint" mat-button color="accent" (click)="binding()">
-        <mat-icon>link</mat-icon> Get binding
+        <mat-icon>link</mat-icon>  {{'controllers.get_binding_url' | translate}}
       </button>
       <button *ngIf="controller?.descriptor?.addBindingEndpoint"  mat-icon-button color="accent" (click)="binding()">
         <mat-icon>link</mat-icon>

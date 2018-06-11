@@ -20,7 +20,15 @@
         "reset": "",
         "save": "",
         "general": "",
-        "images": ""
+        "images": "",
+        "email": "",
+        "mandate_starts": "",
+        "mandate_ends": "",
+        "status": "",
+        "active": "",
+        "pending": "",
+        "revoked": "",
+        "revoke": ""
     },
     "login": {
         "title": "",
@@ -29,10 +37,14 @@
     "error": {
         "connecting_to_host": "",
         "deleting": "",
-        "creating": ""
+        "creating": "",
+        "loading": "",
+        "updating": "",
+        "calling": ""
     },
     "message": {
-        "copied_to_clipboard": ""
+        "copied_to_clipboard": "",
+        "updated": ""
     },
     "realm-list": {
         "enter_realm": "",
@@ -67,7 +79,10 @@
     },
     "invite": {
         "admin_invite_sent": "",
-        "error_sending": ""
+        "error_sending": "",
+        "delete_invite": "",
+        "resend_invite": "",
+        "error_deleting": ""
     },
     "settings": {
         "guest_role": "",
@@ -91,5 +106,37 @@
     },
     "logout": {
         "confirm": ""
+    },
+    "mandates": {
+        "edit_role": "",
+        "delete_role": "",
+        "invite_to_role": "",
+        "mandates_tab": "",
+        "authorizations_tab": "",
+        "enter_role_name": "",
+        "delete_role_confirmation": "",
+        "revoke_mandate": "",
+        "error_revoking": ""
+    },
+    "controllers": {
+        "error_syncing_controllers": "",
+        "add_service": "",
+        "custom_binding_url": "",
+        "binding_url_placeholder": "",
+        "error_syncing_controller": "",
+        "controller_settings": "",
+        "delete_controller": "",
+        "edit_service": "",
+        "delete_service": "",
+        "sync_service": "",
+        "get_binding_url": ""
+    },
+    "binding": {
+        "error_invalid_token": "",
+        "error_add_failed": "",
+        "binding_success": "",
+        "error_binding_failed": "",
+        "bind_controller": "",
+        "mandate_role_placeholder": ""
     }
 }

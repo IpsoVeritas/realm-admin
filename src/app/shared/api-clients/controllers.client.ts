@@ -42,7 +42,6 @@ export class ControllersClient extends BaseClient {
     return this.config.getBackendURL(`/realms/${controller.realm}/controllers/${controller.id}`)
       .then(url => this.http.delete(url).toPromise())
       .then(() => this.cache.invalidate(`controllerIds:${controller.realm}`, `controller:${controller.realm}/${controller.id}`));
-
   }
 
   public updateActions(controller: Controller, actions: string): Promise<any> {
@@ -83,7 +82,6 @@ export class ControllersClient extends BaseClient {
           responseType: 'text',
           headers: new HttpHeaders({ 'Authorization': `Mandate ${token}` }),
         };
-        console.log(controller.descriptor.actionsURI);
         return this.http.get(controller.descriptor.actionsURI, options).toPromise();
       });
   }
@@ -95,7 +93,8 @@ export class ControllersClient extends BaseClient {
 
   public bindController(controller: Controller, binding: any): Promise<any> {
     const url = controller.descriptor.bindURI;
-    return this.http.post(url, binding).toPromise();
+    return this.http.post(url, binding).toPromise()
+      .then(() => this.cache.invalidate(`controllerIds:${controller.realm}`));
   }
 
 }

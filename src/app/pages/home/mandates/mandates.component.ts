@@ -84,7 +84,6 @@ export class MandatesComponent implements OnInit {
     this.controllersClient.getControllers(this.session.realm)
       .then(controllers => controllers.map(controller => this.controllersClient.getControllerActions(controller)
         .then(actions => {
-          console.log(controller, actions);
           controller['actions'] = actions;
           return controller;
         })))
@@ -133,7 +132,7 @@ export class MandatesComponent implements OnInit {
 
   deleteRole(role: Role) {
     this.dialogs.openConfirm({
-      message: this.translate.instant('mandates.delete_role_confirmation', { role: role.description, count: this.items.length }),
+      message: this.translate.instant('mandates.delete_role_confirmation', { role: role.description, count: this.dataSource.data.length }),
       ok: this.translate.instant('label.delete'),
       okColor: 'warn',
       okIcon: 'delete',
@@ -157,7 +156,7 @@ export class MandatesComponent implements OnInit {
     invite.role = role.name;
     invite.type = 'invite';
     invite.messageType = 'email';
-    this.dialog.open(RoleInviteDialogComponent, { data: invite })
+    this.dialog.open(RoleInviteDialogComponent, { data: { invite: invite, role: role.description } })
       .afterClosed().toPromise()
       .then(i => {
         if (i) {
@@ -185,7 +184,7 @@ export class MandatesComponent implements OnInit {
   revoke(item) {
     const mandate: IssuedMandate = item.data;
     this.dialogs.openConfirm({
-      message: this.translate.instant('mandates.revoke_mandate', { role: mandate.label, recipient: mandate.recipientName }),
+      message: this.translate.instant('mandates.revoke_mandate', { role: this.role.description, recipient: mandate.recipientName }),
       ok: this.translate.instant('label.revoke'),
       okColor: 'warn',
       okIcon: 'block',

@@ -120,7 +120,7 @@ export class ControllerComponent implements OnInit, OnDestroy {
           this.controllersClient.updateController(updated)
             .then(() => this.controller = updated)
             .catch(error => this.snackBarOpen(
-              this.translate.instant('general.error_updating', { value: this.controller.name }),
+              this.translate.instant('error.updating', { value: this.controller.name }),
               this.translate.instant('label.close'),
               this.snackBarErrorConfig));
         }
@@ -129,8 +129,10 @@ export class ControllerComponent implements OnInit, OnDestroy {
 
   delete() {
     this.dialogs.openConfirm({
-      message: this.translate.instant('controllers.delete_controller', { value: this.controller.name }),
-      ok: this.translate.instant('label.ok'),
+      message: this.translate.instant('controllers.delete_controller', { controller: this.controller.name }),
+      ok: this.translate.instant('label.delete'),
+      okColor: 'warn',
+      okIcon: 'delete',
       cancel: this.translate.instant('label.cancel')
     }).then(confirmed => {
       if (confirmed) {
@@ -138,7 +140,7 @@ export class ControllerComponent implements OnInit, OnDestroy {
           .then(() => this.events.publish('controllers_updated'))
           .then(() => this.router.navigateByUrl(`/${this.session.realm}/home`))
           .catch(error => this.snackBarOpen(
-            this.translate.instant('general.error_deleting', { value: this.controller.name }),
+            this.translate.instant('error.deleting', { value: this.controller.name }),
             this.translate.instant('label.close'),
             this.snackBarErrorConfig));
       }
@@ -148,7 +150,7 @@ export class ControllerComponent implements OnInit, OnDestroy {
   sync() {
     this.controllersClient.syncController(this.controller)
       .catch(error => this.snackBarOpen(
-        this.translate.instant('controllers.error_syncing_controller', { value: this.controller.name }),
+        this.translate.instant('controllers.error_syncing_controller', { controller: this.controller.name }),
         this.translate.instant('label.close'),
         this.snackBarErrorConfig));
   }
@@ -164,13 +166,13 @@ export class ControllerComponent implements OnInit, OnDestroy {
           const obj = JSON.parse(xhr.responseText);
           this.clipboard.copy(obj.url)
             .then(value => this.snackBarOpen(
-              this.translate.instant('binding.url_copied', { value: this.controller.name }),
+              this.translate.instant('message.copied_to_clipboard', { value: obj.url }),
               this.translate.instant('label.close'),
               { duration: 2000 }))
             .catch(() => this.snackBarOpen(obj.url, 'Close'));
         } else {
           this.snackBarOpen(
-            this.translate.instant('general.error_calling', { value: this.controller.descriptor.addBindingEndpoint }),
+            this.translate.instant('error.calling', { value: this.controller.descriptor.addBindingEndpoint }),
             this.translate.instant('label.close'),
             this.snackBarErrorConfig);
         }

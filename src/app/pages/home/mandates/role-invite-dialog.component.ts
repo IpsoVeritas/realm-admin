@@ -7,7 +7,7 @@ import { Invite } from './../../../shared/models/';
 @Component({
   selector: 'app-role-invite-dialog',
   template: `
-    <h2 mat-dialog-title>{{ 'invite-dialog.title' | translate:{role:invite.role} }}</h2>
+    <h2 mat-dialog-title>{{ 'invite-dialog.title' | translate:{role:role} }}</h2>
     <form>
       <mat-dialog-content>
         <mat-form-field>
@@ -56,12 +56,17 @@ import { Invite } from './../../../shared/models/';
 })
 export class RoleInviteDialogComponent {
 
+  public invite: Invite;
+  public role: string;
+
   emailFormControl = new FormControl('', [
     Validators.required,
     Validators.email,
   ]);
 
   constructor(public dialogRef: MatDialogRef<RoleInviteDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public invite: Invite) {
+    @Inject(MAT_DIALOG_DATA) public data: any) {
+    this.invite = data.invite;
+    this.role = data.role;
   }
 }

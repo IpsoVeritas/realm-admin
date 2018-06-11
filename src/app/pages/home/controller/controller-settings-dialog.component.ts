@@ -13,8 +13,10 @@ import { Controller } from './../../../shared/models/';
       </mat-form-field>
     </mat-dialog-content>
     <mat-dialog-actions>
-      <button mat-button [mat-dialog-close]="null">{{'label.cancel' | translate}}</button>
-      <button mat-raised-button [mat-dialog-close]="controller" color="accent">{{'label.ok' | translate}}</button>
+      <button mat-button [mat-dialog-close]="null" color="accent">{{'label.cancel' | translate}}</button>
+      <button mat-raised-button [mat-dialog-close]="controller" color="accent">
+        <mat-icon>mode_edit</mat-icon>{{'label.save' | translate}}
+      </button>
     </mat-dialog-actions>`,
   styles: [`
     mat-dialog-content {

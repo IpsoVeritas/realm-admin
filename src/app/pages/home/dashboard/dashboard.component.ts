@@ -57,6 +57,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     setTimeout(() => this.updateClock(), 500);
+    this.events.subscribe('controllers_updated', () => this.loadControllers());
   }
 
   ngOnDestroy() {
@@ -87,7 +88,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     return this.controllersClient.getControllers(this.session.realm)
       .then(controllers => controllers.filter(controller => controller.descriptor.requireSetup))
       .then(controllers => this.controllers = controllers)
-      .then(() => console.log(this.controllers))
       .then(() => this.controllers);
   }
 

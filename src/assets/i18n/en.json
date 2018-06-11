@@ -20,7 +20,15 @@
         "reset": "Reset",
         "save": "Save",
         "general": "General",
-        "images": "Images"
+        "images": "Images",
+        "email": "E-mail",
+        "mandate_starts": "Mandate start date",
+        "mandate_ends": "Mandate end date",
+        "status": "Status",
+        "active": "Active",
+        "pending": "Pending",
+        "revoked": "Revoked",
+        "revoke": "revoke"
     },
     "login": {
         "title": "Login to {{realm}}",
@@ -29,10 +37,14 @@
     "error": {
         "connecting_to_host": "Error connecting to {{host}}",
         "deleting": "Unable to delete {{value}}",
-        "creating": "Unable to create {{value}}"
+        "creating": "Unable to create {{value}}",
+        "loading": "Unable to load {{value}}",
+        "updating": "Unable to update {{value}}",
+        "calling": "Error calling {{value}}"
     },
     "message": {
-        "copied_to_clipboard": "Copied '{{value}}' to clipboard"
+        "copied_to_clipboard": "Copied '{{value}}' to clipboard",
+        "updated": "Updated {{value}}"
     },
     "realm-list": {
         "enter_realm": "Enter the realm name",
@@ -67,7 +79,10 @@
     },
     "invite": {
         "admin_invite_sent": "Admin invite sent to {{email}}",
-        "error_sending": "Unable to send invite to {{email}}"
+        "error_sending": "Unable to send invite to {{email}}",
+        "delete_invite": "Delete invite sent to {{email}}",
+        "resend_invite": "Re-send invite to {{email}}",
+        "error_deleting": "Unable to delete invite sent to {{email}}"
     },
     "settings": {
         "guest_role": "Guest group",
@@ -91,5 +106,37 @@
     },
     "logout": {
         "confirm": "Logout from {{realm}}?"
+    },
+    "mandates": {
+        "edit_role": "Edit group",
+        "delete_role": "Delete group",
+        "invite_to_role": "Invite people",
+        "mandates_tab": "Group members",
+        "authorizations_tab": "Authorizations",
+        "enter_role_name": "Group name",
+        "delete_role_confirmation": "Delete group {{role}} with {{count}} members",
+        "revoke_mandate": "Revoke {{role}} membership for {{recipient}}",
+        "error_revoking": "Unable to revoke {{role}} membership"
+    },
+    "controllers": {
+        "error_syncing_controllers": "Error syncing services",
+        "add_service": "Add service",
+        "custom_binding_url": "Custom binding...",
+        "binding_url_placeholder": "Binding URL",
+        "error_syncing_controller": "Error syncing {{controller}}",
+        "controller_settings": "Service settings",
+        "delete_controller": "Delete {{controller}}",
+        "edit_service": "Edit service",
+        "delete_service": "Delete service",
+        "sync_service": "Sync service",
+        "get_binding_url": "Binding URL"
+    },
+    "binding": {
+        "error_invalid_token": "Invalid binding token",
+        "error_add_failed": "Add service failed",
+        "binding_success": "Service {{controller}} has been added",
+        "error_binding_failed": "Error while binding service",
+        "bind_controller": "Bind service",
+        "mandate_role_placeholder": "Group membership"
     }
 }

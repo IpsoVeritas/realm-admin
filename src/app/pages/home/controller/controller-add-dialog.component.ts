@@ -19,11 +19,11 @@ import { ServicesClient } from '../../../shared/api-clients';
         <input #custom
         matInput
         [(ngModel)]="customService.url"
-        placeholder="{{'binding.binding_url' | translate}}">
+        placeholder="{{'controllers.binding_url_placeholder' | translate}}">
       </mat-form-field>
     </mat-dialog-content>
     <mat-dialog-actions>
-      <button mat-button [mat-dialog-close]="null">{{'label.cancel' | translate}}</button>
+      <button mat-button [mat-dialog-close]="null" color="accent">{{'label.cancel' | translate}}</button>
       <button mat-raised-button
         [mat-dialog-close]="service"
         color="accent"
