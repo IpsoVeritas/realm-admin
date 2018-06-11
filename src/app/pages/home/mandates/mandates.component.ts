@@ -84,6 +84,7 @@ export class MandatesComponent implements OnInit {
     this.controllersClient.getControllers(this.session.realm)
       .then(controllers => controllers.map(controller => this.controllersClient.getControllerActions(controller)
         .then(actions => {
+          console.log(controller, actions);
           controller['actions'] = actions;
           return controller;
         })))
@@ -107,9 +108,10 @@ export class MandatesComponent implements OnInit {
   editRole(role: Role) {
     this.dialogs.openSimpleInput({
       value: role.description,
-      message: this.translate.instant('roles.role_name'),
-      ok: this.translate.instant('label.ok'),
+      message: this.translate.instant('mandates.enter_role_name'),
+      ok: this.translate.instant('label.save'),
       okColor: 'accent',
+      okIcon: 'mode_edit',
       cancel: this.translate.instant('label.cancel'),
       cancelColor: 'accent',
     }).then(name => {
@@ -121,7 +123,7 @@ export class MandatesComponent implements OnInit {
               .then(() => Object.assign(role, updated))
               .then(() => this.events.publish('roles_updated'))
               .catch(error => this.snackBarOpen(
-                this.translate.instant('general.error_updating', { value: role.description }),
+                this.translate.instant('error.updating', { value: role.description }),
                 this.translate.instant('label.close'),
                 this.snackBarErrorConfig));
           });
@@ -131,7 +133,7 @@ export class MandatesComponent implements OnInit {
 
   deleteRole(role: Role) {
     this.dialogs.openConfirm({
-      message: this.translate.instant('group.delete_group', { description: role.description, items: this.items.length }),
+      message: this.translate.instant('mandates.delete_role_confirmation', { role: role.description, count: this.items.length }),
       ok: this.translate.instant('label.delete'),
       okColor: 'warn',
       okIcon: 'delete',
@@ -142,7 +144,7 @@ export class MandatesComponent implements OnInit {
           .then(() => this.events.publish('roles_updated'))
           .then(() => this.router.navigateByUrl(`/${this.session.realm}/home`))
           .catch(error => this.snackBarOpen(
-            this.translate.instant('general.error_deleting', { value: role.description }),
+            this.translate.instant('error.deleting', { value: role.description }),
             this.translate.instant('label.close'),
             this.snackBarErrorConfig));
       }
@@ -183,8 +185,8 @@ export class MandatesComponent implements OnInit {
   revoke(item) {
     const mandate: IssuedMandate = item.data;
     this.dialogs.openConfirm({
-      message: this.translate.instant('mandates.revoke_mandate', { mandate: mandate.label, recipient: mandate.recipientName }),
-      ok: this.translate.instant('label.ok'),
+      message: this.translate.instant('mandates.revoke_mandate', { role: mandate.label, recipient: mandate.recipientName }),
+      ok: this.translate.instant('label.revoke'),
       okColor: 'warn',
       okIcon: 'block',
       cancel: this.translate.instant('label.cancel')
@@ -196,7 +198,7 @@ export class MandatesComponent implements OnInit {
             item.data.status = 1;
           })
           .catch(error => this.snackBarOpen(
-            this.translate.instant('mandates.error_revoking', { value: mandate.label }),
+            this.translate.instant('mandates.error_revoking', { role: mandate.label, recipient: mandate.recipientName }),
             this.translate.instant('label.close'),
             this.snackBarErrorConfig));
       }
@@ -206,14 +208,17 @@ export class MandatesComponent implements OnInit {
   resend(item: any) {
     const invite = item.data;
     this.dialogs.openConfirm({
-      message: this.translate.instant('invites.resend_invite', { value: invite.name }),
-      ok: this.translate.instant('label.ok'),
-      cancel: this.translate.instant('label.cancel')
+      message: this.translate.instant('invite.resend_invite', { email: invite.name }),
+      ok: this.translate.instant('label.send'),
+      okColor: 'accent',
+      okIcon: 'send',
+      cancel: this.translate.instant('label.cancel'),
+      cancelColor: 'accent'
     }).then(confirmed => {
       if (confirmed) {
         this.invitesClient.resendInvite(invite)
           .catch(error => this.snackBarOpen(
-            this.translate.instant('invites.error_sending', { value: invite.name }),
+            this.translate.instant('invite.error_sending', { email: invite.name }),
             this.translate.instant('label.close'),
             this.snackBarErrorConfig));
       }
@@ -223,8 +228,10 @@ export class MandatesComponent implements OnInit {
   delete(item: any) {
     const invite = item.data;
     this.dialogs.openConfirm({
-      message: this.translate.instant('invites.delete_invite', { value: invite.name }),
-      ok: this.translate.instant('label.ok'),
+      message: this.translate.instant('invite.delete_invite', { email: invite.name }),
+      ok: this.translate.instant('label.delete'),
+      okColor: 'warn',
+      okIcon: 'delete',
       cancel: this.translate.instant('label.cancel')
     }).then(confirmed => {
       if (confirmed) {
@@ -232,7 +239,7 @@ export class MandatesComponent implements OnInit {
           .then(() => this.items = this.items.filter(i => i !== item))
           .then(() => this.dataSource.data = this.dataSource.data.filter(i => i !== item))
           .catch(error => this.snackBarOpen(
-            this.translate.instant('invites.error_deleting', { value: invite.name }),
+            this.translate.instant('invite.error_deleting', { email: invite.name }),
             this.translate.instant('label.close'),
             this.snackBarErrorConfig));
       }

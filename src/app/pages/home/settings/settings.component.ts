@@ -76,7 +76,7 @@ export class SettingsComponent implements OnInit {
       })
       .then(() => this.isChanged = false)
       .catch(error => this.snackBarOpen(
-        this.translate.instant('general.error_loading', { value: this.session.realm }),
+        this.translate.instant('error.loading', { value: this.session.realm }),
         this.translate.instant('label.close'),
         this.snackBarErrorConfig));
   }
@@ -117,11 +117,11 @@ export class SettingsComponent implements OnInit {
       .then(() => this.isChanged = false)
       .then(() => this.events.publish('realm_updated', this.realm))
       .then(() => this.snackBarOpen(
-        this.translate.instant('general.success_updating', { value: this.realm.id }),
+        this.translate.instant('message.updated', { value: this.realm.id }),
         this.translate.instant('label.close'),
         { duration: 2000 }))
       .catch(error => this.snackBarOpen(
-        this.translate.instant('general.error_updating', { value: this.realm.id }),
+        this.translate.instant('error.updating', { value: this.realm.id }),
         this.translate.instant('label.close'),
         this.snackBarErrorConfig));
   }

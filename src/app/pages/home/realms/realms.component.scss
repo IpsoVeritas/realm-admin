@@ -29,4 +29,6 @@
 .cdk-column-action {
   flex: 0 1 84px;
   min-width: 84px;
+  display: flex;
+  justify-content: flex-end;
 }

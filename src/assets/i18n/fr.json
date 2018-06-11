@@ -1,24 +1,37 @@
 {
     "bootstrap": {
-        "password": "",
-        "admin_mandate": ""
-    },
-    "error": {
-        "password_required": "",
-        "invalid_password": "",
-        "connecting": ""
+        "password_placeholder": "",
+        "collect_admin_mandate": "",
+        "error_password_required": "",
+        "error_invalid_password": ""
     },
     "label": {
         "ok": "",
         "close": "",
         "cancel": "",
-        "done": ""
+        "done": "",
+        "realms": "",
+        "name": "",
+        "description": "",
+        "create_realm": "",
+        "delete": "",
+        "create": "",
+        "send": "",
+        "reset": "",
+        "save": "",
+        "general": "",
+        "images": ""
     },
     "login": {
         "title": "",
         "instructions": ""
     },
-    "toast": {
+    "error": {
+        "connecting_to_host": "",
+        "deleting": "",
+        "creating": ""
+    },
+    "message": {
         "copied_to_clipboard": ""
     },
     "realm-list": {
@@ -28,5 +41,55 @@
     },
     "realm-card": {
         "no_descriptor": ""
+    },
+    "invite-dialog": {
+        "title": "",
+        "email": "",
+        "message": "",
+        "error_email_invalid": "",
+        "error_email_required": ""
+    },
+    "menu": {
+        "settings": "",
+        "login_other": "",
+        "logout": "",
+        "dashboard": "",
+        "realms": "",
+        "roles": "",
+        "controllers": "",
+        "create_role": "",
+        "add_service": "",
+        "sync_controllers": ""
+    },
+    "realms": {
+        "delete_realm": "",
+        "realm_name": ""
+    },
+    "invite": {
+        "admin_invite_sent": "",
+        "error_sending": ""
+    },
+    "settings": {
+        "guest_role": "",
+        "guest_role_placeholder": "",
+        "no_guest_role": "",
+        "guest_role_instructions": "",
+        "description_instructions": "",
+        "image_instructions": ""
+    },
+    "dashboard": {
+        "personalise_section": "",
+        "personalise_content": "",
+        "personalise_title": "",
+        "add_pictures": "",
+        "session_section": "",
+        "services_section": "",
+        "controllers_section": "",
+        "session_expires_content": "",
+        "session_expires_title": "",
+        "setup_now": ""
+    },
+    "logout": {
+        "confirm": ""
     }
 }

@@ -1,8 +1,11 @@
 @import "~@brickchain/integrity-theme/theming";
 
 .mat-chip {
-  width: 80px;
+  width: 60px;
   justify-content: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 
   &.active {
     background-color: mat-color($integrity-green);
@@ -50,7 +53,8 @@
 }
 
 .cdk-column-action {
-  cursor: pointer;
-  flex: 0 1 40px;
-  min-width: 40px;
+  flex: 0 1 100px;
+  display: flex;
+  justify-content: flex-end;
+  min-width: 100px;
 }

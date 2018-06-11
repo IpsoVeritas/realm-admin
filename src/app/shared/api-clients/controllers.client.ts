@@ -83,6 +83,7 @@ export class ControllersClient extends BaseClient {
           responseType: 'text',
           headers: new HttpHeaders({ 'Authorization': `Mandate ${token}` }),
         };
+        console.log(controller.descriptor.actionsURI);
         return this.http.get(controller.descriptor.actionsURI, options).toPromise();
       });
   }

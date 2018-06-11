@@ -1,24 +1,37 @@
 {
     "bootstrap": {
-        "password": "Bootstrap password",
-        "admin_mandate": "Scan to collect Admin Mandate"
-    },
-    "error": {
-        "password_required": "A password is required",
-        "invalid_password": "The password is invalid",
-        "connecting": "Error connecting to {{host}}"
+        "password_placeholder": "Bootstrap password",
+        "collect_admin_mandate": "Scan to collect Admin Mandate",
+        "error_password_required": "A password is required",
+        "error_invalid_password": "The password is invalid"
     },
     "label": {
         "ok": "OK",
         "close": "Close",
         "cancel": "Cancel",
-        "done": "Done"
+        "done": "Done",
+        "realms": "Realms",
+        "name": "Name",
+        "description": "Description",
+        "create_realm": "Create realm",
+        "delete": "Delete",
+        "create": "Create",
+        "send": "Send",
+        "reset": "Reset",
+        "save": "Save",
+        "general": "General",
+        "images": "Images"
     },
     "login": {
         "title": "Login to {{realm}}",
         "instructions": "You need the Integrity App to scan this QR Code and access your admin interface for {{realm}}"
     },
-    "toast": {
+    "error": {
+        "connecting_to_host": "Error connecting to {{host}}",
+        "deleting": "Unable to delete {{value}}",
+        "creating": "Unable to create {{value}}"
+    },
+    "message": {
         "copied_to_clipboard": "Copied '{{value}}' to clipboard"
     },
     "realm-list": {
@@ -28,5 +41,55 @@
     },
     "realm-card": {
         "no_descriptor": "Realm is offline"
+    },
+    "invite-dialog": {
+        "title": "Invite as {{role}}",
+        "email": "E-mail",
+        "message": "Message",
+        "error_email_invalid": "Invalid e-mail address",
+        "error_email_required": "E-mail address is required"
+    },
+    "menu": {
+        "settings": "Settings",
+        "login_other": "Log in to another realm",
+        "logout": "Log out",
+        "dashboard": "Your dashboard",
+        "realms": "Manage realms",
+        "roles": "Manage groups",
+        "controllers": "Manage services",
+        "create_role": "New group",
+        "add_service": "Add service",
+        "sync_controllers": "Sync services"
+    },
+    "realms": {
+        "delete_realm": "Delete realm {{realm}}?",
+        "realm_name": "Enter realm name"
+    },
+    "invite": {
+        "admin_invite_sent": "Admin invite sent to {{email}}",
+        "error_sending": "Unable to send invite to {{email}}"
+    },
+    "settings": {
+        "guest_role": "Guest group",
+        "guest_role_placeholder": "Select guest group for realm",
+        "no_guest_role": "No group",
+        "guest_role_instructions": "This is the group a user is assigned when automatically joining your realm.",
+        "description_instructions": "This is what your users see when they connect. It can be the name of your organisation, or the name of your service.",
+        "image_instructions": "Select images to personalise your realm. They will be visible to your users. Please select a dark image for your banner, as your realm name will appear in white. You can directly drag an image from your desktop."
+    },
+    "dashboard": {
+        "personalise_section": "Personalise your realm",
+        "personalise_content": "Add a banner and a profile picture to make your realm easily identified by your users.",
+        "personalise_title": "Add pictures to your realm",
+        "add_pictures": "Add pictures",
+        "session_section": "Current session",
+        "services_section": "Available services",
+        "controllers_section": "New services",
+        "session_expires_content": "{{minutes}} minutes and {{seconds}} seconds",
+        "session_expires_title": "Expires in...",
+        "setup_now": "Setup now"
+    },
+    "logout": {
+        "confirm": "Logout from {{realm}}?"
     }
 }

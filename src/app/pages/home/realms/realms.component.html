@@ -42,11 +42,11 @@
         <button mat-menu-item (click)="invite(realm)">Send admin invite</button>
         <button mat-menu-item (click)="delete(realm)" *ngIf="session.realm != realm.id && !realm.ownerRealm">Delete realm</button>
       </mat-menu>
-    -->
+      -->
       <button mat-icon-button (click)="invite(realm)">
         <mat-icon>person_add</mat-icon>
       </button>
-      <button mat-icon-button (click)="delete(realm)" *ngIf="session.realm != realm.id && !realm.ownerRealm">
+      <button mat-icon-button (click)="delete(realm)" [disabled]="session.realm == realm.id && realm.ownerRealm">
         <mat-icon>delete</mat-icon>
       </button>
 
