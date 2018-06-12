@@ -1,0 +1,21 @@
+@import "~@brickchain/integrity-theme/theming";
+
+.content-header {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.invite-form {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+
+  .buttons {
+    display: flex;
+    justify-content: flex-end;
+
+    button {
+      margin: 12px 0 0 12px;
+    }
+  }
+}

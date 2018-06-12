@@ -28,6 +28,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTabsModule } from '@angular/material/tabs';
 
+import { OwlDateTimeModule } from 'ng-pick-datetime';
+import { OwlMomentDateTimeModule } from 'ng-pick-datetime-moment';
+
 import { TranslateModule, TranslateLoader, TranslateFakeLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { POEditorLoader } from './shared/utils/poeditor.loader';
@@ -65,6 +68,7 @@ import { ControllerBindDialogComponent } from './pages/home/controller/controlle
 import { ControllerSettingsDialogComponent } from './pages/home/controller/controller-settings-dialog.component';
 import { SessionTimeoutDialogComponent } from './pages/home/session-timeout-dialog.component';
 import { SettingsComponent } from './pages/home/settings/settings.component';
+import { InviteComponent } from './pages/home/invite/invite.component';
 
 export function createTranslateLoader(http: HttpClient) {
   if (environment.production) {
@@ -93,7 +97,8 @@ export function createTranslateLoader(http: HttpClient) {
     ControllerSettingsDialogComponent,
     SessionTimeoutDialogComponent,
     SettingsComponent,
-    RealmsComponent
+    RealmsComponent,
+    InviteComponent
   ],
   entryComponents: [
     ControllerAddDialogComponent,
@@ -141,6 +146,8 @@ export function createTranslateLoader(http: HttpClient) {
     DragAndDropModule,
     SectionModule,
     Ng2ImgToolsModule,
+    OwlDateTimeModule,
+    OwlMomentDateTimeModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

@@ -9,6 +9,7 @@ import { LoginComponent } from './pages/login/login.component';
 import { HomeComponent } from './pages/home/home.component';
 import { DashboardComponent } from './pages/home/dashboard/dashboard.component';
 import { RealmsComponent } from './pages/home/realms/realms.component';
+import { InviteComponent } from './pages/home/invite/invite.component';
 import { MandatesComponent } from './pages/home/mandates/mandates.component';
 import { ControllerComponent } from './pages/home/controller/controller.component';
 import { SettingsComponent } from './pages/home/settings/settings.component';
@@ -21,6 +22,7 @@ const appRoutes: Routes = [
     children: [
       { path: '', component: DashboardComponent },
       { path: 'realms', component: RealmsComponent },
+      { path: 'invite/:id', component: InviteComponent },
       { path: 'mandates/:id', component: MandatesComponent },
       { path: 'controller/:id', component: ControllerComponent },
       { path: 'settings', component: SettingsComponent },

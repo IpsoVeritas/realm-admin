@@ -1,6 +1,7 @@
 import { Component, HostBinding, OnInit } from '@angular/core';
 import { URLSearchParams } from '@angular/http';
 import { TranslateService } from '@ngx-translate/core';
+import { DateTimeAdapter } from 'ng-pick-datetime';
 import { EventsService } from '@brickchain/integrity-angular';
 import { PlatformService, ConfigService, SessionService } from './shared/services';
 import 'rxjs/add/operator/filter';
@@ -16,6 +17,7 @@ export class AppComponent implements OnInit {
 
   constructor(
     private translate: TranslateService,
+    private dateTimeAdapter: DateTimeAdapter<any>,
     private platform: PlatformService,
     private config: ConfigService,
     private session: SessionService,
@@ -44,6 +46,7 @@ export class AppComponent implements OnInit {
   useLanguage(language: string) {
     this.session.language = language;
     this.translate.use(language);
+    this.dateTimeAdapter.setLocale(this.translate.currentLang);
   }
 
 }

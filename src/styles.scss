@@ -1,5 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~@brickchain/integrity-theme/material-theme";
+@import "~ng-pick-datetime/assets/style/picker.min.css";
 
 html {
   width: 100vw;
@@ -79,7 +80,8 @@ body {
 }
 
 .content-header {
-  .menu-icon {
+  .menu-icon, .back-icon {
+    cursor: pointer;
     margin-right: 10px;
     font-size: 30px !important;
     width: 30px !important;
@@ -110,6 +112,7 @@ body {
       display: none;
       opacity: 0;
     }
+
     .mat-display-1 {
       max-width: 100%;
     }
@@ -134,6 +137,24 @@ body {
 .cdk-overlay-shadow {
   box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.1);
   animation: fadein 0.2s ease-in-out;
+}
+
+.owl-dt-popup-container {
+  top: 15px !important;
+  border-radius: 6px;
+}
+
+.owl-dt-calendar-table .owl-dt-calendar-cell-selected {
+  color: rgba(255, 255, 255, 0.85);
+  background-color: mat-color($integrity-accent);
+}
+
+.owl-dt-calendar-table .owl-dt-calendar-cell-today:not(.owl-dt-calendar-cell-selected) {
+  border-color: mat-color($integrity-primary);
+}
+
+.owl-dt-container-control-button {
+  color: mat-color($integrity-accent);
 }
 
 @keyframes fadein {

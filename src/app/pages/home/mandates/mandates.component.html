@@ -16,10 +16,10 @@
     <button mat-icon-button color="accent" (click)="deleteRole(role)">
       <mat-icon>delete</mat-icon>
     </button>
-    <button mat-button color="accent" (click)="inviteToRole(role)">
+    <button *ngIf="role" mat-button color="accent" routerLink="/{{session.realm}}/home/invite/{{role.id}}">
       <mat-icon>person_add</mat-icon> {{'mandates.invite_to_role' | translate}}
     </button>
-    <button mat-icon-button color="accent" (click)="inviteToRole(role)">
+    <button *ngIf="role" mat-icon-button color="accent" routerLink="/{{session.realm}}/home/invite/{{role.id}}">
       <mat-icon>person_add</mat-icon>
     </button>
   </mat-toolbar-row>
