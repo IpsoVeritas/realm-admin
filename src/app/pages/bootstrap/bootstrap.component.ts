@@ -44,7 +44,7 @@ export class BootstrapComponent implements OnInit, AfterViewInit {
     return this.accessClient.postBootstrap(this.password.value)
       .then((response: BootstrapResponse) => this.platform.handleURI(
         response.mandateURI,
-        this.translate.instant('bootstrap.admin_mandate')
+        this.translate.instant('bootstrap.collect_admin_mandate')
       ))
       .then(() => this.router.navigateByUrl(`/${this.session.realm}/login`))
       .catch(error => this.password.setErrors({ 'bootstrapFailed': true }));

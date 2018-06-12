@@ -27,6 +27,7 @@ export class LoginComponent implements OnInit {
   qrCountdown = 100;
   progressTimer: any;
   pollTimer: any;
+  copied = false;
 
   descriptor: RealmDescriptor;
 
@@ -100,6 +101,8 @@ export class LoginComponent implements OnInit {
   }
 
   showCopySuccess(value: string) {
+    this.copied = true;
+    setTimeout(() => this.copied = false, 500);
     this.snackBar.open(this.translate.instant('message.copied_to_clipboard', { value: value }), '', { duration: 2000 });
   }
 

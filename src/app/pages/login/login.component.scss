@@ -61,6 +61,10 @@
 
       integrity-qrcode {
         cursor: copy;
+
+        &.copied {
+          cursor: progress;
+        }
       }
     }
 

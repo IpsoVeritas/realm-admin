@@ -6,7 +6,7 @@
         <mat-error *ngIf="password.errors && password.errors['required']" translate>bootstrap.error_password_required</mat-error>
         <mat-error *ngIf="password.errors && password.errors['bootstrapFailed']" translate>bootstrap.error_invalid_password</mat-error>
       </mat-form-field>
-      <button type="submit" mat-raised-button [disabled]="bootstrapForm.invalid" color="accent" translate>label.ok</button>
+      <button type="submit" mat-raised-button [disabled]="bootstrapForm.invalid" color="accent">{{ 'label.ok' | translate }}</button>
     </form>
   </mat-card>
 </div>

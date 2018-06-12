@@ -165,7 +165,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     clearTimeout(this.sessionTimer);
     const timeout = this.session.expires - Date.now();
     if (timeout > 0) {
-      this.sessionTimer = setTimeout(() => this.events.publish('logout'), timeout);
+      this.sessionTimer = setTimeout(() => this.timeout(), timeout);
     } else {
       this.timeout();
     }

@@ -6,16 +6,16 @@ import { SessionService, PlatformService, CryptoService } from '../../shared/ser
 import { AuthUser, AuthInfo } from '../../shared/models';
 
 @Component({
-  selector: 'app-controller-settings-dialog',
+  selector: 'app-session-timeout-dialog',
   template: `
-    <h2 mat-dialog-title translate>Session expired, scan to resume</h2>
+    <h2 mat-dialog-title translate>session-resume.dialog_title</h2>
     <mat-dialog-content>
-      <integrity-qrcode *ngIf="qrUri" [qrdata]="qrUri" [integrityClipboard]="qrUri">
+      <integrity-qrcode *ngIf="qrUri" [qrdata]="qrUri" [integrityClipboard]="qrUri" (copySuccess)="copySuccess()" [class.copied]="copied">
       </integrity-qrcode>
       <mat-progress-bar *ngIf="qrUri" mode="determinate" [value]="qrCountdown" color="accent"></mat-progress-bar>
     </mat-dialog-content>
     <mat-dialog-actions>
-      <button mat-raised-button [mat-dialog-close]="false" color="warn">{{'label.logout' | translate}}</button>
+      <button mat-raised-button [mat-dialog-close]="false" color="warn">{{'session-resume.logout' | translate}}</button>
     </mat-dialog-actions>`,
   styles: [`
     mat-dialog-content {
@@ -28,6 +28,9 @@ import { AuthUser, AuthInfo } from '../../shared/models';
       padding: 35px 45px;
       margin: 15px 0 0 0;
     }
+    integrity-qrcode.copied {
+      cursor: progress;
+    }
   `]
 })
 export class SessionTimeoutDialogComponent {
@@ -39,6 +42,7 @@ export class SessionTimeoutDialogComponent {
   qrCountdown = 100;
   progressTimer: any;
   pollTimer: any;
+  copied = false;
 
   constructor(private authClient: AuthClient,
     public session: SessionService,
@@ -109,6 +113,11 @@ export class SessionTimeoutDialogComponent {
   @HostListener('keydown.enter')
   public onEnter(): void {
     this.dialogRef.close(false);
+  }
+
+  public copySuccess() {
+    this.copied = true;
+    setTimeout(() => this.copied = false, 500);
   }
 
 }

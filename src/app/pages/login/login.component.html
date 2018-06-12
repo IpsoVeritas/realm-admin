@@ -15,7 +15,7 @@
     </div>
 
     <div class="qrcode">
-      <integrity-qrcode *ngIf="qrUri" [qrdata]="qrUri" [integrityClipboard]="qrUri" (copySuccess)="showCopySuccess($event)"></integrity-qrcode>
+      <integrity-qrcode *ngIf="qrUri" [qrdata]="qrUri" [integrityClipboard]="qrUri" (copySuccess)="showCopySuccess($event)" [class.copied]="copied"></integrity-qrcode>
     </div>
 
     <div *ngIf="descriptor" class="instructions">
