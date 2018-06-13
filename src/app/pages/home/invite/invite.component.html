@@ -26,9 +26,9 @@
           </mat-form-field>
         </div>
 
-        <span class="hidden-when-narrow">{{ 'label.to' | translate }}</span>
+        <mat-checkbox [(ngModel)]="endDateEnabled" (ngModelChange)="isChanged=true">{{ 'invite.add_end_date' | translate }}</mat-checkbox>
 
-        <div class="date-picker">
+        <div class="date-picker" *ngIf="endDateEnabled">
           <mat-form-field>
             <input matInput [(ngModel)]="endDate" name="d2" [owlDateTime]="d2" (dateTimeChange)="computeDates(false)" placeholder="{{ 'label.end_date' | translate }}">
             <mat-icon matSuffix [owlDateTimeTrigger]="d2" color="accent">today</mat-icon>
@@ -49,21 +49,37 @@
 
     <integrity-section [title]="'invite.recipient_section' | translate">
 
-      <mat-form-field>
-        <textarea matInput integrityDragAndDrop (filesDropped)="recipientsDropped($event)" [(ngModel)]="recipients" (ngModelChange)="isChanged=true" placeholder="{{'invite.recipients_placeholder' | translate}}"></textarea>
+      <mat-form-field class="full-width">
+        <textarea matInput matTextareaAutosize matAutosizeMinRows="1" matAutosizeMaxRows="6" integrityDragAndDrop class="dropzone"
+          [(ngModel)]="recipients" (ngModelChange)="recipientsChanged()" (filesDropped)="recipientsDropped($event)" placeholder="{{'invite.recipients_placeholder' | translate}}"></textarea>
+        <mat-hint align="start" translate>invite.recipients_hint</mat-hint>
+        <mat-hint align="end">{{ 'invite.recipients_count_hint' | translate:{count:emails.length} }}</mat-hint>
       </mat-form-field>
 
-      <mat-form-field>
-        <input matInput [(ngModel)]="message" (ngModelChange)="isChanged=true" placeholder="{{'invite.message_placeholder' | translate}}">
+      <mat-form-field class="full-width">
+        <textarea matInput matTextareaAutosize matAutosizeMinRows="1" matAutosizeMaxRows="6" [(ngModel)]="message" (ngModelChange)="isChanged=true"
+          placeholder="{{'invite.message_placeholder' | translate}}"></textarea>
+        <mat-hint align="start" translate>invite.message_hint</mat-hint>
       </mat-form-field>
 
     </integrity-section>
 
     <mat-divider></mat-divider>
 
+    <integrity-section *ngIf="isSending || (sentInvites && sentInvites.length > 0) || (failedInvites && failedInvites.length > 0)" [title]="'invite.sending_section' | translate">
+      <mat-progress-bar *ngIf="isSending" mode="buffer" [bufferValue]="progressBufferValue" [value]="progressValue" color="accent"></mat-progress-bar>
+      <div *ngIf="!isSending">
+        {{ 'invite.send_summary' | translate:{sent:sentInvites.length, failed:failedInvites.length, total:(sentInvites.length+failedInvites.length)} }}
+      </div>
+      <ul *ngIf="!isSending && failedInvites && failedInvites.length > 0">
+        <li *ngFor="let invite of failedInvites">{{ invite.name }}</li>
+      </ul>
+    </integrity-section>
+
     <div class="buttons">
-      <button mat-button color="accent" (click)="resetForm()" [disabled]="!isChanged">{{'label.reset' | translate}}</button>
-      <button mat-raised-button color="accent" (click)="sendInvite()">{{'label.send' | translate}}</button>
+      <button mat-button color="accent" (click)="resetForm()" [disabled]="isSending || !isChanged">{{'label.reset' | translate}}</button>
+      <button mat-raised-button color="accent" *ngIf="!isSending" (click)="sendInvites()" [disabled]="isSending || !(message && emails.length > 0)">{{'label.send' | translate}}</button>
+      <button mat-raised-button color="warn" *ngIf="isSending" (click)="cancelSending = true" [disabled]="cancelSending">{{'label.cancel' | translate}}</button>
     </div>
 
   </div>

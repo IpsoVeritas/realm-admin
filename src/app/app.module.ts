@@ -27,6 +27,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 import { OwlDateTimeModule } from 'ng-pick-datetime';
 import { OwlMomentDateTimeModule } from 'ng-pick-datetime-moment';
@@ -138,6 +139,7 @@ export function createTranslateLoader(http: HttpClient) {
     MatProgressSpinnerModule,
     MatChipsModule,
     MatTabsModule,
+    MatCheckboxModule,
     WebviewClientModule,
     QRCodeModule,
     EventsModule,

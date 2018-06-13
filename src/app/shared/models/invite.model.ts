@@ -1,5 +1,5 @@
 import { JsonObject, JsonProperty } from 'json2typescript';
-import { Base } from './base.model';
+import { DateConverter } from './converters/date.converter';
 
 @JsonObject
 export class Invite {
@@ -48,5 +48,13 @@ export class Invite {
 
   @JsonProperty('keyLevel', Number, true)
   keyLevel: number = undefined;
+
+  /* v2 fields */
+
+  @JsonProperty('validFrom', DateConverter, true)
+  validFrom: Date = undefined;
+
+  @JsonProperty('validUntil', DateConverter, true)
+  validUntil: Date = undefined;
 
 }

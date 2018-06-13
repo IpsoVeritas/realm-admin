@@ -22,7 +22,8 @@ const appRoutes: Routes = [
     children: [
       { path: '', component: DashboardComponent },
       { path: 'realms', component: RealmsComponent },
-      { path: 'invite/:id', component: InviteComponent },
+      { path: 'invite/:realm/:role', component: InviteComponent },
+      { path: 'invite/:role', component: InviteComponent },
       { path: 'mandates/:id', component: MandatesComponent },
       { path: 'controller/:id', component: ControllerComponent },
       { path: 'settings', component: SettingsComponent },

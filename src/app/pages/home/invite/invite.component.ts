@@ -5,6 +5,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { SessionService } from '../../../shared/services';
 import { RolesClient, MandatesClient, InvitesClient, ControllersClient } from '../../../shared/api-clients';
 import { Role, IssuedMandate, Invite, Controller } from '../../../shared/models';
+import { promiseSerial } from '../../../shared/utils';
 import * as moment from 'moment';
 
 @Component({
@@ -22,9 +23,18 @@ export class InviteComponent implements OnInit {
   endDate: moment.Moment;
   endTime: moment.Moment;
 
+  endDateEnabled = false;
   isChanged = false;
   recipients: string;
+  emails: string[] = [];
   message: string;
+
+  isSending = false;
+  cancelSending = false;
+  sentInvites: Invite[];
+  failedInvites: Invite[];
+  progressValue: number;
+  progressBufferValue: number;
 
   constructor(public location: Location,
     private route: ActivatedRoute,
@@ -37,15 +47,16 @@ export class InviteComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.route.paramMap.subscribe(paramMap => this.selectRole(paramMap.get('id')));
+    this.route.paramMap.subscribe(paramMap => this.selectRole(paramMap.get('realm'), paramMap.get('role')));
   }
 
-  selectRole(roleId: string) {
-    this.rolesClient.getRole(this.session.realm, roleId)
+  selectRole(realmId: string, roleId: string) {
+    this.rolesClient.getRole(realmId ? realmId : this.session.realm, roleId)
       .then(role => this.role = role);
   }
 
   computeDates(adjustEnd: boolean = true) {
+    this.isChanged = true;
     let starts = moment(this.startDate).hour(this.startTime.hour()).minute(this.startTime.minute());
     let ends = moment(this.endDate).hour(this.endTime.hour()).minute(this.endTime.minute());
     if (starts.isAfter(ends)) {
@@ -63,27 +74,93 @@ export class InviteComponent implements OnInit {
 
   recipientsDropped(files) {
     if (files && files.length === 1) {
-      console.log(files[0]);
       const reader = new FileReader();
       reader.onload = () => {
         this.recipients = reader.result;
-        this.isChanged = true;
+        this.recipientsChanged();
       };
       reader.readAsText(files[0]);
     }
   }
 
+  recipientsChanged() {
+    this.isChanged = true;
+    const list = this.recipients.split(/[\s,:;]+/).map(value => value.toLowerCase());
+    const re = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+    this.emails = list.filter((value, index, self) => index === self.indexOf(value) && re.test(value));
+  }
+
   resetForm() {
     this.startDate = moment(Math.floor(Date.now() / 300000) * 300000); // Round to nearest 5 minutes
     this.startTime = moment(this.startDate);
-    this.endDate = moment(this.startDate).add(1, 'h');
+    this.endDateEnabled = false;
+    this.endDate = moment(this.startDate).add(1, 'y');
     this.endTime = moment(this.endDate);
     this.recipients = '';
     this.message = '';
+    this.isChanged = false;
   }
 
-  sendInvite() {
+  sendInvites() {
+
+    this.progressValue = 0;
+    this.progressBufferValue = 0;
+    this.cancelSending = false;
+    this.sentInvites = [];
+    this.failedInvites = [];
+    this.isSending = true;
+
+    const starts = moment(this.startDate).hour(this.startTime.hour()).minute(this.startTime.minute());
+    const ends = moment(this.endDate).hour(this.endTime.hour()).minute(this.endTime.minute());
+
+    const functions = this.emails.map(email => {
+      const invite = new Invite();
+      invite.realm = this.role.realm;
+      invite.name = email;
+      invite.role = this.role.name;
+      invite.type = 'invite';
+      invite.messageType = 'email';
+      invite.messageURI = `mailto:${email}`;
+      invite.validFrom = starts.toDate();
+      if (this.endDateEnabled) {
+        invite.validUntil = ends.toDate();
+      }
+      return () => {
+        if (this.cancelSending) {
+          return Promise.reject('canceled');
+        } else {
+          return this.invitesClient.sendInvite(invite)
+            .then(() => this.sentInvites.push(invite))
+            .catch(error => this.failedInvites.push(invite))
+            .then(() => this.updateSendProgress());
+        }
+      };
+    });
+
+    promiseSerial(functions).catch(error => console.log(error));
 
   }
 
+  updateSendProgress() {
+    this.isSending = !this.cancelSending && this.sentInvites.length + this.failedInvites.length < this.emails.length;
+    this.progressValue = Math.round(100 * this.failedInvites.length / this.emails.length);
+    this.progressBufferValue = Math.round(100 * (this.sentInvites.length + this.failedInvites.length) / this.emails.length);
+  }
+
+  /*
+  fakeSend(invite: Invite): Promise<Invite> {
+    return new Promise((resolve, reject) => {
+      const ts = Date.now();
+      setTimeout(() => {
+        if (Math.random() < 0.8) {
+          console.log(`${invite.messageURI} ok ${Date.now() - ts}`);
+          resolve(invite);
+        } else {
+          console.log(`${invite.messageURI} failed ${Date.now() - ts}`);
+          reject(invite);
+        }
+      }, 500);
+    });
+  }
+*/
 }

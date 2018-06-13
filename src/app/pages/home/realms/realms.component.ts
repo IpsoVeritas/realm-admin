@@ -1,4 +1,5 @@
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import { MatTableDataSource, } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
@@ -6,7 +7,7 @@ import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dial
 import { TranslateService } from '@ngx-translate/core';
 import { DialogsService, EventsService } from '@brickchain/integrity-angular';
 import { SessionService } from '../../../shared/services';
-import { RealmsClient, InvitesClient } from '../../../shared/api-clients';
+import { RealmsClient, RolesClient, InvitesClient } from '../../../shared/api-clients';
 import { Realm } from '../../../shared/models';
 import { RoleInviteDialogComponent } from '../mandates/role-invite-dialog.component';
 import { Invite } from '../../../shared/models';
@@ -28,11 +29,13 @@ export class RealmsComponent implements OnInit {
     panelClass: 'error'
   };
 
-  constructor(private dialogs: DialogsService,
+  constructor(private router: Router,
+    private dialogs: DialogsService,
     private translate: TranslateService,
     public session: SessionService,
     public events: EventsService,
     private realmsClient: RealmsClient,
+    private rolesClient: RolesClient,
     private invitesClient: InvitesClient,
     private dialog: MatDialog,
     private snackBar: MatSnackBar) { }
@@ -69,6 +72,12 @@ export class RealmsComponent implements OnInit {
   }
 
   invite(realm: Realm) {
+    this.rolesClient.getRoles(realm.id)
+      .then(roles => roles.filter(role => role.name === realm.adminRoles[0]))
+      .then(roles => roles[0])
+      .then(role => this.router.navigateByUrl(`/${this.session.realm}/home/invite/${realm.id}/${role.id}`));
+
+    /*
     const invite = new Invite();
     invite.realm = realm.name;
     invite.role = realm.adminRoles[0];
@@ -90,7 +99,7 @@ export class RealmsComponent implements OnInit {
               this.snackBarErrorConfig));
         }
       });
-
+*/
   }
 
   delete(realm: Realm) {
