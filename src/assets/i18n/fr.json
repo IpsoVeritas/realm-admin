@@ -28,7 +28,11 @@
         "active": "",
         "pending": "",
         "revoked": "",
-        "revoke": ""
+        "revoke": "",
+        "start_date": "",
+        "start_time": "",
+        "end_date": "",
+        "end_time": ""
     },
     "login": {
         "title": "",
@@ -54,12 +58,23 @@
     "realm-card": {
         "no_descriptor": ""
     },
-    "invite-dialog": {
+    "invite": {
         "title": "",
-        "email": "",
-        "message": "",
-        "error_email_invalid": "",
-        "error_email_required": ""
+        "admin_invite_sent": "",
+        "error_sending": "",
+        "delete_invite": "",
+        "resend_invite": "",
+        "error_deleting": "",
+        "settings_section": "",
+        "recipient_section": "",
+        "recipients_placeholder": "",
+        "recipients_hint": "",
+        "message_placeholder": "",
+        "message_hint": "",
+        "add_end_date": "",
+        "recipients_count_hint": "",
+        "sending_section": "",
+        "send_summary": ""
     },
     "menu": {
         "settings": "",
@@ -76,13 +91,6 @@
     "realms": {
         "delete_realm": "",
         "realm_name": ""
-    },
-    "invite": {
-        "admin_invite_sent": "",
-        "error_sending": "",
-        "delete_invite": "",
-        "resend_invite": "",
-        "error_deleting": ""
     },
     "settings": {
         "guest_role": "",
@@ -138,5 +146,9 @@
         "error_binding_failed": "",
         "bind_controller": "",
         "mandate_role_placeholder": ""
+    },
+    "session-resume": {
+        "dialog_title": "",
+        "logout": ""
     }
 }

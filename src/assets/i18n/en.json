@@ -1,7 +1,7 @@
 {
     "bootstrap": {
         "password_placeholder": "Bootstrap password",
-        "collect_admin_mandate": "Scan to collect Admin Mandate",
+        "collect_admin_mandate": "Scan to collect Admin mandate",
         "error_password_required": "A password is required",
         "error_invalid_password": "The password is invalid"
     },
@@ -28,7 +28,11 @@
         "active": "Active",
         "pending": "Pending",
         "revoked": "Revoked",
-        "revoke": "revoke"
+        "revoke": "revoke",
+        "start_date": "Starts",
+        "start_time": "at",
+        "end_date": "Ends",
+        "end_time": "at"
     },
     "login": {
         "title": "Login to {{realm}}",
@@ -54,12 +58,23 @@
     "realm-card": {
         "no_descriptor": "Realm is offline"
     },
-    "invite-dialog": {
-        "title": "Invite as {{role}}",
-        "email": "E-mail",
-        "message": "Message",
-        "error_email_invalid": "Invalid e-mail address",
-        "error_email_required": "E-mail address is required"
+    "invite": {
+        "title": "Invite to {{role}}",
+        "admin_invite_sent": "Admin invite sent to {{email}}",
+        "error_sending": "Unable to send invite to {{email}}",
+        "delete_invite": "Delete invite sent to {{email}}",
+        "resend_invite": "Re-send invite to {{email}}",
+        "error_deleting": "Unable to delete invite sent to {{email}}",
+        "settings_section": "Memership settings",
+        "recipient_section": "Invite via email",
+        "recipients_placeholder": "Add email",
+        "recipients_hint": "Enter recipients here, or drag a text file",
+        "message_placeholder": "Add a personal message",
+        "message_hint": "Enter your message here",
+        "add_end_date": "Add end date",
+        "recipients_count_hint": "{{count}} recipients",
+        "sending_section": "Send status",
+        "send_summary": "Sent {{sent}} out of {{total}} invites with {{failed}} failures."
     },
     "menu": {
         "settings": "Settings",
@@ -76,13 +91,6 @@
     "realms": {
         "delete_realm": "Delete realm {{realm}}?",
         "realm_name": "Enter realm name"
-    },
-    "invite": {
-        "admin_invite_sent": "Admin invite sent to {{email}}",
-        "error_sending": "Unable to send invite to {{email}}",
-        "delete_invite": "Delete invite sent to {{email}}",
-        "resend_invite": "Re-send invite to {{email}}",
-        "error_deleting": "Unable to delete invite sent to {{email}}"
     },
     "settings": {
         "guest_role": "Guest group",
@@ -138,5 +146,9 @@
         "error_binding_failed": "Error while binding service",
         "bind_controller": "Bind service",
         "mandate_role_placeholder": "Group membership"
+    },
+    "session-resume": {
+        "dialog_title": "Session expired, scan to resume",
+        "logout": "Log out"
     }
 }
