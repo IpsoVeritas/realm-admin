@@ -2,7 +2,7 @@
   <app-stripe></app-stripe>
   <mat-toolbar-row>
     <mat-icon class="back-icon" (click)="location.back()">arrow_back</mat-icon>
-    <span class="mat-display-1" *ngIf="role">{{ 'invite-dialog.title' | translate:{role:role.description} }}</span>
+    <span class="mat-display-1" *ngIf="role">{{ 'invite.title' | translate:{role:role.description} }}</span>
   </mat-toolbar-row>
 </mat-toolbar>
 <div class="content mat-elevation-z0" *ngIf="role">
