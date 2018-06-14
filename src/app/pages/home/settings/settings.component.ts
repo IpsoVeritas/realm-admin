@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import { EventsService } from '@brickchain/integrity-angular';
@@ -7,8 +7,6 @@ import { Ng2ImgToolsService } from 'ng2-img-tools';
 import { SessionService, CacheService } from '../../../shared/services';
 import { RealmsClient, RolesClient } from '../../../shared/api-clients';
 import { Realm, Role } from '../../../shared/models';
-
-import { JsonConvert, OperationMode, ValueCheckingMode } from 'json2typescript';
 
 @Component({
   selector: 'app-settings',

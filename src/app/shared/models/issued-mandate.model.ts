@@ -1,4 +1,4 @@
-import { JsonObject, JsonProperty, Any } from 'json2typescript';
+import { JsonObject, JsonProperty } from 'json2typescript';
 import { Mandate } from './mandate.model';
 
 @JsonObject

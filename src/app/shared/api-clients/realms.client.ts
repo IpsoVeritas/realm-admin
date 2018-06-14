@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BaseClient } from './base.client';
-import { Realm, RealmDescriptor, Controller, ControllerDescriptor } from '../models';
+import { Realm, RealmDescriptor, Controller } from '../models';
 
 @Injectable()
 export class RealmsClient extends BaseClient {
@@ -14,8 +13,7 @@ export class RealmsClient extends BaseClient {
     return this.cache.get(`realmDescriptor:${realmId}`)
       .catch(() => this.config.getBackendURL(`/realms/${realmId}/realm.json?ts=${Date.now()}`)
         .then(url => this.http.get(url).toPromise())
-        .then(jws => this.crypto.verifyAndParseJWS(jws))
-        .then(obj => this.jsonConvert.deserializeObject(obj, RealmDescriptor))
+        .then(jws => this.crypto.deserializeJWS<RealmDescriptor>(jws, RealmDescriptor))
         .then(descriptor => this.cache.set(`realmDescriptor:${realmId}`, descriptor)));
   }
 

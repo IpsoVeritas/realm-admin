@@ -1,15 +1,16 @@
 import { Injector } from '@angular/core';
 import { DialogsService } from '@brickchain/integrity-angular';
+import { DocumentHandler } from './document-handler.interface';
 import { DocumentHandlerService } from './document-handler.service';
 import { Role } from '../shared/models';
 import { RolesClient } from './../shared/api-clients';
 
-export class AddRoleHandler {
+export class AddRoleHandler implements DocumentHandler {
 
   private dialogs: DialogsService;
   private rolesClient: RolesClient;
 
-  constructor(private documentHandler: DocumentHandlerService, private injector: Injector) {
+  constructor(public documentHandler: DocumentHandlerService, private injector: Injector) {
     this.dialogs = this.injector.get(DialogsService);
     this.rolesClient = this.injector.get(RolesClient);
   }

@@ -1,16 +1,13 @@
-import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import { MatTableDataSource, } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
-import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { DialogsService, EventsService } from '@brickchain/integrity-angular';
 import { SessionService } from '../../../shared/services';
-import { RealmsClient, RolesClient, InvitesClient } from '../../../shared/api-clients';
+import { RealmsClient, RolesClient } from '../../../shared/api-clients';
 import { Realm } from '../../../shared/models';
-import { RoleInviteDialogComponent } from '../mandates/role-invite-dialog.component';
-import { Invite } from '../../../shared/models';
 
 @Component({
   selector: 'app-realms',
@@ -36,8 +33,6 @@ export class RealmsComponent implements OnInit {
     public events: EventsService,
     private realmsClient: RealmsClient,
     private rolesClient: RolesClient,
-    private invitesClient: InvitesClient,
-    private dialog: MatDialog,
     private snackBar: MatSnackBar) { }
 
   ngOnInit() {
@@ -76,30 +71,6 @@ export class RealmsComponent implements OnInit {
       .then(roles => roles.filter(role => role.name === realm.adminRoles[0]))
       .then(roles => roles[0])
       .then(role => this.router.navigateByUrl(`/${this.session.realm}/home/invite/${realm.id}/${role.id}`));
-
-    /*
-    const invite = new Invite();
-    invite.realm = realm.name;
-    invite.role = realm.adminRoles[0];
-    invite.type = 'invite';
-    invite.messageType = 'email';
-    this.dialog.open(RoleInviteDialogComponent, { data: { invite: invite, role: realm.adminRoles[0] } })
-      .afterClosed().toPromise()
-      .then(i => {
-        if (i) {
-          invite.messageURI = 'mailto:' + invite.name;
-          this.invitesClient.sendInvite(invite)
-            .then(() => this.snackBarOpen(
-              this.translate.instant('invite.admin_invite_sent', { email: invite.name }),
-              this.translate.instant('label.close'),
-              { duration: 3000 }))
-            .catch(error => this.snackBarOpen(
-              this.translate.instant('invite.error_sending', { email: invite.name }),
-              this.translate.instant('label.close'),
-              this.snackBarErrorConfig));
-        }
-      });
-*/
   }
 
   delete(realm: Realm) {

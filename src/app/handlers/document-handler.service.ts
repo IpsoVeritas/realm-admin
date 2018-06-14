@@ -1,5 +1,4 @@
 import { Injectable, Injector } from '@angular/core';
-import { Controller } from '../shared/models';
 import { TextDecoder } from 'text-encoding-utf-8';
 import * as jose from 'node-jose';
 

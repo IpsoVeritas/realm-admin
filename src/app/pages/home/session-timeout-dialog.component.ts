@@ -1,7 +1,7 @@
-import { Component, Inject, HostListener } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Component, HostListener } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
 import { WebviewClientService } from '@brickchain/integrity-webview-client';
-import { AuthClient, RealmsClient } from '../../shared/api-clients';
+import { AuthClient } from '../../shared/api-clients';
 import { SessionService, PlatformService, CryptoService } from '../../shared/services';
 import { AuthUser, AuthInfo } from '../../shared/models';
 

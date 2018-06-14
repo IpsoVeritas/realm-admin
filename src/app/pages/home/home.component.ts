@@ -1,15 +1,15 @@
 import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild } from '@angular/core';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { BreakpointObserver } from '@angular/cdk/layout';
 import { MatDrawer } from '@angular/material/sidenav';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
-import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { EventsService, DialogsService } from '@brickchain/integrity-angular';
-import { PlatformService, SessionService, CacheService } from '../../shared/services';
+import { PlatformService, SessionService, CacheService, CryptoService } from '../../shared/services';
 import { AccessClient, RealmsClient, RolesClient, ControllersClient, ServicesClient } from '../../shared/api-clients';
-import { User, Realm, RealmDescriptor, Role, Controller, Service } from '../../shared/models';
+import { User, Realm, RealmDescriptor, Role, Controller, Service, ControllerBinding } from '../../shared/models';
 import { ControllerAddDialogComponent } from './controller/controller-add-dialog.component';
 import { ControllerBindDialogComponent } from './controller/controller-bind-dialog.component';
 import { SessionTimeoutDialogComponent } from './session-timeout-dialog.component';
@@ -58,9 +58,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     private dialogs: DialogsService,
     private router: Router,
     private route: ActivatedRoute,
-    private platform: PlatformService,
+    public platform: PlatformService,
     public session: SessionService,
     private cache: CacheService,
+    private crypto: CryptoService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private realmsClient: RealmsClient,
@@ -70,10 +71,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     private breakpointObserver: BreakpointObserver,
     private accessClient: AccessClient) {
     this.drawerMode = 'side';
-    breakpointObserver.observe(['(max-width: 1170px)']).subscribe(result => {
+    this.breakpointObserver.observe(['(max-width: 1170px)']).subscribe(result => {
       this.drawerMode = result.matches ? 'over' : 'side';
     });
-    breakpointObserver.observe(['(max-width: 1420px)']).subscribe(result => {
+    this.breakpointObserver.observe(['(max-width: 1420px)']).subscribe(result => {
       this.profileMode = result.matches ? 'drawer' : 'side';
     });
     this.navigationSubscription = this.router.events.subscribe((event: any) => {
@@ -228,7 +229,12 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
           .catch(error => this.snackBarOpen(
             this.translate.instant('error.creating', { value: role.description }),
             this.translate.instant('label.close'),
-            this.snackBarErrorConfig));
+            this.snackBarErrorConfig))
+          .then(() => {
+            if (this.drawerMode === 'over') {
+              this.drawer.close();
+            }
+          });
       }
     });
   }
@@ -268,13 +274,17 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       .then(controller => {
         if (controller) {
           this.realmsClient.bindController(controller)
-            .then(binding => this.controllersClient.bindController(controller, binding))
-            .then(() => this.servicesClient.deleteToken(token))
-            .then(() => this.snackBarOpen(
-              this.translate.instant('binding.binding_success', { controller: controller.name }),
-              this.translate.instant('label.close'),
-              { duration: 2000 }))
-            .then(() => this.events.publish('controllers_updated'))
+            .then((binding: Object) => this.controllersClient.bindController(controller, binding)
+              .then(() => this.servicesClient.deleteToken(token))
+              .then(() => this.snackBarOpen(
+                this.translate.instant('binding.binding_success', { controller: controller.name }),
+                this.translate.instant('label.close'),
+                { duration: 2000 }))
+              .then(() => this.crypto.deserializeJWS<ControllerBinding>(binding, ControllerBinding))
+              .then(controllerBinding => {
+                this.router.navigateByUrl(`/${this.session.realm}/home/controller/${controllerBinding.id}`);
+                this.events.publish('controllers_updated');
+              }))
             .catch(error => {
               console.error('Error binding controller:', error);
               this.snackBarOpen(
@@ -282,12 +292,20 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.translate.instant('label.close'),
                 this.snackBarErrorConfig
               );
+            })
+            .then(() => {
+              if (this.drawerMode === 'over') {
+                this.drawer.close();
+              }
             });
         }
       });
   }
 
   syncControllers() {
+    if (this.drawerMode === 'over') {
+      this.drawer.close();
+    }
     Promise.all(this.controllers.map(item => this.controllersClient.syncController(item)))
       .catch(error => this.snackBarOpen(
         this.translate.instant('controllers.error_syncing_controllers'),

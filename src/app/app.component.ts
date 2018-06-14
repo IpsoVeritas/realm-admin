@@ -1,9 +1,9 @@
 import { Component, HostBinding, OnInit } from '@angular/core';
-import { URLSearchParams } from '@angular/http';
+import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { DateTimeAdapter } from 'ng-pick-datetime';
 import { EventsService } from '@brickchain/integrity-angular';
-import { PlatformService, ConfigService, SessionService } from './shared/services';
+import { ConfigService, SessionService } from './shared/services';
 import 'rxjs/add/operator/filter';
 
 @Component({
@@ -15,10 +15,9 @@ export class AppComponent implements OnInit {
 
   @HostBinding('class.ready') ready = false;
 
-  constructor(
+  constructor(private router: Router,
     private translate: TranslateService,
     private dateTimeAdapter: DateTimeAdapter<any>,
-    private platform: PlatformService,
     private config: ConfigService,
     private session: SessionService,
     private events: EventsService) {
@@ -29,15 +28,21 @@ export class AppComponent implements OnInit {
 
     const params = new URLSearchParams(window.location.search.indexOf('?') !== -1 ? window.location.search.split('?')[1] : '');
     const paramsHash = new URLSearchParams(window.location.hash.indexOf('?') !== -1 ? window.location.hash.split('?')[1] : '');
-    params.appendAll(paramsHash);
-
-    this.config.get('backend').then(backend => this.session.backend = backend);
+    if (paramsHash.has('language')) {
+      params.set('language', paramsHash.get('language'));
+    }
 
     if (params.has('language')) {
       this.useLanguage(params.get('language'));
     } else {
       this.useLanguage(this.session.getItem('language', this.translate.getBrowserLang()));
     }
+
+    if (params.has('realm')) {
+      this.router.navigateByUrl(`/${params.get('realm')}`);
+    }
+
+    this.config.get('backend').then(backend => this.session.backend = backend);
 
     this.events.subscribe('ready', isReady => this.ready = isReady);
 

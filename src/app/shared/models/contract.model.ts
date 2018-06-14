@@ -1,5 +1,4 @@
 import { JsonObject, JsonProperty } from 'json2typescript';
-import { DateConverter } from './converters/date.converter';
 import { Base } from './base.model';
 
 @JsonObject

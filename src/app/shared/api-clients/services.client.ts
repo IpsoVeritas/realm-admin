@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BaseClient } from './base.client';
 import { Service, URLResponse } from '../models';
 import * as uuid from 'uuid/v1';

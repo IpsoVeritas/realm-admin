@@ -11,6 +11,7 @@ export { RealmDescriptor } from './realm-descriptor.model';
 export { Role } from './role.model';
 export { Controller } from './controller.model';
 export { ControllerDescriptor } from './controller-descriptor.model';
+export { ControllerBinding } from './controller-binding.model';
 export { IssuedMandate } from './issued-mandate.model';
 export { Invite } from './invite.model';
 export { CertificateChain } from './certificate-chain.model';

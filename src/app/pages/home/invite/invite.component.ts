@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
-import { Router, ActivatedRoute } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
+import { ActivatedRoute } from '@angular/router';
 import { SessionService } from '../../../shared/services';
-import { RolesClient, MandatesClient, InvitesClient, ControllersClient } from '../../../shared/api-clients';
-import { Role, IssuedMandate, Invite, Controller } from '../../../shared/models';
+import { RolesClient, InvitesClient } from '../../../shared/api-clients';
+import { Role, Invite } from '../../../shared/models';
 import { promiseSerial } from '../../../shared/utils';
 import * as moment from 'moment';
 
@@ -38,7 +37,6 @@ export class InviteComponent implements OnInit {
 
   constructor(public location: Location,
     private route: ActivatedRoute,
-    private translate: TranslateService,
     public session: SessionService,
     private rolesClient: RolesClient,
     private invitesClient: InvitesClient
@@ -137,7 +135,7 @@ export class InviteComponent implements OnInit {
       };
     });
 
-    promiseSerial(functions).catch(error => console.log(error));
+    promiseSerial(functions).catch(error => error === 'canceled' ? Promise.resolve() : console.warn(error));
 
   }
 
@@ -147,20 +145,4 @@ export class InviteComponent implements OnInit {
     this.progressBufferValue = Math.round(100 * (this.sentInvites.length + this.failedInvites.length) / this.emails.length);
   }
 
-  /*
-  fakeSend(invite: Invite): Promise<Invite> {
-    return new Promise((resolve, reject) => {
-      const ts = Date.now();
-      setTimeout(() => {
-        if (Math.random() < 0.8) {
-          console.log(`${invite.messageURI} ok ${Date.now() - ts}`);
-          resolve(invite);
-        } else {
-          console.log(`${invite.messageURI} failed ${Date.now() - ts}`);
-          reject(invite);
-        }
-      }, 500);
-    });
-  }
-*/
 }

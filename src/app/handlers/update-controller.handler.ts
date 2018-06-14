@@ -1,12 +1,13 @@
 import { Injector } from '@angular/core';
+import { DocumentHandler } from './document-handler.interface';
 import { DocumentHandlerService } from './document-handler.service';
 import { ControllersClient } from './../shared/api-clients';
 
-export class UpdateControllerHandler {
+export class UpdateControllerHandler implements DocumentHandler {
 
   private controllersClient: ControllersClient;
 
-  constructor(private documentHandler: DocumentHandlerService, private injector: Injector) {
+  constructor(public documentHandler: DocumentHandlerService, private injector: Injector) {
     this.controllersClient = this.injector.get(ControllersClient);
   }
 

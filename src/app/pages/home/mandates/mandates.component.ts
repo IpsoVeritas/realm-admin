@@ -1,18 +1,14 @@
-import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
-import { Location } from '@angular/common';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import { MatTableDataSource, } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
-import { MatSelect } from '@angular/material/select';
-import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { TranslateService } from '@ngx-translate/core';
-import { RoleInviteDialogComponent } from './role-invite-dialog.component';
 import { DialogsService, EventsService } from '@brickchain/integrity-angular';
 import { SessionService } from '../../../shared/services';
 import { RolesClient, MandatesClient, InvitesClient, ControllersClient } from '../../../shared/api-clients';
-import { Role, IssuedMandate, Invite, Controller } from '../../../shared/models';
+import { Role, IssuedMandate, Controller } from '../../../shared/models';
 
 @Component({
   selector: 'app-mandates',
@@ -47,8 +43,7 @@ export class MandatesComponent implements OnInit {
     private mandatesClient: MandatesClient,
     private invitesClient: InvitesClient,
     private controllersClient: ControllersClient,
-    private snackBar: MatSnackBar,
-    private dialog: MatDialog) { }
+    private snackBar: MatSnackBar) { }
 
   ngOnInit() {
     Promise.all([
@@ -148,37 +143,6 @@ export class MandatesComponent implements OnInit {
             this.snackBarErrorConfig));
       }
     });
-  }
-
-  inviteToRole(role: Role) {
-    const invite = new Invite();
-    invite.realm = role.realm;
-    invite.role = role.name;
-    invite.type = 'invite';
-    invite.messageType = 'email';
-    this.dialog.open(RoleInviteDialogComponent, { data: { invite: invite, role: role.description } })
-      .afterClosed().toPromise()
-      .then(i => {
-        if (i) {
-          invite.messageURI = 'mailto:' + invite.name;
-          this.invitesClient.sendInvite(invite)
-            .then(() => {
-              this.items.push({
-                role: invite.role,
-                name: invite.name,
-                status: 'Pending',
-                type: 'invite',
-                data: invite
-              });
-              this.dataSource = new MatTableDataSource(this.getMandates(this.role));
-              this.dataSource.sort = this.sort;
-            })
-            .catch(error => this.snackBarOpen(
-              this.translate.instant('invite.error_sending', { value: invite.name }),
-              this.translate.instant('label.close'),
-              this.snackBarErrorConfig));
-        }
-      });
   }
 
   revoke(item) {

@@ -101,4 +101,9 @@ export class CryptoService {
       });
   }
 
+  public deserializeJWS<T>(jws: string | Object, constructor: new () => T): Promise<T> {
+    return this.verifyAndParseJWS(jws)
+      .then(obj => this.jsonConvert.deserializeObject(obj, constructor));
+  }
+
 }

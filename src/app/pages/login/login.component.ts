@@ -1,5 +1,5 @@
-import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
-import { Overlay } from '@angular/cdk/overlay';
+import { Component, ViewChild, ElementRef, OnInit, OnDestroy } from '@angular/core';
+import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { Router, ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -16,7 +16,7 @@ import { RealmListComponent } from '../../shared/components';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
 
   @ViewChild('realmPopupTrigger') realmPopupTrigger: ElementRef;
 
@@ -30,6 +30,7 @@ export class LoginComponent implements OnInit {
   copied = false;
 
   descriptor: RealmDescriptor;
+  overlayRef: OverlayRef;
 
   constructor(private route: ActivatedRoute,
     private overlay: Overlay,
@@ -67,35 +68,45 @@ export class LoginComponent implements OnInit {
     });
   }
 
+  ngOnDestroy() {
+    if (this.overlayRef) {
+      this.overlayRef.dispose();
+      this.overlayRef = null;
+    }
+  }
+
   showRealmList() {
     const positionStrategy = this.overlay
       .position()
       .connectedTo(this.realmPopupTrigger, { originX: 'center', originY: 'bottom' }, { overlayX: 'center', overlayY: 'top' });
-    const overlayRef = this.overlay.create({
+    this.overlayRef = this.overlay.create({
       width: '344px',
       height: '325px',
       hasBackdrop: true,
       backdropClass: 'invisible-backdrop',
       positionStrategy
     });
-    overlayRef.overlayElement.classList.add('cdk-overlay-shadow');
+    this.overlayRef.overlayElement.classList.add('cdk-overlay-shadow');
     const realmPopupPortal = new ComponentPortal(RealmListComponent);
-    const realmPopupComponentRef = overlayRef.attach(realmPopupPortal);
+    const realmPopupComponentRef = this.overlayRef.attach(realmPopupPortal);
     const realmListComponentInstance = realmPopupComponentRef.instance;
-    overlayRef.backdropClick().subscribe(() => {
+    this.overlayRef.backdropClick().subscribe(() => {
       if (this.descriptor) {
-        overlayRef.dispose();
+        this.overlayRef.dispose();
+        this.overlayRef = null;
       }
     });
     realmListComponentInstance.select.subscribe(descriptor => {
-      overlayRef.dispose();
+      this.overlayRef.dispose();
+      this.overlayRef = null;
       if (!this.descriptor || this.descriptor.name !== descriptor.name) {
         this.router.navigate([`/${descriptor.name}/login`, {}]);
       }
     });
     realmListComponentInstance.cancel.subscribe(() => {
       if (this.descriptor) {
-        overlayRef.dispose();
+        this.overlayRef.dispose();
+        this.overlayRef = null;
       }
     });
   }

@@ -1,5 +1,5 @@
 import { Component, Inject, HostListener, OnInit } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SessionService } from '../../../shared/services';
 import { Role, Controller } from './../../../shared/models/';
 import { RolesClient } from '../../../shared/api-clients';

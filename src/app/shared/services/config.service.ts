@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Location } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable()
@@ -10,7 +9,7 @@ export class ConfigService {
   private _backend: string;
   private _base: string;
 
-  constructor(private http: HttpClient, private location: Location) {
+  constructor(private http: HttpClient) {
     this._ready = this.http.get('./config.json').toPromise()
       .then(config => this._config = config)
       .then(() => {

@@ -1,15 +1,13 @@
 import { Injector } from '@angular/core';
 import { PlatformService } from '../shared/services';
+import { DocumentHandler } from './document-handler.interface';
 import { DocumentHandlerService } from './document-handler.service';
-import { ControllersClient } from './../shared/api-clients';
 
-export class BrowseHandler {
+export class BrowseHandler implements DocumentHandler {
 
   private platform: PlatformService;
-  private controllersClient: ControllersClient;
 
-  constructor(private documentHandler: DocumentHandlerService, private injector: Injector) {
-    this.controllersClient = this.injector.get(ControllersClient);
+  constructor(public documentHandler: DocumentHandlerService, private injector: Injector) {
     this.platform = this.injector.get(PlatformService);
   }
 

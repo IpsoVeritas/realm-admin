@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
 import { JsonConvert, OperationMode, ValueCheckingMode } from 'json2typescript';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { ConfigService, CryptoService, SessionService, CacheService } from '../services';
 
 @Injectable()

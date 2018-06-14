@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Router, } from '@angular/router';
-import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { EventsService, DialogsService } from '@brickchain/integrity-angular';
 import { WebviewClientService } from '@brickchain/integrity-webview-client';
@@ -13,7 +12,6 @@ export class PlatformService {
   public isMobile = false;
 
   constructor(private router: Router,
-    private dialog: MatDialog,
     private translate: TranslateService,
     private webviewClient: WebviewClientService,
     private session: SessionService,
@@ -38,9 +36,6 @@ export class PlatformService {
       this.session.key = undefined;
       this.session.chain = undefined;
       this.session.mandates = undefined;
-
-      const realms = this.session.realms;
-      // this.session.realms = realms.filter((elem, pos, arr) => elem !== this.session.realm);
 
       if (this.inApp) {
         this.webviewClient.cancel();
@@ -70,8 +65,7 @@ export class PlatformService {
       return Promise.resolve();
     } else {
       const message = this.translate.instant('message.copied_to_clipboard', { value: uri });
-      return this.dialogs.openQRCode({ title: title, qrdata: uri, copySuccessMessage: message })
-        .then(() => console.log('closed'));
+      return this.dialogs.openQRCode({ title: title, qrdata: uri, copySuccessMessage: message }).then(() => Promise.resolve());
     }
   }
 

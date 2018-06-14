@@ -1,7 +1,7 @@
 import { environment } from '../environments/environment';
 
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HTTP_INTERCEPTORS, HttpClientModule, HttpClient } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -32,7 +32,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { OwlDateTimeModule } from 'ng-pick-datetime';
 import { OwlMomentDateTimeModule } from 'ng-pick-datetime-moment';
 
-import { TranslateModule, TranslateLoader, TranslateFakeLoader } from '@ngx-translate/core';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { POEditorLoader } from './shared/utils/poeditor.loader';
 
@@ -61,7 +61,6 @@ import { LoginComponent } from './pages/login/login.component';
 import { HomeComponent } from './pages/home/home.component';
 import { DashboardComponent } from './pages/home/dashboard/dashboard.component';
 import { RealmsComponent } from './pages/home/realms/realms.component';
-import { RoleInviteDialogComponent } from './pages/home/mandates/role-invite-dialog.component';
 import { MandatesComponent } from './pages/home/mandates/mandates.component';
 import { ControllerComponent } from './pages/home/controller/controller.component';
 import { ControllerAddDialogComponent } from './pages/home/controller/controller-add-dialog.component';
@@ -75,9 +74,15 @@ export function createTranslateLoader(http: HttpClient) {
   if (environment.production) {
     return new TranslateHttpLoader(http, './assets/i18n/', '.json');
   } else {
-    // return new TranslateFakeLoader();
     return new POEditorLoader(http, environment.poeditor_url, environment.poeditor_api_token, environment.poeditor_project_id);
   }
+}
+
+export class CustomHammerConfig extends HammerGestureConfig {
+  overrides = <any>{
+    'pinch': { enable: false },
+    'rotate': { enable: false }
+  };
 }
 
 @NgModule({
@@ -90,7 +95,6 @@ export function createTranslateLoader(http: HttpClient) {
     LoginComponent,
     HomeComponent,
     DashboardComponent,
-    RoleInviteDialogComponent,
     MandatesComponent,
     ControllerComponent,
     ControllerAddDialogComponent,
@@ -106,7 +110,6 @@ export function createTranslateLoader(http: HttpClient) {
     ControllerBindDialogComponent,
     ControllerSettingsDialogComponent,
     SessionTimeoutDialogComponent,
-    RoleInviteDialogComponent,
     RealmListComponent,
   ],
   imports: [
@@ -188,6 +191,10 @@ export function createTranslateLoader(http: HttpClient) {
       provide: HTTP_INTERCEPTORS,
       useClass: LanguageInterceptor,
       multi: true
+    },
+    {
+      provide: HAMMER_GESTURE_CONFIG,
+      useClass: CustomHammerConfig
     }
   ],
   bootstrap: [

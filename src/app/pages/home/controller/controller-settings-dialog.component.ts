@@ -1,6 +1,5 @@
 import { Component, Inject, HostListener } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { SessionService } from '../../../shared/services';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Controller } from './../../../shared/models/';
 
 @Component({

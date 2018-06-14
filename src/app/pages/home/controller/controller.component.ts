@@ -3,13 +3,13 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
-import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { EventsService, DialogsService, ClipboardService } from '@brickchain/integrity-angular';
 import { DocumentHandlerService } from '../../../handlers/document-handler.service';
 import { SessionService, CryptoService } from '../../../shared/services';
-import { ControllersClient, RealmsClient } from '../../../shared/api-clients';
-import { Controller, ControllerDescriptor } from './../../../shared/models/';
+import { ControllersClient } from '../../../shared/api-clients';
+import { Controller } from './../../../shared/models/';
 import { ControllerSettingsDialogComponent } from './controller-settings-dialog.component';
 
 @Component({
@@ -51,7 +51,6 @@ export class ControllerComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private documentHandler: DocumentHandlerService,
     private controllersClient: ControllersClient,
-    private realmsClient: RealmsClient,
     private cryptoService: CryptoService,
     private snackBar: MatSnackBar
   ) {
@@ -99,7 +98,6 @@ export class ControllerComponent implements OnInit, OnDestroy {
         mandates,
         (this.session.expires - Date.now()) / 1000
       ).then(token => {
-        console.log(`New token: ${token}`);
         const message = {
           '@type': 'token-refresh',
           'token': token

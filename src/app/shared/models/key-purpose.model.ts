@@ -1,5 +1,4 @@
-import { JsonObject, JsonProperty, Any } from 'json2typescript';
-import { Base } from './base.model';
+import { JsonObject, JsonProperty } from 'json2typescript';
 
 @JsonObject
 export class KeyPurpose {
