@@ -82,7 +82,8 @@ deploy to branch:
     - aws configure set preview.cloudfront true
     - aws cloudfront create-invalidation --distribution-id E2Y3HN6RJX8DF5 --paths "/$CI_PROJECT_NAME/$CI_BUILD_REF_NAME/*"
   variables:
-    BACKEND: "https://realm.plusintegrity.com/realm-api"
+    BACKEND: "https://realm.svc-staging.plusintegrity.com/realm-api"
+    SRVFEED: "https://firebasestorage.googleapis.com/v0/b/integrity-autobinder-staging.appspot.com/o/services.json?alt=media"
 
 deploy to staging:
   image: gcr.io/brickchain-docker/gitlab-builder-deploy
