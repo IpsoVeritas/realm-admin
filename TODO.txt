@@ -1,0 +1,1 @@
+config.json.template, proxy_base -> proxyBase, or servicesFeed -> services_feed
