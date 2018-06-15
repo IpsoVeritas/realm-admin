@@ -1,4 +1,4 @@
 {
-    "backend": "${BACKEND}",
-    "servicesFeed": "${SRVFEED}"
+    "servicesFeed": "${SRVFEED}",
+    "proxy_base": "${PROXY}"
 }

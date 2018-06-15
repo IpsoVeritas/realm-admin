@@ -18,3 +18,5 @@ export { CertificateChain } from './certificate-chain.model';
 export { MandateToken } from './mandate-token.model';
 export { Service } from './service.model';
 export { URLResponse } from './url-response.model';
+export * from './v2';
+export * from './proxy';
