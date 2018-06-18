@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { RealmGuard, BootmodeGuard, LoginGuard, RealmRedirectGuard } from './shared/guards';
+import { RealmGuard, LoginGuard, RealmRedirectGuard } from './shared/guards';
 
 import { AppComponent } from './app.component';
 import { BootstrapComponent } from './pages/bootstrap/bootstrap.component';
@@ -15,10 +15,10 @@ import { ControllerComponent } from './pages/home/controller/controller.componen
 import { SettingsComponent } from './pages/home/settings/settings.component';
 
 const appRoutes: Routes = [
-  { path: ':realm/bootstrap', component: BootstrapComponent, canActivate: [RealmGuard, BootmodeGuard] },
-  { path: ':realm/login', component: LoginComponent, canActivate: [RealmGuard, BootmodeGuard, LoginGuard] },
+  { path: ':realm/bootstrap', component: BootstrapComponent, canActivate: [RealmGuard] },
+  { path: ':realm/login', component: LoginComponent, canActivate: [RealmGuard, LoginGuard] },
   {
-    path: ':realm/home', component: HomeComponent, canActivate: [RealmGuard, BootmodeGuard, LoginGuard],
+    path: ':realm/home', component: HomeComponent, canActivate: [RealmGuard, LoginGuard],
     children: [
       { path: '', component: DashboardComponent },
       { path: 'realms', component: RealmsComponent },
@@ -42,7 +42,6 @@ const appRoutes: Routes = [
   ],
   providers: [
     RealmGuard,
-    BootmodeGuard,
     LoginGuard,
     RealmRedirectGuard
   ]

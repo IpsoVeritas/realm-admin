@@ -27,6 +27,7 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
 
     const params = new URLSearchParams(window.location.search.indexOf('?') !== -1 ? window.location.search.split('?')[1] : '');
+
     const paramsHash = new URLSearchParams(window.location.hash.indexOf('?') !== -1 ? window.location.hash.split('?')[1] : '');
     if (paramsHash.has('language')) {
       params.set('language', paramsHash.get('language'));
@@ -41,8 +42,6 @@ export class AppComponent implements OnInit {
     if (params.has('realm')) {
       this.router.navigateByUrl(`/${params.get('realm')}`);
     }
-
-    this.config.get('backend').then(backend => this.session.backend = backend);
 
     this.events.subscribe('ready', isReady => this.ready = isReady);
 

@@ -51,7 +51,7 @@ import {
   AuthClient, AccessClient, RealmsClient, MandatesClient,
   ControllersClient, RolesClient, InvitesClient, ServicesClient
 } from './shared/api-clients';
-import { SessionService, PlatformService, ConfigService, CryptoService, CacheService } from './shared/services';
+import { SessionService, PlatformService, ConfigService, CryptoService, CacheService, ProxyService } from './shared/services';
 
 import { StripeComponent, RealmCardComponent, RealmListComponent } from './shared/components';
 
@@ -172,6 +172,7 @@ export class CustomHammerConfig extends HammerGestureConfig {
     ConfigService,
     CryptoService,
     CacheService,
+    ProxyService,
     DocumentHandlerService,
     {
       provide: HTTP_INTERCEPTORS,

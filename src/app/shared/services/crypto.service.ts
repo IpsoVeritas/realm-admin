@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { SessionService } from './session.service';
-import * as jose from 'node-jose';
 import { TextDecoder } from 'text-encoding-utf-8';
 import { JsonConvert, OperationMode, ValueCheckingMode } from 'json2typescript';
-import { MandateToken } from '../models';
+import { MandateToken, MandateTokenV2 } from '../models';
+import * as jose from 'node-jose';
+import * as base32 from 'base32';
 
 declare const Buffer;
 
@@ -38,6 +39,11 @@ export class CryptoService {
     }
   }
 
+  public getPublicKey(): Promise<any> {
+    return this.getKey()
+      .then(key => key.toJSON(false));
+  }
+
   private generateKey(): Promise<any> {
     return this.keystore.generate('EC', 'P-256')
       .then(key => this.thumbprint(key)
@@ -49,7 +55,12 @@ export class CryptoService {
   }
 
   private thumbprint(key: any, hash = 'SHA-256'): Promise<string> {
-    return key.thumbprint(hash).then(bytes => Buffer.from(bytes).toString('hex').trim());
+    return key.thumbprint(hash).then(bytes => base32.encode(bytes));
+  }
+
+  public getID(): Promise<string> {
+    return this.getKey()
+      .then(key => this.thumbprint(key));
   }
 
   public sign(input: any): Promise<string> {
@@ -88,10 +99,17 @@ export class CryptoService {
     return this.signCompact(mandateToken);
   }
 
-  public verifyAndParseJWS(jws: string | Object): Promise<any> {
-    if (typeof jws === 'string' && jws.trim().startsWith('{')) {
-      jws = JSON.parse(jws);
-    }
+  public createMandateTokenV2(uri: string, mandates: string[], ttl: number = 60): Promise<string> {
+    const mandateToken = new MandateTokenV2();
+    mandateToken.timestamp = new Date();
+    mandateToken.uri = uri;
+    mandateToken.mandates = mandates;
+    mandateToken.certificate = this.session.chain;
+    mandateToken.ttl = Math.floor(ttl);
+    return this.signCompact(mandateToken);
+  }
+
+  public verifyAndParseJWS(jws: any): Promise<any> {
     return this.verifier.verify(jws, { allowEmbeddedKey: true })
       .then(verified => new TextDecoder('utf-8').decode(verified.payload))
       .then(payload => JSON.parse(payload))

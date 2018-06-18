@@ -31,7 +31,7 @@ export class ProxyService {
     private configService: ConfigService
   ) {
     console.info(`Instantiating ProxyService`, Date.now());
-    this._ready = this.initialize().then(() => console.log("Proxy initialized"))
+    this._ready = this.initialize().then(() => console.log('Proxy initialized'));
     this.jsonConvert = new JsonConvert();
     this.jsonConvert.operationMode = OperationMode.ENABLE; // print some debug data
     this.jsonConvert.ignorePrimitiveChecks = false; // don't allow assigning number to string etc.
@@ -41,34 +41,30 @@ export class ProxyService {
   public initialize(): Promise<any> {
     return this.configService.get('proxy_base')
       .then(url => {
-        if (this._base != url) {
-          this._base = url
-
-          let ws = url.replace('https://', 'wss://').replace('http://', 'ws://')
-          return this.subscribe(`${ws}/proxy/subscribe`)
-            // .then(() => this.cryptoService.getID())
-            // .then(id => this._id = id)
+        if (this._base !== url) {
+          this._base = url;
+          const ws = url.replace('https://', 'wss://').replace('http://', 'ws://');
+          return this.subscribe(`${ws}/proxy/subscribe`);
         }
       })
-      .catch(error => console.error(`ProxyService._ready`, error))
+      .catch(error => console.error(`ProxyService._ready`, error));
   }
 
   private register(): Promise<any> {
     return this.cryptoService.createMandateTokenV2(this.base, [])
       .then(mandateToken => {
-        let regreq = new RegistrationRequest();
-        regreq.mandateToken = mandateToken
+        const regreq = new RegistrationRequest();
+        regreq.mandateToken = mandateToken;
 
-        this.send(this.jsonConvert.serializeObject(regreq))
+        this.send(this.jsonConvert.serializeObject(regreq));
 
         return new Promise(resolve => {
           this.waitForResponse(regreq.id, (res) => {
-            this._id = res.keyID
-
-            resolve()
-          })
-        })
-      })
+            this._id = res.keyID;
+            resolve();
+          });
+        });
+      });
   }
 
   get base(): string {
@@ -87,63 +83,66 @@ export class ProxyService {
   }
 
   private send(msg: any) {
-    let m = msg
-    if (typeof msg === 'object') m = JSON.stringify(msg)
-    console.log("send:", m)
-    return this._conn.send(m, WebSocketSendMode.Direct, true)
+    let m = msg;
+    if (typeof msg === 'object') {
+      m = JSON.stringify(msg);
+    }
+    console.log(`send: ${m}`);
+    return this._conn.send(m, WebSocketSendMode.Direct, true);
   }
 
   private subscribe(url: string): Promise<any> {
     if (url === '') {
-      console.error("Empty url");
+      console.error('Empty url');
       return;
     }
 
     console.debug(`ProxyService.subscribe`, Date.now(), url);
     return new Promise(resolve => {
-        this._conn = new $WebSocket(url)
-        resolve()
+        this._conn = new $WebSocket(url);
+        resolve();
       })
       .then(() => {
         this._conn.onError(err => console.error(`ProxyService <- ws.error`, err));
         this._conn.getDataStream().subscribe(
           (msgEvent) => {
             // console.debug("msgEvent", msgEvent);
-            let msg = JSON.parse(msgEvent.data);
-            if (msg['@type'] != 'https://proxy.brickchain.com/v1/ping.json') console.debug(`ProxyService <- ws.msg`, Date.now(), msgEvent.data);
-
+            const msg = JSON.parse(msgEvent.data);
+            if (msg['@type'] !== 'https://proxy.brickchain.com/v1/ping.json') {
+              console.debug(`ProxyService <- ws.msg`, Date.now(), msgEvent.data);
+            }
             switch (msg['@type']) {
               case 'https://proxy.brickchain.com/v1/ping.json':
                 break;
 
               case 'https://proxy.brickchain.com/v1/registration-response.json':
-                let registrationResponse = <RegistrationResponse>this.jsonConvert.deserializeObject(msg, RegistrationResponse);
-                if (this._waiting[registrationResponse.id] != undefined) {
-                  console.log("found a waiting registration handler for", registrationResponse.id);
+                const registrationResponse = <RegistrationResponse>this.jsonConvert.deserializeObject(msg, RegistrationResponse);
+                if (this._waiting[registrationResponse.id] !== undefined) {
+                  console.log(`found a waiting registration handler for: ${registrationResponse.id}`);
                   this._waiting[registrationResponse.id](registrationResponse);
                   delete this._waiting[registrationResponse.id];
                 }
                 break;
 
               case 'https://proxy.brickchain.com/v1/http-request.json':
-                let httpRequest = <HttpRequest>this.jsonConvert.deserializeObject(msg, HttpRequest);
+                const httpRequest = <HttpRequest>this.jsonConvert.deserializeObject(msg, HttpRequest);
                 try {
-                  let id = httpRequest.id;
+                  const id = httpRequest.id;
                   // let data = JSON.parse(msg['data'])
-                  if (this._handlers[httpRequest.url] != undefined) {
+                  if (this._handlers[httpRequest.url] !== undefined) {
                     this._handlers[httpRequest.url](httpRequest).then(res => {
                       res.id = id;
-                      this.send(this.jsonConvert.serializeObject(res))
-                    })
+                      this.send(this.jsonConvert.serializeObject(res));
+                    });
                   } else {
-                    let res = new HttpResponse();
+                    const res = new HttpResponse();
                     res.id = id;
                     res.status = 404;
                     res.body = 'Not found';
-                    this.send(this.jsonConvert.serializeObject(res))
+                    this.send(this.jsonConvert.serializeObject(res));
                   }
-                } catch(err) {
-                  console.error(err)
+                } catch (err) {
+                  console.error(err);
                 }
                 break;
 
@@ -160,11 +159,11 @@ export class ProxyService {
         );
       })
       .then(() => new Promise((resolve, reject) => {
-        this._conn.onOpen(ready => resolve())
+        this._conn.onOpen(ready => resolve());
 
         setTimeout(() => reject(), 5000);
       }))
-      .then(() => this.register())
+      .then(() => this.register());
   }
 
   public waitForResponse(id: string, f: Function) {
