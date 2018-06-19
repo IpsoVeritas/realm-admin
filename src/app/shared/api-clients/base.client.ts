@@ -24,4 +24,8 @@ export class BaseClient {
     return Promise.resolve(this.jsonConvert.deserializeObject(obj, constructor));
   }
 
+  public serializeObject(source: any): any {
+    return this.jsonConvert.serializeObject(source);
+  }
+
 }

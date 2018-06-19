@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BaseClient } from './base.client';
-import { Realm, RealmDescriptor, Controller } from '../models';
+import { Realm, RealmDescriptorV2, Controller, MultipartV2, ActionDescriptorV2 } from '../models';
 
 @Injectable()
 export class RealmsClient extends BaseClient {
@@ -9,12 +9,26 @@ export class RealmsClient extends BaseClient {
     return super.clone<Realm>(realm, Realm);
   }
 
-  public getRealmDescriptor(realmId: string): Promise<any> {
+  public getRealmDescriptor(realmId: string): Promise<RealmDescriptorV2> {
     return this.cache.get(`realmDescriptor:${realmId}`)
-      .catch(() => this.config.getBackendURL(`/realms/${realmId}/realm.json?ts=${Date.now()}`)
-        .then(url => this.http.get(url).toPromise())
-        .then(jws => this.crypto.deserializeJWS<RealmDescriptor>(jws, RealmDescriptor))
-        .then(descriptor => this.cache.set(`realmDescriptor:${realmId}`, descriptor)));
+      .catch(() => `http${realmId.startsWith('localhost:') ? '' : 's'}://${realmId}/.well-known/realm/realm.json?ts=${Date.now()}`)
+      .then(url => this.http.get(url).toPromise())
+      .then(jws => this.crypto.deserializeJWS<RealmDescriptorV2>(jws, RealmDescriptorV2))
+      .then(descriptor => this.cache.set(`realmDescriptor:${realmId}`, descriptor));
+  }
+
+  public getActionDescriptors(realmId: string, interfaces?: string[]): Promise<ActionDescriptorV2[]> {
+    return this.getRealmDescriptor(realmId)
+      .then(descriptor => this.http.get(descriptor.servicesURL).toPromise())
+      .then(obj => <MultipartV2>this.jsonConvert.deserializeObject(obj, MultipartV2))
+      .then(mp => Promise.all(mp.parts.map(part => this.crypto.deserializeJWS<ActionDescriptorV2>(part.document, ActionDescriptorV2))))
+      .then(descriptors => {
+        if (interfaces) {
+          return descriptors.filter(descriptor => interfaces.reduce((acc, i) => acc || descriptor.interfaces.includes(i), false));
+        } else {
+          return descriptors;
+        }
+      });
   }
 
   public getRealmsIds(): Promise<string[]> {

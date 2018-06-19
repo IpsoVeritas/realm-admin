@@ -56,7 +56,10 @@ export class SessionTimeoutDialogComponent {
     this.start(this.session.realm);
   }
 
+  // TODO: Implement new auth logic here
+
   start(realm: string) {
+    /*
     this.authClient.postAuthRequest(this.session.realm)
       .then((authInfo: AuthInfo) => Promise.resolve(authInfo.requestURI) // this.config.getBaseURL(authInfo.requestURI)
         .then(url => {
@@ -76,6 +79,7 @@ export class SessionTimeoutDialogComponent {
           }
         })
         .then(() => authInfo));
+        */
   }
 
   updateCountdown() {
@@ -83,6 +87,7 @@ export class SessionTimeoutDialogComponent {
   }
 
   poll(token: string, count = 1): void {
+    /*
     this.authClient.getAuthInfo(token)
       .then((user: AuthUser) => {
         if (user.authenticated && user.mandates && user.chain && !user.expired) {
@@ -108,6 +113,7 @@ export class SessionTimeoutDialogComponent {
           this.pollTimer = setTimeout(() => this.poll(token, count + 1), 1000);
         }
       });
+      */
   }
 
   @HostListener('keydown.enter')

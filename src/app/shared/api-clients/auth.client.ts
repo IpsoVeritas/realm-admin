@@ -1,27 +1,28 @@
 import { Injectable } from '@angular/core';
-import { HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponseBase } from '@angular/common/http';
 import { BaseClient } from './base.client';
-
-import { AuthUser, AuthInfo } from '../models';
+import { URLResponse, RealmDescriptorV2, MultipartV2, ActionDescriptorV2 } from '../models';
 
 @Injectable()
 export class AuthClient extends BaseClient {
 
-  public getAuthInfo(token?: string): Promise<AuthUser> {
+  public getConfig(realm: string, mandateToken?: string): Promise<{ adminRoles: string[], serviceFeed: string }> {
     const options: any = {};
-    if (token) {
-      options.headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` });
+    if (mandateToken) {
+      options.headers = new HttpHeaders({ 'Authorization': `Mandate ${mandateToken}` });
     }
-    return this.config.getBackendURL('/auth')
-      .then(url => this.http.get(url, options).toPromise())
-      .then(obj => this.jsonConvert.deserializeObject(obj, AuthUser));
+    return this.http.get(this.session.buildBackendURL(`/realms/${realm}/config`), options).toPromise<Object>()
+      .then(obj => <{ adminRoles: string[], serviceFeed: string }>obj)
   }
 
-  public postAuthRequest(realm: string): Promise<AuthInfo> {
-    return this.config.getBackendURL('/auth/request')
-      .then(url => this.crypto.getKey()
-        .then(key => this.http.post(url, { realm: realm, type: 'login-request', key: key }).toPromise())
-        .then(obj => this.jsonConvert.deserializeObject(obj, AuthInfo)));
+  public getAuthInfo(): Promise<{ authenticated: boolean }> {
+    return this.http.get(this.session.buildBackendURL(`/realms/${this.session.realm}/auth`)).toPromise<Object>()
+      .then(obj => <{ authenticated: boolean }>obj);
+  }
+
+  public isBootModeEnabled(): Promise<boolean> {
+    return this.http.get(this.session.buildBackendURL(`/realms/${this.session.realm}/config`), { observe: 'response' }).toPromise()
+      .then((response: HttpResponseBase) => response.headers.get('X-Boot-Mode') === 'Yes');
   }
 
 }

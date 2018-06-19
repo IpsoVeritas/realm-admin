@@ -57,11 +57,23 @@ export class SessionService {
   }
 
   get backend(): string {
-    return this.getItem('backend');
+    return this.getRealmItem('backend');
   }
 
   set backend(value: string) {
-    this.setItem('backend', value);
+    this.setRealmItem('backend', value);
+  }
+
+  public buildBackendURL(path: string = ''): string {
+    return `${this.backend}${path}`;
+  }
+
+  get roles(): string[] {
+    return this.getRealmItem('roles', []);
+  }
+
+  set roles(value: string[]) {
+    this.setRealmItem('roles', value);
   }
 
   get mandate(): string {
@@ -80,6 +92,14 @@ export class SessionService {
     this.setRealmItem('mandates', value);
   }
 
+  get token(): string {
+    return this.getRealmItem('token');
+  }
+
+  set token(value: string) {
+    this.setRealmItem('token', value);
+  }
+
   get chain(): string {
     return this.getRealmItem('chain');
   }
@@ -94,6 +114,14 @@ export class SessionService {
 
   set expires(value: number) {
     this.setRealmItem('expires', value);
+  }
+
+  get createRealms(): boolean {
+    return this.getRealmItem('create_realms', false);
+  }
+
+  set createRealms(value: boolean) {
+    this.setRealmItem('create_realms', value);
   }
 
   get language(): string {
