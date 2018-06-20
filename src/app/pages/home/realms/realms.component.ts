@@ -67,7 +67,6 @@ export class RealmsComponent implements OnInit {
   }
 
   invite(realm: Realm) {
-    console.log(realm);
     this.rolesClient.getRoles(realm.id)
       .then(roles => roles.filter(role => role.name === realm.adminRoles[0]))
       .then(roles => roles[0])

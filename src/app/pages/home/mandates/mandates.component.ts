@@ -178,7 +178,7 @@ export class MandatesComponent implements OnInit {
       cancelColor: 'accent'
     }).then(confirmed => {
       if (confirmed) {
-        this.invitesClient.resendInvite(invite)
+        this.invitesClient.sendInvite(invite)
           .catch(error => this.snackBarOpen(
             this.translate.instant('invite.error_sending', { email: invite.name }),
             this.translate.instant('label.close'),

@@ -127,8 +127,9 @@ export class InviteComponent implements OnInit {
         if (this.cancelSending) {
           return Promise.reject('canceled');
         } else {
-          return this.invitesClient.sendInvite(invite)
-            .then(() => this.sentInvites.push(invite))
+          return this.invitesClient.createInvite(invite)
+            .then(i => this.invitesClient.sendInvite(i))
+            .then(status => status.sent ? this.sentInvites.push(invite) : this.failedInvites.push(invite))
             .catch(error => this.failedInvites.push(invite))
             .then(() => this.updateSendProgress());
         }
