@@ -9,13 +9,12 @@ export class TokenInterceptor implements HttpInterceptor {
   constructor(private session: SessionService) { }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if (this.session.realm &&
-      request.url.startsWith(this.session.backend) &&
+    if (request.url.startsWith(this.session.backend) &&
       !request.headers.has('Authorization') &&
-      this.session.mandate) {
+      this.session.token) {
       request = request.clone({
         setHeaders: {
-          Authorization: `Mandate ${this.session.mandate}`
+          Authorization: `Mandate ${this.session.token}`
         }
       });
     }

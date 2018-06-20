@@ -52,7 +52,7 @@ export class SessionTimeoutDialogComponent {
     public dialogRef: MatDialogRef<SessionTimeoutDialogComponent>) {
     this.session.mandates = undefined;
     this.session.chain = undefined;
-    this.session.mandate = undefined;
+    this.session.token = undefined;
     this.start(this.session.realm);
   }
 

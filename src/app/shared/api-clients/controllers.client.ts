@@ -10,42 +10,37 @@ export class ControllersClient extends BaseClient {
     return super.clone<Controller>(controller, Controller);
   }
 
-  public getControllerIds(realmId: string): Promise<string[]> {
-    return this.cache.get(`controllerIds:${realmId}`)
-      .catch(() => this.config.getBackendURL(`/realms/${realmId}/controllers`)
-        .then(url => this.http.get(url).toPromise())
-        .then(ids => this.cache.set(`controllerIds:${realmId}`, <string[]>ids)));
-  }
-
   public getController(realmId: string, controllerId: string): Promise<Controller> {
     return this.cache.get(`controller:${realmId}/${controllerId}`)
-      .catch(() => this.config.getBackendURL(`/realms/${realmId}/controllers/${controllerId}`)
+      .catch(() => this.session.getBackendURL(`/realms/${realmId}/controllers/${controllerId}`)
         .then(url => this.http.get(url).toPromise())
         .then(obj => this.jsonConvert.deserializeObject(obj, Controller))
         .then(controller => this.cache.set(`controller:${realmId}/${controllerId}`, controller)));
   }
 
   public getControllers(realmId: string): Promise<Controller[]> {
-    return this.getControllerIds(realmId)
-      .then(controllerIds => controllerIds.map(controllerId => this.getController(realmId, controllerId)))
-      .then(promises => Promise.all(promises));
+    return this.cache.get(`controllers:${realmId}`)
+      .catch(() => this.session.getBackendURL(`/realms/${realmId}/controllers`)
+        .then(url => this.http.get(url).toPromise())
+        .then((arr: any[]) => this.jsonConvert.deserializeArray(arr, Controller))
+        .then(controllers => this.cache.set(`controllers:${realmId}`, controllers)));
   }
 
   public updateController(controller: Controller): Promise<Controller> {
-    return this.config.getBackendURL(`/realms/${controller.realm}/controllers/${controller.id}`)
+    return this.session.getBackendURL(`/realms/${controller.realm}/controllers/${controller.id}`)
       .then(url => this.http.put(url, this.jsonConvert.serializeObject(controller)).toPromise())
       .then(() => this.cache.invalidate(`controller:${controller.realm}/${controller.id}`))
       .then(() => controller);
   }
 
   public deleteController(controller: Controller): Promise<any> {
-    return this.config.getBackendURL(`/realms/${controller.realm}/controllers/${controller.id}`)
+    return this.session.getBackendURL(`/realms/${controller.realm}/controllers/${controller.id}`)
       .then(url => this.http.delete(url).toPromise())
-      .then(() => this.cache.invalidate(`controllerIds:${controller.realm}`, `controller:${controller.realm}/${controller.id}`));
+      .then(() => this.cache.invalidate(`controllers:${controller.realm}`, `controller:${controller.realm}/${controller.id}`));
   }
 
   public updateActions(controller: Controller, actions: string): Promise<any> {
-    return this.config.getBackendURL(`/realms/${controller.realm}/controllers/${controller.id}/actions`)
+    return this.session.getBackendURL(`/realms/${controller.realm}/controllers/${controller.id}/actions`)
       .then(url => this.http.post(url, actions).toPromise());
   }
 
@@ -94,7 +89,7 @@ export class ControllersClient extends BaseClient {
   public bindController(controller: Controller, binding: any): Promise<any> {
     const url = controller.descriptor.bindURI;
     return this.http.post(url, binding).toPromise()
-      .then(() => this.cache.invalidate(`controllerIds:${controller.realm}`));
+      .then(() => this.cache.invalidate(`controllers:${controller.realm}`));
   }
 
 }

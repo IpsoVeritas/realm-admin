@@ -2,7 +2,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SessionService } from '../../services';
 import { RealmsClient } from '../../api-clients';
-import { RealmDescriptorV2 } from '../../models';
+import { RealmDescriptor } from '../../models';
 
 @Component({
   selector: 'app-realm-list',
@@ -11,7 +11,7 @@ import { RealmDescriptorV2 } from '../../models';
 })
 export class RealmListComponent implements OnInit {
 
-  @Output() select: EventEmitter<RealmDescriptorV2> = new EventEmitter();
+  @Output() select: EventEmitter<RealmDescriptor> = new EventEmitter();
   @Output() cancel: EventEmitter<void> = new EventEmitter();
 
   realmForm: FormGroup;
@@ -31,7 +31,7 @@ export class RealmListComponent implements OnInit {
     return this.realmForm.get('realm');
   }
 
-  realmSelected(descriptor: RealmDescriptorV2) {
+  realmSelected(descriptor: RealmDescriptor) {
     this.select.emit(descriptor);
   }
 

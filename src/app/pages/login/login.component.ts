@@ -5,7 +5,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { EventsService } from '@brickchain/integrity-angular';
 import { WebviewClientService } from '@brickchain/integrity-webview-client';
-import { AuthUser, AuthInfo, RealmDescriptorV2, LoginRequestV2, ContractV2, HttpResponse, HttpRequest } from '../../shared/models';
+import { AuthUser, AuthInfo, RealmDescriptor, LoginRequest, Contract, HttpResponse, HttpRequest } from '../../shared/models';
 import { AuthClient, RealmsClient } from '../../shared/api-clients';
 import { ConfigService, SessionService, CryptoService, PlatformService, ProxyService } from '../../shared/services';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -31,7 +31,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   pollTimer: any;
   copied = false;
 
-  descriptor: RealmDescriptorV2;
+  descriptor: RealmDescriptor;
   overlayRef: OverlayRef;
 
   constructor(private route: ActivatedRoute,
@@ -63,23 +63,6 @@ export class LoginComponent implements OnInit, OnDestroy {
           this.showRealmList();
         })
         .then(() => this.events.publish('ready', !this.platform.inApp));
-      /*
-      this.realmsClient.getRealmDescriptor(realm)
-        .then(descriptor => this.descriptor = descriptor)
-        .then(() => this.start(realm))
-        .catch(error => {
-          if (realm === 'other') {
-            this.session.realm = '';
-          } else {
-            this.snackBar.open(
-              this.translate.instant('error.connecting_to_host', { host: this.config.backend }),
-              this.translate.instant('label.close'),
-              { duration: 3000 });
-          }
-          this.showRealmList();
-        })
-        .then(() => this.events.publish('ready', !this.platform.inApp));
-        */
     });
   }
 
@@ -158,22 +141,21 @@ export class LoginComponent implements OnInit, OnDestroy {
   login(realm: string): Promise<any> {
     const id = v4();
     return this.proxy.handlePath(`/login/${id}`, this.getLoginRequestHandler(id))
-      .then(() => this.proxy.handlePath(`/callback/${id}`, this.handleLoginResponse))
+      .then(() => this.proxy.handlePath(`/callback/${id}`, this.getLoginResponseHandler()))
       .then(() => {
         this.qrUriTimestamp = Date.now();
         this.progressTimer = setInterval(() => this.updateCountdown(), 100);
         this.qrUriTimer = setTimeout(() => this.start(realm), this.qrTimeout);
         this.qrUri = `${this.proxy.base}/proxy/request/${this.proxy.id}/login/${id}`;
-        console.log(this.qrUri);
       });
   }
 
   getLoginRequestHandler(id: string): (data: HttpRequest) => Promise<HttpResponse> {
     return (request: HttpRequest) => this.crypto.getPublicKey()
       .then(key => {
-        const loginRequest = new LoginRequestV2();
+        const loginRequest = new LoginRequest();
         loginRequest.timestamp = new Date();
-        loginRequest.contract = new ContractV2();
+        loginRequest.contract = new Contract();
         loginRequest.contract.text = this.translate.instant('login.contract', { realm: this.session.realm });
         loginRequest.ttl = 3600;
         loginRequest.roles = this.session.roles;
@@ -184,99 +166,44 @@ export class LoginComponent implements OnInit, OnDestroy {
       .then(loginRequest => new HttpResponse(200, JSON.stringify(this.realmsClient.serializeObject(loginRequest))));
   }
 
-  handleLoginResponse(request: HttpRequest): Promise<HttpResponse> {
+  getLoginResponseHandler(): (data: HttpRequest) => Promise<HttpResponse> {
 
-    if (request.method !== 'POST') {
-      return Promise.resolve(new HttpResponse(400, 'Method not allowed'));
-    }
+    return (request: HttpRequest) => new Promise((resolve, _reject) => {
 
-    let data = JSON.parse(request.body);
-    if (typeof data === 'string') {
-      data = JSON.parse(data);
-    }
+      if (request.method !== 'POST') {
+        resolve(new HttpResponse(400, 'Method not allowed'));
+      }
 
-    if (data.mandates && data.mandates.length > 0 && data.chain) {
+      let data = JSON.parse(request.body);
+      if (typeof data === 'string') {
+        data = JSON.parse(data);
+      }
 
-      console.log(this.session);
+      if (data.mandates && data.mandates.length > 0 && data.chain) {
 
-      this.session.mandates = data.mandates;
-      this.session.chain = data.chain;
-      this.session.expires = request.timestamp.getTime() + (3600 * 1000);
+        this.session.mandates = data.mandates;
+        this.session.chain = data.chain;
+        this.session.expires = request.timestamp.getTime() + (3600 * 1000);
 
-      clearTimeout(this.qrUriTimer);
-      clearTimeout(this.progressTimer);
-      clearTimeout(this.pollTimer);
+        clearTimeout(this.qrUriTimer);
+        clearTimeout(this.progressTimer);
+        clearTimeout(this.pollTimer);
 
-      this.crypto.createMandateTokenV2(this.session.backend, this.session.mandates, 3600)
-        .then(token => this.session.token = token)
-        .then(() => {
-          this.events.publish('login');
-          this.router.navigateByUrl(`/${this.session.realm}/home`);
-        });
+        this.crypto.createMandateToken(this.session.backend, this.session.mandates, 3600)
+          .then(token => this.session.token = token)
+          .then(() => {
+            this.events.publish('login');
+            this.router.navigateByUrl(`/${this.session.realm}/home`);
+          });
 
-      return Promise.resolve(new HttpResponse(201));
+        resolve(new HttpResponse(201));
 
-    } else {
-      return Promise.resolve(new HttpResponse(400, 'Mandates and/or chain missing'));
-    }
+      } else {
+        resolve(new HttpResponse(400, 'Mandates and/or chain missing'));
+      }
+
+    });
 
   }
-
-  /*
-  start(): Promise<AuthInfo> {
-    return this.authClient.postAuthRequest(this.descriptor.name)
-      .then((authInfo: AuthInfo) => Promise.resolve(authInfo.requestURI)
-        .then(url => {
-          if (this.platform.inApp) {
-            this.platform.handleURI(url)
-              .then(() => this.poll(authInfo.token))
-              .catch(() => this.webviewClient.cancel());
-          } else {
-            this.qrUri = url;
-            clearTimeout(this.qrUriTimer);
-            clearTimeout(this.progressTimer);
-            clearTimeout(this.pollTimer);
-            this.qrUriTimer = setTimeout(() => this.start(), this.qrTimeout);
-            this.progressTimer = setInterval(() => this.updateCountdown(), 100);
-            this.qrUriTimestamp = Date.now();
-            this.poll(authInfo.token);
-          }
-        })
-        .then(() => authInfo));
-  }
-
-  poll(token: string, count = 1): void {
-    this.authClient.getAuthInfo(token)
-      .then((user: AuthUser) => {
-        if (user.authenticated && user.mandates && user.chain && !user.expired) {
-          clearTimeout(this.qrUriTimer);
-          clearTimeout(this.progressTimer);
-          const realms = this.session.realms;
-          realms.push(this.descriptor.name);
-          this.session.realm = this.descriptor.name;
-          this.session.realms = realms.sort().filter((elem, pos, arr) => arr.indexOf(elem) === pos);
-          this.session.mandates = user.mandates;
-          this.session.chain = user.chain;
-          this.session.expires = user.exp.getTime();
-          this.crypto.createMandateToken(
-            this.session.backend,
-            this.session.mandates,
-            (user.exp.getTime() - Date.now()) / 1000
-          ).then(mandate => this.session.mandate = mandate)
-            .then(() => this.authClient.getAuthInfo())
-            .then(() => this.events.publish('login'))
-            .then(() => this.router.navigate([`/${this.descriptor.name}/home`, {}]))
-            .catch(error => {
-              if (error && error.error) {
-                this.snackBar.open(error.error, this.translate.instant('label.close'), { duration: 5000, panelClass: 'error' });
-              }
-              this.start();
-            });
-        } else {
-          this.pollTimer = setTimeout(() => this.poll(token, count + 1), 1000);
-        }
-      });
-  }
-  */
 
 }

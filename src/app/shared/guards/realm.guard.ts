@@ -16,7 +16,7 @@ export class RealmGuard implements CanActivate {
       const realm = route.paramMap.get('realm');
 
       if (this.platform.isMobile && !this.platform.inApp) {
-        this.config.getBackendURL(`/realms/${realm}/login`)
+        this.session.getBackendURL(`/realms/${realm}/login`)
           .then(url => encodeURIComponent(url))
           .then(url => `https://app.plusintegrity.com?data=${url}&label=Login%20to%20${realm}`)
           .then(url => window.location.href = url);

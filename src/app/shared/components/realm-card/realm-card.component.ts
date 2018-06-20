@@ -4,7 +4,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { EventsService } from '@brickchain/integrity-angular';
 import { CacheService } from '../../services';
 import { RealmsClient } from '../../api-clients';
-import { RealmDescriptorV2 } from '../../models';
+import { RealmDescriptor } from '../../models';
 
 @Component({
   selector: 'app-realm-card',
@@ -14,9 +14,9 @@ import { RealmDescriptorV2 } from '../../models';
 export class RealmCardComponent implements OnInit, OnDestroy, OnChanges {
 
   @Input() realm = '';
-  @Output() select: EventEmitter<RealmDescriptorV2> = new EventEmitter();
+  @Output() select: EventEmitter<RealmDescriptor> = new EventEmitter();
 
-  descriptor: RealmDescriptorV2;
+  descriptor: RealmDescriptor;
   error: HttpErrorResponse;
   icon: SafeStyle;
 

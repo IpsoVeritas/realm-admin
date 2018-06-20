@@ -21,7 +21,6 @@ export class MandatesComponent implements OnInit {
   dataSource: MatTableDataSource<any>;
   @ViewChild(MatSort) sort: MatSort;
 
-  // _roles: Array<Role>;
   role: Role;
   items = [];
   controllers: Controller[];

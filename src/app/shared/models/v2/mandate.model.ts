@@ -1,9 +1,14 @@
 import { JsonObject, JsonProperty, Any } from 'json2typescript';
 import { DateConverter } from '../converters/date.converter';
-import { BaseV2 } from './base.model';
+import { Base } from './base.model';
 
 @JsonObject
-export class MandateV2 extends BaseV2 {
+export class Mandate extends Base {
+
+  constructor() {
+    super();
+    this.type = 'https://schema.brickchain.com/v2/mandate.json';
+  }
 
   @JsonProperty('role', String, true)
   role: string = undefined;
@@ -25,10 +30,5 @@ export class MandateV2 extends BaseV2 {
 
   @JsonProperty('params', Any, true)
   params: any = undefined;
-
-  constructor() {
-    super();
-    this.type = 'https://schema.brickchain.com/v2/mandate.json';
-  }
 
 }

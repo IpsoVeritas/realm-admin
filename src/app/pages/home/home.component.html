@@ -13,7 +13,7 @@
         <div class="overlay"></div>
         <mat-icon [class.popup-visible]="profile.expanded">keyboard_arrow_down</mat-icon>
       </div>
-      <h3 class="profile-description">{{realm.description}}</h3>
+      <h3 class="profile-description">{{realm.description ? realm.description : realm.name}}</h3>
       <p class="profile-name">{{realm.name}}</p>
     </div>
 
@@ -31,7 +31,7 @@
           <mat-divider></mat-divider>
           <mat-nav-list>
             <a mat-list-item routerLink="/other/login">
-              <mat-icon>add</mat-icon>{{ 'menu.login_other' | translate }} {{ platform.inApp }}</a>
+              <mat-icon>add</mat-icon>{{ 'menu.login_other' | translate }}</a>
           </mat-nav-list>
         </ng-container>
         <mat-divider></mat-divider>
@@ -48,7 +48,7 @@
       <a mat-list-item routerLink="/{{session.realm}}/home" routerLinkActive="active" (click)="drawerMode == 'over' ? drawer.close() : false">
         <mat-icon>dashboard</mat-icon>{{ 'menu.dashboard' | translate }}
       </a>
-      <a *ngIf="user?.owner" mat-list-item [routerLink]="['realms']" routerLinkActive="active" (click)="drawerMode == 'over' ? drawer.close() : false">
+      <a *ngIf="session.createRealms" mat-list-item [routerLink]="['realms']" routerLinkActive="active" (click)="drawerMode == 'over' ? drawer.close() : false">
         <mat-icon>domain</mat-icon>{{ 'menu.realms' | translate }}
       </a>
     </mat-nav-list>

@@ -1,8 +1,8 @@
 import { JsonObject, JsonProperty, Any } from 'json2typescript';
-import { RealmDescriptorV2 } from './realm-descriptor.model';
+import { RealmDescriptor } from './realm-descriptor.model';
 
 @JsonObject
-export class RealmV2 {
+export class Realm {
 
   @JsonProperty('@id', String, true)
   id: string = undefined;
@@ -25,8 +25,8 @@ export class RealmV2 {
   @JsonProperty('guestMandateTicketId', String, true)
   guestMandateTicketId: string = undefined;
 
-  @JsonProperty('realmDescriptor', RealmDescriptorV2, true)
-  realmDescriptor: RealmDescriptorV2 = undefined;
+  @JsonProperty('realmDescriptor', RealmDescriptor, true)
+  realmDescriptor: RealmDescriptor = undefined;
 
   @JsonProperty('adminRoles', [String], true)
   adminRoles: string[] = undefined;

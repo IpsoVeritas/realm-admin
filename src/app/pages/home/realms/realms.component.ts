@@ -16,7 +16,7 @@ import { Realm } from '../../../shared/models';
 })
 export class RealmsComponent implements OnInit {
 
-  displayedColumns = ['name', 'description', 'action'];
+  displayedColumns = ['name', 'action'];
   dataSource: MatTableDataSource<any>;
   @ViewChild(MatSort) sort: MatSort;
   isSnackBarOpen = false;
@@ -67,6 +67,7 @@ export class RealmsComponent implements OnInit {
   }
 
   invite(realm: Realm) {
+    console.log(realm);
     this.rolesClient.getRoles(realm.id)
       .then(roles => roles.filter(role => role.name === realm.adminRoles[0]))
       .then(roles => roles[0])

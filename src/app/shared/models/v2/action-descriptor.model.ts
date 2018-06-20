@@ -1,10 +1,15 @@
 import { JsonObject, JsonProperty, Any } from 'json2typescript';
-import { BaseV2 } from './base.model';
+import { Base } from './base.model';
 
 @JsonObject
-export class ActionDescriptorV2 extends BaseV2 {
+export class ActionDescriptor extends Base {
 
-  //TODO: add rest of fields for action-descriptor
+  // TODO: add rest of fields for action-descriptor
+
+  constructor() {
+    super();
+    this.type = 'https://schema.brickchain.com/v2/action-descriptor.json';
+  }
 
   @JsonProperty('label', String, true)
   label: string = undefined;
@@ -20,10 +25,5 @@ export class ActionDescriptorV2 extends BaseV2 {
 
   @JsonProperty('icon', String, true)
   icon: string = undefined;
-
-  constructor() {
-    super();
-    this.type = 'https://schema.brickchain.com/v2/action-descriptor.json';
-  }
 
 }

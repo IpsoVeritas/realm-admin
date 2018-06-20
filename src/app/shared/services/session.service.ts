@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { _MatProgressBarMixinBase } from '@angular/material/progress-bar';
 
 @Injectable()
 export class SessionService {
@@ -64,24 +65,12 @@ export class SessionService {
     this.setRealmItem('backend', value);
   }
 
-  public buildBackendURL(path: string = ''): string {
-    return `${this.backend}${path}`;
-  }
-
   get roles(): string[] {
     return this.getRealmItem('roles', []);
   }
 
   set roles(value: string[]) {
     this.setRealmItem('roles', value);
-  }
-
-  get mandate(): string {
-    return this.getRealmItem('mandate');
-  }
-
-  set mandate(value: string) {
-    this.setRealmItem('mandate', value);
   }
 
   get mandates(): string[] {
@@ -146,6 +135,16 @@ export class SessionService {
 
   set key(value: Object) {
     this.setItem('key', value);
+  }
+
+  public getBackendURL(path: string = ''): Promise<string> {
+    return new Promise((resolve, reject) => {
+      if (this.backend) {
+        resolve(`${this.backend}${path}`);
+      } else {
+        reject('no backend defined');
+      }
+    });
   }
 
 }

@@ -1,8 +1,8 @@
 import { JsonObject, JsonProperty, Any } from 'json2typescript';
-import { BaseV2 } from './base.model';
+import { Base } from './base.model';
 
 @JsonObject
-export class PartV2 {
+export class Part {
 
   @JsonProperty('encoding', String, true)
   encoding: string = undefined;
@@ -16,14 +16,14 @@ export class PartV2 {
 }
 
 @JsonObject
-export class MultipartV2 extends BaseV2 {
-
-  @JsonProperty('parts', [PartV2], true)
-  parts: PartV2[] = undefined;
+export class Multipart extends Base {
 
   constructor() {
     super();
     this.type = 'https://schema.brickchain.com/v2/multipart.json';
   }
+
+  @JsonProperty('parts', [Part], true)
+  parts: Part[] = undefined;
 
 }

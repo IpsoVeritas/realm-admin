@@ -76,7 +76,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.realm = realm;
         let url = 'assets/img/banner.jpg';
         if (realm.realmDescriptor.banner) {
-          url = realm.realmDescriptor.banner;
+          url = `https://${this.session.realm}${realm.realmDescriptor.banner}`;
         }
         this.cache.timestamp(`realm:${this.session.realm}`)
           .then(ts => this.bannerImage = this.sanitizer.bypassSecurityTrustStyle(`url(${url}?ts=${ts})`));

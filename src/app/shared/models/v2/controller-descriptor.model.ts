@@ -1,9 +1,9 @@
 import { JsonObject, JsonProperty, Any } from 'json2typescript';
-import { BaseV2 } from './base.model';
-import { KeyPurpose } from '../key-purpose.model';
+import { Base } from './base.model';
+import { KeyPurpose } from '../v1/key-purpose.model';
 
 @JsonObject
-export class ControllerDescriptorV2 extends BaseV2 {
+export class ControllerDescriptor extends Base {
 
   @JsonProperty('label', String, true)
   label: string = undefined;

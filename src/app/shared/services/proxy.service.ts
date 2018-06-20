@@ -51,7 +51,7 @@ export class ProxyService {
   }
 
   private register(): Promise<any> {
-    return this.cryptoService.createMandateTokenV2(this.base, [])
+    return this.cryptoService.createMandateToken(this.base, [])
       .then(mandateToken => {
         const regreq = new RegistrationRequest();
         regreq.mandateToken = mandateToken;
@@ -87,7 +87,7 @@ export class ProxyService {
     if (typeof msg === 'object') {
       m = JSON.stringify(msg);
     }
-    console.log(`send: ${m}`);
+    console.debug(`ProxyService -> ws ${m}`);
     return this._conn.send(m, WebSocketSendMode.Direct, true);
   }
 

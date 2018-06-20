@@ -1,10 +1,10 @@
 import { JsonObject, JsonProperty } from 'json2typescript';
-import { ControllerDescriptorV2 } from './controller-descriptor.model';
-import { BaseV2 } from './base.model';
+import { ControllerDescriptor } from './controller-descriptor.model';
+import { Base } from './base.model';
 
 
 @JsonObject
-export class ControllerV2 extends BaseV2 {
+export class Controller extends Base {
 
   @JsonProperty('active', Boolean, true)
   active: boolean = undefined;
@@ -15,8 +15,8 @@ export class ControllerV2 extends BaseV2 {
   @JsonProperty('uri', String, true)
   uri: string = undefined;
 
-  @JsonProperty('descriptor', ControllerDescriptorV2, true)
-  descriptor: ControllerDescriptorV2 = undefined;
+  @JsonProperty('descriptor', ControllerDescriptor, true)
+  descriptor: ControllerDescriptor = undefined;
 
   @JsonProperty('descriptorUpdated', Number, true)
   descriptorUpdated: number = undefined;

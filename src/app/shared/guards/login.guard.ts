@@ -17,12 +17,12 @@ export class LoginGuard implements CanActivate {
       .catch(() => false)
       .then(isAuthenticated => {
         if (state.url.endsWith('/login')) {
-          if (this.session.realm && isAuthenticated) {
+          if (isAuthenticated) {
             this.router.navigateByUrl(`/${this.session.realm}/home`);
           }
           return !isAuthenticated;
         } else {
-          if (this.session.realm && !isAuthenticated) {
+          if (!isAuthenticated) {
             this.router.navigateByUrl(`/${this.session.realm}/login`);
           }
           return isAuthenticated;

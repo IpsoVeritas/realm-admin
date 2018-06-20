@@ -47,7 +47,7 @@ export class SettingsComponent implements OnInit {
   ngOnInit() {
     this.loadRealm();
     this.rolesClient.getRoles(this.session.realm)
-      .then(roles => roles.filter(role => role.name && !role.name.startsWith('admin@') && role.internal !== true))
+      .then(roles => roles.filter(role => role.name && !role.name.startsWith('admin@') && !role.name.startsWith('services@')))
       .then(roles => this.roles = roles)
       .catch(error => console.warn(error));
   }
@@ -58,14 +58,14 @@ export class SettingsComponent implements OnInit {
       .then(realm => this.realm = realm)
       .then(() => {
         if (this.realm.realmDescriptor.icon) {
-          const url = this.realm.realmDescriptor.icon;
+          const url = `https://${this.session.realm}${this.realm.realmDescriptor.icon}`;
           this.cache.timestamp(`realm:${this.session.realm}`)
             .then(ts => this.iconImage = this.sanitizer.bypassSecurityTrustStyle(`url(${url}?ts=${ts})`));
         } else {
           this.iconImage = undefined;
         }
         if (this.realm.realmDescriptor.banner) {
-          const url = this.realm.realmDescriptor.banner;
+          const url = `https://${this.session.realm}${this.realm.realmDescriptor.banner}`;
           this.cache.timestamp(`realm:${this.session.realm}`)
             .then(ts => this.bannerImage = this.sanitizer.bypassSecurityTrustStyle(`url(${url}?ts=${ts})`));
         } else {

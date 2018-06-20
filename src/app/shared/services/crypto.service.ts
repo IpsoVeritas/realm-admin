@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { SessionService } from './session.service';
 import { TextDecoder } from 'text-encoding-utf-8';
 import { JsonConvert, OperationMode, ValueCheckingMode } from 'json2typescript';
-import { MandateToken, MandateTokenV2 } from '../models';
+import { MandateToken } from '../models';
 import * as jose from 'node-jose';
 import * as base32 from 'base32';
 
@@ -90,17 +90,6 @@ export class CryptoService {
 
   public createMandateToken(uri: string, mandates: string[], ttl: number = 60): Promise<string> {
     const mandateToken = new MandateToken();
-    mandateToken.timestamp = new Date();
-    mandateToken.uri = uri;
-    mandateToken.mandate = mandates[0];
-    mandateToken.mandates = mandates;
-    mandateToken.certificateChain = this.session.chain;
-    mandateToken.ttl = Math.floor(ttl);
-    return this.signCompact(mandateToken);
-  }
-
-  public createMandateTokenV2(uri: string, mandates: string[], ttl: number = 60): Promise<string> {
-    const mandateToken = new MandateTokenV2();
     mandateToken.timestamp = new Date();
     mandateToken.uri = uri;
     mandateToken.mandates = mandates;

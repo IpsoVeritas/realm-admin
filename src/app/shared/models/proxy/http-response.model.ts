@@ -1,9 +1,22 @@
 import { JsonObject, JsonProperty, Any } from 'json2typescript';
-import { DateConverter } from '../converters/date.converter';
-import { BaseV2 } from '../v2/base.model';
+import { Base } from '../v2/base.model';
 
 @JsonObject
-export class HttpResponse extends BaseV2 {
+export class HttpResponse extends Base {
+
+  constructor(status?: number, body?: string, id?: string) {
+    super();
+    this.type = 'https://proxy.brickchain.com/v1/http-response.json';
+    if (id) {
+      this.id = id;
+    }
+    if (status) {
+      this.status = status;
+    }
+    if (body) {
+      this.body = body;
+    }
+  }
 
   @JsonProperty('headers', Any, true)
   headers: any = undefined;
@@ -17,12 +30,4 @@ export class HttpResponse extends BaseV2 {
   @JsonProperty('body', String, true)
   body: string = undefined;
 
-  constructor(status?: number, body?: string, id?: string) {
-    super();
-    this.type = 'https://proxy.brickchain.com/v1/http-response.json';
-
-    if (id) this.id = id;
-    if (status) this.status = status;
-    if (body) this.body = body;
-  }
 }

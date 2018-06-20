@@ -18,13 +18,11 @@
   <!-- Name Column -->
   <ng-container matColumnDef="name">
     <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'label.name' | translate }}</mat-header-cell>
-    <mat-cell *matCellDef="let realm">{{realm.name}}</mat-cell>
-  </ng-container>
-
-  <!-- Description Column -->
-  <ng-container matColumnDef="description">
-    <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'label.description' | translate }}</mat-header-cell>
-    <mat-cell *matCellDef="let realm">{{realm.description}}</mat-cell>
+    <mat-cell *matCellDef="let realm">
+      <span>{{realm.description ? realm.description : realm.name}}</span>
+      <br>
+      <span class="mat-caption">{{realm.name}}</span>
+    </mat-cell>
   </ng-container>
 
   <!-- Action Column -->

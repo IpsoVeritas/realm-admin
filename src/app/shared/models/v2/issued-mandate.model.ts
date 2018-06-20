@@ -1,8 +1,8 @@
 import { JsonObject, JsonProperty, Any } from 'json2typescript';
-import { MandateV2 } from './mandate.model';
+import { Mandate } from './mandate.model';
 
 @JsonObject
-export class IssuedMandateV2 extends MandateV2 {
+export class IssuedMandate extends Mandate {
 
   @JsonProperty('label', String, true)
   label: string = undefined;

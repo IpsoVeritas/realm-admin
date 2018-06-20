@@ -157,7 +157,7 @@ export class ControllerComponent implements OnInit, OnDestroy {
     // Synchronous HTTP to enable clipboard
     const xhr = new XMLHttpRequest();
     xhr.open('post', this.controller.descriptor.addBindingEndpoint, false);
-    xhr.setRequestHeader('Authorization', `Mandate ${this.session.mandate}`);
+    xhr.setRequestHeader('Authorization', `Mandate ${this.session.token}`);
     xhr.onreadystatechange = () => {
       if (xhr.readyState === XMLHttpRequest.DONE) {
         if (xhr.status === 201) {

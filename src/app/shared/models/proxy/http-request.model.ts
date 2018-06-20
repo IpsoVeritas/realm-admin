@@ -1,10 +1,17 @@
 import { JsonObject, JsonProperty, Any } from 'json2typescript';
-import { DateConverter } from '../converters/date.converter';
-import { BaseV2 } from '../v2/base.model';
+import { Base } from '../v2/base.model';
 import { v4 } from 'uuid/v4';
 
 @JsonObject
-export class HttpRequest extends BaseV2 {
+export class HttpRequest extends Base {
+
+  constructor() {
+    super();
+    this.type = 'https://proxy.brickchain.com/v1/http-request.json';
+    if (!this.id) {
+      this.id = v4();
+    }
+  }
 
   @JsonProperty('url', String, true)
   url: string = undefined;
@@ -18,10 +25,4 @@ export class HttpRequest extends BaseV2 {
   @JsonProperty('body', String, true)
   body: string = undefined;
 
-  constructor() {
-    super();
-    this.type = 'https://proxy.brickchain.com/v1/http-request.json';
-
-    if (this.id == undefined || this.id == null || this.id == "") this.id = v4();
-  }
 }

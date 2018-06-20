@@ -9,7 +9,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { EventsService, DialogsService } from '@brickchain/integrity-angular';
 import { PlatformService, SessionService, CacheService, CryptoService } from '../../shared/services';
 import { AccessClient, RealmsClient, RolesClient, ControllersClient, ServicesClient } from '../../shared/api-clients';
-import { User, Realm, RealmDescriptor, Role, Controller, Service, ControllerBinding } from '../../shared/models';
+import { Realm, RealmDescriptor, Role, Controller, Service, ControllerBinding } from '../../shared/models';
 import { ControllerAddDialogComponent } from './controller/controller-add-dialog.component';
 import { ControllerBindDialogComponent } from './controller/controller-bind-dialog.component';
 import { SessionTimeoutDialogComponent } from './session-timeout-dialog.component';
@@ -26,7 +26,6 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   maxServiceTokenAge = 5 * 60 * 1000;
 
   requestCount = 0;
-  user: User;
 
   realm: Realm;
   roles: Role[];
@@ -78,8 +77,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       this.profileMode = result.matches ? 'drawer' : 'side';
     });
     this.navigationSubscription = this.router.events.subscribe((event: any) => {
-      if (event instanceof NavigationEnd &&
-        (!this.realm || session.realm !== this.realm.name)) {
+      if (event instanceof NavigationEnd && (!this.realm || session.realm !== this.realm.name)) {
         this.load();
       }
     });
@@ -117,14 +115,12 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   load(): Promise<any> {
     return Promise.all([this.loadRealm(), this.loadRoles(), this.loadControllers()])
-      .then(() => this.accessClient.getUserAccess())
-      .then(user => this.user = user)
       .then(() => this.events.publish('ready', true))
       .then(() => this.controllersClient.getControllers(this.session.realm))
       .then(controllers => controllers.map(controller => this.controllersClient.syncController(controller)))
+      .catch(error => console.warn('Error syncing controllers', error))
       .then(() => this.startServiceTokenPruning())
-      .then(() => this.startSessionTimer())
-      .catch(error => console.warn('Error syncing controllers', error));
+      .then(() => this.startSessionTimer());
   }
 
   loadRealm(): Promise<Realm> {
@@ -132,7 +128,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       .then(realm => {
         this.realm = realm;
         if (realm.realmDescriptor.icon) {
-          const url = realm.realmDescriptor.icon;
+          const url = `https://${this.session.realm}${realm.realmDescriptor.icon}`;
           this.cache.timestamp(`realm:${this.session.realm}`)
             .then(ts => this.iconImage = this.sanitizer.bypassSecurityTrustStyle(`url(${url}?ts=${ts})`));
         } else {
@@ -144,7 +140,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   loadRoles(): Promise<Role[]> {
     return this.rolesClient.getRoles(this.session.realm)
-      .then(roles => roles.filter(role => !role.internal))
+      .then(roles => roles.filter(role => !role.name.startsWith('services@')))
       .then(roles => roles.sort((a, b) => a.description.localeCompare(b.description)))
       .then(roles => this.roles = roles)
       .then(() => this.roles);

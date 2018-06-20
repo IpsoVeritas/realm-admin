@@ -1,5 +1,5 @@
 import { JsonObject, JsonProperty, Any } from 'json2typescript';
-import { DateConverter } from './converters/date.converter';
+import { DateConverter } from '../converters/date.converter';
 import { Fact } from './fact.model';
 import { Mandate } from './mandate.model';
 import { Contract } from './contract.model';
