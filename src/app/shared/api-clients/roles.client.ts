@@ -42,7 +42,7 @@ export class RolesClient extends BaseClient {
   public updateRole(role: Role): Promise<Role> {
     return this.session.getBackendURL(`/realms/${role.realm}/roles/${role.id}`)
       .then(url => this.http.put(url, this.jsonConvert.serializeObject(role)).toPromise())
-      .then(() => this.cache.invalidate(`role:${role.realm}/${role.id}`))
+      .then(() => this.cache.invalidate(`roles:${role.realm}`, `role:${role.realm}/${role.id}`))
       .then(() => role);
   }
 

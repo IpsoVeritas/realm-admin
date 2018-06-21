@@ -42,10 +42,10 @@ export class RealmsClient extends BaseClient {
   public getRealms(): Promise<Realm[]> {
     return this.cache.get('realms')
       .catch(() => this.session.getBackendURL(`/realms`)
-      .then(url => this.http.get(url).toPromise())
-      .then((arr: any[]) => this.jsonConvert.deserializeArray(arr, Realm))
-      .then(realms => this.cache.set('realms', realms)));
-}
+        .then(url => this.http.get(url).toPromise())
+        .then((arr: any[]) => this.jsonConvert.deserializeArray(arr, Realm))
+        .then(realms => this.cache.set('realms', realms)));
+  }
 
   public createRealm(realm: Realm): Promise<Realm> {
     return this.session.getBackendURL('/realms')
@@ -57,7 +57,7 @@ export class RealmsClient extends BaseClient {
   public updateRealm(realm: Realm): Promise<Realm> {
     return this.session.getBackendURL(`/realms/${realm.id}`)
       .then(url => this.http.put(url, this.jsonConvert.serializeObject(realm)).toPromise())
-      .then(() => this.cache.invalidate(`realm:${realm.id}`, `realmDescriptor:${realm.id}`))
+      .then(() => this.cache.invalidate('realms', `realm:${realm.id}`, `realmDescriptor:${realm.id}`))
       .then(() => realm);
   }
 

@@ -62,15 +62,10 @@
         <mat-header-cell *matHeaderCellDef></mat-header-cell>
         <mat-cell *matCellDef="let item">
 
-          <button mat-icon-button color="accent" (click)="revokeMandate(item)" *ngIf="item.type != 'invite' && item.status == 'Active'">
-            <mat-icon>block</mat-icon>
-          </button>
-
-          <ng-template [ngIf]="item.type == 'invite' && item.status == 'Pending'" [ngIfElse]="inlineIcons">
-            <button mat-icon-button color="accent" [matMenuTriggerFor]="inviteMenu" *ngIf="item.type == 'invite'">
+          <ng-template [ngIf]="item.type == 'invite'" [ngIfElse]="mandateButtons">
+            <button mat-icon-button color="accent" [matMenuTriggerFor]="inviteMenu">
               <mat-icon>more_vert</mat-icon>
             </button>
-
             <mat-menu #inviteMenu="matMenu" yPosition="below" [overlapTrigger]="false">
               <button mat-menu-item (click)="sendInvite(item)">{{'invite.menu_send_invite' | translate }}</button>
               <button mat-menu-item (click)="deleteInvite(item)">{{'invite.menu_delete_invite' | translate }}</button>
@@ -78,12 +73,9 @@
             </mat-menu>
           </ng-template>
 
-          <ng-template #inlineIcons>
-            <button mat-icon-button (click)="sendInvite(item)" *ngIf="item.type == 'invite'">
-              <mat-icon>send</mat-icon>
-            </button>
-            <button mat-icon-button (click)="deleteInvite(item)" *ngIf="item.type == 'invite'">
-              <mat-icon>delete</mat-icon>
+          <ng-template #mandateButtons>
+            <button mat-icon-button color="accent" (click)="revokeMandate(item)" *ngIf="item.status == 'Active'">
+              <mat-icon>block</mat-icon>
             </button>
           </ng-template>
 
