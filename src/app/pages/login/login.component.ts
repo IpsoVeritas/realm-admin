@@ -5,7 +5,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { EventsService } from '@brickchain/integrity-angular';
 import { WebviewClientService } from '@brickchain/integrity-webview-client';
-import { AuthUser, AuthInfo, RealmDescriptor, LoginRequest, Contract, HttpResponse, HttpRequest } from '../../shared/models';
+import { RealmDescriptor, LoginRequest, Contract, HttpResponse, HttpRequest } from '../../shared/models';
 import { AuthClient, RealmsClient } from '../../shared/api-clients';
 import { ConfigService, SessionService, CryptoService, PlatformService, ProxyService } from '../../shared/services';
 import { MatSnackBar } from '@angular/material/snack-bar';

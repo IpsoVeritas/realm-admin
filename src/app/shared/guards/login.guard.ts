@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { SessionService } from '../services/session.service';
 import { AuthClient } from '../api-clients';
-import { AuthUser } from '../models';
 
 @Injectable()
 export class LoginGuard implements CanActivate {
@@ -13,7 +12,7 @@ export class LoginGuard implements CanActivate {
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
     return this.authClient.getAuthInfo()
-      .then((user: AuthUser) => user.authenticated)
+      .then(authInfo => authInfo.authenticated)
       .catch(() => false)
       .then(isAuthenticated => {
         if (state.url.endsWith('/login')) {

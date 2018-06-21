@@ -70,10 +70,10 @@ import { SettingsComponent } from './pages/home/settings/settings.component';
 import { InviteComponent } from './pages/home/invite/invite.component';
 
 export function createTranslateLoader(http: HttpClient) {
-  if (environment.production) {
-    return new TranslateHttpLoader(http, './assets/i18n/', '.json');
-  } else {
+  if (environment.poeditor_live) {
     return new POEditorLoader(http, environment.poeditor_url, environment.poeditor_api_token, environment.poeditor_project_id);
+  } else {
+    return new TranslateHttpLoader(http, './assets/i18n/', '.json');
   }
 }
 

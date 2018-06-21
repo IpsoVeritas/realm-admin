@@ -3,7 +3,6 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { WebviewClientService } from '@brickchain/integrity-webview-client';
 import { AuthClient } from '../../shared/api-clients';
 import { SessionService, PlatformService, CryptoService } from '../../shared/services';
-import { AuthUser, AuthInfo } from '../../shared/models';
 
 @Component({
   selector: 'app-session-timeout-dialog',

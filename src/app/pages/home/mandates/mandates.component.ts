@@ -6,9 +6,9 @@ import { MatSort } from '@angular/material/sort';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { TranslateService } from '@ngx-translate/core';
 import { DialogsService, EventsService } from '@brickchain/integrity-angular';
-import { SessionService } from '../../../shared/services';
+import { PlatformService, SessionService } from '../../../shared/services';
 import { RolesClient, MandatesClient, InvitesClient, ControllersClient } from '../../../shared/api-clients';
-import { Role, IssuedMandate, Controller } from '../../../shared/models';
+import { Role, Invite, IssuedMandate, Controller } from '../../../shared/models';
 
 @Component({
   selector: 'app-mandates',
@@ -37,6 +37,7 @@ export class MandatesComponent implements OnInit {
     private translate: TranslateService,
     private dialogs: DialogsService,
     public events: EventsService,
+    private platform: PlatformService,
     public session: SessionService,
     private rolesClient: RolesClient,
     private mandatesClient: MandatesClient,
@@ -65,7 +66,6 @@ export class MandatesComponent implements OnInit {
       }));
       this.route.paramMap.subscribe(paramMap => this.selectRole(paramMap.get('id')));
     });
-
   }
 
   tabChanged(event: MatTabChangeEvent) {
@@ -144,10 +144,10 @@ export class MandatesComponent implements OnInit {
     });
   }
 
-  revoke(item) {
-    const mandate: IssuedMandate = item.data;
+  revokeMandate(item) {
+    const mandate = <IssuedMandate>item.data;
     this.dialogs.openConfirm({
-      message: this.translate.instant('mandates.revoke_mandate', { role: this.role.description, recipient: mandate.recipientName }),
+      message: this.translate.instant('mandates.revoke_mandate', { role: this.role.description, recipient: mandate.label }),
       ok: this.translate.instant('label.revoke'),
       okColor: 'warn',
       okIcon: 'block',
@@ -160,15 +160,15 @@ export class MandatesComponent implements OnInit {
             item.data.status = 1;
           })
           .catch(error => this.snackBarOpen(
-            this.translate.instant('mandates.error_revoking', { role: mandate.label, recipient: mandate.recipientName }),
+            this.translate.instant('mandates.error_revoking', { role: mandate.label, recipient: mandate.label }),
             this.translate.instant('label.close'),
             this.snackBarErrorConfig));
       }
     });
   }
 
-  resend(item: any) {
-    const invite = item.data;
+  sendInvite(item: any) {
+    const invite = <Invite>item.data;
     this.dialogs.openConfirm({
       message: this.translate.instant('invite.resend_invite', { email: invite.name }),
       ok: this.translate.instant('label.send'),
@@ -187,8 +187,8 @@ export class MandatesComponent implements OnInit {
     });
   }
 
-  delete(item: any) {
-    const invite = item.data;
+  deleteInvite(item: any) {
+    const invite = <Invite>item.data;
     this.dialogs.openConfirm({
       message: this.translate.instant('invite.delete_invite', { email: invite.name }),
       ok: this.translate.instant('label.delete'),
@@ -206,6 +206,13 @@ export class MandatesComponent implements OnInit {
             this.snackBarErrorConfig));
       }
     });
+  }
+
+  scanInvite(item: any) {
+    const invite = <Invite>item.data;
+    const uri = `https://${this.session.realm}/realm/v2/realms/${invite.realm}/invites/id/${invite.id}/fetch`;
+    const title = this.translate.instant('invite.scan_invite', { role: this.role.description, email: invite.name });
+    this.platform.handleURI(uri, title);
   }
 
   snackBarOpen(message: string, action?: string, config?: MatSnackBarConfig) {

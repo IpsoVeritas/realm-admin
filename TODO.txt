@@ -1,1 +1,6 @@
 config.json.template, proxy_base -> proxyBase, or servicesFeed -> services_feed
+image upload broken
+image get returns wrong mime type
+add role.json to document schemas
+add recipeint name to mandate in go.document-v2.
+fix mandate table logic

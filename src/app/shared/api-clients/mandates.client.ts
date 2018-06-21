@@ -9,13 +9,6 @@ export class MandatesClient extends BaseClient {
     return super.clone<IssuedMandate>(mandate, IssuedMandate);
   }
 
-  public getMandateIds(realmId: string): Promise<string[]> {
-    return this.cache.get(`mandateIds:${realmId}`)
-      .catch(() => this.session.getBackendURL(`/realms/${realmId}/mandates`)
-        .then(url => this.http.get(url).toPromise())
-        .then(ids => this.cache.set(`mandateIds:${realmId}`, <string[]>ids)));
-  }
-
   public getMandate(realmId: string, mandateId: string): Promise<IssuedMandate> {
     return this.cache.get(`mandate:${realmId}/${mandateId}`)
       .catch(() => this.session.getBackendURL(`/realms/${realmId}/mandates/${mandateId}`)
@@ -25,15 +18,17 @@ export class MandatesClient extends BaseClient {
   }
 
   public getMandates(realmId: string): Promise<IssuedMandate[]> {
-    return this.getMandateIds(realmId)
-      .then(mandateIds => mandateIds.map(mandateId => this.getMandate(realmId, mandateId)))
-      .then(promises => Promise.all(promises));
+    return this.cache.get(`mandates:${realmId}`)
+      .catch(() => this.session.getBackendURL(`/realms/${realmId}/mandates`)
+        .then(url => this.http.get(url).toPromise())
+        .then((arr: any[]) => this.jsonConvert.deserializeArray(arr, IssuedMandate))
+        .then(mandates => this.cache.set(`mandates:${realmId}`, mandates)));
   }
 
   public revokeMandate(mandate: IssuedMandate): Promise<any> {
     return this.session.getBackendURL(`/realms/${mandate.realm}/mandates/${mandate.id}/revoke`)
       .then(url => this.http.put(url, {}).toPromise())
-      .then(() => this.cache.invalidate(`mandate:${mandate.realm}/${mandate.id}`));
+      .then(() => this.cache.invalidate(`mandates:${mandate.realm}`, `mandate:${mandate.realm}/${mandate.id}`));
   }
 
 }

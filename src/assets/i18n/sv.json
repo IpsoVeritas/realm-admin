@@ -36,7 +36,8 @@
     },
     "login": {
         "title": "",
-        "instructions": ""
+        "instructions": "",
+        "contract": ""
     },
     "error": {
         "connecting_to_host": "",
@@ -74,7 +75,11 @@
         "add_end_date": "",
         "recipients_count_hint": "",
         "sending_section": "",
-        "send_summary": ""
+        "send_summary": "",
+        "scan_invite": "",
+        "menu_send_invite": "",
+        "menu_scan_invite": "",
+        "menu_delete_invite": ""
     },
     "menu": {
         "settings": "",
