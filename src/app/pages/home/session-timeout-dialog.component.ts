@@ -1,8 +1,11 @@
 import { Component, HostListener } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { WebviewClientService } from '@brickchain/integrity-webview-client';
-import { AuthClient } from '../../shared/api-clients';
-import { SessionService, PlatformService, CryptoService } from '../../shared/services';
+import { TranslateService } from '@ngx-translate/core';
+import { AuthClient, RealmsClient } from '../../shared/api-clients';
+import { SessionService, PlatformService, CryptoService, ProxyService } from '../../shared/services';
+import { RealmDescriptor, LoginRequest, Contract, HttpResponse, HttpRequest } from '../../shared/models';
+import { v4 } from 'uuid/v4';
 
 @Component({
   selector: 'app-session-timeout-dialog',
@@ -44,75 +47,88 @@ export class SessionTimeoutDialogComponent {
   copied = false;
 
   constructor(private authClient: AuthClient,
+    private translate: TranslateService,
     public session: SessionService,
     private crypto: CryptoService,
+    private proxy: ProxyService,
     private platform: PlatformService,
     private webviewClient: WebviewClientService,
+    private realmsClient: RealmsClient,
     public dialogRef: MatDialogRef<SessionTimeoutDialogComponent>) {
     this.session.mandates = undefined;
     this.session.chain = undefined;
+    this.session.expires = undefined;
     this.session.token = undefined;
-    this.start(this.session.realm);
+    this.login(this.session.realm);
   }
 
-  // TODO: Implement new auth logic here
+  login(realm: string): Promise<any> {
+    const id = v4();
+    return this.proxy.handlePath(`/login/${id}`, this.getLoginRequestHandler(id))
+      .then(() => this.proxy.handlePath(`/callback/${id}`, this.getLoginResponseHandler()))
+      .then(() => {
+        this.qrUriTimestamp = Date.now();
+        this.progressTimer = setInterval(() => this.updateCountdown(), 100);
+        this.qrUriTimer = setTimeout(() => this.login(realm), this.qrTimeout);
+        this.qrUri = `${this.proxy.base}/proxy/request/${this.proxy.id}/login/${id}`;
+      });
+  }
 
-  start(realm: string) {
-    /*
-    this.authClient.postAuthRequest(this.session.realm)
-      .then((authInfo: AuthInfo) => Promise.resolve(authInfo.requestURI) // this.config.getBaseURL(authInfo.requestURI)
-        .then(url => {
-          if (this.platform.inApp) {
-            this.platform.handleURI(url)
-              .then(() => this.poll(authInfo.token))
-              .catch(() => this.webviewClient.cancel());
-          } else {
-            this.qrUri = url;
-            clearTimeout(this.qrUriTimer);
-            clearTimeout(this.progressTimer);
-            clearTimeout(this.pollTimer);
-            this.qrUriTimer = setTimeout(() => this.start(realm), this.qrTimeout);
-            this.progressTimer = setInterval(() => this.updateCountdown(), 100);
-            this.qrUriTimestamp = Date.now();
-            this.poll(authInfo.token);
-          }
-        })
-        .then(() => authInfo));
-        */
+  getLoginRequestHandler(id: string): (data: HttpRequest) => Promise<HttpResponse> {
+    return (request: HttpRequest) => this.crypto.getPublicKey()
+      .then(key => {
+        const loginRequest = new LoginRequest();
+        loginRequest.timestamp = new Date();
+        loginRequest.contract = new Contract();
+        loginRequest.contract.text = this.translate.instant('login.contract', { realm: this.session.realm });
+        loginRequest.ttl = 3600;
+        loginRequest.roles = this.session.roles;
+        loginRequest.key = key;
+        loginRequest.replyTo = [`${this.proxy.base}/proxy/request/${this.proxy.id}/callback/${id}`];
+        return loginRequest;
+      })
+      .then(loginRequest => new HttpResponse(200, JSON.stringify(this.realmsClient.serializeObject(loginRequest))));
+  }
+
+  getLoginResponseHandler(): (data: HttpRequest) => Promise<HttpResponse> {
+
+    return (request: HttpRequest) => new Promise((resolve, _reject) => {
+
+      if (request.method !== 'POST') {
+        resolve(new HttpResponse(400, 'Method not allowed'));
+      }
+
+      let data = JSON.parse(request.body);
+      if (typeof data === 'string') {
+        data = JSON.parse(data);
+      }
+
+      if (data.mandates && data.mandates.length > 0 && data.chain) {
+
+        this.session.mandates = data.mandates;
+        this.session.chain = data.chain;
+        this.session.expires = request.timestamp.getTime() + (3600 * 1000);
+
+        clearTimeout(this.qrUriTimer);
+        clearTimeout(this.progressTimer);
+        clearTimeout(this.pollTimer);
+
+        this.crypto.createMandateToken(this.session.backend, this.session.mandates, 3600)
+          .then(token => this.session.token = token)
+          .then(() => this.dialogRef.close(true));
+
+        resolve(new HttpResponse(201));
+
+      } else {
+        resolve(new HttpResponse(400, 'Mandates and/or chain missing'));
+      }
+
+    });
+
   }
 
   updateCountdown() {
     this.qrCountdown = 100 - 100 * (Date.now() - this.qrUriTimestamp) / this.qrTimeout;
-  }
-
-  poll(token: string, count = 1): void {
-    /*
-    this.authClient.getAuthInfo(token)
-      .then((user: AuthUser) => {
-        if (user.authenticated && user.mandates && user.chain && !user.expired) {
-          clearTimeout(this.qrUriTimer);
-          clearTimeout(this.progressTimer);
-          this.session.mandates = user.mandates;
-          this.session.chain = user.chain;
-          this.session.expires = user.exp.getTime();
-          this.crypto.createMandateToken(
-            this.session.backend,
-            this.session.mandates,
-            (user.exp.getTime() - Date.now()) / 1000
-          ).then(mandate => this.session.mandate = mandate)
-            .then(() => this.authClient.getAuthInfo())
-            .then((confirmedUser: AuthUser) => this.dialogRef.close(true))
-            .catch(error => {
-              if (error && error.error) {
-                console.error(error);
-              }
-              this.start(this.session.realm);
-            });
-        } else {
-          this.pollTimer = setTimeout(() => this.poll(token, count + 1), 1000);
-        }
-      });
-      */
   }
 
   @HostListener('keydown.enter')

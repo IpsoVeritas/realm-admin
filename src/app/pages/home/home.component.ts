@@ -117,8 +117,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     return Promise.all([this.loadRealm(), this.loadRoles(), this.loadControllers()])
       .then(() => this.events.publish('ready', true))
       .then(() => this.controllersClient.getControllers(this.session.realm))
-      .then(controllers => controllers.map(controller => this.controllersClient.syncController(controller)))
-      .catch(error => console.warn('Error syncing controllers', error))
+      .then(controllers => controllers.forEach(controller => {
+        this.controllersClient.syncController(controller)
+          .catch(error => console.warn('Error syncing controller', controller, error));
+      }))
       .then(() => this.startServiceTokenPruning())
       .then(() => this.startSessionTimer());
   }

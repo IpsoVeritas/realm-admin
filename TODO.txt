@@ -3,3 +3,4 @@ image upload broken
 image get returns wrong mime type
 add role.json to document schemas
 implement revocation login in mandate service in realm-ng
+add local proxy service for local dev. can each realm run a proxy?

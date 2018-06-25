@@ -25,6 +25,7 @@ export class RealmGuard implements CanActivate {
       if (this.session.realm && realm !== this.session.realm) {
         this.router.navigate([`/${realm}`, {}]);
       }
+
       this.session.realm = realm;
 
     }

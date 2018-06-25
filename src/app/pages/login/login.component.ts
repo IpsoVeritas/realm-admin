@@ -1,4 +1,5 @@
 import { Component, ViewChild, ElementRef, OnInit, OnDestroy } from '@angular/core';
+import { Location } from '@angular/common';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -11,7 +12,6 @@ import { ConfigService, SessionService, CryptoService, PlatformService, ProxySer
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { RealmListComponent } from '../../shared/components';
 import { v4 } from 'uuid/v4';
-import { identifierModuleUrl } from '@angular/compiler';
 
 @Component({
   selector: 'app-login',
@@ -34,7 +34,8 @@ export class LoginComponent implements OnInit, OnDestroy {
   descriptor: RealmDescriptor;
   overlayRef: OverlayRef;
 
-  constructor(private route: ActivatedRoute,
+  constructor(private location: Location,
+    private route: ActivatedRoute,
     private overlay: Overlay,
     private router: Router,
     private authClient: AuthClient,
@@ -53,16 +54,23 @@ export class LoginComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.route.paramMap.subscribe(paramMap => {
       const realm = paramMap.get('realm');
-      this.realmsClient.getRealmDescriptor(realm).then(descriptor => this.descriptor = descriptor);
-      this.start(realm)
-        .catch(error => {
-          this.snackBar.open(
-            this.translate.instant('error.connecting_to_host', { host: realm }),
-            this.translate.instant('label.close'),
-            { duration: 3000 });
+      if (realm) {
+        this.realmsClient.getRealmDescriptor(realm).then(descriptor => this.descriptor = descriptor);
+        this.start(realm)
+          .catch(error => {
+            this.snackBar.open(
+              this.translate.instant('error.connecting_to_host', { host: realm }),
+              this.translate.instant('label.close'),
+              { duration: 3000 });
+            this.showRealmList();
+          })
+          .then(() => this.events.publish('ready', !this.platform.inApp));
+      } else {
+        setTimeout(() => {
           this.showRealmList();
-        })
-        .then(() => this.events.publish('ready', !this.platform.inApp));
+          this.events.publish('ready', !this.platform.inApp);
+        }, 10);
+      }
     });
   }
 
@@ -105,6 +113,8 @@ export class LoginComponent implements OnInit, OnDestroy {
       if (this.descriptor) {
         this.overlayRef.dispose();
         this.overlayRef = null;
+      } else {
+        this.location.back();
       }
     });
   }
@@ -124,6 +134,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       .then(descriptors => descriptors.length !== 1 ? Promise.reject('no backend found') : Promise.resolve(descriptors[0]))
       .then(descriptor => {
         this.session.realm = realm;
+        this.session.addRealm(realm);
         this.session.backend = descriptor.params['backend'];
         this.session.roles = descriptor.roles;
         this.session.createRealms = descriptor.params['createRealms'] === 'true';
@@ -145,7 +156,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       .then(() => {
         this.qrUriTimestamp = Date.now();
         this.progressTimer = setInterval(() => this.updateCountdown(), 100);
-        this.qrUriTimer = setTimeout(() => this.start(realm), this.qrTimeout);
+        this.qrUriTimer = setTimeout(() => this.login(realm), this.qrTimeout);
         this.qrUri = `${this.proxy.base}/proxy/request/${this.proxy.id}/login/${id}`;
       });
   }

@@ -23,7 +23,7 @@ export class RealmListComponent implements OnInit {
 
   ngOnInit() {
     this.realmForm = this.fb.group({
-      'realm': [this.session.realm, Validators.required]
+      'realm': ['', Validators.required]
     });
   }
 

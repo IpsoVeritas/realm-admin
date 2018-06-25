@@ -15,6 +15,7 @@ import { ControllerComponent } from './pages/home/controller/controller.componen
 import { SettingsComponent } from './pages/home/settings/settings.component';
 
 const appRoutes: Routes = [
+  { path: 'other/login', component: LoginComponent },
   { path: ':realm/bootstrap', component: BootstrapComponent, canActivate: [RealmGuard] },
   { path: ':realm/login', component: LoginComponent, canActivate: [RealmGuard, LoginGuard] },
   {

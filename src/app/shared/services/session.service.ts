@@ -147,4 +147,14 @@ export class SessionService {
     });
   }
 
+  public addRealm(realm: string) {
+    const realms = this.realms;
+    realms.push(realm);
+    this.realms = realms.sort().filter((elem, pos, arr) => arr.indexOf(elem) === pos);
+  }
+
+  public removeRealm(realm: string) {
+    this.realms = this.realms.filter((elem, pos, arr) => elem !== realm);
+  }
+
 }
