@@ -38,13 +38,13 @@
       <!-- Starts Column -->
       <ng-container matColumnDef="starts">
         <mat-header-cell *matHeaderCellDef mat-sort-header>{{'label.mandate_starts' | translate }}</mat-header-cell>
-        <mat-cell *matCellDef="let item">{{ item.data.timestamp | date:'short' }}</mat-cell>
+        <mat-cell *matCellDef="let item">{{ item.data.validFrom | date:'short' }}</mat-cell>
       </ng-container>
 
       <!-- Starts Column -->
       <ng-container matColumnDef="ends">
         <mat-header-cell *matHeaderCellDef mat-sort-header>{{'label.mandate_ends' | translate }}</mat-header-cell>
-        <mat-cell *matCellDef="let item">{{ item.data.timestamp | date:'short' }}</mat-cell>
+        <mat-cell *matCellDef="let item">{{ item.data.validUntil | date:'short' }}</mat-cell>
       </ng-container>
 
       <!-- Status Column -->
