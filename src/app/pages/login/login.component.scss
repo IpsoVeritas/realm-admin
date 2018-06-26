@@ -31,8 +31,9 @@
     box-shadow: 0 -1px 4px 0 rgba(0, 0, 0, 0.1);
 
     .realm {
-      text-align: center;
-      margin-right: 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       padding-bottom: 15px;
       width: 80%;
       overflow: hidden;
@@ -43,11 +44,27 @@
         font-size: 20px;
         font-weight: 600;
         margin-bottom: 5px;
+        max-width: 400px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+
+        @media (max-width: 500px) {
+          max-width: 100%;
+        }
       }
 
       .name {
         font-size: 14px;
         color: #7f7f7f;
+        max-width: 400px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+
+        @media (max-width: 500px) {
+          max-width: 100%;
+        }
       }
     }
 
@@ -73,11 +90,21 @@
       width: 300px !important;
       text-align: center;
       color: #7f7f7f;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      @media (max-width: 400px) {
+        width: 80% !important;
+      }
     }
 
     .mat-progress-bar {
       width: 300px !important;
       border-radius: 2px;
+
+      @media (max-width: 400px) {
+        width: 80% !important;
+      }
     }
   }
 }

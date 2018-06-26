@@ -122,7 +122,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   showCopySuccess(value: string) {
     this.copied = true;
     setTimeout(() => this.copied = false, 500);
-    this.snackBar.open(this.translate.instant('message.copied_to_clipboard', { value: value }), '', { duration: 2000 });
+    this.snackBar.open(this.translate.instant('message.copied_to_clipboard', { value: 'login request URL' }), '', { duration: 2000 });
   }
 
   updateCountdown() {
