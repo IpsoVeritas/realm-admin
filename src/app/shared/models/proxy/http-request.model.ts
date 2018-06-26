@@ -1,4 +1,5 @@
 import { JsonObject, JsonProperty, Any } from 'json2typescript';
+import { Base64Converter } from '../converters/base64.converter';
 import { Base } from '../v2/base.model';
 import { v4 } from 'uuid/v4';
 
@@ -22,7 +23,7 @@ export class HttpRequest extends Base {
   @JsonProperty('method', String, true)
   method: string = undefined;
 
-  @JsonProperty('body', String, true)
+  @JsonProperty('body', Base64Converter, true)
   body: string = undefined;
 
 }
