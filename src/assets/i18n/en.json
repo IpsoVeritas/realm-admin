@@ -48,7 +48,7 @@
         "calling": "Error calling {{value}}"
     },
     "message": {
-        "copied_to_clipboard": "Copied '{{value}}' to clipboard",
+        "copied_to_clipboard": "Copied {{value}} to clipboard",
         "updated": "Updated {{value}}"
     },
     "realm-list": {

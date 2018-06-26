@@ -58,16 +58,14 @@ export class SettingsComponent implements OnInit {
       .then(realm => this.realm = realm)
       .then(() => {
         if (this.realm.realmDescriptor.icon) {
-          const url = `https://${this.session.realm}${this.realm.realmDescriptor.icon}`;
           this.cache.timestamp(`realm:${this.session.realm}`)
-            .then(ts => this.iconImage = this.sanitizer.bypassSecurityTrustStyle(`url(${url}?ts=${ts})`));
+            .then(ts => this.iconImage = this.sanitizer.bypassSecurityTrustStyle(`url(${this.realm.realmDescriptor.icon}?ts=${ts})`));
         } else {
           this.iconImage = undefined;
         }
         if (this.realm.realmDescriptor.banner) {
-          const url = `https://${this.session.realm}${this.realm.realmDescriptor.banner}`;
           this.cache.timestamp(`realm:${this.session.realm}`)
-            .then(ts => this.bannerImage = this.sanitizer.bypassSecurityTrustStyle(`url(${url}?ts=${ts})`));
+            .then(ts => this.bannerImage = this.sanitizer.bypassSecurityTrustStyle(`url(${this.realm.realmDescriptor.banner}?ts=${ts})`));
         } else {
           this.bannerImage = undefined;
         }

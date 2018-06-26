@@ -130,9 +130,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       .then(realm => {
         this.realm = realm;
         if (realm.realmDescriptor.icon) {
-          const url = `https://${this.session.realm}${realm.realmDescriptor.icon}`;
           this.cache.timestamp(`realm:${this.session.realm}`)
-            .then(ts => this.iconImage = this.sanitizer.bypassSecurityTrustStyle(`url(${url}?ts=${ts})`));
+            .then(ts => this.iconImage = this.sanitizer.bypassSecurityTrustStyle(`url(${realm.realmDescriptor.icon}?ts=${ts})`));
         } else {
           this.iconImage = undefined;
         }

@@ -25,7 +25,10 @@
 
 .cdk-column-name {
   flex: 1 0 auto;
-  min-width: 150px;
+  max-width: 250px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .cdk-column-starts {
