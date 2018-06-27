@@ -49,7 +49,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.navigationSubscription = this.router.events.subscribe((event: any) => {
       if (event instanceof NavigationEnd &&
         event.urlAfterRedirects.endsWith('/home') &&
-        (!this.realm || session.realm !== this.realm.name)) {
+        (!this.realm || session.realm !== this.realm.id)) {
         this.load();
       }
     });

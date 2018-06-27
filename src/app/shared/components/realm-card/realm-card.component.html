@@ -5,11 +5,11 @@
   </div>
 
   <button mat-icon-button color="accent" class="delete" *ngIf="error" (click)="deleteRealm()">
-    <mat-icon>delete</mat-icon>
+    <mat-icon>remove_circle</mat-icon>
   </button>
 
-  <p class="description" *ngIf="descriptor">{{descriptor.description ? descriptor.description : descriptor.name}}</p>
-  <p class="name" *ngIf="descriptor">{{descriptor.name}}</p>
+  <p class="description" *ngIf="descriptor">{{descriptor.label ? descriptor.label : descriptor.id}}</p>
+  <p class="name" *ngIf="descriptor">{{descriptor.id}}</p>
 
   <p class="description" *ngIf="!descriptor" translate>realm-card.no_descriptor</p>
   <p class="name" *ngIf="!descriptor">{{realm}}</p>

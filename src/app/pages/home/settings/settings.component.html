@@ -12,7 +12,7 @@
 
     <integrity-section [title]="'label.general' | translate" enableExpansion="true" expansionId="settings.general">
       <mat-form-field>
-        <input matInput [(ngModel)]="realm.description" (ngModelChange)="isChanged=true" placeholder="{{'label.description' | translate}}">
+        <input matInput [(ngModel)]="realm.label" (ngModelChange)="isChanged=true" placeholder="{{'label.description' | translate}}">
       </mat-form-field>
       <p class="mat-caption" translate>settings.description_instructions</p>
     </integrity-section>

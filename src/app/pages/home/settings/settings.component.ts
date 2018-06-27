@@ -113,11 +113,11 @@ export class SettingsComponent implements OnInit {
       .then(() => this.isChanged = false)
       .then(() => this.events.publish('realm_updated', this.realm))
       .then(() => this.snackBarOpen(
-        this.translate.instant('message.updated', { value: this.realm.description ? this.realm.description : this.realm.id }),
+        this.translate.instant('message.updated', { value: this.realm.label ? this.realm.label : this.realm.id }),
         this.translate.instant('label.close'),
         { duration: 2000 }))
       .catch(error => this.snackBarOpen(
-        this.translate.instant('error.updating', { value: this.realm.description ? this.realm.description : this.realm.id }),
+        this.translate.instant('error.updating', { value: this.realm.label ? this.realm.label : this.realm.id }),
         this.translate.instant('label.close'),
         this.snackBarErrorConfig));
   }

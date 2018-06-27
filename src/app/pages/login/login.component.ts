@@ -106,8 +106,8 @@ export class LoginComponent implements OnInit, OnDestroy {
     realmListComponentInstance.select.subscribe(descriptor => {
       this.overlayRef.dispose();
       this.overlayRef = null;
-      if (!this.descriptor || this.descriptor.name !== descriptor.name) {
-        this.router.navigate([`/${descriptor.name}/login`, {}]);
+      if (!this.descriptor || this.descriptor.id !== descriptor.id) {
+        this.router.navigate([`/${descriptor.id}/login`, {}]);
       }
     });
     realmListComponentInstance.cancel.subscribe(() => {

@@ -49,17 +49,16 @@ export class RealmsComponent implements OnInit {
       okColor: 'accent',
       cancel: this.translate.instant('label.cancel'),
       cancelColor: 'accent'
-    }).then(name => {
-      if (name) {
+    }).then(id => {
+      if (id) {
         const realm = new Realm();
-        realm.id = name;
-        realm.name = name;
+        realm.id = id;
         this.realmsClient.createRealm(realm)
           .then(() => this.realmsClient.getRealm(realm.id))
           .then(newRealm => this.dataSource.data.push(newRealm))
           .then(() => this.dataSource.data = this.dataSource.data)
           .catch(error => this.snackBarOpen(
-            this.translate.instant('error.creating', { value: realm.name }),
+            this.translate.instant('error.creating', { value: realm.id }),
             this.translate.instant('label.close'),
             this.snackBarErrorConfig));
       }

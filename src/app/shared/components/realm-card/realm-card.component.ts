@@ -28,7 +28,7 @@ export class RealmCardComponent implements OnInit, OnDestroy, OnChanges {
     private cache: CacheService,
     private realmsClient: RealmsClient) {
     this.realmUpdateListener = (realm) => {
-      if (this.realm && this.realm === realm.name) {
+      if (this.realm && this.realm === realm.id) {
         this.loadRealmDescriptor();
       }
     };
@@ -63,7 +63,7 @@ export class RealmCardComponent implements OnInit, OnDestroy, OnChanges {
       .then(descriptor => this.descriptor = descriptor)
       .then(() => {
         if (this.descriptor.icon) {
-          this.cache.timestamp(`realm:${this.descriptor.realm}`)
+          this.cache.timestamp(`realm:${this.descriptor.id}`)
             .then(ts => this.icon = this.sanitizer.bypassSecurityTrustStyle(`url(${this.descriptor.icon}?ts=${ts})`));
         } else {
           this.icon = undefined;

@@ -9,11 +9,8 @@ export class RealmDescriptor extends Base {
     this.type = 'https://schema.brickchain.com/v2/realm-descriptor.json';
   }
 
-  @JsonProperty('name', String, true)
-  name: string = undefined;
-
-  @JsonProperty('description', String, true)
-  description: string = undefined;
+  @JsonProperty('label', String, true)
+  label: string = undefined;
 
   @JsonProperty('publicKey', Any, true)
   publicKey: any = undefined;

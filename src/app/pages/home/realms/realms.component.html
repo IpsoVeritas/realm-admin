@@ -19,9 +19,9 @@
   <ng-container matColumnDef="name">
     <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'label.name' | translate }}</mat-header-cell>
     <mat-cell *matCellDef="let realm">
-      <span>{{realm.description ? realm.description : realm.name}}</span>
+      <span>{{realm.label ? realm.label : realm.id}}</span>
       <br>
-      <span class="mat-caption">{{realm.name}}</span>
+      <span class="mat-caption">{{realm.id}}</span>
     </mat-cell>
   </ng-container>
 

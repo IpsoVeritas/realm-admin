@@ -10,14 +10,11 @@ export class Realm {
   @JsonProperty('@type', String, true)
   type: string = undefined;
 
-  @JsonProperty('name', String, true)
-  name: string = undefined;
+  @JsonProperty('label', String, true)
+  label: string = undefined;
 
   @JsonProperty('publicKey', Any, true)
   publicKey: any = undefined;
-
-  @JsonProperty('description', String, true)
-  description: string = undefined;
 
   @JsonProperty('uri', String, true)
   uri: string = undefined;

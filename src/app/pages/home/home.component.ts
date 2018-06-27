@@ -77,7 +77,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       this.profileMode = result.matches ? 'drawer' : 'side';
     });
     this.navigationSubscription = this.router.events.subscribe((event: any) => {
-      if (event instanceof NavigationEnd && (!this.realm || session.realm !== this.realm.name)) {
+      if (event instanceof NavigationEnd && (!this.realm || session.realm !== this.realm.id)) {
         this.load();
       }
     });
@@ -198,11 +198,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.drawerMode === 'over') {
       this.drawer.close();
     }
-    this.router.navigateByUrl(`/${descriptor.name}`);
+    this.router.navigateByUrl(`/${descriptor.id}`);
   }
 
   removeRealm(realm: string) {
-    console.log(realm);
     this.session.removeRealm(realm);
   }
 
