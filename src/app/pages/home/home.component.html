@@ -26,7 +26,7 @@
         <ng-container *ngIf="!platform.inApp">
           <ng-container *ngFor="let realm of session.realms">
             <mat-divider></mat-divider>
-            <app-realm-card [realm]="realm" (select)="switchRealm($event)"></app-realm-card>
+            <app-realm-card [realm]="realm" (select)="switchRealm($event)" (delete)="removeRealm($event)"></app-realm-card>
           </ng-container>
           <mat-divider></mat-divider>
           <mat-nav-list>
@@ -103,7 +103,7 @@
       </button>
       <ng-container *ngFor="let realm of session.realms">
         <mat-divider></mat-divider>
-        <app-realm-card [realm]="realm" (select)="switchRealm($event)"></app-realm-card>
+        <app-realm-card [realm]="realm" (select)="switchRealm($event)" (delete)="removeRealm($event)"></app-realm-card>
       </ng-container>
       <mat-divider></mat-divider>
       <button mat-menu-item routerLink="/other/login">

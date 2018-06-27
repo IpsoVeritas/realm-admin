@@ -55,8 +55,9 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.route.paramMap.subscribe(paramMap => {
       const realm = paramMap.get('realm');
       if (realm) {
-        this.realmsClient.getRealmDescriptor(realm).then(descriptor => this.descriptor = descriptor);
-        this.start(realm)
+        this.realmsClient.getRealmDescriptor(realm)
+          .then(descriptor => this.descriptor = descriptor)
+          .then(() => this.start(realm))
           .catch(error => {
             this.snackBar.open(
               this.translate.instant('error.connecting_to_host', { host: realm }),

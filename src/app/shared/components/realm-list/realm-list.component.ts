@@ -35,6 +35,10 @@ export class RealmListComponent implements OnInit {
     this.select.emit(descriptor);
   }
 
+  realmDeleted(realm: string) {
+    this.session.removeRealm(realm);
+  }
+
   onSubmit() {
     return this.realmsClient.getRealmDescriptor(this.realm.value)
       .then(descriptor => this.realmSelected(descriptor))

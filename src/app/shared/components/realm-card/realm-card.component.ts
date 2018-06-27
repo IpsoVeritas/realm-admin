@@ -15,6 +15,7 @@ export class RealmCardComponent implements OnInit, OnDestroy, OnChanges {
 
   @Input() realm = '';
   @Output() select: EventEmitter<RealmDescriptor> = new EventEmitter();
+  @Output() delete: EventEmitter<string> = new EventEmitter();
 
   descriptor: RealmDescriptor;
   error: HttpErrorResponse;
@@ -47,10 +48,14 @@ export class RealmCardComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
 
-  public click() {
+  public selectRealm() {
     if (this.descriptor) {
       this.select.emit(this.descriptor);
     }
+  }
+
+  public deleteRealm() {
+    this.delete.emit(this.realm);
   }
 
   private loadRealmDescriptor() {

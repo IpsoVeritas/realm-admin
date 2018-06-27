@@ -9,6 +9,10 @@
     background-color: rgba(0, 0, 0, 0.04);
   }
 
+  &.no-descriptor:hover {
+    background-color: white;
+  }
+
   .icon {
     float: left;
     display: flex;
@@ -28,6 +32,10 @@
       position: relative;
       z-index: 1;
     }
+  }
+
+  .delete {
+    float: right;
   }
 
   .description {

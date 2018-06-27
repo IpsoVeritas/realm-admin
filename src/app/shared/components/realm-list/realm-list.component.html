@@ -1,6 +1,6 @@
 <div class="realm-list">
   <div class="realm" *ngFor="let realm of session.realms">
-    <app-realm-card [realm]="realm" (select)="realmSelected($event)"></app-realm-card>
+    <app-realm-card [realm]="realm" (select)="realmSelected($event)" (delete)="realmDeleted($event)"></app-realm-card>
   </div>
   <form [formGroup]="realmForm">
     <mat-form-field>

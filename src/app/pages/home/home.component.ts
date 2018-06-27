@@ -201,6 +201,11 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.router.navigateByUrl(`/${descriptor.name}`);
   }
 
+  removeRealm(realm: string) {
+    console.log(realm);
+    this.session.removeRealm(realm);
+  }
+
   toggleProfile() {
     this.showProfile = !this.showProfile;
   }
