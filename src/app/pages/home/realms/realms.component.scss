@@ -11,19 +11,9 @@
 }
 
 .cdk-column-name {
-  flex: 1 1 0%;
-
-  @media (max-width: 550px) {
-    flex: 1 0 auto;
-  }
-}
-
-.cdk-column-description {
-  flex: 2 1 0%;
-
-  @media (max-width: 550px) {
-    display: none;
-  }
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .cdk-column-action {

@@ -25,7 +25,7 @@
 
 .cdk-column-name {
   flex: 1 0 auto;
-  max-width: 250px;
+  max-width: 200px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -34,7 +34,7 @@
 .cdk-column-starts {
   flex: 0 1 150px;
 
-  @media (max-width: 700px) {
+  @media (max-width: 650px) {
     display: none;
   }
 }
@@ -42,7 +42,7 @@
 .cdk-column-ends {
   flex: 0 1 150px;
 
-  @media (max-width: 550px) {
+  @media (max-width: 800px) {
     display: none;
   }
 }
@@ -50,7 +50,7 @@
 .cdk-column-status {
   flex: 0 1 80px;
 
-  @media (max-width: 400px) {
+  @media (max-width: 500px) {
     display: none;
   }
 }
