@@ -7,7 +7,7 @@ export { RegistrationResponse } from './proxy/registration-response.model';
 // export { AuthUser } from './v1/auth-user.model'; DEPRECATED
 // export { BootstrapResponse } from './v1/bootstrap-response.model'; DEPRECATED
 // export { CertificateChain } from './v1/certificate-chain.model'; DEPRECATED
-export { ControllerBinding } from './v1/controller-binding.model';
+// export { ControllerBinding } from './v1/controller-binding.model';
 // export { Fact } from './v1/fact.model'; UNUSED
 export { Link } from './v1/link.model';
 export { Service } from './v1/service.model';
@@ -17,6 +17,7 @@ export { URLResponse } from './v1/url-response.model';
 export { ActionDescriptor } from './v2/action-descriptor.model';
 export { Contract } from './v2/contract.model';
 export { Controller } from './v2/controller.model';
+export { ControllerBinding } from './v2/controller-binding.model';
 export { ControllerDescriptor } from './v2/controller-descriptor.model';
 export { EmailStatus } from './v2/email-status.model';
 export { Invite } from './v2/invite.model';

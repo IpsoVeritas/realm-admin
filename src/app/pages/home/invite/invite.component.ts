@@ -117,6 +117,7 @@ export class InviteComponent implements OnInit {
       invite.name = email;
       invite.role = this.role.name;
       invite.type = 'invite';
+      invite.keyLevel = 10; // Require app key
       invite.messageType = 'email';
       invite.messageURI = `mailto:${email}`;
       invite.validFrom = starts.toDate();

@@ -12,7 +12,7 @@ export class ControllersClient extends BaseClient {
 
   public getController(realmId: string, controllerId: string): Promise<Controller> {
     return this.cache.get(`controller:${realmId}/${controllerId}`)
-      .catch(() => this.session.getBackendURL(`/realms/${realmId}/controllers/${controllerId}`)
+      .catch(() => this.session.getBackendURL(`/realms/${realmId}/controllers/id/${controllerId}`)
         .then(url => this.http.get(url).toPromise())
         .then(obj => this.jsonConvert.deserializeObject(obj, Controller))
         .then(controller => this.cache.set(`controller:${realmId}/${controllerId}`, controller)));
@@ -27,20 +27,20 @@ export class ControllersClient extends BaseClient {
   }
 
   public updateController(controller: Controller): Promise<Controller> {
-    return this.session.getBackendURL(`/realms/${controller.realm}/controllers/${controller.id}`)
+    return this.session.getBackendURL(`/realms/${controller.realm}/controllers/id/${controller.id}`)
       .then(url => this.http.put(url, this.jsonConvert.serializeObject(controller)).toPromise())
       .then(() => this.cache.invalidate(`controller:${controller.realm}/${controller.id}`))
       .then(() => controller);
   }
 
   public deleteController(controller: Controller): Promise<any> {
-    return this.session.getBackendURL(`/realms/${controller.realm}/controllers/${controller.id}`)
+    return this.session.getBackendURL(`/realms/${controller.realm}/controllers/id/${controller.id}`)
       .then(url => this.http.delete(url).toPromise())
       .then(() => this.cache.invalidate(`controllers:${controller.realm}`, `controller:${controller.realm}/${controller.id}`));
   }
 
   public updateActions(controller: Controller, actions: string): Promise<any> {
-    return this.session.getBackendURL(`/realms/${controller.realm}/controllers/${controller.id}/actions`)
+    return this.session.getBackendURL(`/realms/${controller.realm}/controllers/id/${controller.id}/actions`)
       .then(url => this.http.post(url, actions).toPromise());
   }
 

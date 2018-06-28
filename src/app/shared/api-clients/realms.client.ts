@@ -84,7 +84,7 @@ export class RealmsClient extends BaseClient {
   }
 
   public bindController(controller: Controller): Promise<any> {
-    return this.session.getBackendURL(`/realms/${controller.realm}/controllers`)
+    return this.session.getBackendURL(`/realms/${controller.realm}/controllers/bind`)
       .then(url => this.http.post(url, this.jsonConvert.serializeObject(controller)).toPromise());
   }
 
