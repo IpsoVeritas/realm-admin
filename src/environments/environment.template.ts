@@ -5,7 +5,7 @@
 
 export const environment = {
   production: false,
-  poeditor_live: true,
+  poeditor_live: false,
   poeditor_url: '{{.POEDITOR_URL}}',
   poeditor_api_token: '{{.POEDITOR_API_TOKEN}}',
   poeditor_project_id: '{{.POEDITOR_PROJECT_ID}}'
