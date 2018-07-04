@@ -95,7 +95,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   updateClock() {
-    this.seconds = (this.session.expires - Date.now()) / 1000;
+    this.seconds = Math.max(0, (this.session.expires - Date.now() - 5000) / 1000);
     this.hrs = Math.floor(this.seconds / 60 * 60);
     this.min = Math.floor(this.seconds / 60);
     this.sec = Math.floor(this.seconds % 60);

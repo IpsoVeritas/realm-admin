@@ -122,7 +122,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
           .catch(error => console.warn('Error syncing controller', controller, error));
       }))
       .then(() => this.startServiceTokenPruning())
-      .then(() => this.startSessionTimer());
+      .then(() => {
+        clearTimeout(this.sessionTimer);
+        this.checkSessionTimeout();
+      });
   }
 
   loadRealm(): Promise<Realm> {
@@ -159,25 +162,20 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.pruningTimer = setInterval(() => this.servicesClient.pruneTokens(this.maxServiceTokenAge), 60 * 1000);
   }
 
-  startSessionTimer(): void {
-    clearTimeout(this.sessionTimer);
-    const timeout = this.session.expires - Date.now();
-    if (timeout > 0) {
-      this.sessionTimer = setTimeout(() => this.timeout(), timeout);
+  checkSessionTimeout(): void {
+    if (this.session.expires - Date.now() > 5000) {
+      this.sessionTimer = setTimeout(() => this.checkSessionTimeout(), 5000);
     } else {
-      this.timeout();
+      clearTimeout(this.sessionTimer);
+      const dialogRef = this.dialog.open(SessionTimeoutDialogComponent, { disableClose: true });
+      dialogRef.afterClosed().toPromise()
+        .then(resumed => {
+          this.events.publish(resumed ? 'session_resumed' : 'logout');
+          if (resumed) {
+            this.sessionTimer = setTimeout(() => this.checkSessionTimeout(), 5000);
+          }
+        });
     }
-  }
-
-  timeout() {
-    const dialogRef = this.dialog.open(SessionTimeoutDialogComponent, { disableClose: true });
-    dialogRef.afterClosed().toPromise()
-      .then(resumed => {
-        this.events.publish(resumed ? 'session_resumed' : 'logout');
-        if (resumed) {
-          this.startSessionTimer();
-        }
-      });
   }
 
   logout() {
