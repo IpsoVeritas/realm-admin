@@ -57,7 +57,6 @@ export class SessionTimeoutDialogComponent {
     public dialogRef: MatDialogRef<SessionTimeoutDialogComponent>) {
     this.session.mandates = undefined;
     this.session.chain = undefined;
-    this.session.expires = undefined;
     this.session.token = undefined;
     this.login(this.session.realm);
   }

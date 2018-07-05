@@ -30,12 +30,10 @@ export class PlatformService {
     }
     this.events.subscribe('logout', () => {
 
-
       this.session.key = undefined;
 
       this.session.mandates = undefined;
       this.session.chain = undefined;
-      this.session.expires = undefined;
       this.session.token = undefined;
 
       if (this.inApp) {

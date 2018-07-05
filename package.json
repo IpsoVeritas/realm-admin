@@ -8,7 +8,7 @@
     "start": "ng serve --port 6580 --live-reload false",
     "build": "ng build --prod  --bh ./ --stats-json",
     "build-dev": "ng build --dev  --bh ./ --stats-json",
-    "watch": "ng build --watch --bh ./",
+    "watch": "ng build --dev --watch --bh ./",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
