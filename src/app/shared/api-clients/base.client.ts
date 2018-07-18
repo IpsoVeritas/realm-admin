@@ -28,4 +28,9 @@ export class BaseClient {
     return this.jsonConvert.serializeObject(source);
   }
 
+  public deserializeObject(jsonObject: any, classReference: new () => any): any {
+    return this.jsonConvert.deserializeObject(jsonObject, classReference)
+  }
+
+
 }

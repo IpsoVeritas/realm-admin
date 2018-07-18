@@ -29,3 +29,4 @@ export { Multipart } from './v2/multipart.model';
 export { Realm } from './v2/realm.model';
 export { RealmDescriptor } from './v2/realm-descriptor.model';
 export { Role } from './v2/role.model';
+export { LoginResponse } from './v2/login-response.model';

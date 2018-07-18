@@ -6,7 +6,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { EventsService } from '@brickchain/integrity-angular';
 import { WebviewClientService } from '@brickchain/integrity-webview-client';
-import { RealmDescriptor, LoginRequest, Contract, HttpResponse, HttpRequest } from '../../shared/models';
+import { RealmDescriptor, LoginRequest, LoginResponse, Contract, HttpResponse, HttpRequest } from '../../shared/models';
 import { AuthClient, RealmsClient } from '../../shared/api-clients';
 import { ConfigService, SessionService, CryptoService, PlatformService, ProxyService } from '../../shared/services';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -152,18 +152,29 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   login(realm: string): Promise<any> {
     const id = v4();
-    return this.proxy.handlePath(`/login/${id}`, this.getLoginRequestHandler(id))
-      .then(() => this.proxy.handlePath(`/callback/${id}`, this.getLoginResponseHandler()))
-      .then(() => {
-        this.qrUriTimestamp = Date.now();
-        this.progressTimer = setInterval(() => this.updateCountdown(), 100);
-        this.qrUriTimer = setTimeout(() => this.login(realm), this.qrTimeout);
-        this.qrUri = `${this.proxy.base}/proxy/request/${this.proxy.id}/login/${id}`;
-      });
+    if (navigator.userAgent.indexOf('Integrity/') > -1) {
+      console.log("is in app!");
+      return this.createLoginRequest()
+        .then(request => this.webviewClient.handle({
+          '@document': this.realmsClient.serializeObject(request),
+          '@view': 'hidden',
+        }))
+        .then(response => this.realmsClient.deserializeObject(response, LoginResponse))
+        .then(response => this.handleLoginResponse(response))
+    } else {
+      return this.proxy.handlePath(`/login/${id}`, this.getLoginRequestHandler(id))
+        .then(() => this.proxy.handlePath(`/callback/${id}`, this.getLoginResponseHandler()))
+        .then(() => {
+          this.qrUriTimestamp = Date.now();
+          this.progressTimer = setInterval(() => this.updateCountdown(), 100);
+          this.qrUriTimer = setTimeout(() => this.login(realm), this.qrTimeout);
+          this.qrUri = `${this.proxy.base}/proxy/request/${this.proxy.id}/login/${id}`;
+        });
+    }
   }
 
-  getLoginRequestHandler(id: string): (data: HttpRequest) => Promise<HttpResponse> {
-    return (request: HttpRequest) => this.crypto.getPublicKey()
+  createLoginRequest(): Promise<LoginRequest> {
+    return this.crypto.getPublicKey()
       .then(key => {
         const loginRequest = new LoginRequest();
         loginRequest.timestamp = new Date();
@@ -172,10 +183,38 @@ export class LoginComponent implements OnInit, OnDestroy {
         loginRequest.ttl = 3600;
         loginRequest.roles = this.session.roles;
         loginRequest.key = key;
-        loginRequest.replyTo = [`${this.proxy.base}/proxy/request/${this.proxy.id}/callback/${id}`];
         return loginRequest;
       })
-      .then(loginRequest => new HttpResponse(200, JSON.stringify(this.realmsClient.serializeObject(loginRequest))));
+  }
+
+  handleLoginResponse(response: LoginResponse): Promise<any> {
+    if (response.mandates && response.mandates.length > 0 && response.chain) {
+
+      this.session.mandates = response.mandates;
+      this.session.chain = response.chain;
+      this.session.expires = response.timestamp.getTime() ? response.timestamp.getTime() + (3600 * 1000) : Date.now() + (3600 * 1000);
+
+      clearTimeout(this.qrUriTimer);
+      clearTimeout(this.progressTimer);
+      clearTimeout(this.pollTimer);
+
+      return this.crypto.createMandateToken(this.session.backend, this.session.mandates, 3600)
+        .then(token => this.session.token = token)
+        .then(() => {
+          this.events.publish('login');
+          this.router.navigateByUrl(`/${this.session.realm}/home`);
+        });
+    } else {
+      return Promise.reject('Mandates and/or chain missing')
+    }
+  }
+
+  getLoginRequestHandler(id: string): (data: HttpRequest) => Promise<HttpResponse> {
+    return (request: HttpRequest) => this.createLoginRequest()
+      .then(loginRequest => {
+        loginRequest.replyTo = [`${this.proxy.base}/proxy/request/${this.proxy.id}/callback/${id}`];
+        return new HttpResponse(200, JSON.stringify(this.realmsClient.serializeObject(loginRequest)))
+      });
   }
 
   getLoginResponseHandler(): (data: HttpRequest) => Promise<HttpResponse> {
@@ -191,28 +230,11 @@ export class LoginComponent implements OnInit, OnDestroy {
         data = JSON.parse(data);
       }
 
-      if (data.mandates && data.mandates.length > 0 && data.chain) {
+      let response = this.realmsClient.deserializeObject(data, LoginResponse)
 
-        this.session.mandates = data.mandates;
-        this.session.chain = data.chain;
-        this.session.expires = request.timestamp.getTime() + (3600 * 1000);
-
-        clearTimeout(this.qrUriTimer);
-        clearTimeout(this.progressTimer);
-        clearTimeout(this.pollTimer);
-
-        this.crypto.createMandateToken(this.session.backend, this.session.mandates, 3600)
-          .then(token => this.session.token = token)
-          .then(() => {
-            this.events.publish('login');
-            this.router.navigateByUrl(`/${this.session.realm}/home`);
-          });
-
-        resolve(new HttpResponse(201));
-
-      } else {
-        resolve(new HttpResponse(400, 'Mandates and/or chain missing'));
-      }
+      this.handleLoginResponse(response)
+        .then(() => resolve(new HttpResponse(201)))
+        .catch(err => resolve(new HttpResponse(400, err)))
 
     });
 

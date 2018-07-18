@@ -13,3 +13,4 @@ export { Multipart, Part } from './multipart.model';
 export { Realm } from './realm.model';
 export { RealmDescriptor } from './realm-descriptor.model';
 export { Role } from './role.model';
+export { LoginResponse } from './login-response.model';
