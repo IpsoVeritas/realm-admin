@@ -129,11 +129,11 @@ export class SessionService {
     this.setItem('theme', value);
   }
 
-  get key(): Object {
+  get key(): { privateKey: Object, publicKey: Object } {
     return this.getItem('key');
   }
 
-  set key(value: Object) {
+  set key(value: { privateKey: Object, publicKey: Object }) {
     this.setItem('key', value);
   }
 

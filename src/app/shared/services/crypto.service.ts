@@ -28,14 +28,14 @@ export class CryptoService {
   }
 
   public getKey(): Promise<any> {
-    if (!this.session.key) {
+    if (!this.session.key.privateKey) {
       return this.generateKey()
         .then(key => {
           this.session.key = key.toJSON(true);
           return key;
         });
     } else {
-      return jose.JWK.asKey(this.session.key, 'json');
+      return jose.JWK.asKey(this.session.key.privateKey, 'json');
     }
   }
 
