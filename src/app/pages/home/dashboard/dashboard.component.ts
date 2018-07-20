@@ -133,7 +133,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         controller.descriptor = descriptor;
         controller.uri = uri;
         controller.realm = this.session.realm;
-        controller.mandateRole = `service@${this.session.realm}`;
+        controller.mandateRole = `services@${this.session.realm}`;
         const dialogRef = this.dialog.open(ControllerBindDialogComponent, { data: controller });
         return dialogRef.afterClosed().toPromise();
       })
