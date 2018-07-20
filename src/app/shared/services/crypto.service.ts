@@ -35,7 +35,7 @@ export class CryptoService {
           return key;
         });
     } else {
-      return jose.JWK.asKey(this.session.key.privateKey, 'json');
+      return jose.JWK.asKey(this.session.key, 'json');
     }
   }
 
