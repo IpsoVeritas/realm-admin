@@ -1,4 +1,4 @@
 {
-  "servicesFeed": "https://firebasestorage.googleapis.com/v0/b/integrity-autobinder.appspot.com/o/services.json?alt=media",
+  "servicesFeed": "https://firebasestorage.googleapis.com/v0/b/integrity-autobinder-staging.appspot.com/o/services.json?alt=media",
   "proxy_base": "https://proxy.svc-staging.plusintegrity.com"
 }
