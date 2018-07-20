@@ -7,6 +7,10 @@ import { EventsService, DialogsService } from '@brickchain/integrity-angular';
 import { SessionService, CacheService, PlatformService } from '../../../shared/services';
 import { ControllersClient, ServicesClient, RealmsClient } from '../../../shared/api-clients';
 import { Realm, Controller, Service } from '../../../shared/models';
+import { MatDialog } from '@angular/material/dialog';
+import { CryptoService } from '../../../shared/services/crypto.service';
+import { ControllerBinding } from '../../../shared/models/v2/controller-binding.model';
+import { ControllerBindDialogComponent } from '../controller/controller-bind-dialog.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -45,6 +49,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private controllersClient: ControllersClient,
     private servicesClient: ServicesClient,
     private realmsClient: RealmsClient,
+    private dialog: MatDialog,
+    private crypto: CryptoService,
     private snackBar: MatSnackBar) {
     this.navigationSubscription = this.router.events.subscribe((event: any) => {
       if (event instanceof NavigationEnd &&
@@ -105,14 +111,56 @@ export class DashboardComponent implements OnInit, OnDestroy {
   install(service: Service) {
     this.servicesClient.addService(service)
       .then(data => {
+        // if (data) {
+        //   this.router.navigate(['/home/controllers'], { queryParams: { token: data.token, uri: data.uri } });
+        // }
         if (data) {
-          this.router.navigate(['/home/controllers'], { queryParams: { token: data.token, uri: data.uri } });
+          this.bindController(data.token, data.uri);
         }
       })
       .catch(error => this.snackBarOpen(
         this.translate.instant('binding.error_add_failed'),
         this.translate.instant('label.close'),
         this.snackBarErrorConfig));
+  }
+
+  bindController(token: string, uri: string) {
+    this.controllersClient.getControllerDescriptor(uri)
+      .then(descriptor => {
+        const controller = new Controller();
+        controller.name = descriptor.label;
+        controller.active = true;
+        controller.descriptor = descriptor;
+        controller.uri = uri;
+        controller.realm = this.session.realm;
+        controller.mandateRole = `service@${this.session.realm}`;
+        const dialogRef = this.dialog.open(ControllerBindDialogComponent, { data: controller });
+        return dialogRef.afterClosed().toPromise();
+      })
+      .then(controller => {
+        if (controller) {
+          this.realmsClient.bindController(controller)
+            .then((binding: Object) => this.controllersClient.bindController(controller, binding)
+              .then(() => this.servicesClient.deleteToken(token))
+              .then(() => this.snackBarOpen(
+                this.translate.instant('binding.binding_success', { controller: controller.name }),
+                this.translate.instant('label.close'),
+                { duration: 2000 }))
+              .then(() => this.crypto.deserializeJWS<ControllerBinding>(binding, ControllerBinding))
+              .then(controllerBinding => {
+                this.router.navigateByUrl(`/${this.session.realm}/home/controller/${controllerBinding.id}`);
+                this.events.publish('controllers_updated');
+              }))
+            .catch(error => {
+              console.error('Error binding controller:', error);
+              this.snackBarOpen(
+                this.translate.instant('binding.error_binding_failed'),
+                this.translate.instant('label.close'),
+                this.snackBarErrorConfig
+              );
+            })
+        }
+      });
   }
 
   logout() {
