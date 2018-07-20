@@ -28,7 +28,7 @@ export class CryptoService {
   }
 
   public getKey(): Promise<any> {
-    if (!this.session.key.privateKey) {
+    if (!this.session.key) {
       return this.generateKey()
         .then(key => {
           this.session.key = key.toJSON(true);
