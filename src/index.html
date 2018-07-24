@@ -7,66 +7,7 @@
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-    }
-
-    app-root,
-    .loading {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-    }
-
-    .loading {
-      opacity: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      background: #eee;
-      z-index: 10000;
-      transition: all 0.5s ease-in-out;
-    }
-
-    .loading div {
-      border-top: 12px solid #f9b026;
-      border-right: 12px solid #004b97;
-      border-bottom: 12px solid #20afe2;
-      border-left: 12px solid #f76a0a;
-      border-radius: 50%;
-      width: 48px;
-      height: 48px;
-      animation: spin 2s linear infinite;
-    }
-
-    .loading p {
-      color: #333;
-      font: 400 14px/20px Roboto, "Helvetica Neue", sans-serif;
-      margin: 16px 0 0 0 !important;
-    }
-
-    app-root.ready+.loading {
-      opacity: 0;
-      z-index: -1;
-    }
-
-    app-root.ready+.loading div {
-      animation-play-state: paused;
-    }
-
-    @keyframes spin {
-      0% {
-        transform: rotate(0deg);
-      }
-      100% {
-        transform: rotate(360deg);
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="assets/start.css">
 </head>
 
 <body class="integrity-theme mat-typography">
@@ -76,5 +17,4 @@
     <p>Loading 1.0.0</p>
   </div>
 </body>
-
 </html>
