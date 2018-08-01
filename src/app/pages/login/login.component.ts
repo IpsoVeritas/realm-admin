@@ -153,14 +153,13 @@ export class LoginComponent implements OnInit, OnDestroy {
   login(realm: string): Promise<any> {
     const id = v4();
     if (navigator.userAgent.indexOf('Integrity/') > -1) {
-      console.log("is in app!");
       return this.createLoginRequest()
         .then(request => this.webviewClient.handle({
           '@document': this.realmsClient.serializeObject(request),
           '@view': 'hidden',
         }))
         .then(response => this.realmsClient.deserializeObject(response, LoginResponse))
-        .then(response => this.handleLoginResponse(response))
+        .then(response => this.handleLoginResponse(response));
     } else {
       return this.proxy.handlePath(`/login/${id}`, this.getLoginRequestHandler(id))
         .then(() => this.proxy.handlePath(`/callback/${id}`, this.getLoginResponseHandler()))
@@ -184,7 +183,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         loginRequest.roles = this.session.roles;
         loginRequest.key = key;
         return loginRequest;
-      })
+      });
   }
 
   handleLoginResponse(response: LoginResponse): Promise<any> {
@@ -205,7 +204,7 @@ export class LoginComponent implements OnInit, OnDestroy {
           this.router.navigateByUrl(`/${this.session.realm}/home`);
         });
     } else {
-      return Promise.reject('Mandates and/or chain missing')
+      return Promise.reject('Mandates and/or chain missing');
     }
   }
 
@@ -213,7 +212,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     return (request: HttpRequest) => this.createLoginRequest()
       .then(loginRequest => {
         loginRequest.replyTo = [`${this.proxy.base}/proxy/request/${this.proxy.id}/callback/${id}`];
-        return new HttpResponse(200, JSON.stringify(this.realmsClient.serializeObject(loginRequest)))
+        return new HttpResponse(200, JSON.stringify(this.realmsClient.serializeObject(loginRequest)));
       });
   }
 
@@ -230,7 +229,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         data = JSON.parse(data);
       }
 
-      let response = this.realmsClient.deserializeObject(data, LoginResponse)
+      const response = this.realmsClient.deserializeObject(data, LoginResponse);
 
       this.handleLoginResponse(response)
         .then(() => resolve(new HttpResponse(201)))

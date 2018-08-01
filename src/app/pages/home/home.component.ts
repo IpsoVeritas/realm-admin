@@ -92,6 +92,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy() {
+    clearTimeout(this.sessionTimer);
+    clearInterval(this.pruningTimer);
     if (this.navigationSubscription) {
       this.navigationSubscription.unsubscribe();
     }
@@ -122,10 +124,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
           .catch(error => console.warn('Error syncing controller', controller, error));
       }))
       .then(() => this.startServiceTokenPruning())
-      .then(() => {
-        clearTimeout(this.sessionTimer);
-        this.checkSessionTimeout();
-      });
+      .then(() => this.checkSessionTimeout());
   }
 
   loadRealm(): Promise<Realm> {
@@ -163,16 +162,16 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   checkSessionTimeout(): void {
+    clearTimeout(this.sessionTimer);
     if (this.session.expires - Date.now() > 5000) {
       this.sessionTimer = setTimeout(() => this.checkSessionTimeout(), 5000);
     } else {
-      clearTimeout(this.sessionTimer);
       const dialogRef = this.dialog.open(SessionTimeoutDialogComponent, { disableClose: true });
       dialogRef.afterClosed().toPromise()
         .then(resumed => {
           this.events.publish(resumed ? 'session_resumed' : 'logout');
           if (resumed) {
-            this.sessionTimer = setTimeout(() => this.checkSessionTimeout(), 5000);
+            this.checkSessionTimeout();
           }
         });
     }
