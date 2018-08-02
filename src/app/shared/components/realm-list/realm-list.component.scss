@@ -10,7 +10,7 @@
   }
 
   form {
-    margin: 10px 20px 0 70px;
+    margin: 20px 20px 0 70px;
 
     .mat-form-field {
       width: 100%;
@@ -24,5 +24,29 @@
         margin-left: 10px;
       }
     }
+  }
+
+  .other-realm-circle {
+    background-color: #000;
+    width: 30px;
+    height: 30px;
+    border-radius: 15px;
+    opacity: 0.2;
+    position: absolute;
+    z-index: 1;
+    left: -50px;
+    top: -15px;
+  }
+
+  .other-realm-hint {
+    position: absolute;
+    top: -25px;
+    font-size: 16px;
+    @keyframes fadein {
+      0%   { opacity: 0;}
+      100% { opacity: 1;}
+    }
+    animation-name: fadein;
+    animation-duration: .9s;
   }
 }

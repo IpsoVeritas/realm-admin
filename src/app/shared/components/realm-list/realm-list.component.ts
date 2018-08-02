@@ -50,5 +50,4 @@ export class RealmListComponent implements OnInit {
   onCancel() {
     this.cancel.emit();
   }
-
 }
