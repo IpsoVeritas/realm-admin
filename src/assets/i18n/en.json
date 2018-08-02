@@ -28,16 +28,18 @@
         "active": "Active",
         "pending": "Pending",
         "revoked": "Revoked",
-        "revoke": "revoke",
+        "revoke": "Revoke",
         "start_date": "Starts",
         "start_time": "at",
         "end_date": "Ends",
-        "end_time": "at"
+        "end_time": "at",
+        "login": "Login"
     },
     "login": {
         "title": "Login to {{realm}}",
-        "instructions": "You need the Integrity App to scan this QR Code and access your admin interface for {{realm}}",
-        "contract": "Login to {{realm}}"
+        "instructions_desktop": "You need the Integrity App to scan this QR Code and access your admin interface for {{realm}}",
+        "contract": "Login to {{realm}}",
+        "instructions_mobile": "You need the Integrity App on this device to access your admin interface for {{realm}}"
     },
     "error": {
         "connecting_to_host": "Error connecting to {{host}}",
@@ -153,7 +155,11 @@
         "mandate_role_placeholder": "Group membership"
     },
     "session-resume": {
-        "dialog_title": "Session expired, scan to resume",
-        "logout": "Log out"
+        "dialog_title_desktop": "Session expired, scan to resume",
+        "logout": "Log out",
+        "dialog_title_mobile": "Session expired",
+        "mobile_content": "Click the continue button to resume your current session.",
+        "continue": "Continue",
+        "contract": "Remain logged in to {{realm}}"
     }
 }
