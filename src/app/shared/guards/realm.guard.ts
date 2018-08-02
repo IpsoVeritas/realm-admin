@@ -14,14 +14,14 @@ export class RealmGuard implements CanActivate {
     if (route.paramMap.has('realm')) {
 
       const realm = route.paramMap.get('realm');
-
+/*
       if (this.platform.isMobile && !this.platform.inApp) {
         this.session.getBackendURL(`/realms/${realm}/login`)
           .then(url => encodeURIComponent(url))
           .then(url => `https://app.plusintegrity.com?data=${url}&label=Login%20to%20${realm}`)
           .then(url => window.location.href = url);
       }
-
+*/
       if (this.session.realm && realm !== this.session.realm) {
         this.router.navigate([`/${realm}`, {}]);
       }

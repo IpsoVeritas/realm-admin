@@ -44,7 +44,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     private session: SessionService,
     private translate: TranslateService,
     private crypto: CryptoService,
-    private platform: PlatformService,
+    public platform: PlatformService,
     private webviewClient: WebviewClientService,
     private events: EventsService,
     private proxy: ProxyService,
@@ -151,8 +151,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   login(realm: string): Promise<any> {
-    const id = v4();
-    if (navigator.userAgent.indexOf('Integrity/') > -1) {
+    if (this.platform.inApp) {
       return this.createLoginRequest()
         .then(request => this.webviewClient.handle({
           '@document': this.realmsClient.serializeObject(request),
@@ -161,6 +160,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         .then(response => this.realmsClient.deserializeObject(response, LoginResponse))
         .then(response => this.handleLoginResponse(response));
     } else {
+      const id = v4();
       return this.proxy.handlePath(`/login/${id}`, this.getLoginRequestHandler(id))
         .then(() => this.proxy.handlePath(`/callback/${id}`, this.getLoginResponseHandler()))
         .then(() => {

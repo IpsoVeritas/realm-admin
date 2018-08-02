@@ -4,20 +4,30 @@ import { WebviewClientService } from '@brickchain/integrity-webview-client';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthClient, RealmsClient } from '../../shared/api-clients';
 import { SessionService, PlatformService, CryptoService, ProxyService } from '../../shared/services';
-import { RealmDescriptor, LoginRequest, Contract, HttpResponse, HttpRequest } from '../../shared/models';
+import { RealmDescriptor, LoginRequest, LoginResponse, Contract, HttpResponse, HttpRequest } from '../../shared/models';
 import { v4 } from 'uuid/v4';
 
 @Component({
   selector: 'app-session-timeout-dialog',
   template: `
-    <h2 mat-dialog-title translate>session-resume.dialog_title</h2>
+    <h2 *ngIf="!platform.isMobile" mat-dialog-title translate>session-resume.dialog_title_desktop</h2>
+    <h2 *ngIf="platform.isMobile" mat-dialog-title translate>session-resume.dialog_title_mobile</h2>
     <mat-dialog-content>
       <integrity-qrcode *ngIf="qrUri" [qrdata]="qrUri" [integrityClipboard]="qrUri" (copySuccess)="copySuccess()" [class.copied]="copied">
       </integrity-qrcode>
       <mat-progress-bar *ngIf="qrUri" mode="determinate" [value]="qrCountdown" color="accent"></mat-progress-bar>
+      <p *ngIf="platform.isMobile">{{'session-resume.mobile_content' | translate}}</p>
     </mat-dialog-content>
     <mat-dialog-actions>
-      <button mat-raised-button [mat-dialog-close]="false" color="warn">{{'session-resume.logout' | translate}}</button>
+      <button *ngIf="!platform.isMobile" mat-raised-button [mat-dialog-close]="false" color="warn">
+        {{'session-resume.logout' | translate}}
+      </button>
+      <button *ngIf="platform.isMobile" mat-button color="accent" [mat-dialog-close]="false">
+        {{'session-resume.logout' | translate}}
+      </button>
+      <button *ngIf="platform.isMobile" mat-raised-button color="accent" (click)="loginMobile()" cdkFocusInitial>
+        {{'session-resume.continue' | translate}}
+      </button>
     </mat-dialog-actions>`,
   styles: [`
     mat-dialog-content {
@@ -51,14 +61,16 @@ export class SessionTimeoutDialogComponent {
     public session: SessionService,
     private crypto: CryptoService,
     private proxy: ProxyService,
-    private platform: PlatformService,
+    public platform: PlatformService,
     private webviewClient: WebviewClientService,
     private realmsClient: RealmsClient,
     public dialogRef: MatDialogRef<SessionTimeoutDialogComponent>) {
     this.session.mandates = undefined;
     this.session.chain = undefined;
     this.session.token = undefined;
-    this.login(this.session.realm);
+    if (!this.platform.isMobile) {
+      this.login(this.session.realm);
+    }
   }
 
   login(realm: string): Promise<any> {
@@ -73,20 +85,64 @@ export class SessionTimeoutDialogComponent {
       });
   }
 
-  getLoginRequestHandler(id: string): (data: HttpRequest) => Promise<HttpResponse> {
-    return (request: HttpRequest) => this.crypto.getPublicKey()
+  loginMobile() {
+    if (this.platform.inApp) {
+      this.createLoginRequest()
+        .then(request => this.webviewClient.handle({
+          '@document': this.realmsClient.serializeObject(request),
+          '@view': 'hidden',
+        }))
+        .then(response => this.realmsClient.deserializeObject(response, LoginResponse))
+        .then(response => this.handleLoginResponse(response))
+        .then(() => this.dialogRef.close(true))
+        .catch((err) => console.log(err));
+    } else {
+      const id = v4();
+      return this.proxy.handlePath(`/login/${id}`, this.getLoginRequestHandler(id))
+        .then(() => this.proxy.handlePath(`/callback/${id}`, this.getLoginResponseHandler()))
+        .then(() => this.platform.handleURI(`${this.proxy.base}/proxy/request/${this.proxy.id}/login/${id}`));
+    }
+  }
+
+  createLoginRequest(): Promise<LoginRequest> {
+    return this.crypto.getPublicKey()
       .then(key => {
         const loginRequest = new LoginRequest();
         loginRequest.timestamp = new Date();
         loginRequest.contract = new Contract();
-        loginRequest.contract.text = this.translate.instant('login.contract', { realm: this.session.realm });
+        loginRequest.contract.text = this.translate.instant('session-resume.contract', { realm: this.session.realm });
         loginRequest.ttl = 3600;
         loginRequest.roles = this.session.roles;
         loginRequest.key = key;
-        loginRequest.replyTo = [`${this.proxy.base}/proxy/request/${this.proxy.id}/callback/${id}`];
         return loginRequest;
-      })
-      .then(loginRequest => new HttpResponse(200, JSON.stringify(this.realmsClient.serializeObject(loginRequest))));
+      });
+  }
+
+  handleLoginResponse(response: LoginResponse): Promise<any> {
+    if (response.mandates && response.mandates.length > 0 && response.chain) {
+
+      this.session.mandates = response.mandates;
+      this.session.chain = response.chain;
+      this.session.expires = response.timestamp.getTime() ? response.timestamp.getTime() + (3600 * 1000) : Date.now() + (3600 * 1000);
+
+      clearTimeout(this.qrUriTimer);
+      clearTimeout(this.progressTimer);
+      clearTimeout(this.pollTimer);
+
+      return this.crypto.createMandateToken(this.session.backend, this.session.mandates, 3600)
+        .then(token => this.session.token = token);
+
+    } else {
+      return Promise.reject('Mandates and/or chain missing');
+    }
+  }
+
+  getLoginRequestHandler(id: string): (data: HttpRequest) => Promise<HttpResponse> {
+    return (request: HttpRequest) => this.createLoginRequest()
+      .then(loginRequest => {
+        loginRequest.replyTo = [`${this.proxy.base}/proxy/request/${this.proxy.id}/callback/${id}`];
+        return new HttpResponse(200, JSON.stringify(this.realmsClient.serializeObject(loginRequest)));
+      });
   }
 
   getLoginResponseHandler(): (data: HttpRequest) => Promise<HttpResponse> {
@@ -102,25 +158,12 @@ export class SessionTimeoutDialogComponent {
         data = JSON.parse(data);
       }
 
-      if (data.mandates && data.mandates.length > 0 && data.chain) {
+      const response = this.realmsClient.deserializeObject(data, LoginResponse);
 
-        this.session.mandates = data.mandates;
-        this.session.chain = data.chain;
-        this.session.expires = request.timestamp.getTime() + (3600 * 1000);
-
-        clearTimeout(this.qrUriTimer);
-        clearTimeout(this.progressTimer);
-        clearTimeout(this.pollTimer);
-
-        this.crypto.createMandateToken(this.session.backend, this.session.mandates, 3600)
-          .then(token => this.session.token = token)
-          .then(() => this.dialogRef.close(true));
-
-        resolve(new HttpResponse(201));
-
-      } else {
-        resolve(new HttpResponse(400, 'Mandates and/or chain missing'));
-      }
+      this.handleLoginResponse(response)
+        .then(() => this.dialogRef.close(true))
+        .then(() => resolve(new HttpResponse(201)))
+        .catch(err => resolve(new HttpResponse(400, err)));
 
     });
 

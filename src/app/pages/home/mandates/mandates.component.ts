@@ -76,7 +76,7 @@ export class MandatesComponent implements OnInit {
 
   queryControllers() {
     this.controllersClient.getControllers(this.session.realm)
-      .then(controllers => controllers.map(controller => this.controllersClient.getControllerActions(controller)
+      .then(controllers => controllers.map(controller => this.controllersClient.getParsedControllerActions(controller)
         .then(actions => {
           controller['actions'] = actions;
           return controller;
