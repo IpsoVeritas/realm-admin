@@ -50,7 +50,10 @@
     </mat-card-content>
     <mat-card-actions>
       <button mat-button color="accent" (click)="install(service)">
-          <mat-icon>add</mat-icon>{{ 'menu.add_service' | translate }}
+        <div class="button-content-container" *ngIf="!isLoadingAvailableServices">
+            <mat-icon>add</mat-icon>{{ 'menu.add_service' | translate }}
+        </div>
+          <mat-progress-spinner *ngIf="isLoadingAvailableServices" mode="indeterminate" diameter="20" color="accent"></mat-progress-spinner>
       </button>
     </mat-card-actions>
   </mat-card>

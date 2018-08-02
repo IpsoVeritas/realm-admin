@@ -6,6 +6,7 @@ import { EventsService } from '@brickchain/integrity-angular';
 import { AccessClient } from '../../shared/api-clients';
 import { PlatformService, SessionService } from '../../shared/services';
 import { URLResponse } from '../../shared/models';
+import { shim } from 'promise.prototype.finally';
 
 @Component({
   selector: 'app-bootstrap',
@@ -25,6 +26,7 @@ export class BootstrapComponent implements OnInit, AfterViewInit {
     private platform: PlatformService,
     private session: SessionService,
     private events: EventsService) {
+      shim();
   }
 
   ngOnInit() {

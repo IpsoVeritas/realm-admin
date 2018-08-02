@@ -28,6 +28,16 @@
   display: none;
 }
 
+.mat-progress-spinner {
+  margin: 8px;
+}
+
+.button-content-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 :host-context(.drawer-over) {
   .banner {
     display: none;
