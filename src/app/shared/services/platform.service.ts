@@ -59,8 +59,8 @@ export class PlatformService {
     if (this.inApp) {
       return this.webviewClient.handle({ '@uri': uri });
     } else if (this.isMobile) {
-      const url = btoa(encodeURIComponent(window.location.href));
-      window.location.href = `integrity://app/webapp/${url}`;
+      const url = encodeURIComponent(uri);
+      window.location.href = `https://app.plusintegrity.com?exit=true&data=${url}`;
       return Promise.resolve();
     } else {
       const message = this.translate.instant('message.copied_to_clipboard', { value: 'URI' });

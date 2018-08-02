@@ -15,11 +15,18 @@
     </div>
 
     <div class="qrcode">
-      <integrity-qrcode *ngIf="qrUri" [qrdata]="qrUri" [integrityClipboard]="qrUri" (copySuccess)="showCopySuccess($event)" [class.copied]="copied"></integrity-qrcode>
+      <integrity-qrcode *ngIf="!platform.isMobile && qrUri" [qrdata]="qrUri" [integrityClipboard]="qrUri" (copySuccess)="showCopySuccess($event)" [class.copied]="copied"></integrity-qrcode>
+      <button *ngIf="platform.isMobile && qrUri" mat-raised-button color="accent" (click)="platform.handleURI(qrUri)">
+        {{'label.login' | translate}}
+      </button>
     </div>
 
-    <div *ngIf="descriptor" class="instructions">
-      {{'login.instructions' | translate:{realm:descriptor.label ? descriptor.label : descriptor.id} }}
+    <div *ngIf="!platform.isMobile && descriptor" class="instructions">
+      {{'login.instructions_desktop' | translate:{realm:descriptor.label ? descriptor.label : descriptor.id} }}
+    </div>
+
+    <div *ngIf="platform.isMobile && descriptor" class="instructions">
+      {{'login.instructions_mobile' | translate:{realm:descriptor.label ? descriptor.label : descriptor.id} }}
     </div>
 
     <mat-progress-bar *ngIf="qrUri" mode="determinate" [value]="qrCountdown" color="accent"></mat-progress-bar>
