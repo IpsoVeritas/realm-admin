@@ -1,3 +1,5 @@
+import { ActionDescriptor } from './../models/v2/action-descriptor.model';
+import { Multipart } from './../models/v2/multipart.model';
 import { Injectable } from '@angular/core';
 import { HttpHeaders } from '@angular/common/http';
 import { BaseClient } from './base.client';
@@ -58,18 +60,13 @@ export class ControllersClient extends BaseClient {
     if (!controller.descriptor.actionsURI || controller.descriptor.requireSetup) {
       return Promise.resolve(controller);
     }
-    return this.getControllerActionsJWS(controller)
+    return this.getControllerActions(controller)
       .then(actions => this.updateActions(controller, actions))
       .catch(error => console.warn('Update actions failed', controller, error))
       .then(() => controller);
   }
 
   public getControllerActions(controller: Controller): Promise<any> {
-    return this.getControllerActionsJWS(controller)
-      .then(jws => this.crypto.verifyAndParseJWS(jws));
-  }
-
-  public getControllerActionsJWS(controller: Controller): Promise<any> {
     return this.crypto.filterMandates(controller.adminRoles)
       .then(mandates => this.crypto.createMandateToken(controller.descriptor.adminUI, mandates, 30))
       .then(token => {
@@ -79,6 +76,13 @@ export class ControllersClient extends BaseClient {
         };
         return this.http.get(controller.descriptor.actionsURI, options).toPromise();
       });
+  }
+
+  public getParsedControllerActions(controller: Controller): Promise<ActionDescriptor[]> {
+    return this.getControllerActions(controller)
+      .then(json => JSON.parse(json))
+      .then(obj => this.jsonConvert.deserializeObject(obj, Multipart))
+      .then((m: Multipart) => Promise.all(m.parts.map(p => this.crypto.deserializeJWS(p.document, ActionDescriptor))));
   }
 
   public getControllerDescriptor(url: string): Promise<ControllerDescriptor> {
