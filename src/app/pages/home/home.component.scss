@@ -1,3 +1,5 @@
+@import "~@brickchain/integrity-theme/material-theme"; 
+
 .mat-sidenav-container {
   max-width: 1420px;
   margin: 0 auto;
@@ -5,7 +7,10 @@
 
   .mat-sidenav {
     width: 320px;
-    padding: 10px;
+    padding-top: 20px;
+    padding-right: 0;
+    padding-bottom: 20px;
+    padding-left: 0;
 
     .logo {
       width: 200px;
@@ -55,13 +60,15 @@
     flex-flow: row;
     min-height: 100vh;
     position: relative;
+    overflow: visible;
+    z-index: 2;
 
     .content {
       flex: 1 0 842px; // 850 minus margin of 4
       max-width: 842px;
       background-color: #fff;
       box-shadow: 0 -1px 4px 0 rgba(0, 0, 0, 0.2);
-      margin: 20px 4px;
+      margin: 20px 0;
       transition: margin 0.25s;
     }
 
@@ -124,7 +131,44 @@
     text-overflow: ellipsis;
     white-space: nowrap;
   }
+
+  .mat-nav-list {
+    .mat-list-item {
+      &.active {
+        background-color: mat-color($integrity-grey96);
+      }
+    }
+  }
 }
+
+.mat-sidenav {
+  .mat-nav-list:not(:first-child) {
+    .mat-list-item {
+      font-size: 20px;
+    }
+  }
+}
+
+.mat-list-item-content {
+  font-size: 20px;
+}
+
+::ng-deep {
+  .mat-sidenav {
+    .integrity-section {
+      padding-left: 20px !important;
+      padding-right: 0 !important;
+
+      .mat-nav-list {
+        padding-top: 0 !important;
+      }
+    }
+
+    .mat-nav-list:first-child {
+      font-size: 20px;
+    }
+  }
+} 
 
 @media (max-width: 1420px) {
   .mat-sidenav-container {

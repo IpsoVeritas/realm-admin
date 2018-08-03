@@ -2,7 +2,7 @@
 
   <mat-sidenav #drawer class="integrity-background-color" [mode]="drawerMode" [opened]="drawerMode == 'side'" (swipeleft)="drawer.close()">
 
-    <img class="logo" src="assets/img/integrity_grey_landscape.svg" *ngIf="drawerMode == 'side'">
+    <img class="logo" src="assets/img/integrity_colour_landscape.svg" *ngIf="drawerMode == 'side'">
 
     <img class="logo" src="assets/img/integrity_colour_landscape.svg" *ngIf="drawerMode == 'over'">
 
@@ -45,7 +45,11 @@
     <mat-divider *ngIf="profileMode == 'drawer'"></mat-divider>
 
     <mat-nav-list>
-      <a mat-list-item routerLink="/{{session.realm}}/home" routerLinkActive="active" (click)="drawerMode == 'over' ? drawer.close() : false">
+      <a mat-list-item 
+        routerLink="/{{session.realm}}/home" 
+        routerLinkActive="active" 
+        (click)="drawerMode == 'over' ? drawer.close() : false" 
+        [routerLinkActiveOptions]="{ exact : true }">
         <mat-icon>dashboard</mat-icon>{{ 'menu.dashboard' | translate }}
       </a>
       <a *ngIf="session.createRealms" mat-list-item [routerLink]="['realms']" routerLinkActive="active" (click)="drawerMode == 'over' ? drawer.close() : false">
