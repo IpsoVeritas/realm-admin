@@ -183,12 +183,13 @@ export class ControllerComponent implements OnInit, OnDestroy {
     if (this.iframe) {
       this.ready = true;
       const layoutChanges = this.breakpointObserver.observe(Breakpoints.HandsetPortrait);
+      const contentWindow = this.iframe.nativeElement.contentWindow;
       layoutChanges.subscribe(result => {
-        if (result.matches) {
-          this.iframe.nativeElement.contentWindow.postMessage('realm-admin-narrow', '*');
-        } else {
-          this.iframe.nativeElement.contentWindow.postMessage('realm-admin-wide', '*');
-        }
+        const message = {
+          '@type': 'layout-change',
+          'layout': result.matches ? 'narrow' : 'wide'
+        };
+        contentWindow.postMessage(message, this.controller.descriptor.adminUI);
       });
     }
   }
