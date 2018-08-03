@@ -15,6 +15,7 @@ export class RealmListComponent implements OnInit {
   @Output() cancel: EventEmitter<void> = new EventEmitter();
 
   realmForm: FormGroup;
+  isOtherRealmInFocus = false;
 
   constructor(private fb: FormBuilder,
     public session: SessionService,

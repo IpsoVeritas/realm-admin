@@ -10,7 +10,7 @@
         placeholder="{{ 'realm-list.enter_realm' | translate }}"
         (focus)="isOtherRealmInFocus = true" 
         (blur)="isOtherRealmInFocus = false">
-      <div class="other-realm-circle overlay"></div>
+      <div class="other-realm-circle"></div>
       <div class="other-realm-hint" *ngIf="!isOtherRealmInFocus">Other</div>
       <mat-error *ngIf="realm.errors && realm.errors['required']" translate>realm-list.error_required</mat-error>
       <mat-error *ngIf="realm.errors && realm.errors['descriptor']" translate>realm-list.error_descriptor</mat-error>
