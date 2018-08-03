@@ -25,7 +25,6 @@ export class PlatformService {
           this.session.language = data.lang;
           this.translate.use(data.lang);
         }
-        this.session.realm = data.context.realm.id;
       });
     }
     this.events.subscribe('logout', () => {
