@@ -20,6 +20,7 @@ import { ControllerBindDialogComponent } from '../controller/controller-bind-dia
 export class DashboardComponent implements OnInit, OnDestroy {
 
   isSnackBarOpen = false;
+  isLoadingAvailableServices = false;
 
   controllers: Controller[];
   services: Service[];
@@ -109,6 +110,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   install(service: Service) {
+    this.isLoadingAvailableServices = true;
     this.servicesClient.addService(service)
       .then(data => {
         // if (data) {
@@ -121,7 +123,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
       .catch(error => this.snackBarOpen(
         this.translate.instant('binding.error_add_failed'),
         this.translate.instant('label.close'),
-        this.snackBarErrorConfig));
+        this.snackBarErrorConfig))
+      .finally(() => {
+        this.isLoadingAvailableServices = false;
+      });
   }
 
   bindController(token: string, uri: string) {
@@ -158,7 +163,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
                 this.translate.instant('label.close'),
                 this.snackBarErrorConfig
               );
-            })
+            });
         }
       });
   }

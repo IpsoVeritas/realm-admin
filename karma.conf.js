@@ -29,6 +29,7 @@ module.exports = function (config) {
         flags: isDocker() ? ['--no-sandbox'] : []
       }
     },
+    webpack: { node: { fs: 'empty', } },
     reporters: ['progress', 'kjhtml'],
     port: 9876,
     colors: true,
