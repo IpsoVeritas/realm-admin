@@ -95,7 +95,11 @@ export class SessionTimeoutDialogComponent {
         .then(response => this.realmsClient.deserializeObject(response, LoginResponse))
         .then(response => this.handleLoginResponse(response))
         .then(() => this.dialogRef.close(true))
-        .catch((err) => console.log(err));
+        .catch(err => {
+          if (err !== 'cancelled') {
+            console.warn(err);
+          }
+        });
     } else {
       const id = v4();
       return this.proxy.handlePath(`/login/${id}`, this.getLoginRequestHandler(id))

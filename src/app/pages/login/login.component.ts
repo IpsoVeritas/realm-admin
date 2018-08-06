@@ -158,7 +158,14 @@ export class LoginComponent implements OnInit, OnDestroy {
           '@view': 'hidden',
         }))
         .then(response => this.realmsClient.deserializeObject(response, LoginResponse))
-        .then(response => this.handleLoginResponse(response));
+        .then(response => this.handleLoginResponse(response))
+        .catch(err => {
+          if (err === 'cancelled') {
+            this.webviewClient.cancel();
+          } else {
+            console.warn(err);
+          }
+        });
     } else {
       const id = v4();
       return this.proxy.handlePath(`/login/${id}`, this.getLoginRequestHandler(id))
