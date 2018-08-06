@@ -210,7 +210,7 @@ export class MandatesComponent implements OnInit {
 
   scanInvite(item: any) {
     const invite = <Invite>item.data;
-    const uri = `https://${this.session.backend}/realm/v2/realms/${invite.realm}/invites/id/${invite.id}/fetch`;
+    const uri = `https://${this.session.backend}/realms/${invite.realm}/invites/id/${invite.id}/fetch`;
     const title = this.translate.instant('invite.scan_invite', { role: this.role.description, email: invite.name });
     this.platform.handleURI(uri, title);
   }
