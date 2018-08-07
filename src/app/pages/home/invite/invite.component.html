@@ -68,10 +68,13 @@
 
     <integrity-section *ngIf="isSending || (sentInvites && sentInvites.length > 0) || (failedInvites && failedInvites.length > 0)" [title]="'invite.sending_section' | translate">
       <mat-progress-bar *ngIf="isSending" mode="buffer" [bufferValue]="progressBufferValue" [value]="progressValue" color="accent"></mat-progress-bar>
-      <div *ngIf="!isSending">
-        {{ 'invite.send_summary' | translate:{sent:sentInvites.length, failed:failedInvites.length, total:(sentInvites.length+failedInvites.length)} }}
+      <div *ngIf="!isSending && failedInvites.length == 0">
+        {{ 'invite.send_summary_no_failures' | translate:{sent:sentInvites.length, failed:failedInvites.length, total:(sentInvites.length+failedInvites.length)} }}
       </div>
-      <ul *ngIf="!isSending && failedInvites && failedInvites.length > 0">
+      <div *ngIf="!isSending && failedInvites.length > 0">
+          {{ 'invite.send_summary_with_failures' | translate:{sent:sentInvites.length, failed:failedInvites.length, total:(sentInvites.length+failedInvites.length)} }}
+      </div>
+      <ul *ngIf="!isSending && failedInvites.length > 0">
         <li *ngFor="let invite of failedInvites">{{ invite.name }}</li>
       </ul>
     </integrity-section>

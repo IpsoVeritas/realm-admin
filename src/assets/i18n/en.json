@@ -77,11 +77,12 @@
         "add_end_date": "Add end date",
         "recipients_count_hint": "{{count}} recipients",
         "sending_section": "Send status",
-        "send_summary": "Sent {{sent}} out of {{total}} invites with {{failed}} failures.",
+        "send_summary_with_failures": "Sent {{sent}} out of {{total}} invites with {{failed}} failures.",
         "scan_invite": "{{role}} invite to {{email}}",
         "menu_send_invite": "Send invite",
         "menu_scan_invite": "Scan invite",
-        "menu_delete_invite": "Delete invite"
+        "menu_delete_invite": "Delete invite",
+        "send_summary_no_failures": "Invites sent"
     },
     "menu": {
         "settings": "Settings",
