@@ -31,22 +31,22 @@
     </mat-header-cell>
     <mat-cell *matCellDef="let realm">
 
-      <!--
-      <button mat-icon-button color="accent" [matMenuTriggerFor]="realmMenu">
-        <mat-icon>more_vert</mat-icon>
-      </button>
+      <ng-template [ngIf]="session.realm != realm.id" [ngIfElse]="realmButtons">
+        <button mat-icon-button color="accent" [matMenuTriggerFor]="realmMenu">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #realmMenu="matMenu" yPosition="below" [overlapTrigger]="false">
+          <button mat-menu-item (click)="invite(realm)">{{'realms.menu_send_invite' | translate }}</button>
+          <button mat-menu-item (click)="delete(realm)" *ngIf="session.realm != realm.id && !realm.ownerRealm">{{'realms.menu_delete' | translate }}</button>
+          <button mat-menu-item (click)="login(realm)" *ngIf="session.realm != realm.id">{{'realms.menu_login' | translate }}</button>
+        </mat-menu>
+      </ng-template>
 
-      <mat-menu #realmMenu="matMenu" yPosition="below" [overlapTrigger]="false">
-        <button mat-menu-item (click)="invite(realm)">Send admin invite</button>
-        <button mat-menu-item (click)="delete(realm)" *ngIf="session.realm != realm.id && !realm.ownerRealm">Delete realm</button>
-      </mat-menu>
-      -->
-      <button mat-icon-button (click)="invite(realm)">
-        <mat-icon>person_add</mat-icon>
-      </button>
-      <button mat-icon-button (click)="delete(realm)" [disabled]="session.realm == realm.id && realm.ownerRealm">
-        <mat-icon>delete</mat-icon>
-      </button>
+      <ng-template #realmButtons>
+        <button mat-icon-button color="accent" (click)="invite(realm)" *ngIf="session.realm == realm.id">
+          <mat-icon>person_add</mat-icon>
+        </button>
+      </ng-template>
 
     </mat-cell>
   </ng-container>

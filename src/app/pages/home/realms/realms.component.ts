@@ -91,6 +91,11 @@ export class RealmsComponent implements OnInit {
     });
   }
 
+  login(realm: Realm) {
+    console.log(realm);
+    this.router.navigateByUrl(`/${realm.id}`);
+  }
+
   snackBarOpen(message: string, action?: string, config?: MatSnackBarConfig) {
     this.isSnackBarOpen = true;
     const snackbarRef = this.snackBar.open(message, action, config);

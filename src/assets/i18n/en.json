@@ -97,7 +97,10 @@
     },
     "realms": {
         "delete_realm": "Delete realm {{realm}}?",
-        "realm_name": "Enter realm name"
+        "realm_name": "Enter realm name",
+        "menu_send_invite": "Send admin invite",
+        "menu_delete": "Delete realm",
+        "menu_login": "Login"
     },
     "settings": {
         "guest_role": "Guest group",
