@@ -55,6 +55,8 @@ import { SessionService, PlatformService, ConfigService, CryptoService, CacheSer
 
 import { StripeComponent, RealmCardComponent, RealmListComponent } from './shared/components';
 
+import { SafePipe } from './shared/pipes/safe.pipe';
+
 import { BootstrapComponent } from './pages/bootstrap/bootstrap.component';
 import { LoginComponent } from './pages/login/login.component';
 import { HomeComponent } from './pages/home/home.component';
@@ -102,7 +104,8 @@ export class CustomHammerConfig extends HammerGestureConfig {
     SessionTimeoutDialogComponent,
     SettingsComponent,
     RealmsComponent,
-    InviteComponent
+    InviteComponent,
+    SafePipe
   ],
   entryComponents: [
     ControllerAddDialogComponent,

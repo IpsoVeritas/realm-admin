@@ -1,3 +1,4 @@
+import { EmailStatus } from './../../../shared/models/v2/email-status.model';
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
@@ -130,8 +131,20 @@ export class InviteComponent implements OnInit {
         } else {
           return this.invitesClient.createInvite(invite)
             .then(i => this.invitesClient.sendInvite(i))
-            .then(status => status.sent ? this.sentInvites.push(invite) : this.failedInvites.push(invite))
-            .catch(error => this.failedInvites.push(invite))
+            .then(emailStatus => this.inlineAttachments(emailStatus))
+            .then(emailStatus => {
+              if (emailStatus.sent) {
+                this.sentInvites.push(invite);
+              } else {
+                this.failedInvites.push(invite);
+              }
+              invite.emailStatus = emailStatus;
+              return emailStatus;
+            })
+            .catch(error => {
+              invite.error = error;
+              this.failedInvites.push(invite);
+            })
             .then(() => this.updateSendProgress());
         }
       };
@@ -139,6 +152,16 @@ export class InviteComponent implements OnInit {
 
     promiseSerial(functions).catch(error => error === 'canceled' ? Promise.resolve() : console.warn(error));
 
+  }
+
+  inlineAttachments(emailStatus: EmailStatus): EmailStatus {
+    if (emailStatus.rendered && emailStatus.attachments) {
+      Object.keys(emailStatus.attachments).forEach(key => {
+          const data = emailStatus.attachments[key];
+        emailStatus.rendered = emailStatus.rendered.replace(new RegExp(key, 'g'), data); // Replace all
+      });
+    }
+    return emailStatus;
   }
 
   updateSendProgress() {

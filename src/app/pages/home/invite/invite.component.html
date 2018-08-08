@@ -74,9 +74,21 @@
       <div *ngIf="!isSending && failedInvites.length > 0">
           {{ 'invite.send_summary_with_failures' | translate:{sent:sentInvites.length, failed:failedInvites.length, total:(sentInvites.length+failedInvites.length)} }}
       </div>
-      <ul *ngIf="!isSending && failedInvites.length > 0">
-        <li *ngFor="let invite of failedInvites">{{ invite.name }}</li>
-      </ul>
+      <mat-accordion *ngIf="!isSending && failedInvites.length > 0">
+        <mat-expansion-panel *ngFor="let invite of failedInvites">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                  {{ invite.name }}
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div *ngIf="invite.error">
+                {{ invite.error }}
+            </div>
+            <iframe *ngIf="invite.emailStatus && invite.emailStatus.rendered"
+              style="width:100%; height:600px; border: 1px solid lightgrey"
+              [srcdoc]="invite.emailStatus.rendered | safe: 'html'"></iframe>
+        </mat-expansion-panel>
+      </mat-accordion>
     </integrity-section>
 
     <div class="buttons">

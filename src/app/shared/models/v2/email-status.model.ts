@@ -15,7 +15,7 @@ export class EmailStatus {
   @JsonProperty('rendered', String, true)
   rendered: string = undefined;
 
-  @JsonProperty('attachments', [String], true)
-  attachments: string[] = undefined;
+  @JsonProperty('attachments', Any, true)
+  attachments: any = undefined;
 
 }

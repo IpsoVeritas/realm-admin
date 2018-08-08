@@ -1,5 +1,6 @@
 import { JsonObject, JsonProperty } from 'json2typescript';
 import { DateConverter } from '../converters/date.converter';
+import { EmailStatus } from './email-status.model';
 
 @JsonObject
 export class Invite {
@@ -56,5 +57,10 @@ export class Invite {
 
   @JsonProperty('validUntil', DateConverter, true)
   validUntil: Date = undefined;
+
+  /* not serialized */
+
+  error: any;
+  emailStatus: EmailStatus;
 
 }
