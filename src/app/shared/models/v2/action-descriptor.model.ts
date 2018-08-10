@@ -1,10 +1,10 @@
 import { JsonObject, JsonProperty, Any } from 'json2typescript';
 import { Base } from './base.model';
+import { Contract } from './contract.model';
+import { Scope } from './scope.model';
 
 @JsonObject
 export class ActionDescriptor extends Base {
-
-  // TODO: add rest of fields for action-descriptor
 
   constructor() {
     super();
@@ -17,13 +17,34 @@ export class ActionDescriptor extends Base {
   @JsonProperty('roles', [String], true)
   roles: string[] = undefined;
 
+  @JsonProperty('uiURI', String, true)
+  uiURI: string = undefined;
+
+  @JsonProperty('actionURI', String, true)
+  actionURI: string = undefined;
+
+  @JsonProperty('refreshURI', String, true)
+  refreshURI: string = undefined;
+
   @JsonProperty('params', Any, true)
   params: any = undefined;
+
+  @JsonProperty('icon', String, true)
+  icon: string = undefined;
 
   @JsonProperty('interfaces', [String], true)
   interfaces: string[] = undefined;
 
-  @JsonProperty('icon', String, true)
-  icon: string = undefined;
+  @JsonProperty('internal', Boolean, true)
+  internal: boolean = undefined;
+
+  @JsonProperty('keyLevel', Number, true)
+  keyLevel: number = undefined;
+
+  @JsonProperty('contract', Number, true)
+  contract: Contract = undefined;
+
+  @JsonProperty('scopes', [Scope], true)
+  scopes: Scope[] = undefined;
 
 }

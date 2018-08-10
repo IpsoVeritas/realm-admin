@@ -9,8 +9,9 @@ import { EventsService, DialogsService, ClipboardService } from '@brickchain/int
 import { DocumentHandlerService } from '../../../handlers/document-handler.service';
 import { SessionService, CryptoService } from '../../../shared/services';
 import { ControllersClient } from '../../../shared/api-clients';
-import { Controller } from './../../../shared/models/';
+import { Controller, ActionDescriptor, Action } from '../../../shared/models/';
 import { ControllerSettingsDialogComponent } from './controller-settings-dialog.component';
+import { v4 } from 'uuid/v4';
 
 @Component({
   selector: 'app-controller',
@@ -29,6 +30,8 @@ export class ControllerComponent implements OnInit, OnDestroy {
   realmId: string;
   controller: Controller;
   uri: SafeResourceUrl;
+
+  addBindingAction: ActionDescriptor;
 
   ready = false;
 
@@ -72,6 +75,13 @@ export class ControllerComponent implements OnInit, OnDestroy {
 
   loadController(controllerId: string) {
     this.controllersClient.getController(this.realmId, controllerId)
+      .then(controller => {
+        this.addBindingAction = undefined;
+        this.controllersClient.getParsedControllerActions(controller, ['https://interfaces.brickchain.com/v1/add-binding.json'])
+          .then(a => this.addBindingAction = a.length > 0 ? a[0] : undefined)
+          .catch(err => console.warn(err));
+        return controller;
+      })
       .then(controller => this.cryptoService.filterMandates(controller.adminRoles)
         .then(mandates => this.cryptoService.createMandateToken(
           controller.descriptor.adminUI,
@@ -154,29 +164,40 @@ export class ControllerComponent implements OnInit, OnDestroy {
   }
 
   binding() {
-    // Synchronous HTTP to enable clipboard
-    const xhr = new XMLHttpRequest();
-    xhr.open('post', this.controller.descriptor.addBindingEndpoint, false);
-    xhr.setRequestHeader('Authorization', `Mandate ${this.session.token}`);
-    xhr.onreadystatechange = () => {
-      if (xhr.readyState === XMLHttpRequest.DONE) {
-        if (xhr.status === 201) {
-          const obj = JSON.parse(xhr.responseText);
-          this.clipboard.copy(obj.url)
-            .then(value => this.snackBarOpen(
-              this.translate.instant('message.copied_to_clipboard', { value: obj.url }),
-              this.translate.instant('label.close'),
-              { duration: 2000 }))
-            .catch(() => this.snackBarOpen(obj.url, 'Close'));
-        } else {
-          this.snackBarOpen(
-            this.translate.instant('error.calling', { value: this.controller.descriptor.addBindingEndpoint }),
-            this.translate.instant('label.close'),
-            this.snackBarErrorConfig);
-        }
-      }
-    };
-    xhr.send();
+    const action = new Action();
+    action.certificate = this.session.chain;
+    action.mandates = this.session.mandates;
+    action.nonce = v4();
+    action.params = this.addBindingAction.params;
+    this.cryptoService.signCompact(action)
+      .then(jws => {
+        console.log(action, jws);
+        // Synchronous HTTP to enable clipboard
+        const xhr = new XMLHttpRequest();
+        xhr.open('post', this.addBindingAction.actionURI, false);
+        xhr.setRequestHeader('Content-Type', 'application/jose+jws;format=compact');
+        // xhr.setRequestHeader('Authorization', `Mandate ${this.session.token}`);
+        xhr.onreadystatechange = () => {
+          if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 201) {
+              console.log(xhr.responseText);
+              const obj = JSON.parse(xhr.responseText);
+              this.clipboard.copy(obj.url)
+                .then(value => this.snackBarOpen(
+                  this.translate.instant('message.copied_to_clipboard', { value: obj.url }),
+                  this.translate.instant('label.close'),
+                  { duration: 2000 }))
+                .catch(() => this.snackBarOpen(obj.url, 'Close'));
+            } else {
+              this.snackBarOpen(
+                this.translate.instant('error.calling', { value: this.addBindingAction.actionURI }),
+                this.translate.instant('label.close'),
+                this.snackBarErrorConfig);
+            }
+          }
+        };
+        xhr.send(jws);
+      });
   }
 
   load(event) {

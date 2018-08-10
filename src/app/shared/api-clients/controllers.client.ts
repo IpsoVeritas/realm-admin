@@ -78,11 +78,18 @@ export class ControllersClient extends BaseClient {
       });
   }
 
-  public getParsedControllerActions(controller: Controller): Promise<ActionDescriptor[]> {
+  public getParsedControllerActions(controller: Controller, interfaces?: string[]): Promise<ActionDescriptor[]> {
     return this.getControllerActions(controller)
       .then(json => JSON.parse(json))
       .then(obj => this.jsonConvert.deserializeObject(obj, Multipart))
-      .then((m: Multipart) => Promise.all(m.parts.map(p => this.crypto.deserializeJWS(p.document, ActionDescriptor))));
+      .then((m: Multipart) => Promise.all(m.parts.map(p => this.crypto.deserializeJWS(p.document, ActionDescriptor))))
+      .then(descriptors => {
+        if (interfaces) {
+          return descriptors.filter(descriptor => interfaces.reduce((acc, i) => acc || descriptor.interfaces.includes(i), false));
+        } else {
+          return descriptors;
+        }
+      });
   }
 
   public getControllerDescriptor(url: string): Promise<ControllerDescriptor> {

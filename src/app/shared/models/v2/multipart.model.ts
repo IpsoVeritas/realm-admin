@@ -1,19 +1,6 @@
 import { JsonObject, JsonProperty, Any } from 'json2typescript';
 import { Base } from './base.model';
-
-@JsonObject
-export class Part {
-
-  @JsonProperty('encoding', String, true)
-  encoding: string = undefined;
-
-  @JsonProperty('name', String, true)
-  name: string = undefined;
-
-  @JsonProperty('document', String, true)
-  document: string = undefined;
-
-}
+import { Part } from './part.model';
 
 @JsonObject
 export class Multipart extends Base {
