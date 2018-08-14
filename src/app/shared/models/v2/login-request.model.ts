@@ -25,4 +25,7 @@ export class LoginRequest extends Base {
   @JsonProperty('replyTo', [String], true)
   replyTo: string[] = undefined;
 
+  @JsonProperty('documentTypes', [String], true)
+  documentTypes: string[] = undefined;
+
 }

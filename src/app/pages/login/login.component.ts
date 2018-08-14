@@ -189,6 +189,10 @@ export class LoginComponent implements OnInit, OnDestroy {
         loginRequest.ttl = 3600;
         loginRequest.roles = this.session.roles;
         loginRequest.key = key;
+        loginRequest.documentTypes = [
+          'https://schema.brickchain.com/v2/mandate-token.json',
+          'https://schema.brickchain.com/v2/action.json'
+        ];
         return loginRequest;
       });
   }
