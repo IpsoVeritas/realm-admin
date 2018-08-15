@@ -279,12 +279,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.translate.instant('label.close'),
                 { duration: 2000 }))
               .then(() => this.crypto.deserializeJWS<ControllerBinding>(binding, ControllerBinding))
-              .then(controllerBinding => {
-                controller.id = controllerBinding.id;
-                return this.controllersClient.syncController(controller).catch(() => controller);
-              })
-              .then(() => {
-                this.router.navigateByUrl(`/${this.session.realm}/home/controller/${controller.id}`);
+              .then(controllerBinding => this.controllersClient.getController(controller.realm, controllerBinding.id))
+              .then(c => this.controllersClient.syncController(c).catch(() => c))
+              .then(c => {
+                this.router.navigateByUrl(`/${this.session.realm}/home/controller/${c.id}`);
                 this.events.publish('controllers_updated');
               }))
             .catch(error => {
