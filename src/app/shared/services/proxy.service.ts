@@ -87,7 +87,6 @@ export class ProxyService {
     if (typeof msg === 'object') {
       m = JSON.stringify(msg);
     }
-    console.debug(`ProxyService -> ws ${m}`);
     return this._conn.send(m, WebSocketSendMode.Direct, true);
   }
 
@@ -99,22 +98,17 @@ export class ProxyService {
 
     console.debug(`ProxyService.subscribe`, Date.now(), url);
     return new Promise(resolve => {
-        this._conn = new $WebSocket(url);
-        resolve();
-      })
+      this._conn = new $WebSocket(url);
+      resolve();
+    })
       .then(() => {
         this._conn.onError(err => console.error(`ProxyService <- ws.error`, err));
         this._conn.getDataStream().subscribe(
           (msgEvent) => {
-            // console.debug("msgEvent", msgEvent);
             const msg = JSON.parse(msgEvent.data);
-            if (msg['@type'] !== 'https://proxy.brickchain.com/v1/ping.json') {
-              console.debug(`ProxyService <- ws.msg`, Date.now(), msgEvent.data);
-            }
             switch (msg['@type']) {
               case 'https://proxy.brickchain.com/v1/ping.json':
                 break;
-
               case 'https://proxy.brickchain.com/v1/registration-response.json':
                 const registrationResponse = <RegistrationResponse>this.jsonConvert.deserializeObject(msg, RegistrationResponse);
                 if (this._waiting[registrationResponse.id] !== undefined) {
@@ -123,29 +117,31 @@ export class ProxyService {
                   delete this._waiting[registrationResponse.id];
                 }
                 break;
-
               case 'https://proxy.brickchain.com/v1/http-request.json':
-                const httpRequest = <HttpRequest>this.jsonConvert.deserializeObject(msg, HttpRequest);
+                const req = <HttpRequest>this.jsonConvert.deserializeObject(msg, HttpRequest);
                 try {
-                  const id = httpRequest.id;
-                  // let data = JSON.parse(msg['data'])
-                  if (this._handlers[httpRequest.url] !== undefined) {
-                    this._handlers[httpRequest.url](httpRequest).then(res => {
-                      res.id = id;
+                  if (this._handlers[req.url] !== undefined) {
+                    if (req.method === 'OPTIONS') {
+                      const res = new HttpResponse(200, 'OK', req.id);
+                      res.headers = {
+                        'Access-Control-Allow-Origin': req.headers['Origin'],
+                        'Access-Control-Allow-Headers': '*'
+                      };
                       this.send(this.jsonConvert.serializeObject(res));
-                    });
+                    } else {
+                      this._handlers[req.url](req).then(res => {
+                        res.id = req.id;
+                        this.send(this.jsonConvert.serializeObject(res));
+                      });
+                    }
                   } else {
-                    const res = new HttpResponse();
-                    res.id = id;
-                    res.status = 404;
-                    res.body = 'Not found';
+                    const res = new HttpResponse(404, 'Not found', req.id);
                     this.send(this.jsonConvert.serializeObject(res));
                   }
                 } catch (err) {
                   console.error(err);
                 }
                 break;
-
               default:
                 break;
             }

@@ -33,7 +33,8 @@
         "start_time": "at",
         "end_date": "Ends",
         "end_time": "at",
-        "login": "Login"
+        "login": "Login",
+        "copy": "Copy"
     },
     "login": {
         "title": "Login to {{realm}}",
@@ -51,7 +52,8 @@
     },
     "message": {
         "copied_to_clipboard": "Copied {{value}} to clipboard",
-        "updated": "Updated {{value}}"
+        "updated": "Updated {{value}}",
+        "copy_to_clipboard_failed": "Copy {{value}} to clipboard failed"
     },
     "realm-list": {
         "enter_realm": "Enter the realm name",

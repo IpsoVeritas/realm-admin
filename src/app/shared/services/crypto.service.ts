@@ -84,7 +84,7 @@ export class CryptoService {
 
   public filterMandates(roles: string[]): Promise<string[]> {
     return Promise.all(this.session.mandates.map(mandate => this.verifyAndParseJWS(mandate)))
-      .then(mandates => mandates.filter(mandate => roles.includes(mandate.role)))
+      .then(mandates => mandates.filter(mandate => roles && roles.includes(mandate.role)))
       .then(mandates => mandates.map(mandate => mandate.signed));
   }
 

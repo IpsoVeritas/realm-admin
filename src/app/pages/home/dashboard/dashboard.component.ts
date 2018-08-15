@@ -153,7 +153,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
                 { duration: 2000 }))
               .then(() => this.crypto.deserializeJWS<ControllerBinding>(binding, ControllerBinding))
               .then(controllerBinding => {
-                this.router.navigateByUrl(`/${this.session.realm}/home/controller/${controllerBinding.id}`);
+                controller.id = controllerBinding.id;
+                return this.controllersClient.syncController(controller).catch(() => controller);
+              })
+              .then(() => {
+                this.router.navigateByUrl(`/${this.session.realm}/home/controller/${controller.id}`);
                 this.events.publish('controllers_updated');
               }))
             .catch(error => {

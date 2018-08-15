@@ -2,7 +2,8 @@ import { Component, ViewChild, ElementRef, OnInit, OnDestroy, Renderer2 } from '
 import { Router, ActivatedRoute } from '@angular/router';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarConfig, MatSnackBarRef, SimpleSnackBar } from '@angular/material/snack-bar';
+import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { EventsService, DialogsService, ClipboardService } from '@brickchain/integrity-angular';
@@ -55,7 +56,8 @@ export class ControllerComponent implements OnInit, OnDestroy {
     private documentHandler: DocumentHandlerService,
     private controllersClient: ControllersClient,
     private cryptoService: CryptoService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    protected http: HttpClient,
   ) {
     this.resumeHandler = () => this.resume();
   }
@@ -170,34 +172,31 @@ export class ControllerComponent implements OnInit, OnDestroy {
     action.nonce = v4();
     action.params = this.addBindingAction.params;
     this.cryptoService.signCompact(action)
-      .then(jws => {
-        console.log(action, jws);
-        // Synchronous HTTP to enable clipboard
-        const xhr = new XMLHttpRequest();
-        xhr.open('post', this.addBindingAction.actionURI, false);
-        xhr.setRequestHeader('Content-Type', 'application/jose+jws;format=compact');
-        // xhr.setRequestHeader('Authorization', `Mandate ${this.session.token}`);
-        xhr.onreadystatechange = () => {
-          if (xhr.readyState === XMLHttpRequest.DONE) {
-            if (xhr.status === 201) {
-              console.log(xhr.responseText);
-              const obj = JSON.parse(xhr.responseText);
-              this.clipboard.copy(obj.url)
-                .then(value => this.snackBarOpen(
-                  this.translate.instant('message.copied_to_clipboard', { value: obj.url }),
-                  this.translate.instant('label.close'),
-                  { duration: 2000 }))
-                .catch(() => this.snackBarOpen(obj.url, 'Close'));
-            } else {
-              this.snackBarOpen(
-                this.translate.instant('error.calling', { value: this.addBindingAction.actionURI }),
-                this.translate.instant('label.close'),
-                this.snackBarErrorConfig);
-            }
-          }
-        };
-        xhr.send(jws);
-      });
+      .then(jws => this.http.post(this.addBindingAction.actionURI, jws).toPromise())
+      .then((response: any) => {
+        if ((<any>navigator).clipboard) {
+          (<any>navigator).clipboard.writeText(response.url)
+            .then(() => this.snackBarOpen(
+              this.translate.instant('message.copied_to_clipboard', { value: response.url }),
+              this.translate.instant('label.close'),
+              { duration: 2000 }))
+            .catch(() => this.snackBarOpen(
+              this.translate.instant('message.copy_to_clipboard_failed', { value: response.url }),
+              this.translate.instant('label.close'),
+              this.snackBarErrorConfig));
+        } else {
+          const snackbarRef = this.snackBarOpen(
+            response.url,
+            this.translate.instant('label.copy'),
+            { duration: 5000 });
+          snackbarRef.onAction().toPromise()
+            .then(() => this.clipboard.copy(response.url));
+        }
+      })
+      .catch(() => this.snackBarOpen(
+        this.translate.instant('error.calling', { value: this.addBindingAction.actionURI }),
+        this.translate.instant('label.close'),
+        this.snackBarErrorConfig));
   }
 
   load(event) {
@@ -249,10 +248,11 @@ export class ControllerComponent implements OnInit, OnDestroy {
     return message;
   }
 
-  snackBarOpen(message: string, action?: string, config?: MatSnackBarConfig) {
+  snackBarOpen(message: string, action?: string, config?: MatSnackBarConfig): MatSnackBarRef<SimpleSnackBar> {
     this.isSnackBarOpen = true;
     const snackbarRef = this.snackBar.open(message, action, config);
     snackbarRef.afterDismissed().toPromise().then(() => this.isSnackBarOpen = false);
+    return snackbarRef;
   }
 
 }
