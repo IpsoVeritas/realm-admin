@@ -45,10 +45,10 @@
     <mat-divider *ngIf="profileMode == 'drawer'"></mat-divider>
 
     <mat-nav-list>
-      <a mat-list-item 
-        routerLink="/{{session.realm}}/home" 
-        routerLinkActive="active" 
-        (click)="drawerMode == 'over' ? drawer.close() : false" 
+      <a mat-list-item
+        routerLink="/{{session.realm}}/home"
+        routerLinkActive="active"
+        (click)="drawerMode == 'over' ? drawer.close() : false"
         [routerLinkActiveOptions]="{ exact : true }">
         <mat-icon>dashboard</mat-icon>{{ 'menu.dashboard' | translate }}
       </a>
@@ -71,9 +71,12 @@
       <mat-nav-list>
         <a mat-list-item [routerLink]="['controller', controller.id]" routerLinkActive="active" (click)="drawerMode == 'over' ? drawer.close() : false"
           *ngFor="let controller of controllers">
-          <mat-icon>
+          <mat-icon *ngIf="controller.descriptor.icon else no_service_icon">
             <img src="{{controller.descriptor.icon}}" width="20" height="20">
           </mat-icon>
+          <ng-template #no_service_icon>
+            <mat-icon>trip_origin</mat-icon>
+          </ng-template>
           {{controller.name}}
           <!-- span *ngIf="controller.descriptor?.requireSetup" translate>general.setup_required</span -->
         </a>

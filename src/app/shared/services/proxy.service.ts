@@ -119,6 +119,7 @@ export class ProxyService {
                 break;
               case 'https://proxy.brickchain.com/v1/http-request.json':
                 const req = <HttpRequest>this.jsonConvert.deserializeObject(msg, HttpRequest);
+                console.debug(`ProxyService.HttpRequest: ${req.id}`, req);
                 try {
                   if (this._handlers[req.url] !== undefined) {
                     if (req.method === 'OPTIONS') {
@@ -127,15 +128,22 @@ export class ProxyService {
                         'Access-Control-Allow-Origin': req.headers['Origin'],
                         'Access-Control-Allow-Headers': '*'
                       };
+                      console.debug(`ProxyService.HttpResponse: ${res.id}`, res);
                       this.send(this.jsonConvert.serializeObject(res));
                     } else {
-                      this._handlers[req.url](req).then(res => {
+                      this._handlers[req.url](req).then((res: HttpResponse) => {
                         res.id = req.id;
+                        res.headers = {
+                          'Access-Control-Allow-Origin': req.headers['Origin'],
+                          'Access-Control-Allow-Headers': '*'
+                        };
+                        console.debug(`ProxyService.HttpResponse: ${res.id}`, res);
                         this.send(this.jsonConvert.serializeObject(res));
                       });
                     }
                   } else {
                     const res = new HttpResponse(404, 'Not found', req.id);
+                    console.debug(`ProxyService.HttpResponse: ${res.id}`, res);
                     this.send(this.jsonConvert.serializeObject(res));
                   }
                 } catch (err) {
