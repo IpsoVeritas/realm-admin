@@ -85,7 +85,8 @@ export class ControllersClient extends BaseClient {
       .then((m: Multipart) => Promise.all(m.parts.map(p => this.crypto.deserializeJWS(p.document, ActionDescriptor))))
       .then(descriptors => {
         if (interfaces) {
-          return descriptors.filter(descriptor => interfaces.reduce((acc, i) => acc || descriptor.interfaces.includes(i), false));
+          return descriptors.filter(descriptor =>
+            interfaces.reduce((acc, i) => acc || (descriptor.interfaces && descriptor.interfaces.includes(i)), false));
         } else {
           return descriptors;
         }

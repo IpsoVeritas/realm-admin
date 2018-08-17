@@ -150,7 +150,9 @@
         "edit_service": "Edit service",
         "delete_service": "Delete service",
         "sync_service": "Sync service",
-        "get_binding_url": "Binding URL"
+        "get_binding_url": "Binding URL",
+        "descriptor_title": "Controller details",
+        "actions_title": "Available actions"
     },
     "binding": {
         "error_invalid_token": "Invalid binding token",

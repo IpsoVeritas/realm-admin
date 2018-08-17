@@ -1,3 +1,5 @@
+@import "~@brickchain/integrity-theme/material-theme";
+
 .content-header {
   border-bottom: 1px solid rgba(0, 0, 0, 0.12);
 }
@@ -47,6 +49,20 @@
       margin: 0;
       padding: 0;
       border: none;
+    }
+
+    .information {
+      width: 100%;
+
+      .mat-headline, .mat-title, .code {
+        margin: 15px 30px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      code {
+        white-space: pre;
+      }
     }
   }
 }

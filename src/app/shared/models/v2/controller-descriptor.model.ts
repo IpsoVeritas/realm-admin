@@ -1,6 +1,6 @@
 import { JsonObject, JsonProperty, Any } from 'json2typescript';
 import { Base } from './base.model';
-import { KeyPurpose } from '../v1/key-purpose.model';
+import { KeyPurpose } from './key-purpose.model';
 
 @JsonObject
 export class ControllerDescriptor extends Base {

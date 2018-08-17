@@ -30,6 +30,7 @@ export class ControllerComponent implements OnInit, OnDestroy {
 
   realmId: string;
   controller: Controller;
+  actions: ActionDescriptor[];
   uri: SafeResourceUrl;
 
   addBindingAction: ActionDescriptor;
@@ -76,47 +77,61 @@ export class ControllerComponent implements OnInit, OnDestroy {
   }
 
   loadController(controllerId: string) {
+    this.ready = false;
+    this.uri = undefined;
+    if (this.stopListening !== undefined) {
+      this.stopListening();
+      this.stopListening = undefined;
+    }
     this.controllersClient.getController(this.realmId, controllerId)
       .then(controller => {
+        this.controller = controller;
         this.addBindingAction = undefined;
         this.controllersClient.getParsedControllerActions(controller, ['https://interfaces.brickchain.com/v1/add-binding.json'])
           .then(a => this.addBindingAction = a.length > 0 ? a[0] : undefined)
           .catch(err => console.warn(err));
         return controller;
       })
-      .then(controller => this.cryptoService.filterMandates(controller.adminRoles)
-        .then(mandates => this.cryptoService.createMandateToken(
-          controller.descriptor.adminUI,
-          mandates,
-          (this.session.expires - Date.now()) / 1000
-        ).then(token => {
-          this.controller = controller;
-          if (controller.descriptor.adminUI) {
-            let hash = controller.descriptor.adminUI.split('#')[1];
-            hash = hash ? hash : '';
-            const delim = hash.length > 0 ? (hash.indexOf('?') === -1 ? '?' : '&') : '?';
-            const referer = encodeURIComponent(window.location.href);
-            const uri = `${controller.descriptor.adminUI}#${delim}token=${token}&referer=${referer}&language=${this.session.language}`;
-            this.stopListening = this.renderer.listen('window', 'message', this.handleMessage.bind(this));
-            this.uri = this.sanitizer.bypassSecurityTrustResourceUrl(uri);
-          }
-        })));
+      .then(controller => {
+        if (controller.descriptor.adminUI) {
+          this.cryptoService.filterMandates(controller.adminRoles)
+            .then(mandates => this.cryptoService.createMandateToken(
+              controller.descriptor.adminUI,
+              mandates,
+              (this.session.expires - Date.now()) / 1000
+            ).then(token => {
+              let hash = controller.descriptor.adminUI.split('#')[1];
+              hash = hash ? hash : '';
+              const delim = hash.length > 0 ? (hash.indexOf('?') === -1 ? '?' : '&') : '?';
+              const referer = encodeURIComponent(window.location.href);
+              const uri = `${controller.descriptor.adminUI}#${delim}token=${token}&referer=${referer}&language=${this.session.language}`;
+              this.stopListening = this.renderer.listen('window', 'message', this.handleMessage.bind(this));
+              this.uri = this.sanitizer.bypassSecurityTrustResourceUrl(uri);
+            }));
+        } else {
+          this.controllersClient.getParsedControllerActions(controller)
+            .then(actions => this.actions = actions)
+            .then(() => this.ready = true);
+        }
+      });
   }
 
   resume() {
-    this.cryptoService.filterMandates(this.controller.adminRoles)
-      .then(mandates => this.cryptoService.createMandateToken(
-        this.controller.descriptor.adminUI,
-        mandates,
-        (this.session.expires - Date.now()) / 1000
-      ).then(token => {
-        const message = {
-          '@type': 'token-refresh',
-          'token': token
-        };
-        const contentWindow = this.iframe.nativeElement.contentWindow;
-        contentWindow.postMessage(message, this.controller.descriptor.adminUI);
-      }));
+    if (this.controller && this.controller.descriptor.adminUI) {
+      this.cryptoService.filterMandates(this.controller.adminRoles)
+        .then(mandates => this.cryptoService.createMandateToken(
+          this.controller.descriptor.adminUI,
+          mandates,
+          (this.session.expires - Date.now()) / 1000
+        ).then(token => {
+          const message = {
+            '@type': 'token-refresh',
+            'token': token
+          };
+          const contentWindow = this.iframe.nativeElement.contentWindow;
+          contentWindow.postMessage(message, this.controller.descriptor.adminUI);
+        }));
+    }
   }
 
   edit() {

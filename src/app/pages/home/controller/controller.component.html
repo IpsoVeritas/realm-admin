@@ -3,7 +3,7 @@
     <app-stripe></app-stripe>
     <mat-toolbar-row>
       <mat-icon class="menu-icon" (click)="events.publish('toggle_drawer')">menu</mat-icon>
-      <span *ngIf="controller" class="mat-display-1"> {{controller?.name}}</span>
+      <span *ngIf="controller" class="mat-display-1" style="margin-bottom: 0">{{controller?.name}}</span>
       <span class="mat-spacer"></span>
       <button mat-button color="accent" (click)="edit()">
         <mat-icon>mode_edit</mat-icon> {{'controllers.edit_service' | translate}}
@@ -24,9 +24,9 @@
         <mat-icon>sync</mat-icon>
       </button>
       <button *ngIf="addBindingAction" mat-button color="accent" (click)="binding()">
-        <mat-icon>link</mat-icon>  {{'controllers.get_binding_url' | translate}}
+        <mat-icon>link</mat-icon> {{'controllers.get_binding_url' | translate}}
       </button>
-      <button *ngIf="addBindingAction"  mat-icon-button color="accent" (click)="binding()">
+      <button *ngIf="addBindingAction" mat-icon-button color="accent" (click)="binding()">
         <mat-icon>link</mat-icon>
       </button>
     </mat-toolbar-row>
@@ -38,5 +38,14 @@
       <p>Loading {{controller?.name}}</p>
     </div>
     <iframe #iframe *ngIf="uri" [src]="uri" (load)="load($event)" sandbox="allow-forms allow-scripts allow-same-origin allow-popups"></iframe>
+    <div class="information" *ngIf="ready && !uri">
+      <div class="mat-headline">{{'controllers.descriptor_title' | translate}}</div>
+      <div class="code"><code>{{ controller.descriptor | json }}</code></div>
+      <div class="mat-headline">{{'controllers.actions_title' | translate}}</div>
+      <ng-container *ngFor="let action of actions">
+        <div class="mat-title">{{action.label}}</div>
+        <div class="code"><code>{{ action | json }}</code></div>
+      </ng-container>
+    </div>
   </div>
 </div>
