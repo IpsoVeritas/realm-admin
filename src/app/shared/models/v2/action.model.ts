@@ -23,6 +23,6 @@ export class Action extends Base {
   facts: Part[] = undefined;
 
   @JsonProperty('contract', String, true)
-  contract: string = undefined;
+  _contract: string = undefined;
 
 }
