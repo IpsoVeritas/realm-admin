@@ -41,7 +41,7 @@ export class ActionDescriptor extends Base {
   @JsonProperty('keyLevel', Number, true)
   keyLevel: number = undefined;
 
-  @JsonProperty('contract', Number, true)
+  @JsonProperty('contract', Contract, true)
   contract: Contract = undefined;
 
   @JsonProperty('scopes', [Scope], true)
