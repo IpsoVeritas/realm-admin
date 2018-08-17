@@ -25,4 +25,12 @@ export class Action extends Base {
   @JsonProperty('contract', String, true)
   _contract: string = undefined;
 
+  get contract(): string {
+    return this._contract;
+  }
+
+  set contract(value: string) {
+    this._contract = value;
+  }
+
 }
