@@ -126,7 +126,7 @@ export class ProxyService {
                       const res = new HttpResponse(200, 'OK', req.id);
                       res.headers = {
                         'Access-Control-Allow-Origin': req.headers['Origin'],
-                        'Access-Control-Allow-Headers': '*'
+                        'Access-Control-Allow-Headers': 'Accept, Accept-Language, Content-Language, Content-Type'
                       };
                       console.debug(`ProxyService.HttpResponse: ${res.id}`, res);
                       this.send(this.jsonConvert.serializeObject(res));
@@ -135,7 +135,7 @@ export class ProxyService {
                         res.id = req.id;
                         res.headers = {
                           'Access-Control-Allow-Origin': req.headers['Origin'],
-                          'Access-Control-Allow-Headers': '*'
+                          'Access-Control-Allow-Headers': 'Accept, Accept-Language, Content-Language, Content-Type'
                         };
                         console.debug(`ProxyService.HttpResponse: ${res.id}`, res);
                         this.send(this.jsonConvert.serializeObject(res));
