@@ -62,5 +62,5 @@ deploy to production:
     - aws configure set preview.cloudfront true
     - aws cloudfront create-invalidation --distribution-id E2Y3HN6RJX8DF5 --paths "/$CI_PROJECT_NAME/release/*"
   variables:
-    BACKEND: "https://realm.plusintegrity.com/realm-api"
-    PROXY: "https://proxy.svc.plusintegrity.com"
+    SRVFEED: "https://firebasestorage.googleapis.com/v0/b/integrity-autobinder.appspot.com/o/services.json?alt=media"
+    PROXY: "https://proxy.svc.integrity.app"
