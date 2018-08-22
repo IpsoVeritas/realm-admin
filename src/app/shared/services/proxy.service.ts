@@ -15,6 +15,7 @@ import { RegistrationResponse } from '../models/proxy/registration-response.mode
 @Injectable()
 export class ProxyService {
 
+  private _session: string;
   private _base: string;
   private _id: string;
   private _ws: string;
@@ -31,6 +32,7 @@ export class ProxyService {
     private configService: ConfigService
   ) {
     console.info(`Instantiating ProxyService`, Date.now());
+    this._session = v4()
     this._ready = this.initialize().then(() => console.log('Proxy initialized'));
     this.jsonConvert = new JsonConvert();
     this.jsonConvert.operationMode = OperationMode.ENABLE; // print some debug data
@@ -55,6 +57,7 @@ export class ProxyService {
       .then(mandateToken => {
         const regreq = new RegistrationRequest();
         regreq.mandateToken = mandateToken;
+        regreq.session = this._session;
 
         this.send(this.jsonConvert.serializeObject(regreq));
 
