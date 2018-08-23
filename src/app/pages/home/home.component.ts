@@ -248,8 +248,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     const dialogRef = this.dialog.open(ControllerAddDialogComponent);
     dialogRef.afterClosed().toPromise()
       .then((service: Service) => {
-        this._isLoadingSubject.next(true);
         if (service) {
+          this._isLoadingSubject.next(true);
           this.servicesClient.addService(service)
             .then(data => {
               if (data) {
