@@ -13,6 +13,8 @@ import { Realm, RealmDescriptor, Role, Controller, Service, ControllerBinding } 
 import { ControllerAddDialogComponent } from './controller/controller-add-dialog.component';
 import { ControllerBindDialogComponent } from './controller/controller-bind-dialog.component';
 import { SessionTimeoutDialogComponent } from './session-timeout-dialog.component';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
 
 import * as uuid from 'uuid/v1';
 
@@ -38,6 +40,9 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   navigationSubscription;
 
+  private _isLoadingSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  public isLoadingObserver: Observable<boolean> = this._isLoadingSubject.asObservable();
+
   public drawerMode: string;
   public profileMode: string;
   public showProfile = false;
@@ -45,6 +50,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('drawer') drawer: MatDrawer;
 
   isSnackBarOpen = false;
+  isLoading = false;
 
   snackBarErrorConfig: MatSnackBarConfig = {
     duration: 5000,
@@ -81,6 +87,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         this.load();
       }
     });
+    this.isLoadingObserver.subscribe(isLoading => this.isLoading = isLoading);
   }
 
   ngOnInit() {
@@ -241,6 +248,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     const dialogRef = this.dialog.open(ControllerAddDialogComponent);
     dialogRef.afterClosed().toPromise()
       .then((service: Service) => {
+        this._isLoadingSubject.next(true);
         if (service) {
           this.servicesClient.addService(service)
             .then(data => {
@@ -251,7 +259,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
             .catch(error => this.snackBarOpen(
               this.translate.instant('binding.error_add_failed'),
               this.translate.instant('label.close'),
-              this.snackBarErrorConfig));
+              this.snackBarErrorConfig))
+            .finally(() => {
+              this._isLoadingSubject.next(false);
+            });
         }
       });
   }

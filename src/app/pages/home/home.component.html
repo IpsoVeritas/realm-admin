@@ -125,3 +125,9 @@
   </mat-sidenav-content>
 
 </mat-sidenav-container>
+
+<div *ngIf="isLoadingObserver | async" class="loading-overlay">
+  <div class="loader">
+      <mat-progress-spinner mode="indeterminate" diameter="70" color="accent"></mat-progress-spinner>
+  </div>
+</div>
