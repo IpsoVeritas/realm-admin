@@ -78,7 +78,23 @@
             <mat-icon>trip_origin</mat-icon>
           </ng-template>
           {{controller.name}}
-          <!-- span *ngIf="controller.descriptor?.requireSetup" translate>general.setup_required</span -->
+          <button mat-icon-button color="accent" class="menu-button" [matMenuTriggerFor]="controllerContextualMenu">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #controllerContextualMenu="matMenu" yPosition="below" [overlapTrigger]="false">
+            <button mat-menu-item (click)="editService(controller)">
+              {{'controllers.edit_service' | translate}}
+            </button>
+            <button mat-menu-item (click)="deleteService(controller)">
+              {{'controllers.delete_service' | translate}}
+            </button>
+            <button mat-menu-item (click)="syncService(controller)">
+              {{'controllers.sync_service' | translate}}
+            </button>
+            <button mat-menu-item (click)="binding(controller)">
+              {{'controllers.get_binding_url' | translate}}
+            </button>
+          </mat-menu>
         </a>
         <a mat-list-item (click)="syncControllers()" routerLinkActive="active">
           <mat-icon>sync</mat-icon>{{ 'menu.sync_controllers' | translate }}</a>

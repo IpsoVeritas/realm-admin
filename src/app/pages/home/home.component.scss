@@ -134,6 +134,8 @@
 
   .mat-nav-list {
     .mat-list-item {
+      position: relative;
+
       &.active {
         background-color: mat-color($integrity-grey96);
       }
@@ -166,6 +168,19 @@
 
     .mat-nav-list:first-child {
       font-size: 20px;
+    }
+  }
+}
+
+.menu-button {
+  position: absolute;
+  right: 5px;
+  display: flex;
+  justify-content: center;
+
+  ::ng-deep {
+    .mat-icon {
+      vertical-align: top;
     }
   }
 }

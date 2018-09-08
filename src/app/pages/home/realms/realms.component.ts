@@ -92,7 +92,6 @@ export class RealmsComponent implements OnInit {
   }
 
   login(realm: Realm) {
-    console.log(realm);
     this.router.navigateByUrl(`/${realm.id}`);
   }
 
