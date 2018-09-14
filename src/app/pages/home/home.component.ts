@@ -336,6 +336,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     return snackbarRef;
   }
 
+  onControllerMenuClicked(event) {
+    event.stopPropagation();
+  }
+
   editService(controller: Controller) {
     this.controllersClient.cloneController(controller)
       .then(clone => {

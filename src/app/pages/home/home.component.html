@@ -69,33 +69,36 @@
 
     <integrity-section [title]="'menu.controllers' | translate" enableExpansion="true" expansionId="home.controllers" class="nav-list">
       <mat-nav-list>
-        <a mat-list-item [routerLink]="['controller', controller.id]" routerLinkActive="active" (click)="drawerMode == 'over' ? drawer.close() : false"
-          *ngFor="let controller of controllers">
-          <mat-icon *ngIf="controller.descriptor.icon else no_service_icon">
-            <img src="{{controller.descriptor.icon}}" width="20" height="20">
-          </mat-icon>
-          <ng-template #no_service_icon>
-            <mat-icon>trip_origin</mat-icon>
-          </ng-template>
-          {{controller.name}}
-          <button mat-icon-button color="accent" class="menu-button" [matMenuTriggerFor]="controllerContextualMenu">
-            <mat-icon>more_vert</mat-icon>
-          </button>
-          <mat-menu #controllerContextualMenu="matMenu" yPosition="below" [overlapTrigger]="false">
-            <button mat-menu-item (click)="editService(controller)">
-              {{'controllers.edit_service' | translate}}
+        <div class="controller-wrapper" *ngFor="let controller of controllers">
+          <a mat-list-item [routerLink]="['controller', controller.id]" routerLinkActive="active" (click)="drawerMode == 'over' ? drawer.close() : false">
+            <mat-icon *ngIf="controller.descriptor.icon else no_service_icon">
+              <img src="{{controller.descriptor.icon}}" width="20" height="20">
+            </mat-icon>
+            <ng-template #no_service_icon>
+              <mat-icon>trip_origin</mat-icon>
+            </ng-template>
+            {{controller.name}}
+          </a>
+          <div class="sub-menu-button-wrapper">
+            <button mat-icon-button color="accent" class="menu-button" [matMenuTriggerFor]="controllerContextualMenu" (click)="onControllerMenuClicked($event)">
+              <mat-icon>more_vert</mat-icon>
             </button>
-            <button mat-menu-item (click)="deleteService(controller)">
-              {{'controllers.delete_service' | translate}}
-            </button>
-            <button mat-menu-item (click)="syncService(controller)">
-              {{'controllers.sync_service' | translate}}
-            </button>
-            <button mat-menu-item (click)="binding(controller)">
-              {{'controllers.get_binding_url' | translate}}
-            </button>
-          </mat-menu>
-        </a>
+            <mat-menu #controllerContextualMenu="matMenu" [overlapTrigger]="false">
+              <button mat-menu-item (click)="editService(controller)">
+                {{'controllers.edit_service' | translate}}
+              </button>
+              <button mat-menu-item (click)="deleteService(controller)">
+                {{'controllers.delete_service' | translate}}
+              </button>
+              <button mat-menu-item (click)="syncService(controller)">
+                {{'controllers.sync_service' | translate}}
+              </button>
+              <button mat-menu-item (click)="binding(controller)">
+                {{'controllers.get_binding_url' | translate}}
+              </button>
+            </mat-menu>
+          </div>
+        </div>
         <a mat-list-item (click)="syncControllers()" routerLinkActive="active">
           <mat-icon>sync</mat-icon>{{ 'menu.sync_controllers' | translate }}</a>
         <a mat-list-item (click)="addController()" routerLinkActive="active">

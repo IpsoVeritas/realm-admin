@@ -186,6 +186,16 @@
   }
 }
 
+.controller-wrapper {
+  position: relative;
+
+  .sub-menu-button-wrapper {
+    position: absolute;
+    top: 5px;
+    right: 0;
+  }
+}
+
 @media (max-width: 1420px) {
   .mat-sidenav-container {
     max-width: 1170px;
