@@ -7,6 +7,7 @@ import { RolesClient, InvitesClient } from '../../../shared/api-clients';
 import { Role, Invite } from '../../../shared/models';
 import { promiseSerial } from '../../../shared/utils';
 import * as moment from 'moment';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-invite',
@@ -16,6 +17,7 @@ import * as moment from 'moment';
 export class InviteComponent implements OnInit {
 
   role: Role;
+  roles: Array<Role>;
 
   startDate: moment.Moment;
   startTime: moment.Moment;
@@ -28,6 +30,7 @@ export class InviteComponent implements OnInit {
   recipients: string;
   emails: string[] = [];
   message: string;
+  title: string;
 
   isSending = false;
   cancelSending = false;
@@ -35,14 +38,17 @@ export class InviteComponent implements OnInit {
   failedInvites: Invite[];
   progressValue: number;
   progressBufferValue: number;
+  showRolePicker = false;
 
   constructor(public location: Location,
     private route: ActivatedRoute,
     public session: SessionService,
     private rolesClient: RolesClient,
-    private invitesClient: InvitesClient
+    private invitesClient: InvitesClient,
+    private translate: TranslateService
   ) {
     this.resetForm();
+    this.title = translate.instant('mandates.invite_to_role');
   }
 
   ngOnInit() {
@@ -50,8 +56,17 @@ export class InviteComponent implements OnInit {
   }
 
   selectRole(realmId: string, roleId: string) {
+    if (!roleId) {
+      this.rolesClient
+        .getRoles(realmId ? realmId : this.session.realm)
+        .then(roles => this.roles = roles.filter(role => !role.name.startsWith('services@')))
+        .then(() => this.role = this.roles[0]);
+
+      return;
+    }
     this.rolesClient.getRole(realmId ? realmId : this.session.realm, roleId)
-      .then(role => this.role = role);
+      .then(role => this.role = role)
+      .then(() => this.title = this.translate.instant('invite.title').replace('{{role}}', this.role.description));
   }
 
   computeDates(adjustEnd: boolean = true) {

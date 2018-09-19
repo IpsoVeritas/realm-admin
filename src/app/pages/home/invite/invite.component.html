@@ -2,17 +2,24 @@
   <app-stripe></app-stripe>
   <mat-toolbar-row>
     <mat-icon class="back-icon" (click)="location.back()">arrow_back</mat-icon>
-    <span class="mat-display-1" *ngIf="role">{{ 'invite.title' | translate:{role:role.description} }}</span>
+    <span class="mat-display-1">{{ title }}</span>
   </mat-toolbar-row>
 </mat-toolbar>
-<div class="content mat-elevation-z0" *ngIf="role">
+<div class="content mat-elevation-z0">
 
   <div class="invite-form">
 
     <integrity-section [title]="'invite.settings_section' | translate" enableExpansion="true" expansionId="invite.settings">
 
-      <div class="date-range">
+      <div class="role-section" *ngIf="roles">
+        <mat-form-field>
+            <mat-select [(ngModel)]="role" #matSelect placeholder="{{ 'label.role' | translate}}">
+              <mat-option *ngFor="let selectableRole of roles" [value]="selectableRole">{{ selectableRole.description }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+      </div>
 
+      <div class="date-range">
         <div class="date-picker">
           <mat-form-field>
             <input matInput [(ngModel)]="startDate" name="d1" [owlDateTime]="d1" (dateTimeChange)="computeDates()" placeholder="{{ 'label.start_date' | translate }}">
@@ -93,7 +100,7 @@
 
     <div class="buttons">
       <button mat-button color="accent" (click)="resetForm()" [disabled]="isSending || !isChanged">{{'label.reset' | translate}}</button>
-      <button mat-raised-button color="accent" *ngIf="!isSending" (click)="sendInvites()" [disabled]="isSending || !(emails.length > 0)">{{'label.send' | translate}}</button>
+      <button mat-raised-button color="accent" *ngIf="!isSending" (click)="sendInvites()" [disabled]="isSending || !(emails.length > 0) || role == null">{{'label.send' | translate}}</button>
       <button mat-raised-button color="warn" *ngIf="isSending" (click)="cancelSending = true" [disabled]="cancelSending">{{'label.cancel' | translate}}</button>
     </div>
 

@@ -34,7 +34,8 @@
         "end_date": "Ends",
         "end_time": "at",
         "login": "Login",
-        "copy": "Copy"
+        "copy": "Copy",
+        "role": "Role"
     },
     "login": {
         "title": "Login to {{realm}}",
@@ -84,7 +85,9 @@
         "menu_send_invite": "Send invite",
         "menu_scan_invite": "Scan invite",
         "menu_delete_invite": "Delete invite",
-        "send_summary_no_failures": "Invites sent"
+        "send_summary_no_failures": "Invites sent",
+        "invite_dashboard_title": "Invite people to interact with your services",
+        "invite_dashboard_description": "Define roles, manage access and invite people to your services. Build your own community!"
     },
     "menu": {
         "settings": "Settings",
@@ -92,7 +95,7 @@
         "logout": "Log out",
         "dashboard": "Your dashboard",
         "realms": "Manage realms",
-        "roles": "Manage groups",
+        "roles": "Manage roles",
         "controllers": "Manage services",
         "create_role": "New group",
         "add_service": "Add service",
