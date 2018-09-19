@@ -9,7 +9,7 @@
 
   <div class="invite-form">
 
-    <integrity-section [title]="'invite.settings_section' | translate">
+    <integrity-section [title]="'invite.settings_section' | translate" enableExpansion="true" expansionId="invite.settings">
 
       <div class="date-range">
 
@@ -47,7 +47,7 @@
 
     <mat-divider></mat-divider>
 
-    <integrity-section [title]="'invite.recipient_section' | translate">
+    <integrity-section [title]="'invite.recipient_section' | translate" enableExpansion="true" expansionId="invite.recipients">
 
       <mat-form-field class="full-width">
         <textarea matInput matTextareaAutosize matAutosizeMinRows="1" matAutosizeMaxRows="6" integrityDragAndDrop class="dropzone"
@@ -93,7 +93,7 @@
 
     <div class="buttons">
       <button mat-button color="accent" (click)="resetForm()" [disabled]="isSending || !isChanged">{{'label.reset' | translate}}</button>
-      <button mat-raised-button color="accent" *ngIf="!isSending" (click)="sendInvites()" [disabled]="isSending || !(message && emails.length > 0)">{{'label.send' | translate}}</button>
+      <button mat-raised-button color="accent" *ngIf="!isSending" (click)="sendInvites()" [disabled]="isSending || !(emails.length > 0)">{{'label.send' | translate}}</button>
       <button mat-raised-button color="warn" *ngIf="isSending" (click)="cancelSending = true" [disabled]="cancelSending">{{'label.cancel' | translate}}</button>
     </div>
 
