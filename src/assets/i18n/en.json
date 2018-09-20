@@ -35,7 +35,8 @@
         "end_time": "at",
         "login": "Login",
         "copy": "Copy",
-        "role": "Role"
+        "role": "Role",
+        "service_place_name": "Service place name"
     },
     "login": {
         "title": "Login to {{realm}}",
@@ -110,9 +111,9 @@
     },
     "settings": {
         "guest_role": "Guest group",
-        "guest_role_placeholder": "Select guest group for realm",
+        "guest_role_placeholder": "Default invite role",
         "no_guest_role": "No group",
-        "guest_role_instructions": "This is the group a user is assigned when automatically joining your realm.",
+        "guest_role_instructions": "This is the role a user is assigned when automatically joining your realm.",
         "description_instructions": "This is what your users see when they connect. It can be the name of your organisation, or the name of your service.",
         "image_instructions": "Select images to personalise your realm. They will be visible to your users. Please select a dark image for your banner, as your realm name will appear in white. You can directly drag an image from your desktop."
     },
