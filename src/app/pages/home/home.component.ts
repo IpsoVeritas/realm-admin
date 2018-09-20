@@ -223,7 +223,6 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       message: this.translate.instant('mandates.enter_role_name'),
       ok: this.translate.instant('label.create'),
       okColor: 'accent',
-      okIcon: 'add',
       cancel: this.translate.instant('label.cancel'),
       cancelColor: 'accent'
     }).then(name => {

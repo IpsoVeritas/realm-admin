@@ -45,7 +45,6 @@ export class RealmsComponent implements OnInit {
     this.dialogs.openSimpleInput({
       message: this.translate.instant('realms.realm_name'),
       ok: this.translate.instant('label.create'),
-      okIcon: 'add',
       okColor: 'accent',
       cancel: this.translate.instant('label.cancel'),
       cancelColor: 'accent'
