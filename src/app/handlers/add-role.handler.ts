@@ -21,7 +21,7 @@ export class AddRoleHandler implements DocumentHandler {
       return Promise.reject('No realm in context');
     }
 
-    this.dialogs.openSimpleInput({ message: 'Role name' })
+    this.dialogs.openSimpleInput({ message: 'Role name' }, { width: 450 })
       .then(name => {
         if (name) {
           const role = new Role();
