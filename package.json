@@ -30,7 +30,7 @@
     "@angular/router": "^5.2.0",
     "@angular/service-worker": "^5.2.4",
     "@brickchain/integrity-angular": "^0.4.9",
-    "@brickchain/integrity-theme": "^0.2.0",
+    "@brickchain/integrity-theme": "^0.2.1",
     "@brickchain/integrity-webview-client": "^0.3.4",
     "@ngx-translate/core": "^9.1.1",
     "@ngx-translate/http-loader": "^2.0.1",
