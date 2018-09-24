@@ -74,9 +74,16 @@
           </ng-template>
 
           <ng-template #mandateButtons>
-            <button mat-icon-button class="revoke-button" color="accent" (click)="revokeMandate(item)" *ngIf="item.status == 'Active'">
-              <mat-icon>block</mat-icon>
-            </button>
+            <div class="sub-menu-button-wrapper" *ngIf="item.status == 'Active'">
+              <button mat-icon-button color="accent" class="menu-button" [matMenuTriggerFor]="mandateContextualMenu">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #mandateContextualMenu="matMenu" [overlapTrigger]="false">
+                <button mat-menu-item (click)="revokeMandate(item)">
+                  {{ 'label.revoke_mandate_action' | translate }}
+                </button>
+              </mat-menu>
+            </div>
           </ng-template>
 
         </mat-cell>

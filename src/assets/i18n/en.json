@@ -34,7 +34,10 @@
         "end_date": "Ends",
         "end_time": "at",
         "login": "Login",
-        "copy": "Copy"
+        "copy": "Copy",
+        "role": "Role",
+        "service_place_name": "Service place name",
+        "revoke_mandate_action": "Revoke mandate"
     },
     "login": {
         "title": "Login to {{realm}}",
@@ -84,7 +87,9 @@
         "menu_send_invite": "Send invite",
         "menu_scan_invite": "Scan invite",
         "menu_delete_invite": "Delete invite",
-        "send_summary_no_failures": "Invites sent"
+        "send_summary_no_failures": "Invites sent",
+        "invite_dashboard_title": "Invite people to interact with your services",
+        "invite_dashboard_description": "Define roles, manage access and invite people to your services. Build your own community!"
     },
     "menu": {
         "settings": "Settings",
@@ -92,9 +97,9 @@
         "logout": "Log out",
         "dashboard": "Your dashboard",
         "realms": "Manage realms",
-        "roles": "Manage groups",
+        "roles": "Manage roles",
         "controllers": "Manage services",
-        "create_role": "New group",
+        "create_role": "New role",
         "add_service": "Add service",
         "sync_controllers": "Sync services"
     },
@@ -106,10 +111,10 @@
         "menu_login": "Login"
     },
     "settings": {
-        "guest_role": "Guest group",
-        "guest_role_placeholder": "Select guest group for realm",
-        "no_guest_role": "No group",
-        "guest_role_instructions": "This is the group a user is assigned when automatically joining your realm.",
+        "guest_role": "Guest role",
+        "guest_role_placeholder": "Default invite role",
+        "no_guest_role": "No role",
+        "guest_role_instructions": "This is the role a user is assigned when automatically joining your realm.",
         "description_instructions": "This is what your users see when they connect. It can be the name of your organisation, or the name of your service.",
         "image_instructions": "Select images to personalise your realm. They will be visible to your users. Please select a dark image for your banner, as your realm name will appear in white. You can directly drag an image from your desktop."
     },
@@ -129,13 +134,13 @@
         "confirm": "Logout from {{realm}}?"
     },
     "mandates": {
-        "edit_role": "Edit group",
-        "delete_role": "Delete group",
+        "edit_role": "Edit role",
+        "delete_role": "Delete role",
         "invite_to_role": "Invite people",
-        "mandates_tab": "Group members",
+        "mandates_tab": "Role members",
         "authorizations_tab": "Authorizations",
-        "enter_role_name": "Group name",
-        "delete_role_confirmation": "Delete group {{role}} with {{count}} members",
+        "enter_role_name": "Role name",
+        "delete_role_confirmation": "Delete role {{role}} with {{count}} members",
         "revoke_mandate": "Revoke {{role}} membership for {{recipient}}",
         "error_revoking": "Unable to revoke {{role}} membership"
     },
@@ -160,7 +165,7 @@
         "binding_success": "Service {{controller}} has been added",
         "error_binding_failed": "Error while binding service",
         "bind_controller": "Bind service",
-        "mandate_role_placeholder": "Group membership"
+        "mandate_role_placeholder": "Role membership"
     },
     "session-resume": {
         "dialog_title_desktop": "Session expired, scan to resume",
