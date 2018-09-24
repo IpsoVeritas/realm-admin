@@ -28,6 +28,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   hrs: number;
   min: number;
   sec: number;
+  countdown: number;
 
   navigationSubscription;
 
@@ -106,6 +107,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.hrs = Math.floor(this.seconds / 60 * 60);
     this.min = Math.floor(this.seconds / 60);
     this.sec = Math.floor(this.seconds % 60);
+    const sessionLength = 60 * 60;
+    this.countdown = (this.seconds * 100) / sessionLength;
     setTimeout(() => this.updateClock(), 500);
   }
 

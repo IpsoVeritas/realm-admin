@@ -48,3 +48,40 @@
     display: flex;
   }
 }
+
+.dashboard-wrapper {
+  height: calc(100% - 50px);
+}
+
+.bottom-section {
+  display: flex;
+  border-top: 1px solid #e5e5e5;
+  align-items: center;
+  height: 50px;
+
+  p {
+    padding: 0 30px;
+    width: 280px;
+    margin: 0;
+  }
+
+  button {
+    padding: 0 30px;
+    height: 40px;
+    margin: 0 15px;
+  }
+
+  ::ng-deep {
+    .mat-progress-bar-fill::after {
+      background-color: #20afe2;
+    }
+
+    .mat-progress-bar-buffer {
+      background: #f6f6f6;
+    }
+
+    .mat-progress-bar {
+      border-radius: 2px;
+    }
+  }
+}
