@@ -36,7 +36,12 @@
         "login": "Login",
         "copy": "Copy",
         "role": "Role",
-        "service_place_name": "Service place name"
+        "service_place_name": "Service place name",
+        "revoke_mandate_action": "Revoke mandate",
+        "bind_controller_service_setup_hint": "Advanced setup enables you to give extra permissions to your service. By default, we recommend to use the Standard setup unless stated in the service documentation.",
+        "bind_controller_service_setup": "Service setup",
+        "bind_controller_service_name": "Enter a name for your service",
+        "bind_controller_service_name_hint": "You can change this later in your service settings."
     },
     "login": {
         "title": "Login to {{realm}}",
