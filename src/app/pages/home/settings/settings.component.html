@@ -49,11 +49,9 @@
       </div>
     </integrity-section>
 
-    <mat-divider></mat-divider>
-
     <div class="buttons">
-      <button mat-button color="accent" (click)="loadRealm()" [disabled]="!isChanged">{{'label.reset' | translate}}</button>
-      <button mat-raised-button color="accent" (click)="updateRealm()">{{'label.save' | translate}}</button>
+      <button mat-button color="accent" (click)="cancel()">{{'label.cancel' | translate}}</button>
+      <button mat-raised-button color="accent" (click)="updateRealm()">{{'label.done' | translate}}</button>
     </div>
 
   </div>
