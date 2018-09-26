@@ -35,10 +35,25 @@ export class ControllersClient extends BaseClient {
       .then(() => controller);
   }
 
-  public deleteController(controller: Controller): Promise<any> {
-    return this.session.getBackendURL(`/realms/${controller.realm}/controllers/id/${controller.id}`)
-      .then(url => this.http.delete(url).toPromise())
-      .then(() => this.cache.invalidate(`controllers:${controller.realm}`, `controller:${controller.realm}/${controller.id}`));
+  public async deleteController(controller: Controller): Promise<any> {
+
+    try {
+      let bindURI = controller.descriptor.bindURI
+      console.log("delete: " + bindURI)
+      let r1 = await this.http.delete(bindURI).toPromise()
+    } catch (err) {
+      console.error("failed to unbind controller at "+controller.uri+" directly error: ", err)
+    }
+
+    try {
+      let url = await this.session.getBackendURL(`/realms/${controller.realm}/controllers/id/${controller.id}`)
+      let r2 = await this.http.delete(url).toPromise()
+      await this.cache.invalidate(`controllers:${controller.realm}`, `controller:${controller.realm}/${controller.id}`)
+      return true
+    } catch (err) {
+      console.error("failed to remove controller from realm: ", err)
+      throw err
+    }
   }
 
   public updateActions(controller: Controller, actions: string): Promise<any> {
