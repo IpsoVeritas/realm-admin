@@ -104,10 +104,10 @@ export class MandatesComponent implements OnInit {
       message: this.translate.instant('mandates.enter_role_name'),
       ok: this.translate.instant('label.save'),
       okColor: 'accent',
-      okIcon: 'mode_edit',
       cancel: this.translate.instant('label.cancel'),
       cancelColor: 'accent',
-    }).then(name => {
+    },
+    { width: 450 }).then(name => {
       if (name) {
         this.rolesClient.cloneRole(role)
           .then(updated => {
@@ -131,7 +131,8 @@ export class MandatesComponent implements OnInit {
       okColor: 'warn',
       okIcon: 'delete',
       cancel: this.translate.instant('label.cancel')
-    }).then(confirmed => {
+    },
+    { width: 450 }).then(confirmed => {
       if (confirmed) {
         this.rolesClient.deleteRole(role)
           .then(() => this.events.publish('roles_updated'))
@@ -152,7 +153,8 @@ export class MandatesComponent implements OnInit {
       okColor: 'warn',
       okIcon: 'block',
       cancel: this.translate.instant('label.cancel')
-    }).then(confirmed => {
+    },
+    { width: 450 }).then(confirmed => {
       if (confirmed) {
         this.mandatesClient.revokeMandate(mandate)
           .then(() => {
@@ -176,7 +178,8 @@ export class MandatesComponent implements OnInit {
       okIcon: 'send',
       cancel: this.translate.instant('label.cancel'),
       cancelColor: 'accent'
-    }).then(confirmed => {
+    },
+    { width: 450 }).then(confirmed => {
       if (confirmed) {
         this.invitesClient.sendInvite(invite)
           .catch(error => this.snackBarOpen(
@@ -195,7 +198,8 @@ export class MandatesComponent implements OnInit {
       okColor: 'warn',
       okIcon: 'delete',
       cancel: this.translate.instant('label.cancel')
-    }).then(confirmed => {
+    },
+    { width: 450 }).then(confirmed => {
       if (confirmed) {
         this.invitesClient.deleteInvite(invite)
           .then(() => this.items = this.items.filter(i => i !== item))

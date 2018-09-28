@@ -12,12 +12,22 @@ import { RolesClient } from '../../../shared/api-clients';
     <mat-dialog-content>
 
       <mat-form-field floatLabel="always">
-        <mat-label>Enter a name for your service</mat-label>
+        <mat-label>{{ 'label.bind_controller_service_name' | translate }}</mat-label>
         <input matInput [(ngModel)]="controller.name">
-        <mat-hint>You can change this later in your service settings.</mat-hint>
+        <mat-hint>{{ 'label.bind_controller_service_name_hint' | translate }}</mat-hint>
       </mat-form-field>
 
-      <mat-form-field>
+      <mat-form-field class="setup-type">
+        <mat-label>{{ 'label.bind_controller_service_setup' | translate }}</mat-label>
+        <mat-select [(ngModel)]="setupType">
+          <mat-option *ngFor="let option of setupOptions" [value]="option.value">
+            {{ option.text }}
+          </mat-option>
+        </mat-select>
+        <mat-hint>{{ 'label.bind_controller_service_setup_hint' | translate }}</mat-hint>
+      </mat-form-field>
+
+      <mat-form-field *ngIf="setupType === 'advanced'" class="sub-level-field">
         <mat-select [(ngModel)]="controller.mandateRole" placeholder="Roles">
           <mat-option *ngFor="let role of roles" [value]="role.name">
             {{ role.description }}
@@ -36,11 +46,17 @@ import { RolesClient } from '../../../shared/api-clients';
 export class ControllerBindDialogComponent implements OnInit {
 
   roles: Role[];
+  setupOptions: any = [
+    { value: 'standard', text: 'Standard'  },
+    { value: 'advanced', text: 'Advanced'  },
+  ];
+  setupType: any;
 
   constructor(public dialogRef: MatDialogRef<ControllerBindDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public controller: Controller,
     private session: SessionService,
     private rolesClient: RolesClient) {
+      this.setupType = this.setupOptions[0].value;
       console.log(controller);
   }
 

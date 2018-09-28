@@ -139,7 +139,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         controller.uri = uri;
         controller.realm = this.session.realm;
         controller.mandateRole = `services@${this.session.realm}`;
-        const dialogRef = this.dialog.open(ControllerBindDialogComponent, { data: controller });
+        const dialogRef = this.dialog.open(ControllerBindDialogComponent, { data: controller, minWidth: '450px' });
         return dialogRef.afterClosed().toPromise();
       })
       .then(controller => {

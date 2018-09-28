@@ -37,7 +37,6 @@
       </button>
     </mat-card-actions>
   </mat-card>
-
 </integrity-section>
 
 <integrity-section [title]="'dashboard.services_section' | translate" enableExpansion="true" expansionId="dashboard.services" *ngIf="services && services.length > 0">
@@ -57,7 +56,22 @@
       </button>
     </mat-card-actions>
   </mat-card>
+</integrity-section>
 
+<integrity-section [title]="'mandates.invite_to_role' | translate" enableExpansion="true" expansionId="dashboard.invite">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title><p class="mat-body-2">{{ 'invite.invite_dashboard_title' | translate }}</p></mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <p>{{ 'invite.invite_dashboard_description' | translate }}</p>
+    </mat-card-content>
+    <mat-card-actions>
+    <button mat-button color="accent" routerLink="/{{session.realm}}/home/invite">
+      <mat-icon>person_add</mat-icon> {{'mandates.invite_to_role' | translate}}
+    </button>
+    </mat-card-actions>
+  </mat-card>
 </integrity-section>
 
 <integrity-section [title]="'dashboard.session_section' | translate">

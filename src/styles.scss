@@ -34,6 +34,10 @@ body {
   justify-content: space-between;
 }
 
+.mat-header-row {
+  box-shadow: none !important;
+}
+
 .mat-row:last-of-type {
   border: none;
 }

@@ -137,7 +137,7 @@ export class ControllerComponent implements OnInit, OnDestroy {
   edit() {
     this.controllersClient.cloneController(this.controller)
       .then(clone => {
-        const dialogRef = this.dialog.open(ControllerSettingsDialogComponent, { data: clone });
+        const dialogRef = this.dialog.open(ControllerSettingsDialogComponent, { data: clone, minWidth: '450px' });
         return dialogRef.afterClosed().toPromise();
       })
       .then(updated => {
