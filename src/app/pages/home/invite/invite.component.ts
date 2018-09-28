@@ -104,6 +104,10 @@ export class InviteComponent implements OnInit {
     this.emails = list.filter((value, index, self) => index === self.indexOf(value) && re.test(value));
   }
 
+  goBack() {
+    this.location.back();
+  }
+
   resetForm() {
     this.startDate = moment(Math.floor(Date.now() / 300000) * 300000); // Round to nearest 5 minutes
     this.startTime = moment(this.startDate);
