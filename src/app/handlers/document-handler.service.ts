@@ -8,6 +8,7 @@ import { ListRolesHandler } from './list-roles.handler';
 import { UpdateActionsHandler } from './update-actions.handler';
 import { UpdateControllerHandler } from './update-controller.handler';
 import { ToggleDrawerHandler } from './toggle-drawer.handler';
+import { MandateHandler } from './mandate.handler';
 
 @Injectable()
 export class DocumentHandlerService {
@@ -23,6 +24,7 @@ export class DocumentHandlerService {
     this.handlers['update-actions'] = new UpdateActionsHandler(this, this.injector);
     this.handlers['update-controller'] = new UpdateControllerHandler(this, this.injector);
     this.handlers['toggle-drawer'] = new ToggleDrawerHandler(this, this.injector);
+    this.handlers['show-mandate'] = new MandateHandler(this, this.injector);
   }
 
   public handleData(context: any, data: any): Promise<any> {
