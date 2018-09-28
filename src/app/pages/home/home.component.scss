@@ -1,4 +1,4 @@
-@import "~@brickchain/integrity-theme/material-theme"; 
+@import "~@brickchain/integrity-theme/material-theme";
 
 .mat-sidenav-container {
   max-width: 1420px;
@@ -134,6 +134,8 @@
 
   .mat-nav-list {
     .mat-list-item {
+      position: relative;
+
       &.active {
         background-color: mat-color($integrity-grey96);
       }
@@ -168,7 +170,31 @@
       font-size: 20px;
     }
   }
-} 
+}
+
+.menu-button {
+  position: absolute;
+  right: 5px;
+  display: flex;
+  justify-content: center;
+  color: #7f7f7f !important;
+
+  ::ng-deep {
+    .mat-icon {
+      vertical-align: top;
+    }
+  }
+}
+
+.controller-wrapper {
+  position: relative;
+
+  .sub-menu-button-wrapper {
+    position: absolute;
+    top: 5px;
+    right: 0;
+  }
+}
 
 @media (max-width: 1420px) {
   .mat-sidenav-container {
@@ -227,5 +253,21 @@
         width: auto;
       }
     }
+  }
+}
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  height: 100vw;
+  width: 100vw;
+  background-color:rgba(0, 0, 0, 0.15);
+
+  .loader {
+    position: fixed;
+    top: 50%;
+    left: 50%;
   }
 }
