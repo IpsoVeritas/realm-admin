@@ -1,35 +1,6 @@
 <div class="iframe-container">
   <mat-toolbar class="content-header">
     <app-stripe></app-stripe>
-    <mat-toolbar-row>
-      <mat-icon class="menu-icon" (click)="events.publish('toggle_drawer')">menu</mat-icon>
-      <span *ngIf="controller" class="mat-display-1" style="margin-bottom: 0">{{controller?.name}}</span>
-      <span class="mat-spacer"></span>
-      <button mat-button color="accent" (click)="edit()">
-        <mat-icon>mode_edit</mat-icon> {{'controllers.edit_service' | translate}}
-      </button>
-      <button mat-icon-button color="accent" (click)="edit()">
-        <mat-icon>mode_edit</mat-icon>
-      </button>
-      <button mat-button color="accent" (click)="delete()">
-        <mat-icon>delete</mat-icon> {{'controllers.delete_service' | translate}}
-      </button>
-      <button mat-icon-button color="accent" (click)="delete()">
-        <mat-icon>delete</mat-icon>
-      </button>
-      <button mat-button color="accent" (click)="sync()">
-        <mat-icon>sync</mat-icon> {{'controllers.sync_service' | translate}}
-      </button>
-      <button mat-icon-button color="accent" (click)="sync()">
-        <mat-icon>sync</mat-icon>
-      </button>
-      <button *ngIf="addBindingAction" mat-button color="accent" (click)="binding()">
-        <mat-icon>link</mat-icon> {{'controllers.get_binding_url' | translate}}
-      </button>
-      <button *ngIf="addBindingAction" mat-icon-button color="accent" (click)="binding()">
-        <mat-icon>link</mat-icon>
-      </button>
-    </mat-toolbar-row>
   </mat-toolbar>
 
   <div class="iframe">

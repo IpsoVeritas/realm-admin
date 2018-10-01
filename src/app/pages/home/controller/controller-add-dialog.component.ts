@@ -7,6 +7,7 @@ import { ServicesClient } from '../../../shared/api-clients';
 @Component({
   selector: 'app-controller-service-dialog',
   template: `
+  <div class="app-controller-service-dialog">
     <h2 mat-dialog-title translate>controllers.add_service</h2>
     <mat-dialog-content>
       <mat-form-field>
@@ -30,8 +31,13 @@ import { ServicesClient } from '../../../shared/api-clients';
         [disabled]="service === customService && !customService.url">
         {{'label.ok' | translate}}
       </button>
-    </mat-dialog-actions>`,
+    </mat-dialog-actions>
+  </div>`,
   styles: [`
+  .app-controller-service-dialog {
+    padding: 10px;
+  }
+  `, `
     mat-dialog-content {
       display: flex;
       flex-direction: column;
@@ -39,7 +45,11 @@ import { ServicesClient } from '../../../shared/api-clients';
     .hidden {
       display: none !important;
     }
-  `]
+  `, `
+  .mat-dialog-actions {
+    padding: 20px 0;
+  }
+`]
 })
 export class ControllerAddDialogComponent implements OnInit {
 

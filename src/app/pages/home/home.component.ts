@@ -2,19 +2,23 @@ import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild } from '@angular
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { BreakpointObserver } from '@angular/cdk/layout';
+import { HttpClient } from '@angular/common/http';
 import { MatDrawer } from '@angular/material/sidenav';
-import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarConfig, MatSnackBarRef, SimpleSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
-import { EventsService, DialogsService } from '@brickchain/integrity-angular';
+import { EventsService, DialogsService, ClipboardService } from '@brickchain/integrity-angular';
 import { PlatformService, SessionService, CacheService, CryptoService } from '../../shared/services';
 import { AccessClient, RealmsClient, RolesClient, ControllersClient, ServicesClient } from '../../shared/api-clients';
-import { Realm, RealmDescriptor, Role, Controller, Service, ControllerBinding } from '../../shared/models';
+import { Realm, RealmDescriptor, Role, Controller, Service, ControllerBinding, Action, ActionDescriptor } from '../../shared/models';
 import { ControllerAddDialogComponent } from './controller/controller-add-dialog.component';
 import { ControllerBindDialogComponent } from './controller/controller-bind-dialog.component';
 import { SessionTimeoutDialogComponent } from './session-timeout-dialog.component';
-
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
+import { ControllerSettingsDialogComponent } from '../home/controller/controller-settings-dialog.component';
 import * as uuid from 'uuid/v1';
+import { v4 } from 'uuid/v4';
 
 @Component({
   selector: 'app-home',
@@ -38,6 +42,9 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   navigationSubscription;
 
+  private _isLoadingSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  public isLoadingObserver: Observable<boolean> = this._isLoadingSubject.asObservable();
+
   public drawerMode: string;
   public profileMode: string;
   public showProfile = false;
@@ -45,6 +52,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('drawer') drawer: MatDrawer;
 
   isSnackBarOpen = false;
+  isLoading = false;
 
   snackBarErrorConfig: MatSnackBarConfig = {
     duration: 5000,
@@ -68,7 +76,9 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     private controllersClient: ControllersClient,
     private servicesClient: ServicesClient,
     private breakpointObserver: BreakpointObserver,
-    private accessClient: AccessClient) {
+    private accessClient: AccessClient,
+    private http: HttpClient,
+    private clipboard: ClipboardService) {
     this.drawerMode = 'side';
     this.breakpointObserver.observe(['(max-width: 1170px)']).subscribe(result => {
       this.drawerMode = result.matches ? 'over' : 'side';
@@ -81,6 +91,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         this.load();
       }
     });
+    this.isLoadingObserver.subscribe(isLoading => this.isLoading = isLoading);
+    this.executeBindingAction = this.executeBindingAction.bind(this);
   }
 
   ngOnInit() {
@@ -242,6 +254,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     dialogRef.afterClosed().toPromise()
       .then((service: Service) => {
         if (service) {
+          this._isLoadingSubject.next(true);
           this.servicesClient.addService(service)
             .then(data => {
               if (data) {
@@ -251,7 +264,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
             .catch(error => this.snackBarOpen(
               this.translate.instant('binding.error_add_failed'),
               this.translate.instant('label.close'),
-              this.snackBarErrorConfig));
+              this.snackBarErrorConfig))
+            .finally(() => {
+              this._isLoadingSubject.next(false);
+            });
         }
       });
   }
@@ -313,10 +329,104 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         this.snackBarErrorConfig));
   }
 
-  snackBarOpen(message: string, action?: string, config?: MatSnackBarConfig) {
+  snackBarOpen(message: string, action?: string, config?: MatSnackBarConfig): MatSnackBarRef<SimpleSnackBar> {
     this.isSnackBarOpen = true;
     const snackbarRef = this.snackBar.open(message, action, config);
     snackbarRef.afterDismissed().toPromise().then(() => this.isSnackBarOpen = false);
+    return snackbarRef;
   }
 
+  onControllerMenuClicked(event) {
+    event.stopPropagation();
+  }
+
+  editService(controller: Controller) {
+    this.controllersClient.cloneController(controller)
+      .then(clone => {
+        const dialogRef = this.dialog.open(ControllerSettingsDialogComponent, { data: clone });
+        return dialogRef.afterClosed().toPromise();
+      })
+      .then(updated => {
+        if (updated) {
+          this.controllersClient.updateController(updated)
+            .then(() => controller = updated)
+            .catch(error => this.snackBarOpen(
+              this.translate.instant('error.updating', { value: controller.name }),
+              this.translate.instant('label.close'),
+              this.snackBarErrorConfig));
+        }
+      });
+  }
+
+  deleteService(controller: Controller) {
+    this.dialogs.openConfirm({
+      message: this.translate.instant('controllers.delete_controller', { controller: controller.name }),
+      ok: this.translate.instant('label.delete'),
+      okColor: 'warn',
+      okIcon: 'delete',
+      cancel: this.translate.instant('label.cancel')
+    }).then(confirmed => {
+      if (confirmed) {
+        this.controllersClient.deleteController(controller)
+          .then(() => this.events.publish('controllers_updated'))
+          .then(() => this.router.navigateByUrl(`/${this.session.realm}/home`))
+          .catch(error => this.snackBarOpen(
+            this.translate.instant('error.deleting', { value: controller }),
+            this.translate.instant('label.close'),
+            this.snackBarErrorConfig));
+      }
+    });
+  }
+
+  syncService(controller: Controller) {
+    this.controllersClient.syncController(controller)
+      .catch(error => this.snackBarOpen(
+        this.translate.instant('controllers.error_syncing_controller', { controller: controller }),
+        this.translate.instant('label.close'),
+        this.snackBarErrorConfig));
+  }
+
+  private getAddBindingAction(controller: Controller): Promise<ActionDescriptor> {
+    return this.controllersClient
+                .getParsedControllerActions(controller, ['https://interfaces.brickchain.com/v1/add-binding.json'])
+                .then(a => a.length > 0 ? a[0] : undefined);
+  }
+
+  private executeBindingAction(addBindingAction: ActionDescriptor) {
+    const action = new Action();
+    action.certificate = this.session.chain;
+    action.mandates = this.session.mandates;
+    action.nonce = v4();
+    action.params = addBindingAction.params;
+    return this.crypto.signCompact(action)
+      .then(jws => this.http.post(addBindingAction.actionURI, jws).toPromise())
+      .then((response: any) => {
+        if ((<any>navigator).clipboard) {
+          (<any>navigator).clipboard.writeText(response.url)
+            .then(() => this.snackBarOpen(
+              this.translate.instant('message.copied_to_clipboard', { value: response.url }),
+              this.translate.instant('label.close'),
+              { duration: 2000 }))
+            .catch(() => this.snackBarOpen(
+              this.translate.instant('message.copy_to_clipboard_failed', { value: response.url }),
+              this.translate.instant('label.close'),
+              this.snackBarErrorConfig));
+        } else {
+          const snackbarRef = this.snackBarOpen(
+            response.url,
+            this.translate.instant('label.copy'),
+            { duration: 5000 });
+          snackbarRef.onAction().toPromise()
+            .then(() => this.clipboard.copy(response.url));
+        }
+      })
+      .catch(() => this.snackBarOpen(
+        this.translate.instant('error.calling', { value: addBindingAction.actionURI }),
+        this.translate.instant('label.close'),
+        this.snackBarErrorConfig));
+  }
+
+  binding(controller: Controller) {
+    this.getAddBindingAction(controller).then(this.executeBindingAction);
+  }
 }

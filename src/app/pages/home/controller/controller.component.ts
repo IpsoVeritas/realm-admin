@@ -226,6 +226,15 @@ export class ControllerComponent implements OnInit, OnDestroy {
         };
         contentWindow.postMessage(message, this.controller.descriptor.adminUI);
       });
+
+      const largeLayoutChanges = this.breakpointObserver.observe('(max-width: 1170px)');
+      largeLayoutChanges.subscribe(result => {
+        const message = {
+          '@type': 'layout-change',
+          'isDesktop': result.matches ? false : true
+        };
+        contentWindow.postMessage(message, this.controller.descriptor.adminUI);
+      });
     }
   }
 
