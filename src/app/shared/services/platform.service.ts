@@ -18,8 +18,8 @@ export class PlatformService {
     private events: EventsService,
     private dialogs: DialogsService) {
     this.inApp = /Integrity\//i.test(navigator.userAgent) ||
-      window.location.search.indexOf("integrity-iframe-browser=true") != -1 ||
-      window.location.hash.indexOf("integrity-iframe-browser=true") != -1;
+      window.location.search.indexOf("inapp=true") != -1 ||
+      window.location.hash.indexOf("inapp=true") != -1;
 
     this.isMobile = /Android|iPhone/i.test(navigator.userAgent);
 
