@@ -17,8 +17,12 @@ export class PlatformService {
     private session: SessionService,
     private events: EventsService,
     private dialogs: DialogsService) {
-    this.inApp = /Integrity\//i.test(navigator.userAgent);
+    this.inApp = /Integrity\//i.test(navigator.userAgent) ||
+      window.location.search.indexOf("integrity-iframe-browser=true") != -1 ||
+      window.location.hash.indexOf("integrity-iframe-browser=true") != -1;
+
     this.isMobile = /Android|iPhone/i.test(navigator.userAgent);
+
     if (this.inApp) {
       this.webviewClient.init().then(data => {
         if (data.lang) {
