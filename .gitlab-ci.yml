@@ -31,6 +31,9 @@ deploy to branch:
   variables:
     SRVFEED: "https://firebasestorage.googleapis.com/v0/b/integrity-autobinder-staging.appspot.com/o/services.json?alt=media"
     PROXY: "https://proxy.svc-staging.plusintegrity.com"
+  environment:
+    name: branch/$CI_COMMIT_REF_NAME
+    url: https://actions.brickchain.com/realm-admin-ng/$CI_COMMIT_REF_NAME/
 
 deploy to staging:
   image: gcr.io/brickchain-docker/gitlab-builder-deploy
@@ -49,7 +52,7 @@ deploy to staging:
     PROXY: "https://proxy.svc-staging.plusintegrity.com"
   environment:
     name: staging
-    url: "https://actions.brickchain.com/realm-admin-ng/master/"
+    url: https://actions.brickchain.com/realm-admin-ng/master/
 
 deploy to production:
   image: gcr.io/brickchain-docker/gitlab-builder-deploy
@@ -69,4 +72,4 @@ deploy to production:
     PROXY: "https://proxy.svc.integrity.app"
   environment:
     name: production
-    url: "https://admin.integrity.app/"
+    url: https://admin.integrity.app/
