@@ -27,6 +27,27 @@
     width: 100%;
   }
 
+  ::ng-deep {
+    mat-form-field {
+      padding-bottom: 30px;
+
+      input.mat-input-element,
+      mat-select {
+        margin-top: 8px;
+      }
+
+      mat-label {
+        font-size: 19px;
+        color: #333;
+        font-weight: 600;
+      }
+
+      .mat-select-arrow {
+        color: #20afe2;
+      }
+    }
+  }
+
   .dropzone {
     margin: 15px auto;
     display: flex;
@@ -72,5 +93,21 @@
     input[type=file] {
       display: none;
     }
+  }
+}
+
+::ng-deep {
+  .integrity-section:last-child {
+    padding-top: 30px;
+  }
+}
+
+.buttons {
+  padding: 10px;
+
+  button {
+    width: 120px;
+    height: 50px;
+    border-radius: 50px !important;
   }
 }

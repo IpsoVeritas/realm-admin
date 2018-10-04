@@ -199,7 +199,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         okColor: 'accent',
         cancel: this.translate.instant('label.cancel'),
         cancelColor: 'accent'
-      }).then(confirmed => confirmed ? this.events.publish('logout') : false);
+      },
+      { width: 450}).then(confirmed => confirmed ? this.events.publish('logout') : false);
     }
   }
 
@@ -223,10 +224,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       message: this.translate.instant('mandates.enter_role_name'),
       ok: this.translate.instant('label.create'),
       okColor: 'accent',
-      okIcon: 'add',
       cancel: this.translate.instant('label.cancel'),
       cancelColor: 'accent'
-    }).then(name => {
+    },
+    { width: 450 }).then(name => {
       if (name) {
         const role = new Role();
         role.name = `${uuid()}@${this.session.realm}`;
@@ -250,7 +251,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   addController() {
-    const dialogRef = this.dialog.open(ControllerAddDialogComponent);
+    const dialogRef = this.dialog.open(ControllerAddDialogComponent, { minWidth: '450px' });
     dialogRef.afterClosed().toPromise()
       .then((service: Service) => {
         if (service) {

@@ -28,6 +28,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   hrs: number;
   min: number;
   sec: number;
+  countdown: number;
 
   navigationSubscription;
 
@@ -74,7 +75,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   load(): Promise<any> {
-    return Promise.all([this.loadRealm(), this.loadControllers().then(() => this.loadServices())]);
+    return Promise.all([this.loadRealm(), this.loadControllers(), this.loadServices()]);
   }
 
   loadRealm(): Promise<Realm> {
@@ -97,9 +98,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   loadServices(): Promise<Service[]> {
     return this.servicesClient.getServices()
-      .then(services => this.controllersClient.getControllers(this.session.realm)
-          .then(controllers => services.filter(service => controllers.map(c => c.serviceID == service.id).indexOf(true) < 0))
-      )
       .then(services => this.services = services)
       .then(() => this.services);
   }
@@ -109,6 +107,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.hrs = Math.floor(this.seconds / 60 * 60);
     this.min = Math.floor(this.seconds / 60);
     this.sec = Math.floor(this.seconds % 60);
+    const sessionLength = 60 * 60;
+    this.countdown = (this.seconds * 100) / sessionLength;
     setTimeout(() => this.updateClock(), 500);
   }
 
@@ -120,7 +120,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         //   this.router.navigate(['/home/controllers'], { queryParams: { token: data.token, uri: data.uri } });
         // }
         if (data) {
-          this.bindController(data.token, data.uri, service);
+          this.bindController(data.token, data.uri);
         }
       })
       .catch(error => this.snackBarOpen(
@@ -132,7 +132,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       });
   }
 
-  bindController(token: string, uri: string, service?: Service) {
+  bindController(token: string, uri: string) {
     this.controllersClient.getControllerDescriptor(uri)
       .then(descriptor => {
         const controller = new Controller();
@@ -142,8 +142,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         controller.uri = uri;
         controller.realm = this.session.realm;
         controller.mandateRole = `services@${this.session.realm}`;
-        if (service) controller.serviceID = service.id;
-        const dialogRef = this.dialog.open(ControllerBindDialogComponent, { data: controller });
+        const dialogRef = this.dialog.open(ControllerBindDialogComponent, { data: controller, minWidth: '450px' });
         return dialogRef.afterClosed().toPromise();
       })
       .then(controller => {
@@ -157,15 +156,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
                 { duration: 2000 }))
               .then(() => this.crypto.deserializeJWS<ControllerBinding>(binding, ControllerBinding))
               .then(controllerBinding => this.controllersClient.getController(controller.realm, controllerBinding.id))
-              .then(c => {
-                if (service) {
-                  c.serviceID = service.id;
-                  return this.controllersClient.updateController(c)
-                    .then(() => c)
-                } else {
-                  return c
-                }
-              })
               .then(c => this.controllersClient.syncController(c).catch(() => c))
               .then(c => {
                 this.router.navigateByUrl(`/${this.session.realm}/home/controller/${c.id}`);

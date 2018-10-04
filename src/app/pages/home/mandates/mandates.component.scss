@@ -71,3 +71,13 @@
     display: flex;
   }
 }
+
+.content-header {
+  box-shadow: none;
+}
+
+::ng-deep {
+  .mat-tab-header {
+    box-shadow: inset 0 -10px 10px -10px rgba(0, 0, 0, 0.2);
+  }
+}
