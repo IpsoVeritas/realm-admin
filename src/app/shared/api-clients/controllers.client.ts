@@ -61,14 +61,15 @@ export class ControllersClient extends BaseClient {
       .then(url => this.http.post(url, actions).toPromise());
   }
 
-  public syncController(controller: Controller): Promise<Controller> {
-    return this.syncDescriptor(controller).then(() => this.syncActions(controller));
+  public async syncController(controller: Controller): Promise<Controller> {
+    let c = await this.syncDescriptor(controller)
+    return await this.syncActions(controller);
   }
 
-  public syncDescriptor(controller: Controller): Promise<Controller> {
-    return this.getControllerDescriptor(controller.uri)
-      .then(descriptor => controller.descriptor = descriptor)
-      .then(() => this.updateController(controller));
+  public async syncDescriptor(controller: Controller): Promise<Controller> {
+    let descriptor = await this.getControllerDescriptor(controller.uri)
+    controller.descriptor = descriptor
+    return await this.updateController(controller)
   }
 
   public syncActions(controller: Controller): Promise<Controller> {

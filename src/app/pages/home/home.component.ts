@@ -127,45 +127,52 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  load(): Promise<any> {
-    return Promise.all([this.loadRealm(), this.loadRoles(), this.loadControllers()])
-      .then(() => this.events.publish('ready', true))
-      .then(() => this.controllersClient.getControllers(this.session.realm))
-      .then(controllers => controllers.forEach(controller => {
-        this.controllersClient.syncController(controller)
-          .catch(error => console.warn('Error syncing controller', controller, error));
-      }))
-      .then(() => this.startServiceTokenPruning())
-      .then(() => this.checkSessionTimeout());
+  async load(): Promise<any> {
+
+    this.realm = await this.loadRealm()
+    this.roles = await this.loadRoles()
+    this.controllers = await this.loadControllers()
+    this.events.publish('ready', true)
+
+    let controllers = await this.controllersClient.getControllers(this.session.realm)
+
+    for (let i = 0; i < controllers.length; i++) {
+       let controller = controllers[i]
+       try {
+         await this.controllersClient.syncController(controller)
+       } catch (error) {
+         console.warn('Error syncing controller', controller, error)
+       }
+    }
+
+    this.startServiceTokenPruning()
+    this.checkSessionTimeout()
+    return this.realm != null
+
   }
 
-  loadRealm(): Promise<Realm> {
-    return this.realmsClient.getRealm(this.session.realm)
-      .then(realm => {
-        this.realm = realm;
-        if (realm.realmDescriptor.icon) {
-          this.cache.timestamp(`realm:${this.session.realm}`)
-            .then(ts => this.iconImage = this.sanitizer.bypassSecurityTrustStyle(`url(${realm.realmDescriptor.icon}?ts=${ts})`));
-        } else {
-          this.iconImage = undefined;
-        }
-      })
-      .then(() => this.realm);
+  async loadRealm(): Promise<Realm> {
+    let realm = await this.realmsClient.getRealm(this.session.realm)
+    if (realm.realmDescriptor.icon) {
+        let ts = await this.cache.timestamp(`realm:${this.session.realm}`)
+        this.iconImage = this.sanitizer.bypassSecurityTrustStyle(`url(${realm.realmDescriptor.icon}?ts=${ts})`);
+    } else {
+        this.iconImage = undefined;
+    }
+    return realm;
   }
 
-  loadRoles(): Promise<Role[]> {
-    return this.rolesClient.getRoles(this.session.realm)
-      .then(roles => roles.filter(role => !role.name.startsWith('services@')))
-      .then(roles => roles.sort((a, b) => a.description.localeCompare(b.description)))
-      .then(roles => this.roles = roles)
-      .then(() => this.roles);
+  async loadRoles(): Promise<Role[]> {
+    let roles = await this.rolesClient.getRoles(this.session.realm)
+    roles = roles.filter(role => !role.name.startsWith('services@'))
+    roles = roles.sort((a, b) => a.description.localeCompare(b.description))
+    return roles
   }
 
-  loadControllers(): Promise<Controller[]> {
-    return this.controllersClient.getControllers(this.session.realm)
-      .then(controllers => controllers.filter(controller => !controller.hidden))
-      .then(controllers => this.controllers = controllers)
-      .then(() => this.controllers);
+  async loadControllers(): Promise<Controller[]> {
+    let controllers = await this.controllersClient.getControllers(this.session.realm)
+    controllers = controllers.filter(controller => !controller.hidden)
+    return controllers
   }
 
   startServiceTokenPruning(): void {
@@ -199,10 +206,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         okColor: 'accent',
         cancel: this.translate.instant('label.cancel'),
         cancelColor: 'accent'
-      },
-      { width: 450}).then(confirmed => confirmed ? this.events.publish('logout') : false);
+      }).then(confirmed => confirmed ? this.events.publish('logout') : false);
     }
   }
+
 
   switchRealm(descriptor: RealmDescriptor) {
     if (this.drawerMode === 'over') {
@@ -226,8 +233,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       okColor: 'accent',
       cancel: this.translate.instant('label.cancel'),
       cancelColor: 'accent'
-    },
-    { width: 450 }).then(name => {
+    })
+    .then(name => {
       if (name) {
         const role = new Role();
         role.name = `${uuid()}@${this.session.realm}`;
