@@ -7,6 +7,7 @@ import { Ng2ImgToolsService } from 'ng2-img-tools';
 import { SessionService, CacheService } from '../../../shared/services';
 import { RealmsClient, RolesClient } from '../../../shared/api-clients';
 import { Realm, Role } from '../../../shared/models';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-settings',
@@ -42,7 +43,8 @@ export class SettingsComponent implements OnInit {
     private cache: CacheService,
     private realmsClient: RealmsClient,
     private rolesClient: RolesClient,
-    private snackBar: MatSnackBar) { }
+    private snackBar: MatSnackBar,
+    private router: Router) { }
 
   ngOnInit() {
     this.loadRealm();
@@ -120,6 +122,10 @@ export class SettingsComponent implements OnInit {
         this.translate.instant('error.updating', { value: this.realm.label ? this.realm.label : this.realm.id }),
         this.translate.instant('label.close'),
         this.snackBarErrorConfig));
+  }
+
+  cancel() {
+    this.router.navigateByUrl(`/${this.session.realm}/home`);
   }
 
   snackBarOpen(message: string, action?: string, config?: MatSnackBarConfig) {

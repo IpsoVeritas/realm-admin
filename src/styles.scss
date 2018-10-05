@@ -34,6 +34,10 @@ body {
   justify-content: space-between;
 }
 
+.mat-header-row {
+  box-shadow: none !important;
+}
+
 .mat-row:last-of-type {
   border: none;
 }
@@ -169,5 +173,31 @@ body {
 
   to {
     opacity: 1;
+  }
+}
+
+::ng-deep {
+  .mat-card {
+    .mat-card-header {
+      height: 30px;
+      padding-right: 130px;
+    }
+
+    .mat-card-content {
+      padding-right: 130px;
+      color: #7f7f7f;
+    }
+  }
+}
+
+.mat-card {
+  .mat-card-header {
+    height: 30px;
+    padding-right: 130px;
+  }
+
+  .mat-card-content {
+    padding-right: 130px;
+    color: #7f7f7f;
   }
 }

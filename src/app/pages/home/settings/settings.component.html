@@ -11,24 +11,23 @@
   <div class="settings-form">
 
     <integrity-section [title]="'label.general' | translate" enableExpansion="true" expansionId="settings.general">
-      <mat-form-field>
-        <input matInput [(ngModel)]="realm.label" (ngModelChange)="isChanged=true" placeholder="{{'label.description' | translate}}">
+      <mat-form-field floatLabel="always">
+        <mat-label>{{ 'label.service_place_name' | translate}}</mat-label>
+        <input matInput [(ngModel)]="realm.label" (ngModelChange)="isChanged=true">
+        <mat-hint>{{ 'settings.description_instructions' | translate }}</mat-hint>
       </mat-form-field>
-      <p class="mat-caption" translate>settings.description_instructions</p>
-    </integrity-section>
-
-    <integrity-section [title]="'settings.guest_role' | translate" enableExpansion="true" expansionId="settings.guestRole">
-      <mat-form-field>
-        <mat-select [(ngModel)]="realm.guestRole" (ngModelChange)="isChanged=true" placeholder="{{'settings.guest_role_placeholder' | translate}}">
-          <mat-option [value]="undefined">
-            {{'settings.no_guest_role' | translate}}
-          </mat-option>
-          <mat-option *ngFor="let role of roles" [value]="role.name">
-            {{ role.description }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-      <p class="mat-caption" translate>settings.guest_role_instructions</p>
+      <mat-form-field floatLabel="always">
+          <mat-label>{{ 'settings.guest_role_placeholder' | translate}}</mat-label>
+          <mat-select [(ngModel)]="realm.guestRole" (ngModelChange)="isChanged=true">
+              <mat-option [value]="undefined">
+                {{'settings.no_guest_role' | translate}}
+              </mat-option>
+              <mat-option *ngFor="let role of roles" [value]="role.name">
+                {{ role.description }}
+              </mat-option>
+            </mat-select>
+          <mat-hint>{{ 'settings.guest_role_instructions' | translate }}</mat-hint>
+        </mat-form-field>
     </integrity-section>
 
     <mat-divider></mat-divider>
@@ -49,11 +48,9 @@
       </div>
     </integrity-section>
 
-    <mat-divider></mat-divider>
-
     <div class="buttons">
-      <button mat-button color="accent" (click)="loadRealm()" [disabled]="!isChanged">{{'label.reset' | translate}}</button>
-      <button mat-raised-button color="accent" (click)="updateRealm()">{{'label.save' | translate}}</button>
+      <button mat-button color="accent" (click)="cancel()">{{'label.cancel' | translate}}</button>
+      <button mat-raised-button color="accent" (click)="updateRealm()">{{'label.done' | translate}}</button>
     </div>
 
   </div>

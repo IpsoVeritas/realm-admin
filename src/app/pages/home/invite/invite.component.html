@@ -9,18 +9,18 @@
 
   <div class="invite-form">
 
-    <integrity-section [title]="'invite.settings_section' | translate">
+    <integrity-section [title]="'invite.settings_section' | translate" enableExpansion="true" expansionId="invite.settings">
 
       <div class="date-range">
 
         <div class="date-picker">
           <mat-form-field>
-            <input matInput [(ngModel)]="startDate" name="d1" [owlDateTime]="d1" (dateTimeChange)="computeDates()" placeholder="{{ 'label.start_date' | translate }}">
+            <input matInput [(ngModel)]="startDate" name="d1" [owlDateTime]="d1" (dateTimeChange)="computeDates()" placeholder="{{ 'label.mandate_valid_from' | translate }}">
             <mat-icon matSuffix [owlDateTimeTrigger]="d1" color="accent">today</mat-icon>
             <owl-date-time #d1 [pickerType]="'calendar'"></owl-date-time>
           </mat-form-field>
           <mat-form-field>
-            <input matInput [(ngModel)]="startTime" name="t1" [owlDateTime]="t1" (dateTimeChange)="computeDates()" placeholder="{{ 'label.start_time' | translate }}">
+            <input matInput [(ngModel)]="startTime" name="t1" [owlDateTime]="t1" (dateTimeChange)="computeDates()" placeholder="{{ 'label.start_time' | translate | titlecase }}">
             <mat-icon matSuffix [owlDateTimeTrigger]="t1" color="accent">schedule</mat-icon>
             <owl-date-time #t1 [pickerType]="'timer'" [stepMinute]="5"></owl-date-time>
           </mat-form-field>
@@ -35,7 +35,7 @@
             <owl-date-time #d2 [pickerType]="'calendar'"></owl-date-time>
           </mat-form-field>
           <mat-form-field>
-            <input matInput [(ngModel)]="endTime" name="t2" [owlDateTime]="t2" (dateTimeChange)="computeDates(false)" placeholder="{{ 'label.end_time' | translate }}">
+            <input matInput [(ngModel)]="endTime" name="t2" [owlDateTime]="t2" (dateTimeChange)="computeDates(false)" placeholder="{{ 'label.end_time' | translate | titlecase }}">
             <mat-icon matSuffix [owlDateTimeTrigger]="t2" color="accent">schedule</mat-icon>
             <owl-date-time #t2 [pickerType]="'timer'"></owl-date-time>
           </mat-form-field>
@@ -47,24 +47,23 @@
 
     <mat-divider></mat-divider>
 
-    <integrity-section [title]="'invite.recipient_section' | translate">
+    <integrity-section class="email-section" [title]="'invite.recipient_section' | translate" enableExpansion="true" expansionId="invite.recipients">
 
-      <mat-form-field class="full-width">
+      <mat-form-field class="full-width" floatLabel="always">
+        <mat-label>{{'invite.recipients_placeholder' | translate}}</mat-label>
         <textarea matInput matTextareaAutosize matAutosizeMinRows="1" matAutosizeMaxRows="6" integrityDragAndDrop class="dropzone"
-          [(ngModel)]="recipients" (ngModelChange)="recipientsChanged()" (filesDropped)="recipientsDropped($event)" placeholder="{{'invite.recipients_placeholder' | translate}}"></textarea>
+          [(ngModel)]="recipients" (ngModelChange)="recipientsChanged()" (filesDropped)="recipientsDropped($event)"></textarea>
         <mat-hint align="start" translate>invite.recipients_hint</mat-hint>
         <mat-hint align="end">{{ 'invite.recipients_count_hint' | translate:{count:emails.length} }}</mat-hint>
       </mat-form-field>
 
-      <mat-form-field class="full-width">
-        <textarea matInput matTextareaAutosize matAutosizeMinRows="1" matAutosizeMaxRows="6" [(ngModel)]="message" (ngModelChange)="isChanged=true"
-          placeholder="{{'invite.message_placeholder' | translate}}"></textarea>
+      <mat-form-field class="full-width" floatLabel="always">
+        <mat-label>{{'invite.message_placeholder' | translate}}</mat-label>
+        <textarea matInput matTextareaAutosize matAutosizeMinRows="1" matAutosizeMaxRows="6" [(ngModel)]="message" (ngModelChange)="isChanged=true"></textarea>
         <mat-hint align="start" translate>invite.message_hint</mat-hint>
       </mat-form-field>
 
     </integrity-section>
-
-    <mat-divider></mat-divider>
 
     <integrity-section *ngIf="isSending || (sentInvites && sentInvites.length > 0) || (failedInvites && failedInvites.length > 0)" [title]="'invite.sending_section' | translate">
       <mat-progress-bar *ngIf="isSending" mode="buffer" [bufferValue]="progressBufferValue" [value]="progressValue" color="accent"></mat-progress-bar>
@@ -92,11 +91,9 @@
     </integrity-section>
 
     <div class="buttons">
-      <button mat-button color="accent" (click)="resetForm()" [disabled]="isSending || !isChanged">{{'label.reset' | translate}}</button>
-      <button mat-raised-button color="accent" *ngIf="!isSending" (click)="sendInvites()" [disabled]="isSending || !(message && emails.length > 0)">{{'label.send' | translate}}</button>
+      <button mat-button color="accent" (click)="goBack()" [disabled]="isSending">{{'label.cancel' | translate}}</button>
+      <button mat-raised-button color="accent" *ngIf="!isSending" (click)="sendInvites()" [disabled]="isSending || !(emails.length > 0)">{{'invite.invite' | translate}}</button>
       <button mat-raised-button color="warn" *ngIf="isSending" (click)="cancelSending = true" [disabled]="cancelSending">{{'label.cancel' | translate}}</button>
     </div>
-
   </div>
-
 </div>

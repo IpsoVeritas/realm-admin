@@ -25,6 +25,7 @@ const appRoutes: Routes = [
       { path: 'realms', component: RealmsComponent },
       { path: 'invite/:realm/:role', component: InviteComponent },
       { path: 'invite/:role', component: InviteComponent },
+      { path: 'invite', component: InviteComponent },
       { path: 'mandates/:id', component: MandatesComponent },
       { path: 'controller/:id', component: ControllerComponent },
       { path: 'settings', component: SettingsComponent },

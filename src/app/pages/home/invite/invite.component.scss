@@ -5,7 +5,7 @@
 }
 
 .invite-form {
-  padding: 20px;
+  padding: 10px 20px 20px 20px;
   display: flex;
   flex-direction: column;
   background-color: #fff;
@@ -58,5 +58,50 @@
       margin-top: 10px;
       margin-bottom: 10px;
     }
+  }
+}
+
+::ng-deep {
+  .mat-form-field {
+    padding-bottom: 15px;
+  }
+
+  .mat-form-field-label {
+    font-size: 18px !important;
+    font-weight: 600 !important;
+    color: #333333 !important;
+    top: 22px;
+  }
+
+  .mat-input-element {
+    margin-top: 3px;
+    color: #333;
+    height: 25px;
+  }
+
+  .mat-input-underline {
+    background-color: #e5e5e5 !important;
+  }
+
+  .integrity-section {
+    padding-top: 30px !important;
+  }
+
+  .integrity-section-content {
+    padding-top: 5px !important;
+  }
+
+  integrity-section:nth-child(2) {
+    padding-top: 30px !important;
+
+    .integrity-section-content {
+      padding-top: 5px;
+    }
+  }
+
+  button {
+    width: 120px;
+    height: 50px;
+    border-radius: 50px !important;
   }
 }
