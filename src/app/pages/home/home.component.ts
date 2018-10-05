@@ -162,15 +162,17 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     return realm;
   }
 
-  loadRoles(): Promise<Role[]> {
-    return this.rolesClient.getRoles(this.session.realm)
-      .then(roles => roles.filter(role => !role.name.startsWith('services@')))
-      .then(roles => roles.sort((a, b) => a.description.localeCompare(b.description)))
+  async loadRoles(): Promise<Role[]> {
+    let roles = await this.rolesClient.getRoles(this.session.realm)
+    roles = roles.filter(role => !role.name.startsWith('services@'))
+    roles = roles.sort((a, b) => a.description.localeCompare(b.description))
+    return roles
   }
 
-  loadControllers(): Promise<Controller[]> {
-    return this.controllersClient.getControllers(this.session.realm)
-      .then(controllers => controllers.filter(controller => !controller.hidden))
+  async loadControllers(): Promise<Controller[]> {
+    let controllers = await this.controllersClient.getControllers(this.session.realm)
+    controllers = controllers.filter(controller => !controller.hidden)
+    return controllers
   }
 
   startServiceTokenPruning(): void {
@@ -204,10 +206,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         okColor: 'accent',
         cancel: this.translate.instant('label.cancel'),
         cancelColor: 'accent'
-      },
-      { width: 450}).then(confirmed => confirmed ? this.events.publish('logout') : false);
+      }).then(confirmed => confirmed ? this.events.publish('logout') : false);
     }
   }
+
 
   switchRealm(descriptor: RealmDescriptor) {
     if (this.drawerMode === 'over') {
@@ -231,8 +233,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       okColor: 'accent',
       cancel: this.translate.instant('label.cancel'),
       cancelColor: 'accent'
-    },
-    { width: 450 }).then(name => {
+    })
+    .then(name => {
       if (name) {
         const role = new Role();
         role.name = `${uuid()}@${this.session.realm}`;
