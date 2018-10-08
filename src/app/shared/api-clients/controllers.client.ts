@@ -20,12 +20,17 @@ export class ControllersClient extends BaseClient {
         .then(controller => this.cache.set(`controller:${realmId}/${controllerId}`, controller)));
   }
 
-  public getControllers(realmId: string): Promise<Controller[]> {
-    return this.cache.get(`controllers:${realmId}`)
-      .catch(() => this.session.getBackendURL(`/realms/${realmId}/controllers`)
-        .then(url => this.http.get(url).toPromise())
-        .then((arr: any[]) => this.jsonConvert.deserializeArray(arr, Controller))
-        .then(controllers => this.cache.set(`controllers:${realmId}`, controllers)));
+  public async getControllers(realmId: string): Promise<Controller[]> {
+    try {
+      let c = await this.cache.get(`controllers:${realmId}`)
+      return c;
+    } catch (err) {
+      let url = await this.session.getBackendURL(`/realms/${realmId}/controllers`)
+      let json = await this.http.get(url).toPromise()
+      let list:any[] = (json as any[]);
+      let controllers = this.jsonConvert.deserializeArray(list, Controller)
+      return controllers
+    }
   }
 
   public updateController(controller: Controller): Promise<Controller> {
@@ -37,10 +42,12 @@ export class ControllersClient extends BaseClient {
 
   public async deleteController(controller: Controller): Promise<any> {
 
+    // now, this version asks for
+
     try {
-      let bindURI = controller.descriptor.bindURI
-      console.log("delete: " + bindURI)
-      let r1 = await this.http.delete(bindURI).toPromise()
+      let actionsURI = controller.descriptor.actionsURI
+      console.log("delete: " + actionsURI)
+      let r1 = await this.http.delete(actionsURI).toPromise()
     } catch (err) {
       console.error("failed to unbind controller at "+controller.uri+" directly error: ", err)
     }
@@ -67,6 +74,8 @@ export class ControllersClient extends BaseClient {
   }
 
   public async syncDescriptor(controller: Controller): Promise<Controller> {
+    let uri = controller.uri;
+    if (!uri) throw new Error("controller uri == undefined, controller.id="+controller.id);
     let descriptor = await this.getControllerDescriptor(controller.uri)
     controller.descriptor = descriptor
     return await this.updateController(controller)

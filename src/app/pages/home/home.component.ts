@@ -159,6 +159,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     } else {
         this.iconImage = undefined;
     }
+    this.realm = realm; 
     return realm;
   }
 
@@ -166,12 +167,14 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     let roles = await this.rolesClient.getRoles(this.session.realm)
     roles = roles.filter(role => !role.name.startsWith('services@'))
     roles = roles.sort((a, b) => a.description.localeCompare(b.description))
+    this.roles = roles;
     return roles
   }
 
   async loadControllers(): Promise<Controller[]> {
     let controllers = await this.controllersClient.getControllers(this.session.realm)
     controllers = controllers.filter(controller => !controller.hidden)
+    this.controllers = controllers;
     return controllers
   }
 
@@ -281,6 +284,9 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   bindController(token: string, uri: string) {
+
+    console.log("bind controller: '", uri,"' , token: " ,token);
+
     this.controllersClient.getControllerDescriptor(uri)
       .then(descriptor => {
         const controller = new Controller();
