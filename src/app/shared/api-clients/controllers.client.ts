@@ -69,6 +69,8 @@ export class ControllersClient extends BaseClient {
   }
 
   public async syncDescriptor(controller: Controller): Promise<Controller> {
+    let uri = controller.uri;
+    if (!uri) throw new Error("controller uri == undefined, controller.id="+controller.id);
     let descriptor = await this.getControllerDescriptor(controller.uri)
     controller.descriptor = descriptor
     return await this.updateController(controller)
