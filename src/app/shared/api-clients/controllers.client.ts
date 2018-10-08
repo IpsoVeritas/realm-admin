@@ -20,12 +20,17 @@ export class ControllersClient extends BaseClient {
         .then(controller => this.cache.set(`controller:${realmId}/${controllerId}`, controller)));
   }
 
-  public getControllers(realmId: string): Promise<Controller[]> {
-    return this.cache.get(`controllers:${realmId}`)
-      .catch(() => this.session.getBackendURL(`/realms/${realmId}/controllers`)
-        .then(url => this.http.get(url).toPromise())
-        .then((arr: any[]) => this.jsonConvert.deserializeArray(arr, Controller))
-        .then(controllers => this.cache.set(`controllers:${realmId}`, controllers)));
+  public async getControllers(realmId: string): Promise<Controller[]> {
+    try {
+      let c = await this.cache.get(`controllers:${realmId}`)
+      return c;
+    } catch (err) {
+      let url = await this.session.getBackendURL(`/realms/${realmId}/controllers`)
+      let json = await this.http.get(url).toPromise()
+      let list:any[] = (json as any[]);
+      let controllers = this.jsonConvert.deserializeArray(list, Controller)
+      return controllers
+    }
   }
 
   public updateController(controller: Controller): Promise<Controller> {
