@@ -37,10 +37,12 @@ export class ControllersClient extends BaseClient {
 
   public async deleteController(controller: Controller): Promise<any> {
 
+    // now, this version asks for
+
     try {
-      let bindURI = controller.descriptor.bindURI
-      console.log("delete: " + bindURI)
-      let r1 = await this.http.delete(bindURI).toPromise()
+      let actionsURI = controller.descriptor.actionsURI
+      console.log("delete: " + actionsURI)
+      let r1 = await this.http.delete(actionsURI).toPromise()
     } catch (err) {
       console.error("failed to unbind controller at "+controller.uri+" directly error: ", err)
     }
