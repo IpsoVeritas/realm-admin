@@ -42,14 +42,16 @@ export class ControllersClient extends BaseClient {
 
   public async deleteController(controller: Controller): Promise<any> {
 
-    // now, this version asks for
-
     try {
-      let actionsURI = controller.descriptor.actionsURI
-      console.log("delete: " + actionsURI)
-      let r1 = await this.http.delete(actionsURI).toPromise()
-    } catch (err) {
-      console.error("failed to unbind controller at "+controller.uri+" directly error: ", err)
+      let bindURI = controller.descriptor.bindURI
+      console.log("delete: " + bindURI)
+      let r1 = await this.http.delete(bindURI).toPromise()
+    } catch (err) { // HttpErrorResponse
+      if (err.status && (err.status = 405 || err.status == 404)) {
+        console.warn("unbind not supported with "+controller.uri+", "+err.statusText);
+      } else {
+        console.error("failed unbind with "+controller.uri+" status: ", err.statusText);
+      }
     }
 
     try {
