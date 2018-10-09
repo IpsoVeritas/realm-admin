@@ -57,7 +57,6 @@ export class ControllerBindDialogComponent implements OnInit {
     private session: SessionService,
     private rolesClient: RolesClient) {
       this.setupType = this.setupOptions[0].value;
-      console.log(controller);
   }
 
   ngOnInit() {

@@ -22,14 +22,11 @@ export class ControllersClient extends BaseClient {
 
   public async getControllers(realmId: string): Promise<Controller[]> {
     try {
-      let c = await this.cache.get(`controllers:${realmId}`)
-      return c;
+      return await this.cache.get(`controllers:${realmId}`);
     } catch (err) {
-      let url = await this.session.getBackendURL(`/realms/${realmId}/controllers`)
-      let json = await this.http.get(url).toPromise()
-      let list:any[] = (json as any[]);
-      let controllers = this.jsonConvert.deserializeArray(list, Controller)
-      return controllers
+      const url = await this.session.getBackendURL(`/realms/${realmId}/controllers`);
+      const json = await this.http.get(url).toPromise();
+      return this.jsonConvert.deserializeArray(json as any[], Controller);
     }
   }
 
@@ -43,25 +40,24 @@ export class ControllersClient extends BaseClient {
   public async deleteController(controller: Controller): Promise<any> {
 
     try {
-      let bindURI = controller.descriptor.bindURI
-      console.log("delete: " + bindURI)
-      let r1 = await this.http.delete(bindURI).toPromise()
-    } catch (err) { // HttpErrorResponse
-      if (err.status && (err.status = 405 || err.status == 404)) {
-        console.warn("unbind not supported with "+controller.uri+", "+err.statusText);
+      await this.http.delete(controller.descriptor.bindURI).toPromise();
+    } catch (err) {
+      if (err.status && (err.status === 404 || err.status === 405)) {
+        console.warn(`Unbind not supported by ${controller.id}`, controller, err);
       } else {
-        console.error("failed unbind with "+controller.uri+" status: ", err.statusText);
+        console.error(`Failed to unbind ${controller.id}`, controller, err);
+        throw err;
       }
     }
 
     try {
-      let url = await this.session.getBackendURL(`/realms/${controller.realm}/controllers/id/${controller.id}`)
-      let r2 = await this.http.delete(url).toPromise()
-      await this.cache.invalidate(`controllers:${controller.realm}`, `controller:${controller.realm}/${controller.id}`)
-      return true
+      const url = await this.session.getBackendURL(`/realms/${controller.realm}/controllers/id/${controller.id}`);
+      await this.http.delete(url).toPromise();
+      await this.cache.invalidate(`controllers:${controller.realm}`, `controller:${controller.realm}/${controller.id}`);
+      return true;
     } catch (err) {
-      console.error("failed to remove controller from realm: ", err)
-      throw err
+      console.error(`Failed to remove controller ${controller.id} from realm`, controller, err);
+      throw err;
     }
   }
 
@@ -71,16 +67,16 @@ export class ControllersClient extends BaseClient {
   }
 
   public async syncController(controller: Controller): Promise<Controller> {
-    let c = await this.syncDescriptor(controller)
-    return await this.syncActions(controller);
+    const c = await this.syncDescriptor(controller);
+    return await this.syncActions(c);
   }
 
   public async syncDescriptor(controller: Controller): Promise<Controller> {
-    let uri = controller.uri;
-    if (!uri) throw new Error("controller uri == undefined, controller.id="+controller.id);
-    let descriptor = await this.getControllerDescriptor(controller.uri)
-    controller.descriptor = descriptor
-    return await this.updateController(controller)
+    if (!controller.uri) {
+      throw new Error(`controller.uri is undefined for controller ${controller.id}`);
+    }
+    controller.descriptor = await this.getControllerDescriptor(controller.uri);
+    return await this.updateController(controller);
   }
 
   public syncActions(controller: Controller): Promise<Controller> {

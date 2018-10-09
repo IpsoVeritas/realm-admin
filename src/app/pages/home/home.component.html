@@ -93,7 +93,7 @@
               <button mat-menu-item (click)="syncService(controller)">
                 {{'controllers.sync_service' | translate}}
               </button>
-              <button mat-menu-item (click)="binding(controller)">
+              <button *ngIf="canBind(controller)" mat-menu-item (click)="binding(controller)">
                 {{'controllers.get_binding_url' | translate}}
               </button>
             </mat-menu>
