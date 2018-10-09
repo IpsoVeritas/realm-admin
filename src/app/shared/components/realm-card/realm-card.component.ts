@@ -22,6 +22,7 @@ export class RealmCardComponent implements OnInit, OnDestroy, OnChanges {
   icon: SafeStyle;
 
   realmUpdateListener: Function;
+  descriptorPoll: any;
 
   constructor(private sanitizer: DomSanitizer,
     private events: EventsService,
@@ -40,6 +41,9 @@ export class RealmCardComponent implements OnInit, OnDestroy, OnChanges {
 
   public ngOnDestroy() {
     this.events.unsubscribe('realm_updated', this.realmUpdateListener);
+    if (this.descriptorPoll) {
+      clearTimeout(this.descriptorPoll);
+    }
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -88,7 +92,7 @@ export class RealmCardComponent implements OnInit, OnDestroy, OnChanges {
         .then(() => resolve())
         .catch(e => {
           if (Number(new Date()) < endTime) {
-            setTimeout(checkCondition, interval, resolve, reject);
+            this.descriptorPoll = setTimeout(checkCondition, interval, resolve, reject);
           } else {
             reject(new Error('Poll timed out'));
           }
