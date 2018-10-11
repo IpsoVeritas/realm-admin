@@ -40,7 +40,12 @@ export class ControllersClient extends BaseClient {
   public async deleteController(controller: Controller): Promise<any> {
 
     try {
-      await this.http.delete(controller.descriptor.bindURI).toPromise();
+      const mandates = await this.crypto.filterMandates(controller.adminRoles);
+      const token = await this.crypto.createMandateToken(controller.descriptor.adminUI, mandates, 30);
+      const options: any = {
+        headers: new HttpHeaders({ 'Authorization': `Mandate ${token}` }),
+      };
+      await this.http.delete(controller.descriptor.bindURI, options).toPromise();
     } catch (err) {
       if (err.status && (err.status === 404 || err.status === 405)) {
         console.warn(`Unbind not supported by ${controller.id}`, controller, err);
