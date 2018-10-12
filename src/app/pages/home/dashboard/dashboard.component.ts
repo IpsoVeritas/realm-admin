@@ -20,7 +20,7 @@ import { ControllerBindDialogComponent } from '../controller/controller-bind-dia
 export class DashboardComponent implements OnInit, OnDestroy {
 
   isSnackBarOpen = false;
-  isLoadingAvailableServices = false;
+  serviceLoaders = {};
 
   controllers: Controller[];
   services: Service[];
@@ -113,12 +113,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   install(service: Service) {
-    this.isLoadingAvailableServices = true;
+    this.serviceLoaders[service.id] = true;
     this.servicesClient.addService(service)
       .then(data => {
-        // if (data) {
-        //   this.router.navigate(['/home/controllers'], { queryParams: { token: data.token, uri: data.uri } });
-        // }
         if (data) {
           this.bindController(data.token, data.uri);
         }
@@ -128,7 +125,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.translate.instant('label.close'),
         this.snackBarErrorConfig))
       .finally(() => {
-        this.isLoadingAvailableServices = false;
+        this.serviceLoaders[service.id] = false;
       });
   }
 
