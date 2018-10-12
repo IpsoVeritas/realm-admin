@@ -259,28 +259,23 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     const dialogRef = this.dialog.open(ControllerAddDialogComponent, { minWidth: '450px' });
     dialogRef.afterClosed().toPromise()
       .then((service: Service) => {
-        if (service) {
-          this._isLoadingSubject.next(true);
-          this.servicesClient.addService(service)
-            .then(data => {
-              if (data) {
-                this.bindController(data.token, data.uri);
-              }
-            })
-            .catch(error => this.snackBarOpen(
-              this.translate.instant('binding.error_add_failed'),
-              this.translate.instant('label.close'),
-              this.snackBarErrorConfig))
-            .finally(() => {
-              this._isLoadingSubject.next(false);
-            });
-        }
+        this._isLoadingSubject.next(true);
+        if (!service) throw new Error("missing service")
+        return this.servicesClient.addService(service)
+      })
+      .then(data => this.bindController(data.token, data.uri))
+      .catch(error => this.snackBarOpen(
+        this.translate.instant('binding.error_add_failed'),
+        this.translate.instant('label.close'),
+        this.snackBarErrorConfig))
+      .finally(() => {
+        this._isLoadingSubject.next(false);
       });
   }
 
-  bindController(token: string, uri: string) {
+  bindController(token: string, uri: string):Promise<any> {
 
-    this.controllersClient.getControllerDescriptor(uri)
+    return this.controllersClient.getControllerDescriptor(uri)
       .then(descriptor => {
         const controller = new Controller();
         controller.name = descriptor.label;
@@ -293,13 +288,12 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         return dialogRef.afterClosed().toPromise();
       }).then(controller => {
         if (controller) {
-          this.realmsClient.bindController(controller)
+          return this.realmsClient.bindController(controller)
             .then((binding: Object) => this.controllersClient.bindController(controller, binding)
               .then(() => this.servicesClient.deleteToken(token))
               .then(() => this.snackBarOpen(
                 this.translate.instant('binding.binding_success', { controller: controller.name }),
-                this.translate.instant('label.close'),
-                { duration: 2000 }))
+                this.translate.instant('label.close'), { duration: 2000 }))
               .then(() => this.crypto.deserializeJWS<ControllerBinding>(binding, ControllerBinding))
               .then(controllerBinding => this.controllersClient.getController(controller.realm, controllerBinding.id))
               .then(c => this.controllersClient.syncController(c).catch(() => c))
@@ -314,12 +308,17 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.translate.instant('label.close'),
                 this.snackBarErrorConfig
               );
+              // rollback adding controller.
+              return this.controllersClient.deleteController(controller)
+                .then(() => this.events.publish('controllers_updated'))
             })
             .then(() => {
               if (this.drawerMode === 'over') {
                 this.drawer.close();
               }
             });
+        } else {
+          throw new Error("Missing controller");
         }
       });
   }
