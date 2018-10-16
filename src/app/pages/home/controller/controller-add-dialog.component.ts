@@ -80,8 +80,8 @@ export class ControllerAddDialogComponent implements OnInit {
     }
   }
 
-  validURL(url:string):boolean {
-    return url && url.startsWith("http") && url.indexOf("//") != -1 && url.indexOf(".") != -1
+  validURL(url: string): boolean {
+    return url && url.startsWith('http') && url.indexOf('//') !== -1;
   }
 
   @HostListener('keydown.enter')
