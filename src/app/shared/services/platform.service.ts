@@ -17,16 +17,15 @@ export class PlatformService {
     private session: SessionService,
     private events: EventsService,
     private dialogs: DialogsService) {
-    this.inApp = /Integrity\//i.test(navigator.userAgent);
+
+    let isInApp = /Integrity\//i.test(navigator.userAgent) ||
+      window.location.search.indexOf("inapp=true") != -1 ||
+      window.location.hash.indexOf("inapp=true") != -1;
+
     this.isMobile = /Android|iPhone/i.test(navigator.userAgent);
-    if (this.inApp) {
-      this.webviewClient.init().then(data => {
-        if (data.lang) {
-          this.session.language = data.lang;
-          this.translate.use(data.lang);
-        }
-      });
-    }
+
+    if (isInApp == true) this.runInApp()
+    
     this.events.subscribe('logout', () => {
 
       this.session.key = undefined;
@@ -42,6 +41,20 @@ export class PlatformService {
         this.router.navigate([`/${this.session.realm}/login`, {}]);
       }
     });
+  }
+
+  public runInApp() {
+    if (!this.inApp) {
+      
+      this.inApp = true;
+
+      this.webviewClient.init().then(data => {
+        if (data.lang) {
+          this.session.language = data.lang;
+          this.translate.use(data.lang);
+        }
+      })
+    }
   }
 
   public handle(document: any): Promise<any> {

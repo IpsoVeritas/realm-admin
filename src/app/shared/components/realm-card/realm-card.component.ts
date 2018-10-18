@@ -22,6 +22,7 @@ export class RealmCardComponent implements OnInit, OnDestroy, OnChanges {
   icon: SafeStyle;
 
   realmUpdateListener: Function;
+  descriptorPoll: any;
 
   constructor(private sanitizer: DomSanitizer,
     private events: EventsService,
@@ -40,6 +41,9 @@ export class RealmCardComponent implements OnInit, OnDestroy, OnChanges {
 
   public ngOnDestroy() {
     this.events.unsubscribe('realm_updated', this.realmUpdateListener);
+    if (this.descriptorPoll) {
+      clearTimeout(this.descriptorPoll);
+    }
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -69,7 +73,32 @@ export class RealmCardComponent implements OnInit, OnDestroy, OnChanges {
           this.icon = undefined;
         }
       })
-      .catch(error => this.error = error);
+      .catch(error => {
+        this.error = error;
+        const forOneHour = 1000 * 60 * 60;
+        const everyThirtySeconds = 30000;
+        this.pollForDescriptor(forOneHour, everyThirtySeconds).then(() => {});
+      });
   }
 
+  pollForDescriptor(timeout, interval) {
+    const endTime = Number(new Date()) + (timeout || 3 * 1000 * 60);
+    interval = interval || 1000;
+
+    const checkCondition = (resolve, reject) => {
+      this.realmsClient
+        .getRealmDescriptor(this.realm)
+        .then(descriptor => this.descriptor = descriptor)
+        .then(() => resolve())
+        .catch(e => {
+          if (Number(new Date()) < endTime) {
+            this.descriptorPoll = setTimeout(checkCondition, interval, resolve, reject);
+          } else {
+            reject(new Error('Poll timed out'));
+          }
+        });
+    };
+
+    return new Promise(checkCondition);
+  }
 }

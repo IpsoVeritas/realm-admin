@@ -45,11 +45,11 @@ export class RealmsComponent implements OnInit {
     this.dialogs.openSimpleInput({
       message: this.translate.instant('realms.realm_name'),
       ok: this.translate.instant('label.create'),
-      okIcon: 'add',
       okColor: 'accent',
       cancel: this.translate.instant('label.cancel'),
       cancelColor: 'accent'
-    }).then(id => {
+    },
+    { width: 450 }).then(id => {
       if (id) {
         const realm = new Realm();
         realm.id = id;
@@ -79,7 +79,8 @@ export class RealmsComponent implements OnInit {
       okIcon: 'delete',
       okColor: 'warn',
       cancel: this.translate.instant('label.cancel')
-    }).then(confirmed => {
+    },
+    { width: 450 }).then(confirmed => {
       if (confirmed) {
         this.realmsClient.deleteRealm(realm)
           .then(() => this.dataSource.data = this.dataSource.data.filter(item => item !== realm))

@@ -28,7 +28,7 @@ import { ServicesClient } from '../../../shared/api-clients';
       <button mat-raised-button
         [mat-dialog-close]="service"
         color="accent"
-        [disabled]="service === customService && !customService.url">
+        [disabled]="service === customService && !validURL(customService.url)">
         {{'label.ok' | translate}}
       </button>
     </mat-dialog-actions>
@@ -78,6 +78,10 @@ export class ControllerAddDialogComponent implements OnInit {
     if (service === this.customService) {
       setTimeout(() => this.customInput.focus(), 100);
     }
+  }
+
+  validURL(url: string): boolean {
+    return url && url.startsWith('http') && url.indexOf('//') !== -1;
   }
 
   @HostListener('keydown.enter')

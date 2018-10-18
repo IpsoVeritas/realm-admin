@@ -17,7 +17,10 @@ export class UpdateControllerHandler implements DocumentHandler {
       return Promise.reject('No controller in context');
     }
 
-    return this.controllersClient.syncDescriptor(context.controller);
+    const descriptorSync = this.controllersClient.syncDescriptor(context.controller);
+    const actionSync = this.controllersClient.syncActions(context.controller);
+
+    return Promise.all([descriptorSync, actionSync]);
 
   }
 

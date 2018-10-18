@@ -45,4 +45,7 @@ export class Controller extends Base {
   @JsonProperty('mandateRole', String, true)
   mandateRole: string = undefined;
 
+  @JsonProperty('serviceID', String, true)
+  serviceID: string = undefined;
+
 }

@@ -20,12 +20,14 @@ export class ControllersClient extends BaseClient {
         .then(controller => this.cache.set(`controller:${realmId}/${controllerId}`, controller)));
   }
 
-  public getControllers(realmId: string): Promise<Controller[]> {
-    return this.cache.get(`controllers:${realmId}`)
-      .catch(() => this.session.getBackendURL(`/realms/${realmId}/controllers`)
-        .then(url => this.http.get(url).toPromise())
-        .then((arr: any[]) => this.jsonConvert.deserializeArray(arr, Controller))
-        .then(controllers => this.cache.set(`controllers:${realmId}`, controllers)));
+  public async getControllers(realmId: string): Promise<Controller[]> {
+    try {
+      return await this.cache.get(`controllers:${realmId}`);
+    } catch (err) {
+      const url = await this.session.getBackendURL(`/realms/${realmId}/controllers`);
+      const json = await this.http.get(url).toPromise();
+      return this.jsonConvert.deserializeArray(json as any[], Controller);
+    }
   }
 
   public updateController(controller: Controller): Promise<Controller> {
@@ -35,10 +37,33 @@ export class ControllersClient extends BaseClient {
       .then(() => controller);
   }
 
-  public deleteController(controller: Controller): Promise<any> {
-    return this.session.getBackendURL(`/realms/${controller.realm}/controllers/id/${controller.id}`)
-      .then(url => this.http.delete(url).toPromise())
-      .then(() => this.cache.invalidate(`controllers:${controller.realm}`, `controller:${controller.realm}/${controller.id}`));
+  public async deleteController(controller: Controller): Promise<any> {
+
+    try {
+      const mandates = await this.crypto.filterMandates(controller.adminRoles);
+      const token = await this.crypto.createMandateToken(controller.descriptor.adminUI, mandates, 30);
+      const options: any = {
+        headers: new HttpHeaders({ 'Authorization': `Mandate ${token}` }),
+      };
+      await this.http.delete(controller.descriptor.bindURI, options).toPromise();
+    } catch (err) {
+      if (err.status && (err.status === 404 || err.status === 405)) {
+        console.warn(`Unbind not supported by ${controller.id}`, controller, err);
+      } else {
+        console.error(`Failed to unbind ${controller.id}`, controller, err);
+        throw err;
+      }
+    }
+
+    try {
+      const url = await this.session.getBackendURL(`/realms/${controller.realm}/controllers/id/${controller.id}`);
+      await this.http.delete(url).toPromise();
+      await this.cache.invalidate(`controllers:${controller.realm}`, `controller:${controller.realm}/${controller.id}`);
+      return true;
+    } catch (err) {
+      console.error(`Failed to remove controller ${controller.id} from realm`, controller, err);
+      throw err;
+    }
   }
 
   public updateActions(controller: Controller, actions: string): Promise<any> {
@@ -46,14 +71,17 @@ export class ControllersClient extends BaseClient {
       .then(url => this.http.post(url, actions).toPromise());
   }
 
-  public syncController(controller: Controller): Promise<Controller> {
-    return this.syncDescriptor(controller).then(() => this.syncActions(controller));
+  public async syncController(controller: Controller): Promise<Controller> {
+    const c = await this.syncDescriptor(controller);
+    return await this.syncActions(c);
   }
 
-  public syncDescriptor(controller: Controller): Promise<Controller> {
-    return this.getControllerDescriptor(controller.uri)
-      .then(descriptor => controller.descriptor = descriptor)
-      .then(() => this.updateController(controller));
+  public async syncDescriptor(controller: Controller): Promise<Controller> {
+    if (!controller.uri) {
+      throw new Error(`controller.uri is undefined for controller ${controller.id}`);
+    }
+    controller.descriptor = await this.getControllerDescriptor(controller.uri);
+    return await this.updateController(controller);
   }
 
   public syncActions(controller: Controller): Promise<Controller> {

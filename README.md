@@ -2,6 +2,23 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.6.3.
 
+It replaces the older react realm UI. 
+
+
+Title: binding first with secret
+client->realm: join-realm & accuire admin mandate
+client->realmadmin: login (token mandate used in api)
+client->realmadmin: add service via binding-url 
+realmadmin->controller: GET controller /descriptor
+realmadmin->controller: GET actions servicesURI
+realmadmin->controller: POST add-binding/ binding-id = default\nsecret=[from log]
+controller->realmadmin: ... { descriptor url with new binding }
+realmadmin->controller: GET /descriptor?binding+secret
+realmadmin->realm: POST: bind this controller
+realm->realmadmin: controller-binding
+realmadmin->controller: POST /descriptor?binding+secret
+
+
 ## Development config
 
 Run `npm run config` to populate the angular dev enviroment file with values from your local .env

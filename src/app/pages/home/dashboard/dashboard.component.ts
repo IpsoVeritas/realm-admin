@@ -20,7 +20,7 @@ import { ControllerBindDialogComponent } from '../controller/controller-bind-dia
 export class DashboardComponent implements OnInit, OnDestroy {
 
   isSnackBarOpen = false;
-  isLoadingAvailableServices = false;
+  serviceLoaders = {};
 
   controllers: Controller[];
   services: Service[];
@@ -28,6 +28,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   hrs: number;
   min: number;
   sec: number;
+  countdown: number;
 
   navigationSubscription;
 
@@ -106,16 +107,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.hrs = Math.floor(this.seconds / 60 * 60);
     this.min = Math.floor(this.seconds / 60);
     this.sec = Math.floor(this.seconds % 60);
+    const sessionLength = 60 * 60;
+    this.countdown = (this.seconds * 100) / sessionLength;
     setTimeout(() => this.updateClock(), 500);
   }
 
   install(service: Service) {
-    this.isLoadingAvailableServices = true;
+    this.serviceLoaders[service.id] = true;
     this.servicesClient.addService(service)
       .then(data => {
-        // if (data) {
-        //   this.router.navigate(['/home/controllers'], { queryParams: { token: data.token, uri: data.uri } });
-        // }
         if (data) {
           this.bindController(data.token, data.uri);
         }
@@ -125,7 +125,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.translate.instant('label.close'),
         this.snackBarErrorConfig))
       .finally(() => {
-        this.isLoadingAvailableServices = false;
+        this.serviceLoaders[service.id] = false;
       });
   }
 
@@ -139,7 +139,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         controller.uri = uri;
         controller.realm = this.session.realm;
         controller.mandateRole = `services@${this.session.realm}`;
-        const dialogRef = this.dialog.open(ControllerBindDialogComponent, { data: controller });
+        const dialogRef = this.dialog.open(ControllerBindDialogComponent, { data: controller, minWidth: '450px' });
         return dialogRef.afterClosed().toPromise();
       })
       .then(controller => {

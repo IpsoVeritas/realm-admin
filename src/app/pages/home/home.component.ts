@@ -127,45 +127,51 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  load(): Promise<any> {
-    return Promise.all([this.loadRealm(), this.loadRoles(), this.loadControllers()])
-      .then(() => this.events.publish('ready', true))
-      .then(() => this.controllersClient.getControllers(this.session.realm))
-      .then(controllers => controllers.forEach(controller => {
-        this.controllersClient.syncController(controller)
-          .catch(error => console.warn('Error syncing controller', controller, error));
-      }))
-      .then(() => this.startServiceTokenPruning())
-      .then(() => this.checkSessionTimeout());
+  async load(): Promise<any> {
+
+    this.realm = await this.loadRealm();
+    this.roles = await this.loadRoles();
+    this.controllers = await this.loadControllers();
+    this.events.publish('ready', true);
+
+    this.controllers.forEach(controller =>
+      this.controllersClient.syncController(controller)
+        .catch(error => console.warn('Error syncing controller', controller, error)));
+
+    this.startServiceTokenPruning();
+    this.checkSessionTimeout();
+    return this.realm != null;
+
   }
 
-  loadRealm(): Promise<Realm> {
-    return this.realmsClient.getRealm(this.session.realm)
-      .then(realm => {
-        this.realm = realm;
-        if (realm.realmDescriptor.icon) {
-          this.cache.timestamp(`realm:${this.session.realm}`)
-            .then(ts => this.iconImage = this.sanitizer.bypassSecurityTrustStyle(`url(${realm.realmDescriptor.icon}?ts=${ts})`));
-        } else {
-          this.iconImage = undefined;
-        }
-      })
-      .then(() => this.realm);
+  async loadRealm(): Promise<Realm> {
+    const realm = await this.realmsClient.getRealm(this.session.realm);
+    if (realm.realmDescriptor.icon) {
+      const ts = await this.cache.timestamp(`realm:${this.session.realm}`);
+      this.iconImage = this.sanitizer.bypassSecurityTrustStyle(`url(${realm.realmDescriptor.icon}?ts=${ts})`);
+    } else {
+      this.iconImage = undefined;
+    }
+    this.realm = realm;
+    return realm;
   }
 
-  loadRoles(): Promise<Role[]> {
-    return this.rolesClient.getRoles(this.session.realm)
-      .then(roles => roles.filter(role => !role.name.startsWith('services@')))
-      .then(roles => roles.sort((a, b) => a.description.localeCompare(b.description)))
-      .then(roles => this.roles = roles)
-      .then(() => this.roles);
+  async loadRoles(): Promise<Role[]> {
+    let roles = await this.rolesClient.getRoles(this.session.realm);
+    roles = roles.filter(role => !role.name.startsWith('services@'));
+    roles = roles.sort((a, b) => a.description.localeCompare(b.description));
+    this.roles = roles;
+    return roles;
   }
 
-  loadControllers(): Promise<Controller[]> {
-    return this.controllersClient.getControllers(this.session.realm)
-      .then(controllers => controllers.filter(controller => !controller.hidden))
-      .then(controllers => this.controllers = controllers)
-      .then(() => this.controllers);
+  async loadControllers(): Promise<Controller[]> {
+    let controllers = await this.controllersClient.getControllers(this.session.realm);
+    controllers = controllers.filter(controller => !controller.hidden);
+    this.controllers = controllers;
+    this.controllers.forEach(controller =>
+      this.getAddBindingAction(controller)
+        .then(action => (<any>controller).bindingAction = action));
+    return controllers;
   }
 
   startServiceTokenPruning(): void {
@@ -203,6 +209,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+
   switchRealm(descriptor: RealmDescriptor) {
     if (this.drawerMode === 'over') {
       this.drawer.close();
@@ -223,7 +230,6 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       message: this.translate.instant('mandates.enter_role_name'),
       ok: this.translate.instant('label.create'),
       okColor: 'accent',
-      okIcon: 'add',
       cancel: this.translate.instant('label.cancel'),
       cancelColor: 'accent'
     }).then(name => {
@@ -250,30 +256,26 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   addController() {
-    const dialogRef = this.dialog.open(ControllerAddDialogComponent);
+    const dialogRef = this.dialog.open(ControllerAddDialogComponent, { minWidth: '450px' });
     dialogRef.afterClosed().toPromise()
       .then((service: Service) => {
-        if (service) {
-          this._isLoadingSubject.next(true);
-          this.servicesClient.addService(service)
-            .then(data => {
-              if (data) {
-                this.bindController(data.token, data.uri);
-              }
-            })
-            .catch(error => this.snackBarOpen(
-              this.translate.instant('binding.error_add_failed'),
-              this.translate.instant('label.close'),
-              this.snackBarErrorConfig))
-            .finally(() => {
-              this._isLoadingSubject.next(false);
-            });
-        }
+        this._isLoadingSubject.next(true);
+        if (!service) throw new Error("missing service")
+        return this.servicesClient.addService(service)
+      })
+      .then(data => this.bindController(data.token, data.uri))
+      .catch(error => this.snackBarOpen(
+        this.translate.instant('binding.error_add_failed'),
+        this.translate.instant('label.close'),
+        this.snackBarErrorConfig))
+      .finally(() => {
+        this._isLoadingSubject.next(false);
       });
   }
 
-  bindController(token: string, uri: string) {
-    this.controllersClient.getControllerDescriptor(uri)
+  bindController(token: string, uri: string):Promise<any> {
+
+    return this.controllersClient.getControllerDescriptor(uri)
       .then(descriptor => {
         const controller = new Controller();
         controller.name = descriptor.label;
@@ -284,16 +286,14 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         controller.mandateRole = `services@${this.session.realm}`;
         const dialogRef = this.dialog.open(ControllerBindDialogComponent, { data: controller });
         return dialogRef.afterClosed().toPromise();
-      })
-      .then(controller => {
+      }).then(controller => {
         if (controller) {
-          this.realmsClient.bindController(controller)
+          return this.realmsClient.bindController(controller)
             .then((binding: Object) => this.controllersClient.bindController(controller, binding)
               .then(() => this.servicesClient.deleteToken(token))
               .then(() => this.snackBarOpen(
                 this.translate.instant('binding.binding_success', { controller: controller.name }),
-                this.translate.instant('label.close'),
-                { duration: 2000 }))
+                this.translate.instant('label.close'), { duration: 2000 }))
               .then(() => this.crypto.deserializeJWS<ControllerBinding>(binding, ControllerBinding))
               .then(controllerBinding => this.controllersClient.getController(controller.realm, controllerBinding.id))
               .then(c => this.controllersClient.syncController(c).catch(() => c))
@@ -308,12 +308,17 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.translate.instant('label.close'),
                 this.snackBarErrorConfig
               );
+              // rollback adding controller.
+              return this.controllersClient.deleteController(controller)
+                .then(() => this.events.publish('controllers_updated'))
             })
             .then(() => {
               if (this.drawerMode === 'over') {
                 this.drawer.close();
               }
             });
+        } else {
+          throw new Error("Missing controller");
         }
       });
   }
@@ -345,8 +350,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       .then(clone => {
         const dialogRef = this.dialog.open(ControllerSettingsDialogComponent, { data: clone });
         return dialogRef.afterClosed().toPromise();
-      })
-      .then(updated => {
+      }).then(updated => {
         if (updated) {
           this.controllersClient.updateController(updated)
             .then(() => controller = updated)
@@ -370,6 +374,11 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         this.controllersClient.deleteController(controller)
           .then(() => this.events.publish('controllers_updated'))
           .then(() => this.router.navigateByUrl(`/${this.session.realm}/home`))
+          .then(() => {
+            if (this.drawerMode === 'over') {
+              this.drawer.close();
+            }
+          })
           .catch(error => this.snackBarOpen(
             this.translate.instant('error.deleting', { value: controller }),
             this.translate.instant('label.close'),
@@ -388,8 +397,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private getAddBindingAction(controller: Controller): Promise<ActionDescriptor> {
     return this.controllersClient
-                .getParsedControllerActions(controller, ['https://interfaces.brickchain.com/v1/add-binding.json'])
-                .then(a => a.length > 0 ? a[0] : undefined);
+      .getParsedControllerActions(controller, ['https://interfaces.brickchain.com/v1/add-binding.json'])
+      .then(a => a.length > 0 ? a[0] : undefined);
   }
 
   private executeBindingAction(addBindingAction: ActionDescriptor) {
@@ -426,7 +435,12 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         this.snackBarErrorConfig));
   }
 
-  binding(controller: Controller) {
-    this.getAddBindingAction(controller).then(this.executeBindingAction);
+  canBind(controller: Controller): boolean {
+    return (<any>controller).bindingAction !== undefined;
   }
+
+  binding(controller: Controller) {
+    this.executeBindingAction((<any>controller).bindingAction);
+  }
+
 }

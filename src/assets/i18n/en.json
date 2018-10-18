@@ -42,7 +42,10 @@
         "bind_controller_service_setup": "Service setup",
         "bind_controller_service_name": "Enter a name for your service",
         "bind_controller_service_name_hint": "You can change this later in your service settings.",
-        "mandate_valid_from": "Mandate valid from"
+        "mandate_valid_from": "Mandate valid from",
+        "next": "Next",
+        "service_requested_permissions_title": "Service requested permissions",
+        "service_requested_permissions_info": "By connecting this service, you allow it to execute the following:"
     },
     "login": {
         "title": "Login to {{realm}}",

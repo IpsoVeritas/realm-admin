@@ -24,13 +24,16 @@ deploy to branch:
   script:
     - eval $(vaultenv read -s secret/env/gitlab-ci/brickchain-actions-s3)
     - cat config.json.template |envsubst >dist/config.json
-    - aws s3 cp --recursive dist/ s3://brickchain-actions/$CI_PROJECT_NAME/$CI_BUILD_REF_NAME
-    - aws s3 cp --content-type 'application/json' --acl public-read s3://brickchain-actions/$CI_PROJECT_NAME/$CI_BUILD_REF_NAME/config.json s3://brickchain-actions/$CI_PROJECT_NAME/$CI_BUILD_REF_NAME/config.json --metadata-directive REPLACE
+    - aws s3 cp --recursive dist/ s3://brickchain-actions/$CI_PROJECT_NAME/$CI_COMMIT_REF_NAME
+    - aws s3 cp --content-type 'application/json' --acl public-read s3://brickchain-actions/$CI_PROJECT_NAME/$CI_COMMIT_REF_NAME/config.json s3://brickchain-actions/$CI_PROJECT_NAME/$CI_COMMIT_REF_NAME/config.json --metadata-directive REPLACE
     - aws configure set preview.cloudfront true
-    - aws cloudfront create-invalidation --distribution-id E2Y3HN6RJX8DF5 --paths "/$CI_PROJECT_NAME/$CI_BUILD_REF_NAME/*"
+    - aws cloudfront create-invalidation --distribution-id E2Y3HN6RJX8DF5 --paths "/$CI_PROJECT_NAME/$CI_COMMIT_REF_NAME/*"
   variables:
     SRVFEED: "https://firebasestorage.googleapis.com/v0/b/integrity-autobinder-staging.appspot.com/o/services.json?alt=media"
     PROXY: "https://proxy.svc-staging.plusintegrity.com"
+  environment:
+    name: branch/$CI_COMMIT_REF_NAME
+    url: https://actions.brickchain.com/$CI_PROJECT_NAME/$CI_COMMIT_REF_NAME/
 
 deploy to staging:
   image: gcr.io/brickchain-docker/gitlab-builder-deploy
@@ -47,6 +50,9 @@ deploy to staging:
   variables:
     SRVFEED: "https://firebasestorage.googleapis.com/v0/b/integrity-autobinder-staging.appspot.com/o/services.json?alt=media"
     PROXY: "https://proxy.svc-staging.plusintegrity.com"
+  environment:
+    name: staging
+    url: https://actions.brickchain.com/realm-admin-ng/master/
 
 deploy to production:
   image: gcr.io/brickchain-docker/gitlab-builder-deploy
@@ -64,3 +70,6 @@ deploy to production:
   variables:
     SRVFEED: "https://firebasestorage.googleapis.com/v0/b/integrity-autobinder.appspot.com/o/services.json?alt=media"
     PROXY: "https://proxy.svc.integrity.app"
+  environment:
+    name: production
+    url: https://admin.integrity.app/

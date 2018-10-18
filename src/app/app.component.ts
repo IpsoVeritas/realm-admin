@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { DateTimeAdapter } from 'ng-pick-datetime';
 import { EventsService } from '@brickchain/integrity-angular';
-import { ConfigService, SessionService } from './shared/services';
+import { ConfigService, SessionService, PlatformService } from './shared/services';
 import 'rxjs/add/operator/filter';
 
 @Component({
@@ -20,7 +20,8 @@ export class AppComponent implements OnInit {
     private dateTimeAdapter: DateTimeAdapter<any>,
     private config: ConfigService,
     private session: SessionService,
-    private events: EventsService) {
+    private events: EventsService,
+    private platform: PlatformService) {
     translate.setDefaultLang('en');
   }
 
@@ -31,6 +32,10 @@ export class AppComponent implements OnInit {
     const paramsHash = new URLSearchParams(window.location.hash.indexOf('?') !== -1 ? window.location.hash.split('?')[1] : '');
     if (paramsHash.has('language')) {
       params.set('language', paramsHash.get('language'));
+    }
+
+    if (paramsHash.has('inapp') || params.has('inapp')) {
+      this.platform.runInApp()
     }
 
     if (params.has('language')) {
