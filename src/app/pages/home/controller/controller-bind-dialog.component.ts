@@ -17,6 +17,15 @@ import { RolesClient } from '../../../shared/api-clients';
         <mat-hint>{{ 'label.bind_controller_service_name_hint' | translate }}</mat-hint>
       </mat-form-field>
 
+      <div class="requested-permissions">
+        <div class="section-title">{{ 'label.service_requested_permissions_title' | translate }}</div>
+        <div class="info">{{ 'label.service_requested_permissions_info' | translate }}</div>
+        <div *ngFor="let keyPurpose of keyPurposes" class="key-purpose">
+          <mat-icon>check</mat-icon>
+          <div>{{ keyPurpose.description }}</div>
+        </div>
+      </div>
+
       <mat-form-field class="setup-type">
         <mat-label>{{ 'label.bind_controller_service_setup' | translate }}</mat-label>
         <mat-select [(ngModel)]="setupType">
@@ -38,7 +47,7 @@ import { RolesClient } from '../../../shared/api-clients';
     </mat-dialog-content>
     <mat-dialog-actions>
       <button mat-button [mat-dialog-close]="null" color="accent">{{'label.cancel' | translate}}</button>
-      <button mat-raised-button [mat-dialog-close]="controller" color="accent">{{'label.ok' | translate}}</button>
+      <button mat-raised-button [mat-dialog-close]="controller" color="accent">{{'label.next' | translate}}</button>
     </mat-dialog-actions>
   </div>`,
   styleUrls: ['./controller-popup-styles.scss']
@@ -51,12 +60,14 @@ export class ControllerBindDialogComponent implements OnInit {
     { value: 'advanced', text: 'Advanced'  },
   ];
   setupType: any;
+  keyPurposes: Array<any>;
 
   constructor(public dialogRef: MatDialogRef<ControllerBindDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public controller: Controller,
     private session: SessionService,
     private rolesClient: RolesClient) {
       this.setupType = this.setupOptions[0].value;
+      this.keyPurposes = this.controller.descriptor.keyPurposes;
   }
 
   ngOnInit() {

@@ -42,3 +42,43 @@ input, .mat-select {
   padding-top: 15px;
   margin-top: 10px;
 }
+
+.requested-permissions {
+  padding-top: 30px;
+
+  .section-title {
+    font-weight: 600;
+    font-size: 13px;
+    color: #333;
+  }
+
+  .info {
+    color: rgba(0, 0, 0, 0.54);
+    margin-top: 15px;
+    margin-bottom: 5px;
+  }
+}
+
+button {
+  height: 50px;
+  border-radius: 50px !important;
+  min-width: 110px;
+}
+
+.key-purpose {
+  ::ng-deep {
+    mat-icon {
+      color: #20afe2;
+      margin-right: 10px;
+    }
+  }
+
+  &:last-of-type {
+    border-bottom: none !important;
+  }
+
+  display: flex;
+  align-items: center;
+  line-height: 50px;
+  border-bottom: 1px solid #e5e5e5;
+}
