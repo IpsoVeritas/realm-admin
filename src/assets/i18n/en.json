@@ -45,7 +45,11 @@
         "mandate_valid_from": "Mandate valid from",
         "next": "Next",
         "service_requested_permissions_title": "Service requested permissions",
-        "service_requested_permissions_info": "By connecting this service, you allow it to execute the following:"
+        "service_requested_permissions_info": "By connecting this service, you allow it to execute the following:",
+        "inactive": "Inactive",
+        "contact_user": "Contact user",
+        "mandate_details": "Mandate details",
+        "mandate_sent_by": "Mandate sent by"
     },
     "login": {
         "title": "Login to {{realm}}",

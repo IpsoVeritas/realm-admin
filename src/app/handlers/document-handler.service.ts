@@ -8,7 +8,7 @@ import { ListRolesHandler } from './list-roles.handler';
 import { UpdateActionsHandler } from './update-actions.handler';
 import { UpdateControllerHandler } from './update-controller.handler';
 import { ToggleDrawerHandler } from './toggle-drawer.handler';
-import { MandateHandler } from './mandate.handler';
+import { MandateHandler } from './mandateHandler/mandate.handler';
 
 @Injectable()
 export class DocumentHandlerService {

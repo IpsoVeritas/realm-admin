@@ -18,14 +18,15 @@ export class PlatformService {
     private events: EventsService,
     private dialogs: DialogsService) {
 
-    let isInApp = /Integrity\//i.test(navigator.userAgent) ||
-      window.location.search.indexOf("inapp=true") != -1 ||
-      window.location.hash.indexOf("inapp=true") != -1;
+    const isInApp = /Integrity\//i.test(navigator.userAgent) ||
+      window.location.search.indexOf('inapp=true') !== -1 ||
+      window.location.hash.indexOf('inapp=true') !== -1;
 
     this.isMobile = /Android|iPhone/i.test(navigator.userAgent);
 
-    if (isInApp == true) this.runInApp()
-    
+    if (isInApp) {
+      this.runInApp();
+    }
     this.events.subscribe('logout', () => {
 
       this.session.key = undefined;
@@ -45,7 +46,7 @@ export class PlatformService {
 
   public runInApp() {
     if (!this.inApp) {
-      
+
       this.inApp = true;
 
       this.webviewClient.init().then(data => {
@@ -53,7 +54,7 @@ export class PlatformService {
           this.session.language = data.lang;
           this.translate.use(data.lang);
         }
-      })
+      });
     }
   }
 

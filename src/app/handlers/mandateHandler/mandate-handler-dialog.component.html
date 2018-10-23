@@ -1,0 +1,33 @@
+<div>
+  <div class="title">{{ 'label.mandate_details' | translate }}</div>
+  <ul>
+    <li>
+      <div class="name">{{ 'label.email' | translate }}</div>
+      <div class="value">{{ mandate.label }} (recipient)</div>
+    </li>
+    <li>
+      <div class="name">{{ 'label.role' | translate }}</div>
+      <div class="value">{{ mandate.roleName }}</div>
+    </li>
+    <li>
+      <div class="name">{{ 'label.mandate_starts' | translate }}</div>
+      <div class="value">{{ mandate.validFrom | date: 'dd/MM/yyyy' }}</div>
+    </li>
+    <li *ngIf="mandate.validUntil">
+      <div class="name">{{ 'label.mandate_ends' | translate }}</div>
+      <div class="value">{{ mandate.validUntil | date: 'dd/MM/yyyy' }}</div>
+    </li>
+    <li>
+      <div class="name">{{ 'label.status' | translate }}</div>
+      <div [ngClass]="{ 'active': mandate.status === 'Active', 'revoked': mandate.status === 'Revoked' }">{{ mandate.status }}</div>
+    </li>
+    <li *ngIf="mandate.sender">
+      <div class="name">{{ 'label.mandate_sent_by' | translate }}</div>
+      <div class="value">{{ mandate.sender }}</div>
+    </li>
+  </ul>
+  <div class="buttons">
+    <div class="button"><mat-icon>email</mat-icon><a href="mailto:{{mandate.label}}">{{ 'label.contact_user' | translate }}</a></div>
+    <div class="button" (ngClick)="revokeMandate()"><mat-icon>not_interested</mat-icon>{{ 'label.revoke_mandate_action' | translate }}</div>
+  </div>
+</div>
