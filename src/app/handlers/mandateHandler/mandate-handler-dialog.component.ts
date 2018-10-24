@@ -11,7 +11,7 @@ import { MandatesClient } from '../../shared/api-clients/mandates.client';
 })
 export class MandateHandlerDialogComponent implements OnInit {
   mandate: any;
-  isActive: boolean;
+  labelIsEmail: boolean;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -20,8 +20,7 @@ export class MandateHandlerDialogComponent implements OnInit {
     private mandatesClient: MandatesClient) {
     this.mandate = data.mandate;
     this.mandate.status = data.mandate.status ? 'Revoked' : 'Active';
-    this.isActive = new Date() > new Date(data.mandate.validFrom) && new Date() < new Date(data.mandate.validUntil);
-    console.log('Found this mandate', data.mandate);
+    this.labelIsEmail = (data.mandate.label as string).includes('@');
   }
 
   ngOnInit() {

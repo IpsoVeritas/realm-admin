@@ -3,7 +3,8 @@
   <ul>
     <li>
       <div class="name">{{ 'label.email' | translate }}</div>
-      <div class="value">{{ mandate.label }} (recipient)</div>
+      <div class="value" *ngIf="labelIsEmail">{{ mandate.label }} (recipient)</div>
+      <div class="value" *ngIf="!labelIsEmail">Unavailable</div>
     </li>
     <li>
       <div class="name">{{ 'label.role' | translate }}</div>
@@ -27,7 +28,7 @@
     </li>
   </ul>
   <div class="buttons">
-    <div class="button"><mat-icon>email</mat-icon><a href="mailto:{{mandate.label}}">{{ 'label.contact_user' | translate }}</a></div>
+    <div class="button" *ngIf="labelIsEmail"><mat-icon>email</mat-icon><a href="mailto:{{mandate.label}}">{{ 'label.contact_user' | translate }}</a></div>
     <div class="button" (ngClick)="revokeMandate()"><mat-icon>not_interested</mat-icon>{{ 'label.revoke_mandate_action' | translate }}</div>
   </div>
 </div>
