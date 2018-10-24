@@ -24,28 +24,12 @@ export class MandateHandler implements DocumentHandler {
 
   public handle(context: any, document: DocumentWithMandateId): Promise<any> {
     this.mandatesClient
-        .getMandate(context.realmId, document.mandateId)
-        .then(this.openMandateModal);
-
-    return new Promise((resolve, reject) => {
-      resolve();
-    });
+      .getMandate(context.realmId, document.mandateId)
+      .then(this.openMandateModal);
+    return Promise.resolve();
   }
 
   private openMandateModal(mandate) {
-    // const mandate =  {
-    //   id: 'someId',
-    //   label: 'someLabel',
-    //   realm: 'someRealm',
-    //   recipient: 'name@provider.com',
-    //   roleName: 'Admin',
-    //   timestamp: '13:51',
-    //   validFrom: '2018-06-13',
-    //   validUntil: '2018-11-29',
-    //   status: 'active',
-    //   sender: 'somedude'
-    // };
-
     Promise.resolve().then(() => {
       const dialogRef = this.dialog.open(MandateHandlerDialogComponent, {
         data: {

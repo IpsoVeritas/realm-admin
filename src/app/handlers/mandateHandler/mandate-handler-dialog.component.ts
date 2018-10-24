@@ -18,8 +18,7 @@ export class MandateHandlerDialogComponent implements OnInit {
     private dialogs: DialogsService,
     private translate: TranslateService,
     private mandatesClient: MandatesClient) {
-    this.mandate = data.mandate;
-    this.mandate.status = data.mandate.status ? 'Revoked' : 'Active';
+    this.mandate = { ...data.mandate, status: data.mandate.status ? 'Revoked' : 'Active' };
     this.labelIsEmail = (data.mandate.label as string).includes('@');
   }
 
@@ -34,16 +33,16 @@ export class MandateHandlerDialogComponent implements OnInit {
       okIcon: 'block',
       cancel: this.translate.instant('label.cancel')
     },
-    { width: 450 }).then(confirmed => {
-      if (confirmed) {
-        this.mandatesClient.revokeMandate(this.mandate)
-          .then(() => {
-            this.mandate.status = 'Revoked';
-          })
-          .catch(error => {
-            console.log('Error when revoking mandate', { role: this.mandate.label, recipient: this.mandate.label, error: error });
-          });
-      }
-    });
+      { width: 450 }).then(confirmed => {
+        if (confirmed) {
+          this.mandatesClient.revokeMandate(this.mandate)
+            .then(() => {
+              this.mandate.status = 'Revoked';
+            })
+            .catch(error => {
+              console.log('Error when revoking mandate', { role: this.mandate.label, recipient: this.mandate.label, error: error });
+            });
+        }
+      });
   }
 }
