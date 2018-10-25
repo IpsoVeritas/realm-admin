@@ -49,7 +49,9 @@
         "inactive": "Inactive",
         "contact_user": "Contact user",
         "mandate_details": "Mandate details",
-        "mandate_sent_by": "Mandate sent by"
+        "mandate_sent_by": "Mandate sent by",
+        "action": "Action",
+        "view_details": "View details"
     },
     "login": {
         "title": "Login to {{realm}}",

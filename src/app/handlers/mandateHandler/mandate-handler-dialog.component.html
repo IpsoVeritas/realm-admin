@@ -20,7 +20,7 @@
     </li>
     <li>
       <div class="name">{{ 'label.status' | translate }}</div>
-      <div [ngClass]="{ 'active': mandate.status === 'Active', 'revoked': mandate.status === 'Revoked' }">{{ mandate.status }}</div>
+      <div [ngClass]="{ 'active': mandate.status === 'Active', 'revoked': mandate.status === 'Revoked' }">{{ mandate.status | uppercase }}</div>
     </li>
     <li *ngIf="mandate.sender">
       <div class="name">{{ 'label.mandate_sent_by' | translate }}</div>
