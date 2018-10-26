@@ -5,6 +5,7 @@ import { DateTimeAdapter } from 'ng-pick-datetime';
 import { EventsService } from '@brickchain/integrity-angular';
 import { ConfigService, SessionService, PlatformService } from './shared/services';
 import 'rxjs/add/operator/filter';
+import { DocumentHandlerService } from './handlers/document-handler.service';
 
 @Component({
   selector: 'app-root',
@@ -21,8 +22,10 @@ export class AppComponent implements OnInit {
     private config: ConfigService,
     private session: SessionService,
     private events: EventsService,
-    private platform: PlatformService) {
+    private platform: PlatformService,
+    private documentHandlerService: DocumentHandlerService) {
     translate.setDefaultLang('en');
+
   }
 
   ngOnInit(): void {
@@ -35,7 +38,7 @@ export class AppComponent implements OnInit {
     }
 
     if (paramsHash.has('inapp') || params.has('inapp')) {
-      this.platform.runInApp()
+      this.platform.runInApp();
     }
 
     if (params.has('language')) {
@@ -49,7 +52,6 @@ export class AppComponent implements OnInit {
     }
 
     this.events.subscribe('ready', isReady => this.ready = isReady);
-
   }
 
   useLanguage(language: string) {

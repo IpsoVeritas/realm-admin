@@ -11,7 +11,7 @@ export class MandatesClient extends BaseClient {
 
   public getMandate(realmId: string, mandateId: string): Promise<IssuedMandate> {
     return this.cache.get(`mandate:${realmId}/${mandateId}`)
-      .catch(() => this.session.getBackendURL(`/realms/${realmId}/mandates/${mandateId}`)
+      .catch(() => this.session.getBackendURL(`/realms/${realmId}/mandate/${mandateId}`)
         .then(url => this.http.get(url).toPromise())
         .then(obj => this.jsonConvert.deserializeObject(obj, IssuedMandate))
         .then(mandate => this.cache.set(`mandate:${realmId}/${mandateId}`, mandate)));
