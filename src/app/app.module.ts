@@ -46,6 +46,7 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 
 import { DocumentHandlerService } from './handlers/document-handler.service';
+import { MandateHandlerDialogComponent } from './handlers/mandateHandler/mandate-handler-dialog.component';
 import { TokenInterceptor, LoaderInterceptor, LanguageInterceptor } from './shared/interceptors';
 import {
   AuthClient, AccessClient, RealmsClient, MandatesClient,
@@ -105,7 +106,8 @@ export class CustomHammerConfig extends HammerGestureConfig {
     SettingsComponent,
     RealmsComponent,
     InviteComponent,
-    SafePipe
+    SafePipe,
+    MandateHandlerDialogComponent
   ],
   entryComponents: [
     ControllerAddDialogComponent,
@@ -113,6 +115,7 @@ export class CustomHammerConfig extends HammerGestureConfig {
     ControllerSettingsDialogComponent,
     SessionTimeoutDialogComponent,
     RealmListComponent,
+    MandateHandlerDialogComponent
   ],
   imports: [
     BrowserModule,
