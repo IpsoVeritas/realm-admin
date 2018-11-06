@@ -9,7 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { EventsService, DialogsService, ClipboardService } from '@brickchain/integrity-angular';
 import { PlatformService, SessionService, CacheService, CryptoService } from '../../shared/services';
-import { AccessClient, RealmsClient, RolesClient, ControllersClient, ServicesClient } from '../../shared/api-clients';
+import { RealmsClient, RolesClient, ControllersClient, ServicesClient } from '../../shared/api-clients';
 import { Realm, RealmDescriptor, Role, Controller, Service, ControllerBinding, Action, ActionDescriptor } from '../../shared/models';
 import { ControllerAddDialogComponent } from './controller/controller-add-dialog.component';
 import { ControllerBindDialogComponent } from './controller/controller-bind-dialog.component';
@@ -76,7 +76,6 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     private controllersClient: ControllersClient,
     private servicesClient: ServicesClient,
     private breakpointObserver: BreakpointObserver,
-    private accessClient: AccessClient,
     private http: HttpClient,
     private clipboard: ClipboardService) {
     this.drawerMode = 'side';
@@ -260,11 +259,13 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     dialogRef.afterClosed().toPromise()
       .then((service: Service) => {
         this._isLoadingSubject.next(true);
-        if (!service) throw new Error("missing service")
-        return this.servicesClient.addService(service)
+        if (!service) {
+          throw new Error('missing service');
+        }
+        return this.servicesClient.addService(service);
       })
       .then(data => this.bindController(data.token, data.uri))
-      .catch(error => this.snackBarOpen(
+      .catch(() => this.snackBarOpen(
         this.translate.instant('binding.error_add_failed'),
         this.translate.instant('label.close'),
         this.snackBarErrorConfig))
@@ -273,7 +274,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       });
   }
 
-  bindController(token: string, uri: string):Promise<any> {
+  bindController(token: string, uri: string): Promise<any> {
 
     return this.controllersClient.getControllerDescriptor(uri)
       .then(descriptor => {
@@ -318,9 +319,27 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
               }
             });
         } else {
-          throw new Error("Missing controller");
+          throw new Error('Missing controller');
         }
       });
+  }
+
+  customizeController(controller: Controller, files: File[]) {
+    if (files && files.length > 0) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.session.setRealmItem(`customize:${controller.id}`, reader.result);
+      };
+      reader.readAsText(files[0]);
+    }
+  }
+
+  isCustomized(controller: Controller) {
+    return this.session.getRealmItem(`customize:${controller.id}`, null) != null;
+  }
+
+  clearControllerCustomization(controller: Controller) {
+    this.session.removeRealmItem(`customize:${controller.id}`);
   }
 
   syncControllers() {

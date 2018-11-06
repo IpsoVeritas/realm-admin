@@ -70,7 +70,7 @@
     <integrity-section [title]="'menu.controllers' | translate" enableExpansion="true" expansionId="home.controllers" class="nav-list">
       <mat-nav-list>
         <div class="controller-wrapper" *ngFor="let controller of controllers">
-          <a mat-list-item [routerLink]="['controller', controller.id]" routerLinkActive="active" (click)="drawerMode == 'over' ? drawer.close() : false">
+          <a mat-list-item integrityDragAndDrop (filesDropped)="customizeController(controller,$event)" [routerLink]="['controller', controller.id]" routerLinkActive="active" (click)="drawerMode == 'over' ? drawer.close() : false">
             <mat-icon *ngIf="controller.descriptor.icon else no_service_icon">
               <img src="{{controller.descriptor.icon}}" width="20" height="20">
             </mat-icon>
@@ -95,6 +95,9 @@
               </button>
               <button *ngIf="canBind(controller)" mat-menu-item (click)="binding(controller)">
                 {{'controllers.get_binding_url' | translate}}
+              </button>
+              <button *ngIf="isCustomized(controller)" mat-menu-item (click)="clearControllerCustomization(controller)">
+                {{'controllers.clear_customization' | translate}}
               </button>
             </mat-menu>
           </div>
