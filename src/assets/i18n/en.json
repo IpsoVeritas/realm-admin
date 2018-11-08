@@ -172,7 +172,8 @@
         "sync_service": "Sync service",
         "get_binding_url": "Binding URL",
         "descriptor_title": "Controller details",
-        "actions_title": "Available actions"
+        "actions_title": "Available actions",
+        "clear_customization": "Clear patch"
     },
     "binding": {
         "error_invalid_token": "Invalid binding token",

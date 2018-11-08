@@ -93,7 +93,6 @@ export class ControllerComponent implements OnInit, OnDestroy {
         return controller;
       })
       .then(controller => {
-        console.log(controller);
         if (controller.descriptor.adminUI) {
           this.cryptoService.filterMandates(controller.adminRoles)
             .then(mandates => this.cryptoService.createMandateToken(

@@ -1,9 +1,8 @@
 import { ActionDescriptor } from './../models/v2/action-descriptor.model';
-import { Multipart } from './../models/v2/multipart.model';
 import { Injectable } from '@angular/core';
 import { HttpHeaders } from '@angular/common/http';
 import { BaseClient } from './base.client';
-import { Controller, ControllerDescriptor } from '../models';
+import { Controller, ControllerDescriptor, Multipart, Part } from '../models';
 
 @Injectable()
 export class ControllersClient extends BaseClient {
@@ -81,14 +80,16 @@ export class ControllersClient extends BaseClient {
       throw new Error(`controller.uri is undefined for controller ${controller.id}`);
     }
     controller.descriptor = await this.getControllerDescriptor(controller.uri);
+    controller = await this.patchControllerDescriptor(controller);
     return await this.updateController(controller);
   }
 
-  public syncActions(controller: Controller): Promise<Controller> {
+  public async syncActions(controller: Controller): Promise<Controller> {
     if (!controller.descriptor.actionsURI || controller.descriptor.requireSetup) {
-      return Promise.resolve(controller);
+      return controller;
     }
     return this.getControllerActions(controller)
+      .then(actions => this.patchActions(controller, actions))
       .then(actions => this.updateActions(controller, actions))
       .catch(error => console.warn('Update actions failed', controller, error))
       .then(() => controller);
@@ -108,6 +109,7 @@ export class ControllersClient extends BaseClient {
 
   public getParsedControllerActions(controller: Controller, interfaces?: string[]): Promise<ActionDescriptor[]> {
     return this.getControllerActions(controller)
+      .then(actions => this.patchActions(controller, actions))
       .then(json => JSON.parse(json))
       .then(obj => this.jsonConvert.deserializeObject(obj, Multipart))
       .then((m: Multipart) => Promise.all(m.parts.map(p => this.crypto.deserializeJWS(p.document, ActionDescriptor))))
@@ -130,6 +132,60 @@ export class ControllersClient extends BaseClient {
     const url = controller.descriptor.bindURI;
     return this.http.post(url, binding).toPromise()
       .then(() => this.cache.invalidate(`controllers:${controller.realm}`));
+  }
+
+  private patchControllerDescriptor(controller: Controller): Promise<Controller> {
+    return Promise.resolve(this.session.getRealmItem(`customize:${controller.id}`, '{}'))
+      .then(json => JSON.parse(json))
+      .then(patch => patch['controller'] ? patch['controller'] : {})
+      .then(patch => Object.assign(controller.descriptor, patch))
+      .catch(err => console.warn('Patch error!', err))
+      .then(() => controller);
+  }
+
+  private patchActions(controller: Controller, actions: string): Promise<any> {
+    return Promise.resolve(this.session.getRealmItem(`customize:${controller.id}`, '{}'))
+      .then(json => JSON.parse(json))
+      .then(patch => patch['actions'] ? patch['actions'] : [])
+      .then((patches: any[]) => {
+        if (patches && patches.length > 0) {
+          const multipart = this.jsonConvert.deserializeObject(JSON.parse(actions), Multipart);
+          return Promise.all(multipart.parts.map(part => this.crypto.deserializeJWS(part.document, ActionDescriptor)
+            .then(descriptor => {
+              let patched = false;
+              patches.forEach(patch => {
+                const matches = Object.entries(patch.match).reduce((acc, [key, value]) => {
+                  try {
+                    const re = new RegExp(<string>value);
+                    const str = JSON.stringify(descriptor[key]);
+                    return acc || re.test(str);
+                  } catch (err) {
+                    console.warn('Match error!', err);
+                    return acc;
+                  }
+                }, false);
+                if (matches) {
+                  patched = true;
+                  Object.assign(descriptor, patch);
+                  delete descriptor['match'];
+                }
+              });
+              if (patched) {
+                descriptor.certificate = this.session.chain;
+                return this.crypto.signCompact(descriptor)
+                  .then(document => part.document = document)
+                  .then(() => part);
+              } else {
+                return part;
+              }
+            })))
+            .then(parts => multipart.parts = parts)
+            .then(() => JSON.stringify(multipart));
+        } else {
+          return actions;
+        }
+      })
+      .catch(() => actions);
   }
 
 }

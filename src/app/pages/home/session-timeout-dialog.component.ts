@@ -120,7 +120,8 @@ export class SessionTimeoutDialogComponent {
         loginRequest.key = key;
         loginRequest.documentTypes = [
           'https://schema.brickchain.com/v2/mandate-token.json',
-          'https://schema.brickchain.com/v2/action.json'
+          'https://schema.brickchain.com/v2/action.json',
+          'https://schema.brickchain.com/v2/action-descriptor.json'
         ];
         return loginRequest;
       });

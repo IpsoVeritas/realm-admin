@@ -78,6 +78,7 @@
               <mat-icon>trip_origin</mat-icon>
             </ng-template>
             {{controller.name}}
+            <mat-icon *ngIf="isCustomized(controller)">call_merge</mat-icon>
           </a>
           <div class="sub-menu-button-wrapper">
             <button mat-icon-button color="accent" class="menu-button" [matMenuTriggerFor]="controllerContextualMenu" (click)="onControllerMenuClicked($event)">
