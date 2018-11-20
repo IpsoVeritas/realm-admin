@@ -80,6 +80,10 @@ export class MandatesComponent implements OnInit {
         .then(actions => {
           controller['actions'] = actions;
           return controller;
+        })
+        .catch(() => {
+          controller['actions'] = [];
+          return controller;
         })))
       .then(promises => Promise.all(promises))
       .then(controllers => this.controllers = controllers);

@@ -128,9 +128,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   async load(): Promise<any> {
 
-    this.realm = await this.loadRealm();
-    this.roles = await this.loadRoles();
-    this.controllers = await this.loadControllers();
+    [this.realm, this.roles, this.controllers] = await Promise.all([this.loadRealm(), this.loadRoles(), this.loadControllers()]);
     this.events.publish('ready', true);
 
     this.controllers.forEach(controller =>
