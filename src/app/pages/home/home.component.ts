@@ -415,7 +415,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   private getAddBindingAction(controller: Controller): Promise<ActionDescriptor> {
     return this.controllersClient
       .getParsedControllerActions(controller, ['https://interfaces.brickchain.com/v1/add-binding.json'])
-      .then(a => a.length > 0 ? a[0] : undefined);
+      .then(a => a.length > 0 ? a[0] : undefined)
+      .catch(() => undefined);
   }
 
   private executeBindingAction(addBindingAction: ActionDescriptor) {

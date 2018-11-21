@@ -25,7 +25,8 @@ export class ControllersClient extends BaseClient {
     } catch (err) {
       const url = await this.session.getBackendURL(`/realms/${realmId}/controllers`);
       const json = await this.http.get(url).toPromise();
-      return this.jsonConvert.deserializeArray(json as any[], Controller);
+      const controllers = this.jsonConvert.deserializeArray(json as any[], Controller);
+      return this.cache.set(`controllers:${realmId}`, controllers);
     }
   }
 
