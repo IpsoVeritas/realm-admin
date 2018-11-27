@@ -73,7 +73,7 @@
         "copy_to_clipboard_failed": "Copy {{value}} to clipboard failed"
     },
     "realm-list": {
-        "enter_realm": "Enter the realm name",
+        "enter_realm": "Enter the realm URL",
         "error_required": "A realm name is required",
         "error_descriptor": "Unable to resolve realm"
     },
