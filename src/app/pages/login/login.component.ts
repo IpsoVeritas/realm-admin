@@ -6,7 +6,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { EventsService } from '@brickchain/integrity-angular';
 import { WebviewClientService } from '@brickchain/integrity-webview-client';
-import { RealmDescriptor, LoginRequest, LoginResponse, Contract, HttpResponse, HttpRequest } from '../../shared/models';
+import { Certificate, RealmDescriptor, LoginRequest, LoginResponse, Contract, HttpResponse, HttpRequest } from '../../shared/models';
 import { AuthClient, RealmsClient } from '../../shared/api-clients';
 import { ConfigService, SessionService, CryptoService, PlatformService, ProxyService } from '../../shared/services';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -23,12 +23,6 @@ export class LoginComponent implements OnInit, OnDestroy {
   @ViewChild('realmPopupTrigger') realmPopupTrigger: ElementRef;
 
   qrUri: string;
-  qrUriTimer: any;
-  qrUriTimestamp: number;
-  qrTimeout = 300 * 1000;
-  qrCountdown = 100;
-  progressTimer: any;
-  pollTimer: any;
   copied = false;
 
   descriptor: RealmDescriptor;
@@ -126,10 +120,6 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.snackBar.open(this.translate.instant('message.copied_to_clipboard', { value: 'login request URL' }), '', { duration: 2000 });
   }
 
-  updateCountdown() {
-    this.qrCountdown = 100 - 100 * (Date.now() - this.qrUriTimestamp) / this.qrTimeout;
-  }
-
   start(realm: string): Promise<any> {
     return this.realmsClient.getActionDescriptors(realm, ['https://interfaces.brickchain.com/v1/realm-admin.json'])
       .then(descriptors => descriptors.length !== 1 ? Promise.reject('no backend found') : Promise.resolve(descriptors[0]))
@@ -145,12 +135,12 @@ export class LoginComponent implements OnInit, OnDestroy {
         if (bootMode) {
           return this.router.navigateByUrl(`/${this.session.realm}/bootstrap`);
         } else {
-          return this.login(realm);
+          return this.login();
         }
       });
   }
 
-  login(realm: string): Promise<any> {
+  login(): Promise<any> {
     if (this.platform.inApp) {
       return this.createLoginRequest()
         .then(request => this.webviewClient.handle({
@@ -171,9 +161,6 @@ export class LoginComponent implements OnInit, OnDestroy {
       return this.proxy.handlePath(`/login/${id}`, this.getLoginRequestHandler(id))
         .then(() => this.proxy.handlePath(`/callback/${id}`, this.getLoginResponseHandler()))
         .then(() => {
-          this.qrUriTimestamp = Date.now();
-          this.progressTimer = setInterval(() => this.updateCountdown(), 100);
-          this.qrUriTimer = setTimeout(() => this.login(realm), this.qrTimeout);
           this.qrUri = `${this.proxy.base}/proxy/request/${this.proxy.id}/login/${id}`;
         });
     }
@@ -200,20 +187,18 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   handleLoginResponse(response: LoginResponse): Promise<any> {
     if (response.mandates && response.mandates.length > 0 && response.chain) {
-
       this.session.mandates = response.mandates;
       this.session.chain = response.chain;
-      this.session.expires = response.timestamp.getTime() ? response.timestamp.getTime() + (3600 * 1000) : Date.now() + (3600 * 1000);
-
-      clearTimeout(this.qrUriTimer);
-      clearTimeout(this.progressTimer);
-      clearTimeout(this.pollTimer);
-
-      return this.crypto.createMandateToken(this.session.backend, this.session.mandates, 3600)
-        .then(token => this.session.token = token)
-        .then(() => {
-          this.events.publish('login');
-          this.router.navigateByUrl(`/${this.session.realm}/home`);
+      return this.crypto.deserializeJWS<Certificate>(this.session.chain, Certificate)
+        .then(certificate => {
+          this.session.ttl = certificate.ttl;
+          this.session.expires = certificate.timestamp.getTime() + (this.session.ttl * 1000);
+          return this.crypto.createMandateToken(this.session.backend, this.session.mandates, this.session.ttl)
+            .then(token => this.session.token = token)
+            .then(() => {
+              this.events.publish('login');
+              this.router.navigateByUrl(`/${this.session.realm}/home`);
+            });
         });
     } else {
       return Promise.reject('Mandates and/or chain missing');

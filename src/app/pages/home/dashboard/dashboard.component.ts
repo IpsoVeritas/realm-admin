@@ -107,8 +107,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.hrs = Math.floor(this.seconds / 60 * 60);
     this.min = Math.floor(this.seconds / 60);
     this.sec = Math.floor(this.seconds % 60);
-    const sessionLength = 60 * 60;
-    this.countdown = (this.seconds * 100) / sessionLength;
+    this.countdown = (this.seconds * 100) / this.session.ttl;
     setTimeout(() => this.updateClock(), 500);
   }
 

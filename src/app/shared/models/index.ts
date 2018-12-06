@@ -15,6 +15,7 @@ export { URLResponse } from './v1/url-response.model';
 // export { User } from './v1/user.model'; DEPRECATED
 
 export { ActionDescriptor } from './v2/action-descriptor.model';
+export { Certificate } from './v2/certificate.model';
 export { Contract } from './v2/contract.model';
 export { Controller } from './v2/controller.model';
 export { ControllerBinding } from './v2/controller-binding.model';

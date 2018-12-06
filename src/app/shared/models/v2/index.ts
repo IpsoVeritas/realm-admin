@@ -1,5 +1,6 @@
 export { ActionDescriptor } from './action-descriptor.model';
 export { Base } from './base.model';
+export { Certificate } from './certificate.model';
 export { Contract } from './contract.model';
 export { Controller } from './controller.model';
 export { ControllerDescriptor } from './controller-descriptor.model';

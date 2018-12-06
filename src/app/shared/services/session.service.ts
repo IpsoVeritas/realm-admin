@@ -97,6 +97,14 @@ export class SessionService {
     this.setRealmItem('chain', value);
   }
 
+  get ttl(): number {
+    return this.getRealmItem('ttl');
+  }
+
+  set ttl(value: number) {
+    this.setRealmItem('ttl', value);
+  }
+
   get expires(): number {
     return this.getRealmItem('expires');
   }

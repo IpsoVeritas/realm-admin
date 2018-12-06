@@ -4,7 +4,7 @@ import { WebviewClientService } from '@brickchain/integrity-webview-client';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthClient, RealmsClient } from '../../shared/api-clients';
 import { SessionService, PlatformService, CryptoService, ProxyService } from '../../shared/services';
-import { RealmDescriptor, LoginRequest, LoginResponse, Contract, HttpResponse, HttpRequest } from '../../shared/models';
+import { Certificate, RealmDescriptor, LoginRequest, LoginResponse, Contract, HttpResponse, HttpRequest } from '../../shared/models';
 import { v4 } from 'uuid/v4';
 
 @Component({
@@ -15,7 +15,6 @@ import { v4 } from 'uuid/v4';
     <mat-dialog-content>
       <integrity-qrcode *ngIf="qrUri" [qrdata]="qrUri" [integrityClipboard]="qrUri" (copySuccess)="copySuccess()" [class.copied]="copied">
       </integrity-qrcode>
-      <mat-progress-bar *ngIf="qrUri" mode="determinate" [value]="qrCountdown" color="accent"></mat-progress-bar>
       <p *ngIf="platform.isMobile">{{'session-resume.mobile_content' | translate}}</p>
     </mat-dialog-content>
     <mat-dialog-actions>
@@ -48,12 +47,6 @@ import { v4 } from 'uuid/v4';
 export class SessionTimeoutDialogComponent {
 
   qrUri: string;
-  qrUriTimer: any;
-  qrUriTimestamp: number;
-  qrTimeout = 300 * 1000;
-  qrCountdown = 100;
-  progressTimer: any;
-  pollTimer: any;
   copied = false;
 
   constructor(private authClient: AuthClient,
@@ -69,18 +62,15 @@ export class SessionTimeoutDialogComponent {
     this.session.chain = undefined;
     this.session.token = undefined;
     if (!this.platform.isMobile) {
-      this.login(this.session.realm);
+      this.login();
     }
   }
 
-  login(realm: string): Promise<any> {
+  login(): Promise<any> {
     const id = v4();
     return this.proxy.handlePath(`/login/${id}`, this.getLoginRequestHandler(id))
       .then(() => this.proxy.handlePath(`/callback/${id}`, this.getLoginResponseHandler()))
       .then(() => {
-        this.qrUriTimestamp = Date.now();
-        this.progressTimer = setInterval(() => this.updateCountdown(), 100);
-        this.qrUriTimer = setTimeout(() => this.login(realm), this.qrTimeout);
         this.qrUri = `${this.proxy.base}/proxy/request/${this.proxy.id}/login/${id}`;
       });
   }
@@ -115,7 +105,7 @@ export class SessionTimeoutDialogComponent {
         loginRequest.timestamp = new Date();
         loginRequest.contract = new Contract();
         loginRequest.contract.text = this.translate.instant('session-resume.contract', { realm: this.session.realm });
-        loginRequest.ttl = 3600;
+        loginRequest.ttl = this.session.ttl;
         loginRequest.roles = this.session.roles;
         loginRequest.key = key;
         loginRequest.documentTypes = [
@@ -129,18 +119,15 @@ export class SessionTimeoutDialogComponent {
 
   handleLoginResponse(response: LoginResponse): Promise<any> {
     if (response.mandates && response.mandates.length > 0 && response.chain) {
-
       this.session.mandates = response.mandates;
       this.session.chain = response.chain;
-      this.session.expires = response.timestamp.getTime() ? response.timestamp.getTime() + (3600 * 1000) : Date.now() + (3600 * 1000);
-
-      clearTimeout(this.qrUriTimer);
-      clearTimeout(this.progressTimer);
-      clearTimeout(this.pollTimer);
-
-      return this.crypto.createMandateToken(this.session.backend, this.session.mandates, 3600)
-        .then(token => this.session.token = token);
-
+      return this.crypto.deserializeJWS<Certificate>(this.session.chain, Certificate)
+        .then(certificate => {
+          this.session.ttl = certificate.ttl;
+          this.session.expires = certificate.timestamp.getTime() + (this.session.ttl * 1000);
+          return this.crypto.createMandateToken(this.session.backend, this.session.mandates, this.session.ttl)
+            .then(token => this.session.token = token);
+        });
     } else {
       return Promise.reject('Mandates and/or chain missing');
     }
@@ -176,10 +163,6 @@ export class SessionTimeoutDialogComponent {
 
     });
 
-  }
-
-  updateCountdown() {
-    this.qrCountdown = 100 - 100 * (Date.now() - this.qrUriTimestamp) / this.qrTimeout;
   }
 
   @HostListener('keydown.enter')

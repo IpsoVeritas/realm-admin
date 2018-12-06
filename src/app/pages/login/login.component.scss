@@ -98,13 +98,5 @@
       }
     }
 
-    .mat-progress-bar {
-      width: 300px !important;
-      border-radius: 2px;
-
-      @media (max-width: 400px) {
-        width: 80% !important;
-      }
-    }
   }
 }
