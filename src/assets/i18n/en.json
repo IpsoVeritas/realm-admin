@@ -21,7 +21,7 @@
         "save": "Save",
         "general": "General",
         "images": "Images",
-        "email": "E-mail",
+        "email": "Email",
         "mandate_starts": "Mandate start date",
         "mandate_ends": "Mandate end date",
         "status": "Status",
@@ -30,13 +30,13 @@
         "revoked": "Revoked",
         "revoke": "Revoke",
         "start_date": "Starts",
-        "start_time": "at",
+        "start_time": "At",
         "end_date": "Ends",
-        "end_time": "at",
+        "end_time": "At",
         "login": "Login",
         "copy": "Copy",
         "role": "Role",
-        "service_place_name": "Service place name",
+        "service_place_name": "Realm name",
         "revoke_mandate_action": "Revoke mandate",
         "bind_controller_service_setup_hint": "Advanced setup enables you to give extra permissions to your service. By default, we recommend to use the Standard setup unless stated in the service documentation.",
         "bind_controller_service_setup": "Service setup",
@@ -50,7 +50,6 @@
         "contact_user": "Contact user",
         "mandate_details": "Mandate details",
         "mandate_sent_by": "Mandate sent by",
-        "action": "Action",
         "view_details": "View details"
     },
     "login": {
@@ -152,12 +151,12 @@
         "edit_role": "Edit role",
         "delete_role": "Delete role",
         "invite_to_role": "Invite people",
-        "mandates_tab": "Role members",
+        "mandates_tab": "Issued mandates",
         "authorizations_tab": "Authorizations",
         "enter_role_name": "Role name",
-        "delete_role_confirmation": "Delete role {{role}} with {{count}} members",
-        "revoke_mandate": "Revoke {{role}} membership for {{recipient}}",
-        "error_revoking": "Unable to revoke {{role}} membership"
+        "delete_role_confirmation": "Delete role {{role}} with {{count}} issued mandates",
+        "revoke_mandate": "Revoke {{role}} issued for {{recipient}}",
+        "error_revoking": "Unable to revoke issued {{role}}"
     },
     "controllers": {
         "error_syncing_controllers": "Error syncing services",
@@ -180,8 +179,7 @@
         "error_add_failed": "Add service failed",
         "binding_success": "Service {{controller}} has been added",
         "error_binding_failed": "Error while binding service",
-        "bind_controller": "Bind service",
-        "mandate_role_placeholder": "Role membership"
+        "bind_controller": "Bind service"
     },
     "session-resume": {
         "dialog_title_desktop": "Session expired, scan to resume",

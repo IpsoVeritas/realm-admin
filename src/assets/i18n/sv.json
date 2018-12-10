@@ -1,1 +1,192 @@
-{}
+{
+    "bootstrap": {
+        "password_placeholder": "Bootstrap-lösenord",
+        "collect_admin_mandate": "Skanna för att hämta Admin-mandatet",
+        "error_password_required": "Ett lösenord krävs",
+        "error_invalid_password": "Lösenordet är ogiltigt"
+    },
+    "label": {
+        "ok": "OK",
+        "close": "Stäng",
+        "cancel": "Avbryt",
+        "done": "Färdig",
+        "realms": "Realmar",
+        "name": "Namn",
+        "description": "Beskrivning",
+        "create_realm": "Skapa realm",
+        "delete": "Radera",
+        "create": "SKapa",
+        "send": "Skicka",
+        "reset": "Nollställ",
+        "save": "Spara",
+        "general": "Generell",
+        "images": "Bilder",
+        "email": "E-post",
+        "mandate_starts": "Mandatets startdatum",
+        "mandate_ends": "Mandatets slutdatum",
+        "status": "Status",
+        "active": "Aktiv",
+        "pending": "Förestående",
+        "revoked": "Återkallad",
+        "revoke": "Återkalla",
+        "start_date": "Börjar",
+        "start_time": "Klockan",
+        "end_date": "Slutar",
+        "end_time": "Klockan",
+        "login": "Logga in",
+        "copy": "Kopiera",
+        "role": "Roll",
+        "service_place_name": "Realm-namn",
+        "revoke_mandate_action": "Återkalla mandat",
+        "bind_controller_service_setup_hint": "Avancerade inställningar gör att du kan ge extra tillstånd till din tjänst. Men vi rekommenderar att du använder standardinställningarna om det inte står annat i dokumentationen för din tjänst.",
+        "bind_controller_service_setup": "Sätt upp tjänst",
+        "bind_controller_service_name": "Skriv in ett namn för din tjänst",
+        "bind_controller_service_name_hint": "Du kan ändra detta senare i inställningarna för din tjänst.",
+        "mandate_valid_from": "Mandatet giltigt från",
+        "next": "Nästa",
+        "service_requested_permissions_title": "Tjänsten efterfrågade tillåtelse",
+        "service_requested_permissions_info": "Genom att ansluta denna tjänst, så tillåter du den att exekvera följande:",
+        "inactive": "Inaktiv",
+        "contact_user": "Kontakta användare",
+        "mandate_details": "Detaljer för mandat",
+        "mandate_sent_by": "Mandatet skickades genom",
+        "view_details": "Visa detaljer"
+    },
+    "login": {
+        "title": "Logga in till {{realm}}",
+        "instructions_desktop": "Du behöver Integrity-appen för att skanna den här QR-koden, och få tillgång till admin-gränssnittet för {{realm}}",
+        "contract": "Logga in till {{realm}}",
+        "instructions_mobile": "Du behöver Integrity-appen på den här enheten för att få tillgång till administrationsgränssnittet för {{realm}}"
+    },
+    "error": {
+        "connecting_to_host": "Fel vid anslutning till {{host}}",
+        "deleting": "Kunde inte radera {{value}}",
+        "creating": "Kunde inte skapa {{value}}",
+        "loading": "Kunde inte ladda {{value}}",
+        "updating": "Kunde inte uppdatera {{value}}",
+        "calling": "Fel vid anrop {{value}}"
+    },
+    "message": {
+        "copied_to_clipboard": "Kopierade {{value}} till urklipp",
+        "updated": "Uppdaterade {{value}}",
+        "copy_to_clipboard_failed": "Kopiera {{value}] till urklipp misslyckades"
+    },
+    "realm-list": {
+        "enter_realm": "Skriv in realm URL",
+        "error_required": "Ett realm-namn krävs",
+        "error_descriptor": "Kunde inte slå upp realm"
+    },
+    "realm-card": {
+        "no_descriptor": "Realmen är offline"
+    },
+    "invite": {
+        "title": "Bjud in till {{role}}",
+        "admin_invite_sent": "Admin-inbjudan skickad till {{email}}",
+        "error_sending": "Kunde inte skicka inbjudan till {{email}}",
+        "delete_invite": "Radera inbjudan sänt till {{email}}",
+        "resend_invite": "Återsänd inbjudan till {{email}}",
+        "error_deleting": "Kunde inte radera inbjudan sänd till {{email}}",
+        "settings_section": "Inbjudningsinställningar",
+        "recipient_section": "Bjud in med e-post",
+        "recipients_placeholder": "Lägg till e-post",
+        "recipients_hint": "Skriv in mottagare här, eller dra in en textfil",
+        "message_placeholder": "Lägg till ett personligt meddelande",
+        "message_hint": "Skriv ditt meddelande här",
+        "add_end_date": "Lägg till slutdatum",
+        "recipients_count_hint": "{{count}} mottagare",
+        "sending_section": "Sändstatus",
+        "send_summary_with_failures": "Skickade {{sent}} av {{total}} inbjudningar med {{failed}} fel.",
+        "scan_invite": "{{role}} inbjuden till {{email}}",
+        "menu_send_invite": "Skicka inbjudan",
+        "menu_scan_invite": "Skanna inbjudan",
+        "menu_delete_invite": "Radera inbjudan",
+        "send_summary_no_failures": "Inbjudningar skickade",
+        "invite_dashboard_title": "Bjud in folk för att interagera med dina tjänster",
+        "invite_dashboard_description": "Definiera roller, hantera åtkomst och bjud in folk till dina tjänster. Bygg din egen gemenskap!",
+        "invite": "Bjud in"
+    },
+    "menu": {
+        "settings": "Inställningar",
+        "login_other": "Logga in till en annan realm",
+        "logout": "Logga ut",
+        "dashboard": "Din översiktspanel",
+        "realms": "Hantera realmar",
+        "roles": "Hantera roller",
+        "controllers": "Hantera tjänster",
+        "create_role": "Ny roll",
+        "add_service": "Lägg till tjänst",
+        "sync_controllers": "Synkronisera tjänster"
+    },
+    "realms": {
+        "delete_realm": "Radera realm {{realm}}?",
+        "realm_name": "Skriv in realm-namn",
+        "menu_send_invite": "Skicka admin-inbjudan",
+        "menu_delete": "Radera realm",
+        "menu_login": "Logga in"
+    },
+    "settings": {
+        "guest_role": "Gäst-roll",
+        "guest_role_placeholder": "Förvald roll för inbjudningar  ",
+        "no_guest_role": "Ingen roll",
+        "guest_role_instructions": "Den här rollen sätts när en användare automatiskt blir medlem i din realm.",
+        "description_instructions": "Det här är vad dina användare ser när de ansluter. Det kan vara namnet på din organisation, eller namnet på din tjänst.",
+        "image_instructions": "Välj bilder för att göra din realm mer personlig. De kommer att synas för dina användare. Vänligen välj en mörkare bild för din banner, eftersom ditt realm-namn kommer att synas i vitt. Du kan dra en bild direkt från ditt skrivbord."
+    },
+    "dashboard": {
+        "personalise_section": "Personifiera din realm",
+        "personalise_content": "Lägg till en banner och en profilbild för att göra din realm lättare att identifera för dina användare.",
+        "personalise_title": "Lägg till bilder för din realm",
+        "add_pictures": "Lägg till bilder",
+        "session_section": "Nuvarande session",
+        "services_section": "Tillgängliga tjänster",
+        "controllers_section": "Nya tjänster",
+        "session_expires_content": "{{minutes} minuter och {{seconds}} sekunder",
+        "session_expires_title": "Går ut om...",
+        "setup_now": "Ställ in nu"
+    },
+    "logout": {
+        "confirm": "Logga ut från {{realm}}?"
+    },
+    "mandates": {
+        "edit_role": "Redigera roll",
+        "delete_role": "Radera roll",
+        "invite_to_role": "Bjud in folk",
+        "mandates_tab": "Utfärdade mandat",
+        "authorizations_tab": "Behörigheter",
+        "enter_role_name": "Rollnamn",
+        "delete_role_confirmation": "Radera roll {{role}} med {{count}} utfärdade mandat",
+        "revoke_mandate": "Återkalla {{role}} utfärdad till {{recipient}}",
+        "error_revoking": "Kunde inte återkalla utfärdad {{role}}"
+    },
+    "controllers": {
+        "error_syncing_controllers": "Fel vid synkronisering av tjänster",
+        "add_service": "Lägg till tjänst",
+        "custom_binding_url": "Anpassad bindning...",
+        "binding_url_placeholder": "Bindnings-URL",
+        "error_syncing_controller": "Fel vid synkronisering av {{controller}}",
+        "controller_settings": "Inställningar för tjänsten",
+        "delete_controller": "Radera {{controller}}",
+        "edit_service": "Redigera tjänst",
+        "delete_service": "Radera tjänst",
+        "sync_service": "",
+        "get_binding_url": "Bindnings-URL",
+        "descriptor_title": "Controller-detaljer",
+        "actions_title": "Tillgängliga actions",
+        "clear_customization": "Nollställ förändring"
+    },
+    "binding": {
+        "error_invalid_token": "Ogiltig bindnings-token",
+        "error_add_failed": "Fel vid tillägg av tjänst",
+        "binding_success": "Tjänsten {{controller}} har lagts till",
+        "error_binding_failed": "Fel vid bindning av tjänst",
+        "bind_controller": "Bind tjänst"
+    },
+    "session-resume": {
+        "dialog_title_desktop": "Sessionen har gått ut, skanna för att återuppta",
+        "logout": "Logga ut",
+        "dialog_title_mobile": "Session utgången",
+        "mobile_content": "Klicka fortsätt-knappen för att återuppta din session.",
+        "continue": "Fortsätt",
+        "contract": "Förbli inloggad till {{realm}}"
+    }
+}
