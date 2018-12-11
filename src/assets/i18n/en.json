@@ -125,7 +125,7 @@
         "menu_login": "Login"
     },
     "settings": {
-        "guest_role": "Guest role",
+        "guest_role": "Guest",
         "guest_role_placeholder": "Default invite role",
         "no_guest_role": "No role",
         "guest_role_instructions": "This is the role a user is assigned when automatically joining your realm.",

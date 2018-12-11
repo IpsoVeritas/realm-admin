@@ -125,8 +125,8 @@
         "menu_login": "Logga in"
     },
     "settings": {
-        "guest_role": "Gäst-roll",
-        "guest_role_placeholder": "Förvald roll för inbjudningar  ",
+        "guest_role": "Gäst",
+        "guest_role_placeholder": "Förvald roll för inbjudningar",
         "no_guest_role": "Ingen roll",
         "guest_role_instructions": "Den här rollen sätts när en användare automatiskt blir medlem i din realm.",
         "description_instructions": "Det här är vad dina användare ser när de ansluter. Det kan vara namnet på din organisation, eller namnet på din tjänst.",
