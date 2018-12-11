@@ -140,7 +140,7 @@
         "session_section": "Nuvarande session",
         "services_section": "Tillgängliga tjänster",
         "controllers_section": "Nya tjänster",
-        "session_expires_content": "{{minutes} minuter och {{seconds}} sekunder",
+        "session_expires_content": "{{minutes}} minuter och {{seconds}} sekunder",
         "session_expires_title": "Går ut om...",
         "setup_now": "Ställ in nu"
     },
