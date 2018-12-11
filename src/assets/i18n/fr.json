@@ -1,22 +1,22 @@
 {
     "bootstrap": {
         "password_placeholder": "",
-        "collect_admin_mandate": "",
-        "error_password_required": "",
-        "error_invalid_password": ""
+        "collect_admin_mandate": "Scannez pour collecter votre mandat Administrateur",
+        "error_password_required": "Un mot de passe est requis",
+        "error_invalid_password": "Le mot de passe est incorrect"
     },
     "label": {
-        "ok": "",
-        "close": "",
-        "cancel": "",
-        "done": "",
-        "realms": "",
-        "name": "",
-        "description": "",
-        "create_realm": "",
-        "delete": "",
-        "create": "",
-        "send": "",
+        "ok": "OK",
+        "close": "Fermer",
+        "cancel": "Annuler",
+        "done": "Terminé",
+        "realms": "Realms",
+        "name": "Nom",
+        "description": "Description",
+        "create_realm": "Créer le realm",
+        "delete": "Supprimer",
+        "create": "Créer",
+        "send": "Envoyer",
         "reset": "",
         "save": "",
         "general": "",
@@ -53,36 +53,36 @@
         "view_details": ""
     },
     "login": {
-        "title": "",
-        "instructions_desktop": "",
+        "title": "Se connecter à",
+        "instructions_desktop": "Vous avez besoin de l'application Integrity pour scanner ce QR code et accéder à votre interface d'administration pour {{realm}}",
         "contract": "",
         "instructions_mobile": ""
     },
     "error": {
-        "connecting_to_host": "",
-        "deleting": "",
-        "creating": "",
+        "connecting_to_host": "Il y a eu un problème lors de la connexion avec {{host}}",
+        "deleting": "Impossible de supprimer",
+        "creating": "Impossible de créer",
         "loading": "",
         "updating": "",
         "calling": ""
     },
     "message": {
-        "copied_to_clipboard": "",
+        "copied_to_clipboard": "Copié {{value}} dans le presse papier",
         "updated": "",
         "copy_to_clipboard_failed": ""
     },
     "realm-list": {
-        "enter_realm": "",
-        "error_required": "",
-        "error_descriptor": ""
+        "enter_realm": "Saisissez l'adresse url du realm",
+        "error_required": "Un nom de realm est requis",
+        "error_descriptor": "Impossible de joindre le realm"
     },
     "realm-card": {
-        "no_descriptor": ""
+        "no_descriptor": "Le realm est hors-ligne"
     },
     "invite": {
-        "title": "",
-        "admin_invite_sent": "",
-        "error_sending": "",
+        "title": "Inviter à",
+        "admin_invite_sent": "L'invitation en tant qu'Administrateur a été envoyée à {{email}}",
+        "error_sending": "Impossible d'envoyer l'invitation à {{email}}",
         "delete_invite": "",
         "resend_invite": "",
         "error_deleting": "",
@@ -106,20 +106,20 @@
         "invite": ""
     },
     "menu": {
-        "settings": "",
-        "login_other": "",
-        "logout": "",
-        "dashboard": "",
-        "realms": "",
-        "roles": "",
-        "controllers": "",
-        "create_role": "",
-        "add_service": "",
-        "sync_controllers": ""
+        "settings": "Paramètres",
+        "login_other": "Se connecter à un autre realm",
+        "logout": "Se déconnecter",
+        "dashboard": "Votre tableau de bord",
+        "realms": "Gérer les realms",
+        "roles": "Gérer les rôles",
+        "controllers": "Gérer les services",
+        "create_role": "Nouveau rôle",
+        "add_service": "Ajouter le service",
+        "sync_controllers": "Synchroniser les services"
     },
     "realms": {
-        "delete_realm": "",
-        "realm_name": "",
+        "delete_realm": "Supprimer le realm {{realm}}?",
+        "realm_name": "Saisir le nom du realm",
         "menu_send_invite": "",
         "menu_delete": "",
         "menu_login": ""

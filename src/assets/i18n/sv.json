@@ -182,7 +182,7 @@
         "bind_controller": "Bind tjänst"
     },
     "session-resume": {
-        "dialog_title_desktop": "Sessionen har gått ut, skanna för att återuppta",
+        "dialog_title_desktop": "Sessionen har gått ut, skanna för att fortsätta",
         "logout": "Logga ut",
         "dialog_title_mobile": "Session utgången",
         "mobile_content": "Klicka fortsätt-knappen för att återuppta din session.",
