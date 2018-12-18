@@ -188,5 +188,8 @@
         "mobile_content": "Klicka fortsätt-knappen för att återuppta din session.",
         "continue": "Fortsätt",
         "contract": "Förbli inloggad till {{realm}}"
+    },
+    "controller": {
+        "bind_with": "Bind med"
     }
 }

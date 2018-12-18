@@ -188,5 +188,8 @@
         "mobile_content": "Cliquer sur \"Continuer\" pour revenir à votre session.",
         "continue": "Continuer",
         "contract": "Rester connecté à {{realm}}"
+    },
+    "controller": {
+        "bind_with": ""
     }
 }

@@ -188,5 +188,8 @@
         "mobile_content": "Click the continue button to resume your current session.",
         "continue": "Continue",
         "contract": "Remain logged in to {{realm}}"
+    },
+    "controller": {
+        "bind_with": "Bind with"
     }
 }

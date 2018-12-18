@@ -8,7 +8,7 @@ import { RolesClient } from '../../../shared/api-clients';
   selector: 'app-controller-bind-dialog',
   template: `
   <div class="controller-bind-dialog">
-    <h2 mat-dialog-title translate>Bind with {{ controller.name }}</h2>
+    <h2 mat-dialog-title translate>{{ 'controller.bind_with' | translate }} {{ controller.name }}</h2>
     <mat-dialog-content>
 
       <mat-form-field floatLabel="always">
@@ -22,7 +22,7 @@ import { RolesClient } from '../../../shared/api-clients';
         <div class="info">{{ 'label.service_requested_permissions_info' | translate }}</div>
         <div *ngFor="let keyPurpose of keyPurposes" class="key-purpose">
           <mat-icon>check</mat-icon>
-          <div>{{ keyPurpose.description }}</div>
+          <div>{{ keyPurpose.description | translate }}</div>
         </div>
       </div>
 
