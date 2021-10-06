@@ -7,7 +7,7 @@ export class LoginResponse extends Base {
 
   constructor() {
     super();
-    this.type = 'https://schema.brickchain.com/v2/login-response.json';
+    this.type = 'https://IpsoVeritas.github.io/schemas/v0/login-response.json';
   }
 
   @JsonProperty('mandates', [String], true)

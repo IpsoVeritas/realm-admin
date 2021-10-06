@@ -7,7 +7,7 @@ export class Multipart extends Base {
 
   constructor() {
     super();
-    this.type = 'https://schema.brickchain.com/v2/multipart.json';
+    this.type = 'https://IpsoVeritas.github.io/schemas/v0/multipart.json';
   }
 
   @JsonProperty('parts', [Part], true)

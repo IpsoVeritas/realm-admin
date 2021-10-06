@@ -8,7 +8,7 @@ export class HttpRequest extends Base {
 
   constructor() {
     super();
-    this.type = 'https://proxy.brickchain.com/v1/http-request.json';
+    this.type = 'https://IpsoVeritas.github.io/schemas/proxy/v0/http-request.json';
     if (!this.id) {
       this.id = v4();
     }

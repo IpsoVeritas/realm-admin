@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: realm-admin
+  labels:
+    app: realm-admin
+    release: {{ .Release.Name }}
+  annotations:
+    {{- toYaml .Values.service.annotations | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+  - port: {{ .Values.port }}
+    name: web
+  selector:
+    app: realm-admin

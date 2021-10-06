@@ -6,7 +6,7 @@ export class MandateToken extends Base {
 
   constructor() {
     super();
-    this.type = 'https://schema.brickchain.com/v2/mandate-token.json';
+    this.type = 'https://IpsoVeritas.github.io/schemas/v0/mandate-token.json';
   }
 
   @JsonProperty('ttl', Number, true)

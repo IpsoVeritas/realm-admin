@@ -1,0 +1,20 @@
+
+image:
+  repository: docker.github.io/IpsoVeritas/realm-admin
+  tag: latest
+  pullPolicy: IfNotPresent
+
+port: 6580
+
+log:
+  level: debug
+  formatter: text
+
+service:
+  annotations: {}
+
+ingress:
+  enabled: false
+  hostname: "admin.example.com"
+
+  annotations: {}

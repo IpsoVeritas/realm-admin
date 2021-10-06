@@ -7,7 +7,7 @@ export class Contract extends Base {
 
   constructor() {
     super();
-    this.type = 'https://schema.brickchain.com/v2/contract.json';
+    this.type = 'https://IpsoVeritas.github.io/schemas/v0/contract.json';
   }
 
   @JsonProperty('text', String, true)

@@ -110,9 +110,9 @@ export class ProxyService {
           (msgEvent) => {
             const msg = JSON.parse(msgEvent.data);
             switch (msg['@type']) {
-              case 'https://proxy.brickchain.com/v1/ping.json':
+              case 'https://IpsoVeritas.github.io/schemas/proxy/v0/ping.json':
                 break;
-              case 'https://proxy.brickchain.com/v1/registration-response.json':
+              case 'https://IpsoVeritas.github.io/schemas/proxy/v0/registration-response.json':
                 const registrationResponse = <RegistrationResponse>this.jsonConvert.deserializeObject(msg, RegistrationResponse);
                 if (this._waiting[registrationResponse.id] !== undefined) {
                   console.log(`found a waiting registration handler for: ${registrationResponse.id}`);
@@ -120,7 +120,7 @@ export class ProxyService {
                   delete this._waiting[registrationResponse.id];
                 }
                 break;
-              case 'https://proxy.brickchain.com/v1/http-request.json':
+              case 'https://IpsoVeritas.github.io/schemas/proxy/v0/http-request.json':
                 const req = <HttpRequest>this.jsonConvert.deserializeObject(msg, HttpRequest);
                 console.debug(`ProxyService.HttpRequest: ${req.id}`, req);
                 try {

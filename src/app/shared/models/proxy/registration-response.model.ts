@@ -6,7 +6,7 @@ export class RegistrationResponse extends Base {
 
   constructor() {
     super();
-    this.type = 'https://proxy.brickchain.com/v1/registration-response.json';
+    this.type = 'https://IpsoVeritas.github.io/schemas/proxy/v0/registration-response.json';
   }
 
   @JsonProperty('keyID', String, true)

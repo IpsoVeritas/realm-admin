@@ -6,7 +6,7 @@ export class Base {
 
   constructor() {
     if (!this.type) {
-      this.type = 'https://schema.brickchain.com/v2/base.json';
+      this.type = 'https://IpsoVeritas.github.io/schemas/v0/base.json';
     }
   }
 

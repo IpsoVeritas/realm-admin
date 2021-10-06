@@ -6,7 +6,7 @@ export class RealmDescriptor extends Base {
 
   constructor() {
     super();
-    this.type = 'https://schema.brickchain.com/v2/realm-descriptor.json';
+    this.type = 'https://IpsoVeritas.github.io/schemas/v0/realm-descriptor.json';
   }
 
   @JsonProperty('label', String, true)

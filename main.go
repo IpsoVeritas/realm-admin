@@ -1,5 +1,3 @@
-//go:generate npm install
-//go:generate ./node_modules/.bin/ng build --prod --bh ./
 //go:generate go-bindata -prefix "dist/" -pkg main -o bindata.go dist/...
 
 package main
@@ -12,9 +10,9 @@ import (
 
 	"github.com/spf13/viper"
 
-	logger "gitlab.brickchain.com/libs/go-logger.v1"
+	logger "github.com/IpsoVeritas/logger"
 
-	"github.com/Sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 
 	"strings"
 
@@ -64,13 +62,12 @@ func static_handler(rw http.ResponseWriter, req *http.Request) {
 			base = req.Host
 		}
 		if !strings.Contains(base, "http") {
-			base = fmt.Sprintf("https://%s/realm-api", base)
-		} else {
-			base = fmt.Sprintf("%s/realm-api", base)
+			base = fmt.Sprintf("https://%s", base)
 		}
 		settings := fmt.Sprintf(`{
-  "backend": "%s"
-}`, base)
+  "backend": "%s/realm-api",
+  "proxy_base": "%s"
+}`, base, base)
 		rw.Header().Set("Content-Type", "application/json")
 		rw.Write([]byte(settings))
 		return

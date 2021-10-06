@@ -6,7 +6,7 @@ export class Role extends Base {
 
   constructor() {
     super();
-    this.type = 'https://schema.brickchain.com/v2/role.json';
+    this.type = 'https://IpsoVeritas.github.io/schemas/v0/role.json';
   }
 
   @JsonProperty('name', String, true)

@@ -109,9 +109,9 @@ export class SessionTimeoutDialogComponent {
         loginRequest.roles = this.session.roles;
         loginRequest.key = key;
         loginRequest.documentTypes = [
-          'https://schema.brickchain.com/v2/mandate-token.json',
-          'https://schema.brickchain.com/v2/action.json',
-          'https://schema.brickchain.com/v2/action-descriptor.json'
+          'https://IpsoVeritas.github.io/schemas/v0/mandate-token.json',
+          'https://IpsoVeritas.github.io/schemas/v0/action.json',
+          'https://IpsoVeritas.github.io/schemas/v0/action-descriptor.json'
         ];
         return loginRequest;
       });

@@ -7,7 +7,7 @@ export class LoginRequest extends Base {
 
   constructor() {
     super();
-    this.type = 'https://schema.brickchain.com/v2/login-request.json';
+    this.type = 'https://IpsoVeritas.github.io/schemas/v0/login-request.json';
   }
 
   @JsonProperty('ttl', Number, true)

@@ -7,7 +7,7 @@ export class HttpResponse extends Base {
 
   constructor(status?: number, body?: string, id?: string) {
     super();
-    this.type = 'https://proxy.brickchain.com/v1/http-response.json';
+    this.type = 'https://IpsoVeritas.github.io/schemas/proxy/v0/http-response.json';
     if (id) {
       this.id = id;
     }

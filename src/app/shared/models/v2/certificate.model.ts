@@ -7,7 +7,7 @@ export class Certificate extends Base {
 
   constructor() {
     super();
-    this.type = 'https://schema.brickchain.com/v2/certificate.json';
+    this.type = 'https://IpsoVeritas.github.io/schemas/v0/certificate.json';
   }
 
   @JsonProperty('ttl', Number, true)
