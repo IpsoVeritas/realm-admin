@@ -2,10 +2,8 @@ module github.com/IpsoVeritas/realm-admin
 
 go 1.16
 
-replace github.com/IpsoVeritas/logger => ../logger
-
 require (
-	github.com/IpsoVeritas/logger v0.0.0-20170616091425-2ed15dbf4854
+	github.com/IpsoVeritas/logger v0.0.0-20211006181550-96416e0d030b
 	github.com/fsnotify/fsnotify v1.4.3-0.20170329110642-4da3e2cfbabc // indirect
 	github.com/hashicorp/hcl v0.0.0-20170509225359-392dba7d905e // indirect
 	github.com/magiconair/properties v1.7.3-0.20170321093039-51463bfca257 // indirect

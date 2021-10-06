@@ -33,37 +33,37 @@ spec:
       {{- end }}
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          image: "{{ .Values.admin.image.repository }}:{{ .Values.admin.image.tag }}"
+          imagePullPolicy: {{ .Values.admin.image.pullPolicy }}
           command:
             - /realm-admin
           env:
             - name: LOG_LEVEL
-              value: {{ .Values.log.level }}
+              value: {{ .Values.admin.log.level }}
             - name: LOG_FORMATTER
-              value: {{ .Values.log.formatter}}
+              value: {{ .Values.admin.log.formatter}}
           ports:
             - name: web
-              containerPort: {{ .Values.port }}
+              containerPort: {{ .Values.admin.port }}
               protocol: TCP
           readinessProbe:
             httpGet:
               path: /
-              port: {{ .Values.port }}
+              port: {{ .Values.admin.port }}
               scheme: HTTP
             initialDelaySeconds: 5
             periodSeconds: 10
           resources:
-            {{- toYaml .Values.resources | nindent 12 }}
-      {{- with .Values.nodeSelector }}
+            {{- toYaml .Values.admin.resources | nindent 12 }}
+      {{- with .Values.admin.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.affinity }}
+      {{- with .Values.admin.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.tolerations }}
+      {{- with .Values.admin.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}

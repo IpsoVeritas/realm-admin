@@ -6,11 +6,11 @@ metadata:
     app: realm-admin
     release: {{ .Release.Name }}
   annotations:
-    {{- toYaml .Values.service.annotations | nindent 4 }}
+    {{- toYaml .Values.admin.service.annotations | nindent 4 }}
 spec:
-  type: {{ .Values.service.type }}
+  type: {{ .Values.admin.service.type }}
   ports:
-  - port: {{ .Values.port }}
+  - port: {{ .Values.admin.port }}
     name: web
   selector:
     app: realm-admin

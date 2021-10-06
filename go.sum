@@ -1,3 +1,5 @@
+github.com/IpsoVeritas/logger v0.0.0-20211006181550-96416e0d030b h1:J1c7+lfs9bb5mGfHe5qp7qMkOS3fgOgVm1eMzZLzDJM=
+github.com/IpsoVeritas/logger v0.0.0-20211006181550-96416e0d030b/go.mod h1:CgXA3A60F88UvL0KptQMoNhtic2NNIaXTdcCg5dN2Ig=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/fsnotify/fsnotify v1.4.3-0.20170329110642-4da3e2cfbabc h1:omfZI1v/Bu4YEatmRAYKISWA95u6XiN4Zorz/JPKCZA=
